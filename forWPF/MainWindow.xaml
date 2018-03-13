@@ -1,0 +1,30 @@
+﻿<Window x:Class="forWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:forWPF"
+        mc:Ignorable="d"
+        Background="AliceBlue"
+        Title="MainWindow" Height="450" Width="800">
+    <TabControl>
+        <TabItem Header="TabItem">
+            <StackPanel DataContext="{Binding ElementName=sb}" >
+                <Label Content="Move the scroll bar to see the current value"/>
+                <ScrollBar Name="sb" Orientation="Horizontal" Height="30"
+                           Minimum="1" Maximum="100" LargeChange="1" SmallChange="1" />
+                <Label Name="sbThumb" Height="30" BorderBrush="Blue" BorderThickness="2"
+                          Content="{Binding Path=Value}"
+                     
+                       />
+                <Button Content="{Binding Path=Value}"/>
+            </StackPanel>
+            
+        </TabItem>
+        <TabItem Header="TabItem">
+            <Grid Background="#FFE5E5E5">
+                <Label Content="that is not good"></Label>
+            </Grid>
+        </TabItem>
+    </TabControl>
+</Window>
