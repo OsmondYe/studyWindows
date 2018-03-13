@@ -26,6 +26,11 @@ namespace forWPF
             InitializeComponent();
         }
 
-       
+      
+
+        private void toSharp(object sender, RoutedEventArgs e)
+        {
+            new toSharp().Show();
+        }
     }
 }

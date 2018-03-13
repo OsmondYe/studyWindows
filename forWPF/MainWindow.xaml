@@ -14,16 +14,19 @@
                 <ScrollBar Name="sb" Orientation="Horizontal" Height="30"
                            Minimum="1" Maximum="100" LargeChange="1" SmallChange="1" />
                 <Label Name="sbThumb" Height="30" BorderBrush="Blue" BorderThickness="2"
-                          Content="{Binding Path=Value}"
-                     
-                       />
+                          Content="{Binding Path=Value}" />
                 <Button Content="{Binding Path=Value}"/>
             </StackPanel>
-            
+
         </TabItem>
         <TabItem Header="TabItem">
             <Grid Background="#FFE5E5E5">
-                <Label Content="that is not good"></Label>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="11*"/>
+                    <ColumnDefinition Width="382*"/>
+                </Grid.ColumnDefinitions>
+                <Label Content="that is not good" Grid.ColumnSpan="2"></Label>
+                <Button Content="To Sharp" Grid.ColumnSpan="2" Click="toSharp" />
             </Grid>
         </TabItem>
     </TabControl>
