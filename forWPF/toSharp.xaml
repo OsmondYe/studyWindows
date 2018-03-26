@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:forWPF"
         xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="forWPF.toSharp"
         mc:Ignorable="d"
-        Title="toSharp" Height="450" Width="984" MouseDown="canvasDrawingArea_MouseDown" Loaded="Window_Loaded" Background="#FFA24D4D" BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" >
+        Title="toSharp" Height="Auto" Width="984" MouseDown="canvasDrawingArea_MouseDown" Loaded="Window_Loaded" Background="#FFA24D4D" BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" >
     <Window.Resources>
         <SolidColorBrush x:Key="commonBk" Color="Transparent">
             <SolidColorBrush.RelativeTransform>
@@ -22,6 +22,7 @@
     </Window.Resources>
     <Grid >
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition />
@@ -122,9 +123,22 @@
             
             
         </ToolBar>
-        <Canvas x:Name="canvasDrawingArea"  Height="400" Width="800"  Grid.Row="2" >
+        <Canvas x:Name="canvasDrawingArea"  Height="200" Width="800"  Grid.Row="2" >
             <Button Content="ha" Click="Button_Click"/>
         </Canvas>
+        <Border Grid.Row="3" Background="LightBlue" BorderBrush="Yellow" BorderThickness="3,5,3,5"
+                CornerRadius="30" Width="200">
+            <!--<StackPanel >
+                <Button Margin="3" HorizontalAlignment="Right">one</Button>
+                <Button Margin="0,2,0,3" HorizontalAlignment="Left">two</Button>
+                <Button Padding="10" HorizontalAlignment="Center">three</Button>
+            </StackPanel>-->
+            <WrapPanel>
+                <Button Margin="3" HorizontalAlignment="Right">one</Button>
+                <Button Margin="0,2,0,3" HorizontalAlignment="Left">two</Button>
+                <Button Padding="10" HorizontalAlignment="Center">three</Button>
+            </WrapPanel>
+        </Border>
 
     </Grid>
 </Window>

@@ -12,14 +12,16 @@ namespace studyCSharp
         
         static void Main(string[] args)
         {
-            forDotNetBasic.Study();
 
+
+            forDotNetBasic.Study();
+            forClassExtension.Study();
             //forDelegate.Study();
             //forLambda.Study();
             //forIndexer.Study();
-            //forLINQ.Study();
+            forLINQ.Study();
 
-            forAsync.Study();
+            //forAsync.Study();
 
             Console.Read();
         }

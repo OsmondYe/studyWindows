@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 
 namespace studyCSharp
 {
+    
     class forLINQ
     {
         public static void Study()
         {
+            // Language Integrated Query
             Basic();
             Theory();
             QueryOverStrings();
@@ -30,10 +32,10 @@ namespace studyCSharp
             //- basic  只返回所有人的姓
             // from p in persons selcet p.FirstName
 
-            //- +condition
+            //- condition
             // from c in cars where c.Make="BMW" && c.Speed>100 select c
 
-            // generate new class obj
+            //- generate new class obj
             // from c in cars where c.Make="BMW" && c.Speed>100 selcet new {c.Make,c.Owner}
 
             // Count 获取总数
@@ -63,12 +65,14 @@ namespace studyCSharp
 
             int[] ints = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
 
+            // type: System.Collections.Generic.IEnumerable<int>
             var set = ints.Where(i => i > 5);
 
             foreach (int  i in set)
             {
                 Console.WriteLine(i);
             }
+
 
         }
 

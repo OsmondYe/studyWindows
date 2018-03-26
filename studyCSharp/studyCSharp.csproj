@@ -8,9 +8,11 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>studyCSharp</RootNamespace>
     <AssemblyName>studyCSharp</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -23,7 +25,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -58,6 +59,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="forAsync.cs" />
+    <Compile Include="forClassExtension.cs" />
+    <Compile Include="forCommonInterface.cs" />
     <Compile Include="forDelegate.cs" />
     <Compile Include="forDotNetBasic.cs" />
     <Compile Include="forIndexer.cs" />
