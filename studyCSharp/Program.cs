@@ -14,16 +14,16 @@ namespace studyCSharp
         {
 
 
-            forDotNetBasic.Study();
-            forClassExtension.Study();
+            //forDotNetBasic.Study();
+            //forClassExtension.Study();
             //forDelegate.Study();
             //forLambda.Study();
             //forIndexer.Study();
-            forLINQ.Study();
+            //forLINQ.Study();
+            forInvokeCpp.Study();
 
             //forAsync.Study();
 
-            Console.Read();
         }
     }
 }
