@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PdfViewerWPFDemo", "PdfView
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CppDll", "CppDll\CppDll.vcxproj", "{386244EC-1343-466C-B17E-C8D21849B7CA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CppTest", "CppTest\CppTest.vcxproj", "{C7A6BEA1-8BAA-4DFD-98F3-E08E5FE40574}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -94,6 +96,16 @@ Global
 		{386244EC-1343-466C-B17E-C8D21849B7CA}.Release|x64.Build.0 = Release|x64
 		{386244EC-1343-466C-B17E-C8D21849B7CA}.Release|x86.ActiveCfg = Release|Win32
 		{386244EC-1343-466C-B17E-C8D21849B7CA}.Release|x86.Build.0 = Release|Win32
+		{C7A6BEA1-8BAA-4DFD-98F3-E08E5FE40574}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{C7A6BEA1-8BAA-4DFD-98F3-E08E5FE40574}.Debug|x64.ActiveCfg = Debug|x64
+		{C7A6BEA1-8BAA-4DFD-98F3-E08E5FE40574}.Debug|x64.Build.0 = Debug|x64
+		{C7A6BEA1-8BAA-4DFD-98F3-E08E5FE40574}.Debug|x86.ActiveCfg = Debug|Win32
+		{C7A6BEA1-8BAA-4DFD-98F3-E08E5FE40574}.Debug|x86.Build.0 = Debug|Win32
+		{C7A6BEA1-8BAA-4DFD-98F3-E08E5FE40574}.Release|Any CPU.ActiveCfg = Release|Win32
+		{C7A6BEA1-8BAA-4DFD-98F3-E08E5FE40574}.Release|x64.ActiveCfg = Release|x64
+		{C7A6BEA1-8BAA-4DFD-98F3-E08E5FE40574}.Release|x64.Build.0 = Release|x64
+		{C7A6BEA1-8BAA-4DFD-98F3-E08E5FE40574}.Release|x86.ActiveCfg = Release|Win32
+		{C7A6BEA1-8BAA-4DFD-98F3-E08E5FE40574}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
