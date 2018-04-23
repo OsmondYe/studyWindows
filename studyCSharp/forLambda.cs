@@ -15,8 +15,13 @@ namespace studyCSharp
             // traditonal
             List<int> evens = list.FindAll(new Predicate<int>(isEven));
 
-            // anonymous 
-            evens = list.FindAll(delegate (int i) { return (i % 2) != 0; });
+            // anonymous, must use keyword delegate
+            evens = list.FindAll(
+                delegate (int i) 
+                {
+                    return (i % 2) != 0;
+                }
+                );
 
             // lambda
             evens = list.FindAll(i => (i % 2) == 0);
