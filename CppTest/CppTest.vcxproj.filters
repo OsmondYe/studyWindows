@@ -29,5 +29,8 @@
     <ClCompile Include="CppTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="test-RMCSDK-wrapper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

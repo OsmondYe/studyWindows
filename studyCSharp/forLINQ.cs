@@ -8,8 +8,22 @@ using System.Threading.Tasks;
 namespace studyCSharp
 {
 
+    class People
+    {
+        public People(int age)
+        {
+            Age = age;
+            Name = "NULL";
+        }
+        public int Age { get; set; }
+        public string Name { get; set; }
+    }
+
     class forLINQ
     {
+
+
+
         Student[] stuArray;
         public forLINQ()
         {
@@ -18,14 +32,150 @@ namespace studyCSharp
 
         public static void Study()
         {
+            
             forLINQ obj = new forLINQ();
+            obj.TechShare();
             // Language Integrated Query
-            obj.Basic();
-            obj.Theory();
-            obj.QueryOverStrings();
-            obj.QueryOverInts();
-            obj.QueryOverStudents();
+            //obj.Basic();
+            //obj.Theory();
+            //obj.QueryOverStrings();
+            //obj.QueryOverInts();
+            //obj.QueryOverStudents();
         }
+
+        delegate bool Conditon(int i);
+
+        delegate void Doing(int i);
+
+        static bool Great20Less180(int i)
+        {
+            return i > 20 && i < 180;
+        }
+
+        static void Loop(int[] ints,Conditon cond)
+        {
+            foreach (var probe in ints)
+            {
+                if (cond(probe))
+                {
+                    Console.Write("{0}, ", probe);
+
+                }
+                //if (probe > 20 && probe < 180)
+                //{
+                //    Console.Write("{0}, ", probe);
+                //}
+            }
+        }
+        static void Loop2(int[] ints, Conditon cond,Doing doing)
+        {
+            foreach (var probe in ints)
+            {
+                if (cond(probe))
+                {
+                    doing(probe);
+                }                
+            }
+        }
+
+        void TechShare()
+        {
+            int[] ints = {
+                0, 12, 34, 4, 453, 67,
+                54,64,7324,1,8,65,37,
+                23, 4236, 78, 24, 83,
+                27, 34, 46, 79, 199 };
+
+
+            // (20,180)
+            for(int i=0; i < ints.Length; i++)
+            {
+                int probe = ints[i];
+                if(probe>20 && probe < 180)
+                {
+                    Console.Write("{0}, ",probe);
+                }
+            }
+                Console.WriteLine("");
+
+            // for-each 
+            foreach (var probe in ints)
+            {
+                if (probe > 20 && probe < 180)
+                {
+                    Console.Write("{0}, ", probe);
+                }
+            }
+            //
+            Console.WriteLine("Great20Less180");
+            Loop(ints, Great20Less180);
+            //
+            Console.WriteLine("Anonymous");
+            Loop(ints, delegate (int probe)
+             {
+                 return probe > 20 && probe < 180;
+             }
+            );
+            Console.WriteLine("");
+            Loop(ints, delegate (int probe)
+            {
+                return probe >= 300 && probe%2==0;
+            }
+            );           
+            // Lambda
+            Console.WriteLine("Lambda <20");
+            //void Loop(int[] ints,Conditon cond)
+            //delegate bool Conditon(int i);
+            Loop(ints, Great20Less180);
+            Loop(ints, delegate (int i){return i<20;});
+            Loop(ints, (int i) => { return i < 20; });
+            Loop(ints, (i) => i < 20 );
+
+            // LINQ
+            Console.WriteLine("");
+            Console.WriteLine("LINQ");
+            // Building a Iterator at runtime;
+            var iterator = from i in ints  
+                           where i < 100
+                           orderby i descending
+                           select new People(i);          
+
+            for (int i = 0; i < ints.Length; i++) { ints[i] = 0; }
+                                  
+            foreach (var i in iterator)
+            {
+                Console.WriteLine("ID={0},IDSTR={1}",i.Age,i.Name);
+            }
+
+            //
+            //
+            //
+            Student[] stu = null;
+            FillStudentData(ref stu);
+
+            var statement = from i in stu
+                            orderby i.StudentName
+                            group i by i.Age;
+
+            foreach (var i in statement)
+            {
+                foreach(var ii in i)
+                {
+                    Console.WriteLine("{0},{1}",ii.StudentName,ii.Age);
+                }
+            }
+            Console.WriteLine("Age>20");
+            foreach (var item in stu.Where((s) => s.Age < 20) )
+            {
+                Console.WriteLine(item.StudentName);
+            }
+
+            
+
+                             
+
+        }
+
 
         void Basic()
         {
@@ -289,11 +439,14 @@ namespace studyCSharp
             Student[]  stuArray = new Student[]{
             new Student() { StudentID = 1, StudentName = "John", Age = 18 },
             new Student() { StudentID = 2, StudentName = "Steve", Age = 21 },
+            new Student() { StudentID = 7, StudentName = "Zoom", Age = 19 },
             new Student() { StudentID = 3, StudentName = "Bill", Age = 25 },
             new Student() { StudentID = 4, StudentName = "Ram", Age = 20 },
+            new Student() { StudentID = 7, StudentName = "Farm", Age = 19 },
             new Student() { StudentID = 5, StudentName = "Ron", Age = 31 },
             new Student() { StudentID = 6, StudentName = "Chris", Age = 17 },
             new Student() { StudentID = 7, StudentName = "Tom", Age = 19 },
+            new Student() { StudentID = 7, StudentName = "Ama", Age = 19 },
             new Student() { StudentID = 8, StudentName = "Jerry", Age = 16 },
             new Student() { StudentID = 9, StudentName = "Jack", Age = 13 },
             new Student() { StudentID = 10, StudentName = "Lucy", Age = 19 },

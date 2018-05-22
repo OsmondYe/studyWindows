@@ -90,21 +90,11 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="Documentation\ReadMe_files\themedata.thmx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Documentation\ReadMe.htm" />
-    <Resource Include="Documentation\ReadMe_files\colorschememapping.xml" />
-    <Resource Include="Documentation\ReadMe_files\filelist.xml" />
-    <Resource Include="Documentation\ReadMe_files\image001.png" />
-    <Resource Include="Documentation\ReadMe_files\image002.jpg" />
-    <Resource Include="Documentation\ReadMe_files\image003.png" />
-    <Resource Include="Documentation\ReadMe_files\image004.jpg" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="Microsoft.Office.Core">
