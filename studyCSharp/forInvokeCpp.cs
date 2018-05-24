@@ -66,6 +66,7 @@ namespace studyCSharp
             for(int i = 0; i < 1; i++)
             {
                 string outStr= null;
+                //extern void FillStringFromComMem(string inStr, ref string outStr);
                 FillStringFromComMem(inStr, ref outStr);
                 Console.WriteLine(outStr);
 
@@ -287,7 +288,7 @@ namespace studyCSharp
         // how to alloce COM heap string in CPP, .Net will aotu release
         [DllImport("CPPDLL.dll", CallingConvention = CallingConvention.Cdecl,
             CharSet = CharSet.Unicode, EntryPoint = "FillStringFromHeap")]
-        private static extern string FillStringFromHeap(string inStr,ref IntPtr outStr);
+        private static extern void FillStringFromHeap(string inStr,ref IntPtr outStr);
 
         [DllImport("CPPDLL.dll", CallingConvention = CallingConvention.Cdecl,
            CharSet = CharSet.Unicode, EntryPoint = "Free_FillStringFromHeap")]
@@ -295,7 +296,7 @@ namespace studyCSharp
 
         [DllImport("CPPDLL.dll", CallingConvention = CallingConvention.Cdecl,
            CharSet = CharSet.Unicode, EntryPoint = "FillStringFromComMem")]
-        private static extern string FillStringFromComMem(string inStr, ref string outStr);
+        private static extern void FillStringFromComMem(string inStr, ref string outStr);
 
 
         //
