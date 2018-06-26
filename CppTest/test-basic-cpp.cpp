@@ -1,8 +1,9 @@
 #include "stdafx.h"
 
 //use DISABLED_ prefix to filter out 
-
+using namespace std;
 //TEST(CppLanguage, String) {
+//TEST(CppLanguage, DISABLED_String) {
 TEST(CppLanguage, DISABLED_String) {
 	// str has 54 chars
 	const wchar_t str[] = L"The Quick Brown Fox Jumps Over The Lazy Dog,1234567890";
@@ -20,9 +21,13 @@ TEST(CppLanguage, DISABLED_String) {
 
 //TEST(CppLanguage, StringStream) {
 TEST(CppLanguage, DISABLED_StringStream) {
+//TEST(CppLanguage, StringStream) {
 	std::string w;
 	std::stringstream ss;
+	std::istringstream iss;
 
-	ss <<"this is" << 10 << " " << 11.233 << " " << 'c' << " " << endl;	
+
+	//iss << "this is" << 10 << " " << 11.233 << " " << 'c' << " " << endl;
+
 	cout << ss.str();
 }

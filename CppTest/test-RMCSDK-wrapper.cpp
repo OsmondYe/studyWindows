@@ -1,18 +1,15 @@
 #include "stdafx.h"
 #include "utils.h"
-namespace rmc {
 #include "sdkwrapper.h"
-};
 
-
-using namespace std;
-using namespace rmc;
 
 
 wchar_t gRouter[] = L"https://rmtest.nextlabs.solutions";
+//wchar_t gRouter[] = L"https://r.skydrm.com";
 wchar_t gTenant[] = L"skydrm.com";
-wchar_t gURL[] = L"https://rms-centos7303.qapf1.qalab01.nextlabs.com:8444/rms";
+//wchar_t gURL[] = L"https://rms-centos7303.qapf1.qalab01.nextlabs.com:8444/rms";
 
+using namespace std;
 
 
 class RMCSKDWrapperTest : public testing::Test {
@@ -36,9 +33,8 @@ protected:
 		std::string t(workingPath.begin(), workingPath.end());
 		t += "\\";
 		::MakeSureDirectoryPathExists(t.c_str());
-		//
-		helper_readLoginJson("userJson.txt", userLoginStr);
-		
+		std::cout << "working_path:" << t << endl;	
+
 		auto error = CreateSDKSession((wchar_t*)workingPath.c_str(), &hSession);
 		if (error || hSession == NULL) {
 			helper_reportError("Error,CreateSDKSession", error);
@@ -58,6 +54,19 @@ protected:
 			helper_reportError("SDWL_Session_Initialize2", error);
 		}
 
+		// get login request cookies;
+		NXL_LOGIN_COOKIES* pCookies;
+		size_t len_Cookies = 0;
+		error = SDWL_Session_GetLoginCookies(hSession, &pCookies, &len_Cookies);
+		
+		
+		//
+		helper_readLoginJson("userJson.txt", userLoginStr);
+
+		std::cout << "userLoginStr:\n" << userLoginStr << std::endl;
+
+
+
 		error = SDWL_Session_GetCurrentTenant(hSession, &hTenant);
 		if (error || hTenant == NULL) {
 			helper_reportError("SDWL_Session_GetCurrentTenant", error);
@@ -73,6 +82,8 @@ protected:
 		else {
 			cout << "hUser: 0x" << hex << hUser << endl;
 		}
+
+		ASSERT_EQ(error, 0)<<"error occurs\n";
 
 	}
 
@@ -101,12 +112,10 @@ protected:
 
 	//// Sets up the test fixture.
 	//virtual void SetUp() {
-
 	//}
 
 	//// Tears down the test fixture.
 	//virtual void TearDown() {
-
 	//}
 
 private:
@@ -188,7 +197,7 @@ HANDLE RMCSKDWrapperTest::hLocalFiles;
 
 TEST_F(RMCSKDWrapperTest, Version) {
 	DWORD ver = -1;
-	ver = rmc::GetSDKVersion();
+	ver = GetSDKVersion();
 
 	EXPECT_NE(-1, ver);
 	// print ver
@@ -365,13 +374,18 @@ TEST_F(RMCSKDWrapperTest, UserLocalFiles) {
 	wcout << L"SDWL_File_GetListNumber:" << size << endl;
 	
 
-	wchar_t ** pStr = NULL;
+	wchar_t * pStr = NULL;
 	int pSize = -1;
-	error = SDWL_File_GetList(hLocalFiles, pStr, &pSize);
+	error = SDWL_File_GetList(hLocalFiles, &pStr, &pSize);
 	EXPECT_EQ(error, 0)<< helper_reportError("SDWL_File_GetList", error);
 	EXPECT_NE(pSize, -1) << "a wrong pSize:" << pSize;
 	
 	wcout << "Files:\t pSize=" << pSize << endl;
+	// print each Files
+	for (int i = 0; i < pSize; i++) {
+		wchar_t* p = *((wchar_t**)pStr + 1);
+		wcout << p << endl;
+	}
 
 	
 	//

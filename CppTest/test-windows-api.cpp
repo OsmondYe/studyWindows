@@ -2,13 +2,24 @@
 
 //use DISABLED_ prefix to filter out 
 
-TEST(Windows, DISABLED_ShellOperation) {
+TEST(Windows, COM) {
+
+	size_t size = sizeof(VARIANT);
+	EXPECT_EQ(size, 0x10);
+
+}
+
+
+TEST(Windows, ShellOperation) {
 	const wchar_t* exe = L"D:\\OyeProject\\CSharp\\rmd-windows\\SkydrmLocal\\Debug\\SkydrmLocal.exe";
 	const wchar_t* cmd = L"-share c:\\aaa.txt";
 	::ShellExecuteW(NULL, L"open", exe, cmd, NULL, SW_SHOW);
+
+	
+
 }
 
-TEST(Windows, DISABLED_RegOperation) {
+TEST(Windows, RegOperation) {
 	HKEY root = HKEY_CURRENT_USER;
 	const wchar_t* parent = L"Software\\NextLabs\\SkyDRM\\LocalApp";
 	HKEY hParent;

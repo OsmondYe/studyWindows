@@ -9,4 +9,8 @@ namespace win {
 
 	bool is_path_exist(const char* dir);
 	bool is_path_exist(const wchar_t* dir);
+
+	HANDLE get_process(const wchar_t* process_name);
+	HANDLE get_process(int process_id);
+
 };
