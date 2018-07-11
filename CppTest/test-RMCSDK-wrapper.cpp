@@ -3,12 +3,13 @@
 #include "sdkwrapper.h"
 
 
+namespace {
+	wchar_t gRouter[] = L"https://rmtest.nextlabs.solutions";
+	//wchar_t gRouter[] = L"https://r.skydrm.com";
+	wchar_t gTenant[] = L"skydrm.com";
+	//wchar_t gURL[] = L"https://rms-centos7303.qapf1.qalab01.nextlabs.com:8444/rms";
 
-wchar_t gRouter[] = L"https://rmtest.nextlabs.solutions";
-//wchar_t gRouter[] = L"https://r.skydrm.com";
-wchar_t gTenant[] = L"skydrm.com";
-//wchar_t gURL[] = L"https://rms-centos7303.qapf1.qalab01.nextlabs.com:8444/rms";
-
+}
 using namespace std;
 
 
@@ -21,6 +22,9 @@ protected:
 	static HANDLE hTenant;
 	static HANDLE hUser;
 	static HANDLE hLocalFiles;
+
+	static WaterMark watermark;
+	static Expiration expiration;
 
 protected:
 	static void SetUpTestCase() {
@@ -44,10 +48,10 @@ protected:
 		};
 
 		// test Session
-		error = SDWL_Session_Initialize(hSession, gRouter, gTenant);
+		/*error = SDWL_Session_Initialize(hSession, gRouter, gTenant);
 		if (error) {
 			helper_reportError("SDWL_Session_Initialize", error);
-		}
+		}*/
 		// Session Init2
 		error = SDWL_Session_Initialize2(hSession, (wchar_t*)workingPath.c_str(), gRouter, gTenant);
 		if (error) {
@@ -58,12 +62,28 @@ protected:
 		NXL_LOGIN_COOKIES* pCookies;
 		size_t len_Cookies = 0;
 		error = SDWL_Session_GetLoginCookies(hSession, &pCookies, &len_Cookies);
+		if (error) {
+			helper_reportError("SDWL_Session_GetLoginCookies", error);
+		}
+		wchar_t* clientID = NULL;
+		for (int i = 0; i < len_Cookies; i++) {
+			wchar_t* key = (pCookies + i)->key;
+			wchar_t* value = (pCookies + i)->values;
+			std::wcout << L"key:" << key << "\t\t" << L"value:" << value << endl;
+			if (!_wcsicmp(key, L"clientid")) {
+				clientID = value;
+			}
+		}
 		
+		// call python to simulate login
+		std::wstring wcmd = L"python rms-login.py -u osmond.ye@nextlabs.com -p 123blue! -o userLgonJson.txt -c ";
+		wcmd += clientID;
+		system(std::string(wcmd.begin(),wcmd.end()).c_str());
 		
 		//
-		helper_readLoginJson("userJson.txt", userLoginStr);
+		helper_readLoginJson("userLgonJson.txt", userLoginStr);
 
-		std::cout << "userLoginStr:\n" << userLoginStr << std::endl;
+		//std::cout << "userLoginStr:\n" << userLoginStr << std::endl;
 
 
 
@@ -84,6 +104,22 @@ protected:
 		}
 
 		ASSERT_EQ(error, 0)<<"error occurs\n";
+
+
+		// set values for watermark and expiration
+		
+		watermark.text= new char[100] {"watermark.text"};
+		watermark.fontName = new char[100] {"watermark.fontname"};
+		watermark.fontColor = new char[100] {"watermark.color"};
+		watermark.repeat = true;
+		watermark.rotation = 0x1;
+		watermark.fontSize = 100;
+		watermark.transparency = 10;
+
+		expiration.type = range;
+		expiration.start = 0x12345678;
+		expiration.end = 0x87654321;
+		
 
 	}
 
@@ -122,7 +158,13 @@ private:
 	static void helper_readLoginJson(std::string path, std::string& buf) {
 		buf.clear();
 
-		std::ifstream ifo = std::ifstream("userJson.txt");
+		std::string fpath;
+		char p[255] = { 0 };
+		::GetCurrentDirectoryA(255, p);
+		fpath.assign(p);
+		fpath += "\\" + path;
+
+		std::ifstream ifo = std::ifstream(fpath);
 		if (!ifo) {
 			return;
 		}
@@ -193,6 +235,8 @@ HANDLE RMCSKDWrapperTest::hSession;
 HANDLE RMCSKDWrapperTest::hTenant;
 HANDLE RMCSKDWrapperTest::hUser;
 HANDLE RMCSKDWrapperTest::hLocalFiles;
+WaterMark RMCSKDWrapperTest::watermark;
+Expiration RMCSKDWrapperTest::expiration;
 
 
 TEST_F(RMCSKDWrapperTest, Version) {
@@ -281,6 +325,45 @@ TEST_F(RMCSKDWrapperTest, UserSync) {
 	cout << "My Drive Info:" << "Used: 0x" << hex << u << '\t' << "Total: 0x" << hex << t << endl;
 }
 
+TEST_F(RMCSKDWrapperTest, UserProtectFile) {
+	DWORD error = -1;
+	int rights[] = { 1,2,4,8,0x10,0x20,0x40,0x80,0x100,0x200,0x400,0x40000000 };
+
+	std::wstring path(L"D:\\test\\dump.log");
+	ASSERT_TRUE(win::is_file_exist(path.c_str())) << L"Path not exist" << path;
+
+
+	const char* t = "{\"a\":\"1.0\",\"b\":\"m39@skydrm.com\",\"c\":\"2018-01-10T09:36:21Z\",\"d\":[{\"a\":0,\"b\":\"Ad-hoc\",\"c\":1,\"d\":[\"DOWNLOAD\",\"VIEW\",\"PRINT\"],\"e\":{\"a\":{\"a\":1,\"b\":\"=\",\"c\":\"application.is_associated_app\",\"d\":true}},\"f\":[]}]}";
+
+	error = SDWL_User_ProtectFile(hUser, (wchar_t*)path.c_str(), rights, 12, watermark, expiration, (char*)t);
+	EXPECT_EQ(error, 0) << helper_reportError("SDWL_User_ProtectFile", error);
+
+	wcout << L"OK to Protect the File" << path.c_str() << endl;
+
+
+}
+
+TEST_F(RMCSKDWrapperTest, UserShareFile) {
+	DWORD error = -1;
+	int rights[] = { 0,1,2,3,4,5,6,7,8,9,10 };
+	const char* recipients[] = {
+		"henry.hu@nextlabs.com",
+		"jach.zhou@nextlabs.com",
+		"allen.ning@nextlabs.com"
+	};
+	const wchar_t* comments = L"this is a comments";
+	std::wstring path(L"D:\\test\\dump.log");
+	ASSERT_TRUE(win::is_file_exist(path.c_str())) << L"Path not exist" << path;
+
+	const char* t = "";
+
+	error = SDWL_User_ShareFile(hUser, (wchar_t*)path.c_str(), rights, 11, (char**)recipients, 3, (wchar_t*)comments, watermark, expiration, (char*)t);
+	EXPECT_EQ(error, 0) << helper_reportError("SDWL_User_ShareFile", error);
+
+
+	wcout << L"OK to share the File" << path.c_str() << endl;
+}
+
 TEST_F(RMCSKDWrapperTest, UserOpenFile) {
 	DWORD error = -1;
 	// open a local nxl file
@@ -313,42 +396,6 @@ TEST_F(RMCSKDWrapperTest, UserDecryptFile) {
 	error = SDWL_User_DecryptNXLFile(hUser, hNxlFile, (wchar_t*)outpath.c_str());
 	EXPECT_EQ(error, 0) << helper_reportError("SDWL_User_DecryptNXLFile", error);
 	ASSERT_TRUE(win::is_file_exist(outpath.c_str())) << L"Path not exist" << path;
-}
-
-TEST_F(RMCSKDWrapperTest, UserProtectFile) {
-	DWORD error = -1;
-	int rights[] = { 0,1,2,3,4,5,6,7,8,9,10 };
-
-	std::wstring path(L"D:\\test\\SkyDRM.vsd");
-	ASSERT_TRUE(win::is_file_exist(path.c_str())) << L"Path not exist" << path;
-
-
-	error = SDWL_User_ProtectFile(hUser, (wchar_t*)path.c_str(), rights, 11);
-	EXPECT_EQ(error, 0) << helper_reportError("SDWL_User_ProtectFile", error);
-	
-	wcout << L"OK to Protect the File" << path.c_str() << endl;
-
-
-}
-
-TEST_F(RMCSKDWrapperTest, UserShareFile) {
-	DWORD error = -1;
-	int rights[] = { 0,1,2,3,4,5,6,7,8,9,10 };
-	const char* recipients[] = {
-		"henry.hu@nextlabs.com",
-		"jach.zhou@nextlabs.com",
-		"allen.ning@nextlabs.com"
-	};
-	const wchar_t* comments = L"this is a comments";
-	std::wstring path(L"D:\\test\\SkyDRM-2018-05-21-12-32-53.vsd.nxl");
-	ASSERT_TRUE(win::is_file_exist(path.c_str())) << L"Path not exist" << path;
-	
-
-	error = SDWL_User_ShareFile(hUser, (wchar_t*)path.c_str(), rights, 11, (char**)recipients, 3, (wchar_t*)comments);
-	EXPECT_EQ(error, 0)<< helper_reportError("SDWL_User_ShareFile", error);
-	
-
-	wcout << L"OK to share the File" << path.c_str() << endl;
 }
 
 TEST_F(RMCSKDWrapperTest, UserUploadActivityLogs) {

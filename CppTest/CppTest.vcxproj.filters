@@ -47,5 +47,11 @@
     <ClCompile Include="test-windows-api.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="test-RMCSDK.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="rms-login.py" />
   </ItemGroup>
 </Project>

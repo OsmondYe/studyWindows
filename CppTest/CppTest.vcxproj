@@ -97,7 +97,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>Dbghelp.lib;sdkwrapper.lib;gtestd.lib;madCHook32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\OyeProject\CSharp\rmd-windows\SkydrmLocal\bin\$(Platform)_$(Configuration)\;$(OSMOND_EXTERNAL)\madCollection\madCodeHook\Header-Libs;$(SKYDRM_EXTERNAL)\gtest\lib\$(Platform)-$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\OyeProject\CSharp\rmd-windows\SkydrmLocal\bin\$(Platform)_$(Configuration)\;$(OSMOND_EXTERNAL)\madCollection\madCodeHook\Header-Libs;$(SKYDRM_EXTERNAL)\gtest\lib\$(Platform)-$(Configuration);$(SKYDRM_EXTERNAL)\rmcsdk-libs\$(Platform)_$(Configuration);$(SKYDRM_EXTERNAL)\rmc-core\$(Platform)_$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -109,12 +109,13 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>D:\OyeProject\CSharp\rmd-windows\SkydrmLocal\sdkwrapper;$(SKYDRM_EXTERNAL)\rmcsdk-libs\sources\include\SDWL\;$(SKYDRM_EXTERNAL)\gtest\include;$(OSMOND_EXTERNAL)\madCollection\madCodeHook\Header-Libs;$(OSMOND_EXTERNAL)\boost_1_67_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>D:\OyeProject\CSharp\rmd-windows\SkydrmLocal\bin\$(Platform)_$(Configuration)\;$(OSMOND_EXTERNAL)\madCollection\madCodeHook\Header-Libs;$(SKYDRM_EXTERNAL)\gtest\lib\$(Platform)-$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Dbghelp.lib;sdkwrapper.lib;gtestd.lib;gtest_maind.lib;madCHook64md.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\OyeProject\CSharp\rmd-windows\SkydrmLocal\bin\$(Platform)_$(Configuration)\;$(OSMOND_EXTERNAL)\madCollection\madCodeHook\Header-Libs;$(SKYDRM_EXTERNAL)\boost\$(Platform)_$(Configuration);$(SKYDRM_EXTERNAL)\gtest\lib\$(Platform)-$(Configuration)\mtd;$(SKYDRM_EXTERNAL)\rmc-core\$(Platform)_$(Configuration);$(SKYDRM_EXTERNAL)\rmcsdk-libs\$(Platform)_$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Shlwapi.lib;Dbghelp.lib;Urlmon.lib;Bcrypt.lib;Winhttp.lib;Wtsapi32.lib;Mpr.lib;Ws2_32.lib;Secur32.lib;Crypt32.lib;libeay32.lib;rmccore.lib;sdkwrapper.lib;gtestd.lib;madCHook64mt.lib;legacy_stdio_definitions.lib;SDWRmcLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -135,7 +136,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>Dbghelp.lib;sdkwrapper.lib;gtest.lib;gtest_main.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\OyeProject\CSharp\rmd-windows\SkydrmLocal\bin\$(Platform)_$(Configuration)\;$(OSMOND_EXTERNAL)\madCollection\madCodeHook\Header-Libs;$(SKYDRM_EXTERNAL)\gtest\lib\$(Platform)-$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\OyeProject\CSharp\rmd-windows\SkydrmLocal\bin\$(Platform)_$(Configuration)\;$(OSMOND_EXTERNAL)\madCollection\madCodeHook\Header-Libs;$(SKYDRM_EXTERNAL)\gtest\lib\$(Platform)-$(Configuration);$(SKYDRM_EXTERNAL)\rmcsdk-libs\$(Platform)_$(Configuration);$(SKYDRM_EXTERNAL)\rmc-core\$(Platform)_$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -155,7 +156,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>D:\OyeProject\CSharp\rmd-windows\SkydrmLocal\bin\$(Platform)_$(Configuration)\;$(OSMOND_EXTERNAL)\madCollection\madCodeHook\Header-Libs;$(SKYDRM_EXTERNAL)\gtest\lib\$(Platform)-$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\OyeProject\CSharp\rmd-windows\SkydrmLocal\bin\$(Platform)_$(Configuration)\;$(OSMOND_EXTERNAL)\madCollection\madCodeHook\Header-Libs;$(SKYDRM_EXTERNAL)\gtest\lib\$(Platform)-$(Configuration);$(SKYDRM_EXTERNAL)\rmcsdk-libs\$(Platform)_$(Configuration);$(SKYDRM_EXTERNAL)\rmc-core\$(Platform)_$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Dbghelp.lib;sdkwrapper.lib;gtest.lib;gtest_main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -175,8 +176,12 @@
     <ClCompile Include="test-basic-cpp.cpp" />
     <ClCompile Include="test-madchook.cpp" />
     <ClCompile Include="test-RMCSDK-wrapper.cpp" />
+    <ClCompile Include="test-RMCSDK.cpp" />
     <ClCompile Include="test-windows-api.cpp" />
     <ClCompile Include="utils.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="rms-login.py" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

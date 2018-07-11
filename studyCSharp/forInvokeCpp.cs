@@ -21,6 +21,19 @@ namespace studyCSharp
             public double doubleValue;
         }
 
+        static public void Study()
+        {
+            var cases = new forInvokeCpp();
+
+            cases.T_Basic();
+            cases.T_OutStrAsParam();
+            cases.T_ReturnString();
+            cases.T_Struct();
+
+
+        }
+
+
         public void T_Basic()
         {
             int a = add(1, 2);
@@ -86,6 +99,30 @@ namespace studyCSharp
                 Console.WriteLine(outStr);
 
             }
+
+            for ( int i=0; i < 1000000; i++)
+            {
+                string[] ss;
+                IntPtr pss;
+                int size;
+                ReturnStringArrays(out pss, out size);
+
+                IntPtr[] pp = new IntPtr[size];
+
+                Marshal.Copy(pss, pp, 0, size);
+
+                ss = new string[size];
+
+                for(int ii = 0; ii < size; ii++)
+                {
+                    ss[ii]= Marshal.PtrToStringUni(pp[ii]);
+                    Marshal.FreeCoTaskMem(pp[ii]);
+
+                }
+                Marshal.FreeCoTaskMem(pss);
+             }
+
+            Console.WriteLine("t");
 
         }
 
@@ -205,19 +242,7 @@ namespace studyCSharp
 
         }
 
-        static public void Study()
-        {
-            var cases = new forInvokeCpp();
-
-
-            cases.T_Basic();
-            cases.T_OutStrAsParam();
-            cases.T_ReturnString();
-            cases.T_Struct();
-            
-           
-
-        }
+        
            
         //
         // DLLImport ,
@@ -280,6 +305,9 @@ namespace studyCSharp
             CharSet = CharSet.Unicode, EntryPoint = "GetStringFromCOMMem")]
         private static extern IntPtr GetStringFromCOMMem2();
 
+        [DllImport("CPPDLL.dll", CallingConvention = CallingConvention.Cdecl,
+            CharSet = CharSet.Unicode, EntryPoint = "ReturnStringArrays")]
+        private static extern IntPtr ReturnStringArrays(out IntPtr pArray,out int pSize);
 
 
         //

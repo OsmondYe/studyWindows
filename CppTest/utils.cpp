@@ -1,5 +1,8 @@
 #include "stdafx.h"
+
 #include "utils.h"
+#include <bcrypt.h>
+
 
 
 
@@ -58,5 +61,191 @@ HANDLE win::get_process(const wchar_t * process_name)
 	return INVALID_HANDLE_VALUE;
 }
 
+// crypt needed params here
+namespace {
+
+	typedef enum PROVIDER_ID {
+		PROV_AES = 0,       /**< AES Provider    (0) */
+		PROV_RSA,           /**< RSA Provider    (1) */
+		PROV_DH,            /**< Diffie-Hellman Provider (2) */
+		PROV_MD5,           /**< MD5 Provider    (3) */
+		PROV_SHA1,          /**< SHA1 Provider   (4) */
+		PROV_SHA256,        /**< SHA256 Provider (5) */
+		PROV_HMAC_MD5,      /**< MD5 Provider    (6) */
+		PROV_HMAC_SHA1,     /**< SHA1 Provider   (7) */
+		PROV_HMAC_SHA256,   /**< SHA256 Provider (8) */
+		PROV_MAX            /**< Maximum Provider Id Value  (9) */
+	} PROVIDER_ID;
+
+#define IsHashAlg(id)   ((id) >= PROV_MD5 && (id) < PROV_MAX)
+#define IsHmacHashAlg(id)   ((id) == PROV_HMAC_MD5 || (id) == PROV_HMAC_SHA1 || (id) == PROV_HMAC_SHA256)
+
+
+	class Provider
+	{
+	public:
+		Provider(PROVIDER_ID id) : _id(id), _h(NULL), _object_length(0), _hash_length(0) {
+			Open();
+		}
+		virtual ~Provider() {
+			Close();
+		}
+
+		LPCWSTR GetAlgName() const {
+			LPCWSTR name = L"Unknown";
+			switch (_id)
+			{
+			case PROV_AES:
+				name = BCRYPT_AES_ALGORITHM;
+				break;
+			case PROV_RSA:
+				name = BCRYPT_RSA_ALGORITHM;
+				break;
+			case PROV_DH:
+				name = BCRYPT_DH_ALGORITHM;
+				break;
+			case PROV_MD5:
+				name = BCRYPT_MD5_ALGORITHM;
+				break;
+			case PROV_SHA1:
+				name = BCRYPT_SHA1_ALGORITHM;
+				break;
+			case PROV_SHA256:
+				name = BCRYPT_SHA256_ALGORITHM;
+				break;
+			case PROV_HMAC_MD5:
+				name = BCRYPT_MD5_ALGORITHM;
+				break;
+			case PROV_HMAC_SHA1:
+				name = BCRYPT_SHA1_ALGORITHM;
+				break;
+			case PROV_HMAC_SHA256:
+				name = BCRYPT_SHA256_ALGORITHM;
+				break;
+			default:
+				break;
+			}
+			return name;
+		}
+		inline void Close() {
+			if (_h) {
+				(VOID)BCryptCloseAlgorithmProvider(_h, 0);
+				_h = NULL;
+				_object_length = 0;
+				_hash_length = 0;
+			}
+		}
+
+		inline bool Opened() const { return (NULL != _h); }
+		inline operator BCRYPT_ALG_HANDLE() const { return _h; }
+		inline ULONG GetObjectLength() const { return _object_length; }
+		inline ULONG GetHashDataLength() const { return _hash_length; }
+
+	protected:
+		void Open() {
+			LONG Status = 0;
+
+			assert(NULL == _h);
+			assert(_id < PROV_MAX);
+
+			do {
+
+				Status = BCryptOpenAlgorithmProvider(&_h, GetAlgName(), MS_PRIMITIVE_PROVIDER, IsHmacHashAlg(_id) ? BCRYPT_ALG_HANDLE_HMAC_FLAG : 0);
+				if (Status != 0) {
+					break;
+				}
+
+				if (IsHashAlg(_id)) {
+
+					unsigned long returned_length = 0;
+
+					Status = BCryptGetProperty(_h, BCRYPT_OBJECT_LENGTH, (PUCHAR)&_object_length, sizeof(ULONG), &returned_length, 0);
+					if (Status != 0) {
+						_object_length = 0;
+						break;
+					}
+
+					Status = BCryptGetProperty(_h, BCRYPT_HASH_LENGTH, (PUCHAR)&_hash_length, sizeof(ULONG), &returned_length, 0);
+					if (Status != 0) {
+						break;
+					}
+				}
+
+			} while (FALSE);
+
+			if (0 != Status) {
+				// Error happened
+				Close();
+			}
+		}
+
+	private:
+		// Copy is not allowed
+		Provider(const Provider& rhs) {}
+
+	private:
+		PROVIDER_ID         _id;
+		BCRYPT_ALG_HANDLE   _h;
+		unsigned long       _object_length;
+		unsigned long       _hash_length;
+	};
+
+	class ProvManager
+	{
+	public:
+		ProvManager(){
+			_providers.push_back(std::shared_ptr<Provider>(new Provider(PROV_AES)));			// AES
+			_providers.push_back(std::shared_ptr<Provider>(new Provider(PROV_RSA)));			// RSA
+			_providers.push_back(std::shared_ptr<Provider>(new Provider(PROV_DH)));				// Diffie-Hellman
+			_providers.push_back(std::shared_ptr<Provider>(new Provider(PROV_MD5)));			// MD5
+			_providers.push_back(std::shared_ptr<Provider>(new Provider(PROV_SHA1)));			// SHA1
+			_providers.push_back(std::shared_ptr<Provider>(new Provider(PROV_SHA256)));			// SHA256
+			_providers.push_back(std::shared_ptr<Provider>(new Provider(PROV_HMAC_MD5)));       // HMAC_MD5
+			_providers.push_back(std::shared_ptr<Provider>(new Provider(PROV_HMAC_SHA1)));		// HMAC_SHA1
+			_providers.push_back(std::shared_ptr<Provider>(new Provider(PROV_HMAC_SHA256)));	// HMAC_SHA256
+			assert(PROV_MAX == _providers.size());
+		}
+
+		~ProvManager() {
+		}
+
+		inline void clear() { _providers.clear(); }
+		inline Provider* GetProvider(PROVIDER_ID id) const { return (id < PROV_MAX) ? _providers[id].get() : NULL; }
+
+	private:
+		std::vector<std::shared_ptr<Provider>> _providers;
+	};
+
+	static ProvManager PROVIDERMGR;
+
+
+	Provider* GetProvider(PROVIDER_ID id)
+	{
+		return PROVIDERMGR.GetProvider(id);
+	}
+
+
 
 	
+
+	
+}
+
+void win::crypt::sha1(const unsigned char * data, size_t data_len, unsigned char * out_buf)
+{
+	// sanity check
+	if (NULL == data || 0 == data_len || NULL == out_buf) {
+		return;
+	}
+
+	Provider* prov = GetProvider(PROV_SHA1);
+	if (NULL == prov) {
+		return;
+	}
+
+	if (!prov->Opened()) {
+		return;
+	}
+
+	
+}

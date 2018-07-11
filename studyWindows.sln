@@ -20,6 +20,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CppDll", "CppDll\CppDll.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CppTest", "CppTest\CppTest.vcxproj", "{C7A6BEA1-8BAA-4DFD-98F3-E08E5FE40574}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDWRmcLib", "..\rmcsdk\rmdsdk\sources\SDWL\SDWRmcLib\SDWRmcLib.vcxproj", "{442882F4-ADA7-4118-A612-2B9AF9EC178C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -106,6 +108,16 @@ Global
 		{C7A6BEA1-8BAA-4DFD-98F3-E08E5FE40574}.Release|x64.Build.0 = Release|x64
 		{C7A6BEA1-8BAA-4DFD-98F3-E08E5FE40574}.Release|x86.ActiveCfg = Release|Win32
 		{C7A6BEA1-8BAA-4DFD-98F3-E08E5FE40574}.Release|x86.Build.0 = Release|Win32
+		{442882F4-ADA7-4118-A612-2B9AF9EC178C}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{442882F4-ADA7-4118-A612-2B9AF9EC178C}.Debug|x64.ActiveCfg = Debug|x64
+		{442882F4-ADA7-4118-A612-2B9AF9EC178C}.Debug|x64.Build.0 = Debug|x64
+		{442882F4-ADA7-4118-A612-2B9AF9EC178C}.Debug|x86.ActiveCfg = Debug|Win32
+		{442882F4-ADA7-4118-A612-2B9AF9EC178C}.Debug|x86.Build.0 = Debug|Win32
+		{442882F4-ADA7-4118-A612-2B9AF9EC178C}.Release|Any CPU.ActiveCfg = Release|Win32
+		{442882F4-ADA7-4118-A612-2B9AF9EC178C}.Release|x64.ActiveCfg = Release|x64
+		{442882F4-ADA7-4118-A612-2B9AF9EC178C}.Release|x64.Build.0 = Release|x64
+		{442882F4-ADA7-4118-A612-2B9AF9EC178C}.Release|x86.ActiveCfg = Release|Win32
+		{442882F4-ADA7-4118-A612-2B9AF9EC178C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
