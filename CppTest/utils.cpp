@@ -2,7 +2,7 @@
 
 #include "utils.h"
 #include <bcrypt.h>
-
+#include <functional>
 
 
 
@@ -60,6 +60,24 @@ HANDLE win::get_process(const wchar_t * process_name)
 	}
 	return INVALID_HANDLE_VALUE;
 }
+
+// some utility classes
+namespace {
+	class ScopeGuard {
+	public:
+		explicit ScopeGuard(std::function<void()> onLeaveScope) {}
+		~ScopeGuard() { if (!_dismissd) _onLeaveScope(); }
+		inline void dismiss() { _dismissd = true; }
+	private: // nocopyable
+		ScopeGuard(ScopeGuard const&);
+		ScopeGuard& operator=(ScopeGuard const&);
+	private:
+		std::function<void()> _onLeaveScope;
+		bool _dismissd;
+	};
+
+}
+
 
 // crypt needed params here
 namespace {
@@ -223,11 +241,6 @@ namespace {
 	{
 		return PROVIDERMGR.GetProvider(id);
 	}
-
-
-
-	
-
 	
 }
 
@@ -246,6 +259,23 @@ void win::crypt::sha1(const unsigned char * data, size_t data_len, unsigned char
 	if (!prov->Opened()) {
 		return;
 	}
-
+	// do
+	NTSTATUS status = 0;
+	BCRYPT_HASH_HANDLE h = NULL;
+	ScopeGuard s([&]() {if (h) { ::BCryptDestroyHash(h); h = NULL; }});
 	
+	status=::BCryptCreateHash(*prov, &h, NULL, 0, NULL, 0, 0);
+	if (0 != status) {
+		return;
+	}
+
+	status = ::BCryptHashData(h, (PUCHAR)data, data_len, 0);
+	if (0 != status) {
+		return;
+	}
+
+	status = ::BCryptFinishHash(h, out_buf, 20, 0);
+	if (0 != status) {
+		return;
+	}
 }
