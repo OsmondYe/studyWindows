@@ -330,7 +330,7 @@ TEST_F(RMCSKDWrapperTest, UserProtectFile) {
 	int rights[] = { 1,2,4,8,0x10,0x20,0x40,0x80,0x100,0x200,0x400,0x40000000 };
 
 	std::wstring path(L"D:\\test\\dump.log");
-	ASSERT_TRUE(win::is_file_exist(path.c_str())) << L"Path not exist" << path;
+	ASSERT_TRUE(win::file::is_file_exist(path.c_str())) << L"Path not exist" << path;
 
 
 	const char* t = "{\"a\":\"1.0\",\"b\":\"m39@skydrm.com\",\"c\":\"2018-01-10T09:36:21Z\",\"d\":[{\"a\":0,\"b\":\"Ad-hoc\",\"c\":1,\"d\":[\"DOWNLOAD\",\"VIEW\",\"PRINT\"],\"e\":{\"a\":{\"a\":1,\"b\":\"=\",\"c\":\"application.is_associated_app\",\"d\":true}},\"f\":[]}]}";
@@ -353,7 +353,7 @@ TEST_F(RMCSKDWrapperTest, UserShareFile) {
 	};
 	const wchar_t* comments = L"this is a comments";
 	std::wstring path(L"D:\\test\\dump.log");
-	ASSERT_TRUE(win::is_file_exist(path.c_str())) << L"Path not exist" << path;
+	ASSERT_TRUE(win::file::is_file_exist(path.c_str())) << L"Path not exist" << path;
 
 	const char* t = "";
 
@@ -368,7 +368,7 @@ TEST_F(RMCSKDWrapperTest, UserOpenFile) {
 	DWORD error = -1;
 	// open a local nxl file
 	std::wstring path(L"D:\\test\\SkyDRM-2018-05-21-12-32-53.vsd.nxl");
-	ASSERT_TRUE(win::is_file_exist(path.c_str())) << L"Path not exist" << path;
+	ASSERT_TRUE(win::file::is_file_exist(path.c_str())) << L"Path not exist" << path;
 
 	HANDLE hNxlFile = NULL;
 
@@ -383,7 +383,7 @@ TEST_F(RMCSKDWrapperTest, UserDecryptFile) {
 	HANDLE hNxlFile = NULL;
 	// open a local nxl file first
 	std::wstring path(L"D:\\test\\SkyDRM-2018-05-21-12-32-53.vsd.nxl");
-	ASSERT_TRUE(win::is_file_exist(path.c_str())) << L"Path not exist" << path;
+	ASSERT_TRUE(win::file::is_file_exist(path.c_str())) << L"Path not exist" << path;
 
 
 	error = SDWL_User_OpenFile(hUser, (wchar_t*)path.c_str(), &hNxlFile);
@@ -395,7 +395,7 @@ TEST_F(RMCSKDWrapperTest, UserDecryptFile) {
 
 	error = SDWL_User_DecryptNXLFile(hUser, hNxlFile, (wchar_t*)outpath.c_str());
 	EXPECT_EQ(error, 0) << helper_reportError("SDWL_User_DecryptNXLFile", error);
-	ASSERT_TRUE(win::is_file_exist(outpath.c_str())) << L"Path not exist" << path;
+	ASSERT_TRUE(win::file::is_file_exist(outpath.c_str())) << L"Path not exist" << path;
 }
 
 TEST_F(RMCSKDWrapperTest, UserUploadActivityLogs) {

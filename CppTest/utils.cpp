@@ -5,37 +5,61 @@
 #include <functional>
 
 
+std::string win::str::from_digit(unsigned char c)
+{
+	static const char* digits = "0123456789ABCDEF";
+	std::string rt;
+	rt.push_back(digits[(c >> 4) & 0x0F]);
+	rt.push_back(digits[c & 0x0F]);
+	return rt;
+}
 
-bool win::is_file_exist(const char * file)
+std::string win::str::from_digits(unsigned char * buf, size_t buf_len)
+{
+	std::string rt;
+	if (buf == NULL || buf_len == 0) {
+		return rt;
+	}
+
+	while (0 != buf_len) {
+		rt += from_digit(*(buf++));
+		buf_len--;
+	}
+	return rt;
+}
+
+
+
+bool win::file::is_file_exist(const char * file)
 {
 	DWORD dwAttrib = GetFileAttributesA(file);
 	return INVALID_FILE_ATTRIBUTES != dwAttrib && 0 == (dwAttrib & FILE_ATTRIBUTE_DIRECTORY);
 }
 
-bool win::is_file_exist(const wchar_t * file)
+bool win::file::is_file_exist(const wchar_t * file)
 {
 	DWORD dwAttrib = GetFileAttributesW(file);
 	return INVALID_FILE_ATTRIBUTES != dwAttrib && 0 == (dwAttrib & FILE_ATTRIBUTE_DIRECTORY);
 }
 
-bool win::is_dir_exist(const char * dir)
+bool win::file::is_dir_exist(const char * dir)
 {
 	DWORD dwAttrib = GetFileAttributesA(dir);
 	return INVALID_FILE_ATTRIBUTES != dwAttrib && 0 != (dwAttrib & FILE_ATTRIBUTE_DIRECTORY);
 }
 
-bool win::is_dir_exist(const wchar_t * dir)
+bool win::file::is_dir_exist(const wchar_t * dir)
 {
 	DWORD dwAttrib = GetFileAttributesW(dir);
 	return INVALID_FILE_ATTRIBUTES != dwAttrib && 0 != (dwAttrib & FILE_ATTRIBUTE_DIRECTORY);
 }
 
-bool win::is_path_exist(const char * dir)
+bool win::file::is_path_exist(const char * dir)
 {
 	return INVALID_FILE_ATTRIBUTES != GetFileAttributesA(dir);
 }
 
-bool win::is_path_exist(const wchar_t * dir)
+bool win::file::is_path_exist(const wchar_t * dir)
 {
 	return INVALID_FILE_ATTRIBUTES != GetFileAttributesW(dir);
 }
@@ -279,3 +303,4 @@ void win::crypt::sha1(const unsigned char * data, size_t data_len, unsigned char
 		return;
 	}
 }
+

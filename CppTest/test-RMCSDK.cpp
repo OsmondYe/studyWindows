@@ -204,7 +204,7 @@ TEST_F(RMCSKDTest, Protect) {
 	const char* tags = "{\"a\":\"1.0\",\"b\":\"m39@skydrm.com\",\"c\":\"2018-01-10T09:36:21Z\",\"d\":[{\"a\":0,\"b\":\"Ad-hoc\",\"c\":1,\"d\":[\"DOWNLOAD\",\"VIEW\",\"PRINT\"],\"e\":{\"a\":{\"a\":1,\"b\":\"=\",\"c\":\"application.is_associated_app\",\"d\":true}},\"f\":[]}]}";
 
 	std::wstring path(L"D:\\test\\dump.log");
-	ASSERT_TRUE(win::is_file_exist(path.c_str())) << L"Path not exist" << path;
+	ASSERT_TRUE(win::file::is_file_exist(path.c_str())) << L"Path not exist" << path;
 
 	rt=pUser->ProtectFile(path, rights, watermark, expiration, tags);
 	EXPECT_EQ(rt.GetCode(), 0);

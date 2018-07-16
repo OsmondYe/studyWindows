@@ -177,6 +177,7 @@
     <ClCompile Include="test-madchook.cpp" />
     <ClCompile Include="test-RMCSDK-wrapper.cpp" />
     <ClCompile Include="test-RMCSDK.cpp" />
+    <ClCompile Include="test-utils.cpp" />
     <ClCompile Include="test-windows-api.cpp" />
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
