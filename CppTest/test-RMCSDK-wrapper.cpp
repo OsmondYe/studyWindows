@@ -258,7 +258,7 @@ TEST_F(RMCSKDWrapperTest, Tenant) {
 	wchar_t* aTenant;
 	error = SDWL_Tenant_GetTenant(hTenant, &aTenant);
 	EXPECT_EQ(error, 0)<< helper_reportError("SDWL_Tenant_GetTenant", error);
-	EXPECT_NE((int)aTenant, NULL);
+	EXPECT_NE(reinterpret_cast<int>(aTenant), NULL);
 	wcout << L"Tenant:\t" << aTenant << endl;	
 	
 	// str router
