@@ -31,3 +31,46 @@ TEST(CppLanguage, DISABLED_StringStream) {
 
 	cout << ss.str();
 }
+
+
+#pragma region MyRegion
+
+// 测试目的:  函数返回一个对象, 编译器会在函数调用处将 返回值当做 函数的一个隐式参数 传入,
+// 普通函数  rcx, [rtObj]  
+// 类成员函数   rcx, this; rdx, [rtObj]
+
+std::list<string> rtList() {
+	std::list<string> ll;
+
+	ll.push_back(string("hello"));
+	ll.push_back(string("world"));
+
+	return ll;
+}
+
+class Mytest {
+public:
+	std::list<string> rtList() {
+		std::list<string> ll;
+
+		ll.push_back(string("hello"));
+		ll.push_back(string("world"));
+
+		return ll;
+	}
+};
+
+
+TEST(CppLanguage, ReturtObj) {
+
+
+	auto a = rtList();
+	Mytest t;
+	auto b = t.rtList();
+
+
+	EXPECT_FALSE(a.empty());
+
+}
+#pragma endregion
+

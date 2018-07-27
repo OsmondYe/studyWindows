@@ -108,7 +108,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\OyeProject\CSharp\rmd-windows\SkydrmLocal\sdkwrapper;$(SKYDRM_EXTERNAL)\rmcsdk-libs\sources\include\SDWL\;$(SKYDRM_EXTERNAL)\gtest\include;$(OSMOND_EXTERNAL)\madCollection\madCodeHook\Header-Libs;$(OSMOND_EXTERNAL)\boost_1_67_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\OyeProject\CSharp\rmd-windows\SkydrmLocal\sdkwrapper;$(SKYDRM_EXTERNAL)\rmcsdk-libs\sources\include\SDWL\;$(SKYDRM_EXTERNAL)\gtest\include;$(OSMOND_EXTERNAL)\madCollection\madCodeHook\Header-Libs;$(OSMOND_EXTERNAL)\boost_1_67_0;$(SKYDRM_EXTERNAL)\openssl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -174,6 +174,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="test-basic-cpp.cpp" />
+    <ClCompile Include="test-https-openssl.cpp" />
     <ClCompile Include="test-madchook.cpp" />
     <ClCompile Include="test-RMCSDK-wrapper.cpp" />
     <ClCompile Include="test-RMCSDK.cpp" />
