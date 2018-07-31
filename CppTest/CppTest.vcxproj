@@ -114,8 +114,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>D:\OyeProject\CSharp\rmd-windows\SkydrmLocal\bin\$(Platform)_$(Configuration)\;$(OSMOND_EXTERNAL)\madCollection\madCodeHook\Header-Libs;$(SKYDRM_EXTERNAL)\boost\$(Platform)_$(Configuration);$(SKYDRM_EXTERNAL)\gtest\lib\$(Platform)-$(Configuration)\mtd;$(SKYDRM_EXTERNAL)\rmc-core\$(Platform)_$(Configuration);$(SKYDRM_EXTERNAL)\rmcsdk-libs\$(Platform)_$(Configuration);$(OSMOND_EXTERNAL)\boost_1_67_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Shlwapi.lib;Dbghelp.lib;Urlmon.lib;Bcrypt.lib;Winhttp.lib;Wtsapi32.lib;Mpr.lib;Ws2_32.lib;Secur32.lib;Crypt32.lib;libeay32.lib;rmccore.lib;sdkwrapper.lib;gtestd.lib;madCHook64mt.lib;legacy_stdio_definitions.lib;SDWRmcLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\OyeProject\CSharp\rmd-windows\SkydrmLocal\bin\$(Platform)_$(Configuration)\;$(OSMOND_EXTERNAL)\madCollection\madCodeHook\Header-Libs;$(SKYDRM_EXTERNAL)\boost\$(Platform)_$(Configuration);$(SKYDRM_EXTERNAL)\gtest\lib\$(Platform)-$(Configuration)\mtd;$(SKYDRM_EXTERNAL)\rmc-core\$(Platform)_$(Configuration);$(SKYDRM_EXTERNAL)\rmcsdk-libs\$(Platform)_$(Configuration);$(OSMOND_EXTERNAL)\boost_1_67_0\stage\lib;$(OSMOND_EXTERNAL)\openssl\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Shlwapi.lib;Dbghelp.lib;Urlmon.lib;Bcrypt.lib;Winhttp.lib;Wtsapi32.lib;Mpr.lib;Ws2_32.lib;Secur32.lib;Crypt32.lib;libeay32.lib;rmccore.lib;sdkwrapper.lib;gtestd.lib;madCHook64mt.lib;legacy_stdio_definitions.lib;SDWRmcLib.lib;libcrypto.lib;libssl.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
