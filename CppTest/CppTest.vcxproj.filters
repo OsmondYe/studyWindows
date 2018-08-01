@@ -41,13 +41,7 @@
     <ClCompile Include="test-madchook.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="test-RMCSDK-wrapper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="test-windows-api.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="test-RMCSDK.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="test-utils.cpp">
@@ -57,6 +51,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="test-boost-asio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test-RMCSDK.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test-RMCSDK-wrapper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

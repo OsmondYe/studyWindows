@@ -168,71 +168,47 @@ private:
 	char reply_[max_length];
 };
 
+void print_ec(const boost::system::error_code& ec) {
+	if (ec) {
+
+		std::cerr << "Error:" << endl
+			<< "msg: " + ec.message() << endl
+			<< "code: " << ec.value() << endl
+			<< "ec:" << ec << endl;
+		
+
+		if (ec == asio::error::eof) {
+			cout << "Connection closed" << endl;
+		}
+	}
+
+}
 
 TEST(BoostAsio, HttpsRmTest) {
 
-	io_service& svc = myService;
+	ip::tcp::resolver resolver(myService);  // class-obj must give a service
+	ip::tcp::resolver::iterator iter = resolver.resolve({ "rmtest.nextlabs.solutions", "443" });
+	ip::tcp::endpoint ep_rmtest = *iter;
+	
+	
+	ip::tcp::socket sock(myService);
+	
+	sock.connect(ep_rmtest);
 
-	ip::tcp::resolver resolver(svc);
-	auto it = resolver.resolve({ "rmtest.nextlabs.solutions","443" });
-	//auto it = resolver.resolve({ "www.baidu.com","443" });
-	cout <<"host:"+ it->host_name()+ " ip:"+ it->endpoint().address().to_string() <<endl ;
+	char buf[0x100] = { 0 };
 
-	ssl::context ctx(ssl::context::method::sslv23_client);
-
-	client c(svc, ctx, it);
-
-	myService.run();
-
-	//boost::system::error_code ec;
-	//ctx.set_verify_mode(ssl::verify_peer);
-
-	//ctx.set_verify_callback(
-	//	[](bool preverified,boost::asio::ssl::verify_context& ctx)->bool 
-	//{
-	//	cout<<"calling here";
-	//	return preverified;
-	//});
-
-	////ctx.load_verify_file("ca.pem");
-
-	////
-	////  connect
-	////
+	buf[0] = 0x16; // handshake
+	buf[1] = 3; buf[2] = 3; // TLS 1.2
 
 
-	//ssl::stream<ip::tcp::socket> ssock(svc, ctx);
-	//ssock.lowest_layer().connect(*it, ec);
-	//if (ec) {
-	//	cout << ec.message();
-	//}
+	boost::system::error_code ec;
 
-	////
-	////  handshake
-	////
-	//ssock.handshake(ssl::stream_base::handshake_type::client,ec);
-	//if (ec) {
-	//	cout << ec.message();
-	//}
+	sock.write_some(buffer(buf, 100),ec); print_ec(ec);
+	sock.write_some(buffer(buf, 100),ec); print_ec(ec);
+	sock.write_some(buffer(buf, 100),ec); print_ec(ec);
 
-	//// send request
-	//char request[] = "GET /rms/intro HTTP/1.1\r\n\r\n";
-	//boost::asio::write(ssock, buffer(request),ec);
-	//if (ec) {
-	//	cout << ec.message();
-	//}
-
-	//// read response
-	//std::string response;
-
-	//do {
-	//	char buf[1024];
-	//	size_t bytes_transferred = ssock.read_some(buffer(buf), ec);
-	//	if (!ec) response.append(buf, buf + bytes_transferred);
-	//} while (!ec);
-
-	//// print and exit
-	//std::cout << "Response received: '" << response << "'\n";
+	sock.read_some(buffer(buf, 100),ec); print_ec(ec);
+	
 
 }
 
