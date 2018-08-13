@@ -36,7 +36,7 @@ namespace studyCSharp
             forLINQ obj = new forLINQ();
             obj.TechShare();
             // Language Integrated Query
-            //obj.Basic();
+            //obj.UseDelegate();
             //obj.Theory();
             //obj.QueryOverStrings();
             //obj.QueryOverInts();

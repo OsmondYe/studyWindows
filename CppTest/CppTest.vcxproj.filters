@@ -24,6 +24,9 @@
     <ClInclude Include="utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="sdkwrapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -47,16 +50,10 @@
     <ClCompile Include="test-utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="test-https-openssl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="test-boost-asio.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="test-RMCSDK.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="test-RMCSDK-wrapper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

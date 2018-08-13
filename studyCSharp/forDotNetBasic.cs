@@ -10,7 +10,7 @@ namespace studyCSharp
     {
         public static void Study()
         {
-            Console.WriteLine("For DotNet Basic:");
+            Console.WriteLine("For DotNet UseDelegate:");
             forString.Study();
             Anonymous.Study();
             Initializer.Study();

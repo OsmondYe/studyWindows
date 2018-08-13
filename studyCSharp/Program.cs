@@ -20,8 +20,8 @@ namespace studyCSharp
             //forLambda.Study();
             //forIndexer.Study();
             //forLINQ.Study();
-            forInvokeCpp.Study();
-
+            //forInvokeCpp.Study();
+            forThread.Study();
             //forAsync.Study();
             //forRegisty.Study();
 
