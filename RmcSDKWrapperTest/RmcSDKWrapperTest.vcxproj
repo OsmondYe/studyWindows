@@ -95,7 +95,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OSMOND_EXTERNAL)\boost_1_67_0\stage\lib;$(SKYDRM_EXTERNAL)\gtest\lib\$(Platform)-$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OSMOND_EXTERNAL)\boost_1_67_0\stage\lib;$(SKYDRM_EXTERNAL)\gtest\lib\$(Platform)-$(Configuration)\;D:\OyeProject\CSharp\rmd-windows\SkydrmLocal\bin\$(Platform)_$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Shlwapi.lib;Dbghelp.lib;Bcrypt.lib;gtestd.lib;sdkwrapper.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -112,7 +112,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OSMOND_EXTERNAL)\boost_1_67_0\stage\lib;$(SKYDRM_EXTERNAL)\gtest\lib\$(Platform)-$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OSMOND_EXTERNAL)\boost_1_67_0\stage\lib;$(SKYDRM_EXTERNAL)\gtest\lib\$(Platform)-$(Configuration)\;D:\OyeProject\CSharp\rmd-windows\SkydrmLocal\bin\$(Platform)_$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Shlwapi.lib;Dbghelp.lib;Bcrypt.lib;gtestd.lib;sdkwrapper.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -133,7 +133,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OSMOND_EXTERNAL)\boost_1_67_0\stage\lib;$(SKYDRM_EXTERNAL)\gtest\lib\$(Platform)-$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OSMOND_EXTERNAL)\boost_1_67_0\stage\lib;$(SKYDRM_EXTERNAL)\gtest\lib\$(Platform)-$(Configuration)\;D:\OyeProject\CSharp\rmd-windows\SkydrmLocal\bin\$(Platform)_$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Shlwapi.lib;Dbghelp.lib;Bcrypt.lib;gtestd.lib;sdkwrapper.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -154,7 +154,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OSMOND_EXTERNAL)\boost_1_67_0\stage\lib;$(SKYDRM_EXTERNAL)\gtest\lib\$(Platform)-$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OSMOND_EXTERNAL)\boost_1_67_0\stage\lib;$(SKYDRM_EXTERNAL)\gtest\lib\$(Platform)-$(Configuration)\;D:\OyeProject\CSharp\rmd-windows\SkydrmLocal\bin\$(Platform)_$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Shlwapi.lib;Dbghelp.lib;Bcrypt.lib;gtestd.lib;sdkwrapper.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

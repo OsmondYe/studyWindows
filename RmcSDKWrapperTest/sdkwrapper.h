@@ -106,6 +106,11 @@ NXSDK_API DWORD SDWL_User_ShareFile(HANDLE hUser, wchar_t* path, int* pRights,in
 
 NXSDK_API DWORD SDWL_User_UpdateRecipients(HANDLE hUser, HANDLE hNxlFile, char* addmails[], int lenaddmails, char* delmails[], int lendelmails);
 
+NXSDK_API DWORD SDWL_User_GetRecipients(HANDLE hUser, HANDLE hNxlFile, 
+									char** emails,int* peSize,
+									char** addEmials,int* paeSize,
+									char** removEmails,int*preSize);
+
 NXSDK_API DWORD SDWL_User_UploadFile(HANDLE hUser, HANDLE hNxlFile);
 
 NXSDK_API DWORD SDWL_User_OpenFile(HANDLE hUser, wchar_t* nxl_path, HANDLE* hNxlFile);
@@ -113,11 +118,6 @@ NXSDK_API DWORD SDWL_User_OpenFile(HANDLE hUser, wchar_t* nxl_path, HANDLE* hNxl
 NXSDK_API DWORD SDWL_User_DecryptNXLFile(HANDLE hUser, HANDLE hNxlFile, wchar_t* path);
 
 NXSDK_API DWORD SDWL_User_UploadActivityLogs(HANDLE hUser);
-
-
-
-
-
 
 NXSDK_API DWORD SDWL_User_GetWaterMarkInfo(HANDLE hUser, WaterMark* pWaterMark);
 

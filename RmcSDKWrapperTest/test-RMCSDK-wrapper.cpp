@@ -308,22 +308,22 @@ TEST_F(RMCSKDWrapperTest, UserBasic) {
 	
 }
 
-TEST_F(RMCSKDWrapperTest, UserSync) {
-	// update user info
-	DWORD error = -1;
-	error = SDWL_User_UpdateUserInfo(hUser);
-	EXPECT_EQ(error,0)<< helper_reportError("SDWL_User_UpdateUserInfo", error);
-	
-	// update mydrive info
-	error = SDWL_User_UpdateMyDriveInfo(hUser);
-	EXPECT_EQ(error, 0) << helper_reportError("SDWL_User_UpdateMyDriveInfo", error);
-	
-	// get mydrive info
-	DWORD64 u, t;
-	error = SDWL_User_GetMyDriveInfo(hUser, &u, &t);
-	EXPECT_EQ(error, 0) << helper_reportError("SDWL_User_GetMyDriveInfo", error);
-	cout << "My Drive Info:" << "Used: 0x" << hex << u << '\t' << "Total: 0x" << hex << t << endl;
-}
+//TEST_F(RMCSKDWrapperTest, UserSync) {
+//	// update user info
+//	DWORD error = -1;
+//	error = SDWL_User_UpdateUserInfo(hUser);
+//	EXPECT_EQ(error,0)<< helper_reportError("SDWL_User_UpdateUserInfo", error);
+//	
+//	// update mydrive info
+//	error = SDWL_User_UpdateMyDriveInfo(hUser);
+//	EXPECT_EQ(error, 0) << helper_reportError("SDWL_User_UpdateMyDriveInfo", error);
+//	
+//	// get mydrive info
+//	DWORD64 u, t;
+//	error = SDWL_User_GetMyDriveInfo(hUser, &u, &t);
+//	EXPECT_EQ(error, 0) << helper_reportError("SDWL_User_GetMyDriveInfo", error);
+//	cout << "My Drive Info:" << "Used: 0x" << hex << u << '\t' << "Total: 0x" << hex << t << endl;
+//}
 
 TEST_F(RMCSKDWrapperTest, UserProtectFile) {
 	DWORD error = -1;
