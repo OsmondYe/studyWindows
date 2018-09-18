@@ -1,15 +1,40 @@
 #include "stdafx.h"
 
+class A {
+public:
+	int getInt() const {
+		return 1;
+	}
+};
+
+class B :public A
+{
+public:
+	B() {
+		printf("gg");
+	}
+	int GetAAA() const {
+		printf("ggg");
+		return getInt();
+	}
+};
+
+
 //use DISABLED_ prefix to filter out 
 using namespace std;
-//TEST(CppLanguage, String) {
+TEST(CppLanguage, String) {
 //TEST(CppLanguage, DISABLED_String) {
-TEST(CppLanguage, DISABLED_String) {
 	// str has 54 chars
+	B b;
+	b.GetAAA();
+
+	B *pb = new B;
+
+
 	const wchar_t str[] = L"The Quick Brown Fox Jumps Over The Lazy Dog,1234567890";
 	// sizeof(str)==110,    55chars,(within '\0')
 
-	EXPECT_EQ(54, sizeof(str));
+	EXPECT_EQ(54, sizeof(str)/sizeof(wchar_t));
 
 	wcout << L"String:" << str << "\tLen:" << wcslen(str) << endl;
 

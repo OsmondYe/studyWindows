@@ -96,7 +96,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Dbghelp.lib;sdkwrapper.lib;gtestd.lib;madCHook32.lib;Shlwapi.lib;Urlmon.lib;Bcrypt.lib;Winhttp.lib;Wtsapi32.lib;Mpr.lib;Ws2_32.lib;Secur32.lib;Crypt32.lib;libeay32.lib;rmccore.lib;legacy_stdio_definitions.lib;SDWRmcLib.lib;libcrypto.lib;libssl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Dbghelp.lib;gtestd.lib;madCHook32.lib;Shlwapi.lib;Urlmon.lib;Bcrypt.lib;Winhttp.lib;Wtsapi32.lib;Mpr.lib;Ws2_32.lib;Secur32.lib;Crypt32.lib;libeay32.lib;legacy_stdio_definitions.lib;libcrypto.lib;libssl.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(OSMOND_EXTERNAL)\madCollection\madCodeHook\Header-Libs;$(SKYDRM_EXTERNAL)\boost\$(Platform)_$(Configuration);$(SKYDRM_EXTERNAL)\gtest\lib\$(Platform)-$(Configuration)\mtd;$(SKYDRM_EXTERNAL)\doom_core\build\build.msvc\$(Platform)_$(Configuration);$(SKYDRM_EXTERNAL)\doom_sdk\build\build.msvc\$(Platform)_$(Configuration);$(OSMOND_EXTERNAL)\boost_1_67_0\stage\lib;$(OSMOND_EXTERNAL)\openssl\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -115,7 +115,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(OSMOND_EXTERNAL)\madCollection\madCodeHook\Header-Libs;$(SKYDRM_EXTERNAL)\boost\$(Platform)_$(Configuration);$(SKYDRM_EXTERNAL)\gtest\lib\$(Platform)-$(Configuration)\mtd;$(SKYDRM_EXTERNAL)\doom_core\build\build.msvc\$(Platform)_$(Configuration);$(SKYDRM_EXTERNAL)\doom_sdk\build\build.msvc\$(Platform)_$(Configuration);$(OSMOND_EXTERNAL)\boost_1_67_0\stage\lib;$(OSMOND_EXTERNAL)\openssl\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Shlwapi.lib;Dbghelp.lib;Urlmon.lib;Bcrypt.lib;Winhttp.lib;Wtsapi32.lib;Mpr.lib;Ws2_32.lib;Secur32.lib;Crypt32.lib;libeay32.lib;rmccore.lib;sdkwrapper.lib;gtestd.lib;madCHook64mt.lib;legacy_stdio_definitions.lib;SDWRmcLib.lib;libcrypto.lib;libssl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Shlwapi.lib;Dbghelp.lib;Urlmon.lib;Bcrypt.lib;Winhttp.lib;Wtsapi32.lib;Mpr.lib;Ws2_32.lib;Secur32.lib;Crypt32.lib;gtestd.lib;madCHook64mt.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

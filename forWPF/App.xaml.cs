@@ -18,5 +18,15 @@ namespace forWPF
             //MessageBox.Show("on application exit");
             Console.Write("On application exit");
         }
+
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {
+
+        }
+
+        private void Application_Activated(object sender, EventArgs e)
+        {
+
+        }
     }
 }

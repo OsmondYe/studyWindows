@@ -4,6 +4,7 @@
              xmlns:local="clr-namespace:forWPF"
              StartupUri="toSharp.xaml"
              Exit="Application_Exit"
+             Startup="Application_Startup" Activated="Application_Activated"
              >
     <Application.Resources>
 
