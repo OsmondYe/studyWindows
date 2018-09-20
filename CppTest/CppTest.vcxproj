@@ -23,7 +23,7 @@
     <ProjectGuid>{C7A6BEA1-8BAA-4DFD-98F3-E08E5FE40574}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>CppTest</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -108,14 +108,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SKYDRM_EXTERNAL)\doom_sdk\sources\include\SDWL\;$(SKYDRM_EXTERNAL)\gtest\include;$(OSMOND_EXTERNAL)\madCollection\madCodeHook\Header-Libs;$(OSMOND_EXTERNAL)\boost_1_67_0;$(SKYDRM_EXTERNAL)\openssl\include</AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(SKYDRM_EXTERNAL)\gtest\include;$(OSMOND_EXTERNAL)\madCollection\madCodeHook\Header-Libs;$(OSMOND_EXTERNAL)\boost_1_67_0;$(OSMOND_EXTERNAL)\boost\boost_1_67_0;$(SKYDRM_EXTERNAL)\openssl\include</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SupportJustMyCode>false</SupportJustMyCode>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OSMOND_EXTERNAL)\madCollection\madCodeHook\Header-Libs;$(SKYDRM_EXTERNAL)\boost\$(Platform)_$(Configuration);$(SKYDRM_EXTERNAL)\gtest\lib\$(Platform)-$(Configuration)\mtd;$(SKYDRM_EXTERNAL)\doom_core\build\build.msvc\$(Platform)_$(Configuration);$(SKYDRM_EXTERNAL)\doom_sdk\build\build.msvc\$(Platform)_$(Configuration);$(OSMOND_EXTERNAL)\boost_1_67_0\stage\lib;$(OSMOND_EXTERNAL)\openssl\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OSMOND_EXTERNAL)\madCollection\madCodeHook\Header-Libs;$(SKYDRM_EXTERNAL)\boost\$(Platform)_$(Configuration);$(SKYDRM_EXTERNAL)\gtest\lib\$(Platform)-$(Configuration)\mtd;$(SKYDRM_EXTERNAL)\gtest\lib\$(Platform)-$(Configuration);$(SKYDRM_EXTERNAL)\doom_core\build\build.msvc\$(Platform)_$(Configuration);$(SKYDRM_EXTERNAL)\doom_sdk\build\build.msvc\$(Platform)_$(Configuration);$(OSMOND_EXTERNAL)\boost_1_67_0\stage\lib;$(OSMOND_EXTERNAL)\openssl\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>Shlwapi.lib;Dbghelp.lib;Urlmon.lib;Bcrypt.lib;Winhttp.lib;Wtsapi32.lib;Mpr.lib;Ws2_32.lib;Secur32.lib;Crypt32.lib;gtestd.lib;madCHook64mt.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -162,7 +162,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="sdkwrapper.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="utils.h" />
@@ -177,10 +176,7 @@
     </ClCompile>
     <ClCompile Include="test-basic-cpp.cpp" />
     <ClCompile Include="test-boost-asio.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="test-madchook.cpp" />
     <ClCompile Include="test-RMCSDK.cpp">

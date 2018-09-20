@@ -1,40 +1,84 @@
 #include "stdafx.h"
 
-class A {
-public:
-	int getInt() const {
-		return 1;
-	}
-};
-
-class B :public A
-{
-public:
-	B() {
-		printf("gg");
-	}
-	int GetAAA() const {
-		printf("ggg");
-		return getInt();
-	}
-};
-
+#include <cctype>
 
 using namespace std;
 
 
-// traits with case-insensitive eq:
-struct custom_traits : std::char_traits<char> {
-	static bool eq(char c, char d) { 
-		return std::tolower(c) == std::tolower(d); 
-	}
-	// some (non-conforming) implementations of basic_string::find call this instead of eq:
-	static const char* find(const char* s, std::size_t n, char c)
+template<typename T>
+class BasicAllocator
+{
+public:
+	typedef size_t size_type;
+	typedef ptrdiff_t difference_type;
+	typedef T* pointer;
+	typedef const T* const_pointer;
+	typedef T& reference;
+	typedef const T& const_reference;
+	typedef T value_type;
+
+
+	BasicAllocator() throw() {};
+	BasicAllocator(const BasicAllocator& other) throw() {};
+
+	template<typename U>
+	BasicAllocator(const BasicAllocator<U>& other) throw() {};
+
+	template<typename U>
+	BasicAllocator& operator = (const BasicAllocator<U>& other) { return *this; }
+	BasicAllocator<T>& operator = (const BasicAllocator& other) { return *this; }
+	~BasicAllocator() {}
+
+	pointer address(reference value) const { return &value; }
+	const_pointer address(const_reference value) const { return &value; }
+
+	pointer allocate(size_type n, const void* hint = 0) { return static_cast<pointer> (::operator new (n * sizeof(value_type))); }
+	void deallocate(void* ptr, size_type n) { ::operator delete (static_cast<T*> (ptr)); }
+
+	template<typename U, typename... Args>
+	void construct(U* ptr, Args&&  ... args) { ::new (static_cast<void*> (ptr)) U(std::forward<Args>(args)...); }
+	void construct(pointer ptr, const T& val) { new (static_cast<T*> (ptr)) T(val); }
+
+	template<typename U>
+	void destroy(U* ptr) { ptr->~U(); }
+	void destroy(pointer ptr) { ptr->~T(); }
+
+	size_type max_size() const { return 0x4000; } /**return std::size_t(-1);**/
+
+	template<typename U>
+	struct rebind
 	{
-		while (n-- && (!eq(*s, c))) ++s; return s;
-	}
+		typedef BasicAllocator<U> other;
+	};
 };
 
+
+// traits with case-insensitive eq:
+struct custom_traits : std::char_traits<char> {
+
+	static bool eq(char c, char d) { 		
+		return std::tolower(c) == std::tolower(d); 
+	}
+
+	static const char* find(const char* s, std::size_t n, char c)
+	{
+		while (n-- && (!eq(*s, c))) 
+			++s; 
+
+		return s;
+	}	
+};
+
+
+struct custom_traits2 : custom_traits {
+	 static  int compare(
+		 const char * const first,
+		const char * const second, 
+		 const size_t count) noexcept 
+	{	
+		 return _strnicmp(first, second, count);
+	}
+};
 
 
 
@@ -52,21 +96,57 @@ TEST(CppLanguage, CppBasicStringStudy) {
 	std::basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t>> aWCharString2(L"Hello World");
 
 
-	std::basic_string<char, custom_traits, allocator<char>> case_insensitive_str1("HELLO WORLD");
-	std::basic_string<char, custom_traits, allocator<char>> case_insensitive_str2("hello world");
 
+	//
+	// Extend : case insensitive
+	//
+
+	//basic
+	{
+		std::basic_string<char, custom_traits, allocator<char>> ci_str1("HELLO WORLD");
+		std::basic_string<char, custom_traits, allocator<char>> ci_str2("hello world");
+
+
+		EXPECT_EQ(ci_str1.find('o'), 4);
+		EXPECT_NE(ci_str1.find('e'), ci_str1.npos);
+
+		EXPECT_TRUE(ci_str1 == ci_str2);
+	}
+
+	// fixed 
+	{
+		std::basic_string<char, custom_traits2, allocator<char>> ci_str1("HELLO WORLD");
+		std::basic_string<char, custom_traits2, allocator<char>> ci_str2("hello world");
+
+		EXPECT_EQ(ci_str1.find('o'), 4);
+		EXPECT_NE(ci_str1.find('e'), ci_str1.npos);
+
+		EXPECT_TRUE(ci_str1 == ci_str2);
+		EXPECT_FALSE(ci_str1 > ci_str2);
+		EXPECT_FALSE(ci_str1 < ci_str2);
+	}
+	
+
+	// for replace
+	{
+		std::basic_string<char, char_traits<char>, allocator<char>>  str;
+
+		str = "Hello world";
+
+		
+		str.replace(6,5, "china_hangzhou",std::strlen("china_hangzhou"));
+
+
+	}
+
+	
+	EXPECT_TRUE(true);
 }
 
 
 TEST(CppLanguage, String) {
 //TEST(CppLanguage, DISABLED_String) {
 	// str has 54 chars
-	B b;
-	b.GetAAA();
-
-	B *pb = new B;
-
-
 	const wchar_t str[] = L"The Quick Brown Fox Jumps Over The Lazy Dog,1234567890";
 	// sizeof(str)==110,    55chars,(within '\0')
 
@@ -77,10 +157,7 @@ TEST(CppLanguage, String) {
 	wstring w(str);
 
 	wcout << L"Use wstring:" << w.c_str() << L"\tSize:" << w.size() << endl;
-
-
-	
-
+		
 }
 
 
