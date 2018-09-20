@@ -110,6 +110,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SKYDRM_EXTERNAL)\doom_sdk\sources\include\SDWL\;$(SKYDRM_EXTERNAL)\gtest\include;$(OSMOND_EXTERNAL)\madCollection\madCodeHook\Header-Libs;$(OSMOND_EXTERNAL)\boost_1_67_0;$(SKYDRM_EXTERNAL)\openssl\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <SupportJustMyCode>false</SupportJustMyCode>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

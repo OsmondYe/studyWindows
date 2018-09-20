@@ -18,21 +18,21 @@ NXSDK_API DWORD SDWL_Session_Initialize(HANDLE hSession, wchar_t* router, wchar_
 
 NXSDK_API DWORD SDWL_Session_Initialize2(HANDLE hSession, wchar_t* workingfolder, wchar_t* router, wchar_t* tenant);
 
-NXSDK_API DWORD SDWL_Session_SaveSession(HANDLE hSession,wchar_t* folder);
+NXSDK_API DWORD SDWL_Session_SaveSession(HANDLE hSession, wchar_t* folder);
 
 NXSDK_API DWORD SDWL_Session_GetCurrentTenant(HANDLE hSession, HANDLE* phTenant);
 
-typedef struct _NXL_LOGIN_COOKIES{
+typedef struct _NXL_LOGIN_COOKIES {
 	wchar_t* key;
 	wchar_t* values;
 
 }NXL_LOGIN_COOKIES;
 
-NXSDK_API DWORD SDWL_Session_GetLoginCookies(HANDLE hSession, NXL_LOGIN_COOKIES** ppCookies,size_t* pSize);
+NXSDK_API DWORD SDWL_Session_GetLoginParams(HANDLE hSession, wchar_t** ppURL, NXL_LOGIN_COOKIES** ppCookies, size_t* pSize);
 
 NXSDK_API DWORD SDWL_Session_SetLoginRequest(HANDLE hSession, char* JsonReturn, HANDLE* hUser);
 
-NXSDK_API DWORD SDWL_Session_GetLoginUser(HANDLE hSession, char* UserEmail, char* PassCode, HANDLE *hUser);
+NXSDK_API DWORD SDWL_Session_GetLoginUser(HANDLE hSession, const char* UserEmail, const char* PassCode, HANDLE *hUser);
 
 #pragma endregion
 
@@ -100,16 +100,16 @@ typedef struct _Expiration {
 }Expiration;
 #pragma pack(pop)
 
-NXSDK_API DWORD SDWL_User_ProtectFile(HANDLE hUser, wchar_t* path, int* pRights, int len,WaterMark watermark, Expiration expiration,char* tags);
+NXSDK_API DWORD SDWL_User_ProtectFile(HANDLE hUser, wchar_t* path, int* pRights, int len, WaterMark watermark, Expiration expiration, char* tags);
 
-NXSDK_API DWORD SDWL_User_ShareFile(HANDLE hUser, wchar_t* path, int* pRights,int lenRights, char* recipients[], int lenRecipients, wchar_t* comments, WaterMark watermark, Expiration expiration, char* tags);
+NXSDK_API DWORD SDWL_User_ShareFile(HANDLE hUser, wchar_t* path, int* pRights, int lenRights, char* recipients[], int lenRecipients, wchar_t* comments, WaterMark watermark, Expiration expiration, char* tags);
 
 NXSDK_API DWORD SDWL_User_UpdateRecipients(HANDLE hUser, HANDLE hNxlFile, char* addmails[], int lenaddmails, char* delmails[], int lendelmails);
 
-NXSDK_API DWORD SDWL_User_GetRecipients(HANDLE hUser, HANDLE hNxlFile, 
-									char** emails,int* peSize,
-									char** addEmials,int* paeSize,
-									char** removEmails,int*preSize);
+NXSDK_API DWORD SDWL_User_GetRecipients(HANDLE hUser, HANDLE hNxlFile,
+	char** emails, int* peSize,
+	char** addEmials, int* paeSize,
+	char** removEmails, int*preSize);
 
 NXSDK_API DWORD SDWL_User_UploadFile(HANDLE hUser, HANDLE hNxlFile);
 
@@ -120,6 +120,44 @@ NXSDK_API DWORD SDWL_User_DecryptNXLFile(HANDLE hUser, HANDLE hNxlFile, wchar_t*
 NXSDK_API DWORD SDWL_User_UploadActivityLogs(HANDLE hUser);
 
 NXSDK_API DWORD SDWL_User_GetWaterMarkInfo(HANDLE hUser, WaterMark* pWaterMark);
+#pragma pack(push)
+#pragma pack(8)
+typedef struct _ProjtectInfo {
+	DWORD id;
+	char* name;
+	char* displayname;
+	char* description;
+	bool owner;
+	DWORD64 totalfiles;
+}ProjtectInfo;
+#pragma pack(pop)
+
+NXSDK_API DWORD SDWL_User_GetProjectsInfo(HANDLE hUser, ProjtectInfo** pProjects, int* pSize);
+
+enum ProjtectFilter {
+	All = 0,
+	OwnedByMe = 1,
+	OwnedByOther = 2
+};
+NXSDK_API DWORD SDWL_User_GetListProjtects(HANDLE hUser, 
+	uint32_t pagedId, uint32_t pageSize,
+	const char* orderBy, ProjtectFilter filter);
+
+NXSDK_API DWORD SDWL_User_ProjectDownloadFile(HANDLE hUser, uint32_t projectId, 
+	const wchar_t* pathId,	const wchar_t* downloadPath, bool bViewOnly);
+
+#pragma pack(push)
+#pragma pack(8)
+typedef struct _ProjectFileInfo {
+	char* id;
+	char* duid;
+	char* displayPath;
+	char* pathId;
+	char* nxlName;
+}ProjectFileInfo;
+#pragma pack(pop)
+NXSDK_API DWORD SDWL_User_ProjectListFiles(HANDLE hUser, uint32_t projectId, uint32_t pagedId, uint32_t pageSize,
+	char* orderby, char* pathId, char* searchStr, ProjectFileInfo** pplistFiles, uint32_t* plistSize);
 
 #pragma endregion
 
@@ -127,7 +165,7 @@ NXSDK_API DWORD SDWL_User_GetWaterMarkInfo(HANDLE hUser, WaterMark* pWaterMark);
 //
 // Wrapper ISDRFiles
 //
-NXSDK_API DWORD SDWL_File_GetListNumber(HANDLE hFile,  int* pSize);
+NXSDK_API DWORD SDWL_File_GetListNumber(HANDLE hFile, int* pSize);
 
 NXSDK_API DWORD SDWL_File_GetList(HANDLE hFile, wchar_t** strArray, int* pSize);
 
@@ -147,9 +185,9 @@ NXSDK_API DWORD SDWL_NXL_File_GetFileName(HANDLE hNxlFile, wchar_t** ppname);
 
 NXSDK_API DWORD SDWL_NXL_File_GetFileSize(HANDLE hNxlFile, DWORD64* pSize);
 
-NXSDK_API DWORD SDWL_NXL_File_IsValidNxl(HANDLE hNxlFile, bool* pResult );
+NXSDK_API DWORD SDWL_NXL_File_IsValidNxl(HANDLE hNxlFile, bool* pResult);
 
-NXSDK_API DWORD SDWL_NXL_File_GetRights(HANDLE hNxlFile, int** pprights, int* pLen );
+NXSDK_API DWORD SDWL_NXL_File_GetRights(HANDLE hNxlFile, int** pprights, int* pLen);
 
 NXSDK_API DWORD SDWL_NXL_File_GetWaterMark(HANDLE hNxlFile, WaterMark* pWaterMark);
 
@@ -162,6 +200,8 @@ NXSDK_API DWORD SDWL_NXL_File_CheckRights(HANDLE hNxlFile, int right, bool* pRes
 NXSDK_API DWORD SDWL_NXL_File_GetClassificationSetting(HANDLE hNxlFile, char** ppResult);
 
 NXSDK_API DWORD SDWL_NXL_File_IsUploadToRMS(HANDLE hNxlFile, bool* pResult);
+
+NXSDK_API DWORD SDWL_NXL_File_GetAdhocWatermarkString(HANDLE hNxlFile, char** ppWmStr);
 
 #pragma pack(push)
 #pragma pack(8)

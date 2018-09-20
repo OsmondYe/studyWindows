@@ -9,13 +9,29 @@ namespace {
 	wchar_t gTenant[] = L"skydrm.com";
 	//wchar_t gURL[] = L"https://rms-centos7303.qapf1.qalab01.nextlabs.com:8444/rms";
 
+	int full_rights[] = { 1,2,4,8,0x10,0x20,0x40,0x80,0x100,0x200,0x400,0x40000000 };
+	int full_rights_len = 12;
+
+	int adhoc_full_rights[] = { 1 ,4,0x200,0x400,0x40000000};
+	int adhoc_full_rights_len = 5;
+
+	const char* recipients[] = {
+		"henry.hu@nextlabs.com",
+		"jach.zhou@nextlabs.com",
+		"allen.ning@nextlabs.com"
+	};
+	const wchar_t* comments = L"this is a comments";
+
+	const char* tags = ""; // tags
+
+	const char* separate_line = "=============================\n";
 }
 using namespace std;
 
 
 class RMCSKDWrapperTest : public testing::Test {
 
-protected:
+public:
 	static std::wstring workingPath;
 	static std::string userLoginStr;
 	static HANDLE hSession;
@@ -37,8 +53,9 @@ protected:
 		std::string t(workingPath.begin(), workingPath.end());
 		t += "\\";
 		::MakeSureDirectoryPathExists(t.c_str());
-		std::cout << "working_path:" << t << endl;	
+		std::cout << "SetUpTestCase: working_path:" << t << endl;	
 
+		// Seesion Create
 		auto error = CreateSDKSession((wchar_t*)workingPath.c_str(), &hSession);
 		if (error || hSession == NULL) {
 			helper_reportError("Error,CreateSDKSession", error);
@@ -47,67 +64,32 @@ protected:
 			cout << "hSession: 0x" << hex << hSession << endl;
 		};
 
-		// test Session
-		/*error = SDWL_Session_Initialize(hSession, gRouter, gTenant);
-		if (error) {
-			helper_reportError("SDWL_Session_Initialize", error);
-		}*/
 		// Session Init2
 		error = SDWL_Session_Initialize2(hSession, (wchar_t*)workingPath.c_str(), gRouter, gTenant);
 		if (error) {
 			helper_reportError("SDWL_Session_Initialize2", error);
 		}
 
-		// get login request cookies;
-		NXL_LOGIN_COOKIES* pCookies;
-		size_t len_Cookies = 0;
-		error = SDWL_Session_GetLoginCookies(hSession, &pCookies, &len_Cookies);
-		if (error) {
-			helper_reportError("SDWL_Session_GetLoginCookies", error);
-		}
-		wchar_t* clientID = NULL;
-		for (int i = 0; i < len_Cookies; i++) {
-			wchar_t* key = (pCookies + i)->key;
-			wchar_t* value = (pCookies + i)->values;
-			std::wcout << L"key:" << key << "\t\t" << L"value:" << value << endl;
-			if (!_wcsicmp(key, L"clientid")) {
-				clientID = value;
+		//if (userLoginStr.size() < 10) {
+
+		// recover user first
+		string email, passcode;
+		if (load_login_user(email, passcode)) {
+			error=SDWL_Session_GetLoginUser(hSession, email.c_str(), passcode.c_str(), &hUser);
+			if (error != 0) {
+				cout << "Failed to recover user,call login()" << endl;
+				login();
+			}
+			else {
+				cout << "Recover user session successfully" << endl;
 			}
 		}
-		
-		// call python to simulate login
-		std::wstring wcmd = L"python rms-login.py -u osmond.ye@nextlabs.com -p 123blue! -o userLgonJson.txt -c ";
-		wcmd += clientID;
-		system(std::string(wcmd.begin(),wcmd.end()).c_str());
-		
-		//
-		helper_readLoginJson("userLgonJson.txt", userLoginStr);
-
-		//std::cout << "userLoginStr:\n" << userLoginStr << std::endl;
-
-
-
-		error = SDWL_Session_GetCurrentTenant(hSession, &hTenant);
-		if (error || hTenant == NULL) {
-			helper_reportError("SDWL_Session_GetCurrentTenant", error);
-		}
 		else {
-			cout << "hTenant: 0x" << hex << hTenant << endl;
+			login();
 		}
+			
 
-		error = SDWL_Session_SetLoginRequest(hSession, (char*)userLoginStr.c_str(), &hUser);
-		if (error) {
-			helper_reportError("SDWL_Session_SetLoginRequest", error);
-		}
-		else {
-			cout << "hUser: 0x" << hex << hUser << endl;
-		}
-
-		ASSERT_EQ(error, 0)<<"error occurs\n";
-
-
-		// set values for watermark and expiration
-		
+		// set values for watermark and expiration		
 		watermark.text= new char[100] {"watermark.text"};
 		watermark.fontName = new char[100] {"watermark.fontname"};
 		watermark.fontColor = new char[100] {"watermark.color"};
@@ -146,13 +128,53 @@ protected:
 
 	}
 
-	//// Sets up the test fixture.
-	//virtual void SetUp() {
-	//}
+private:
+	static void login() {
+		// get login request cookies;
+		NXL_LOGIN_COOKIES* pCookies;
+		size_t len_Cookies = 0;
+		wchar_t* pURL = NULL;
+		auto error = SDWL_Session_GetLoginParams(hSession, &pURL, &pCookies, &len_Cookies);
+		if (error) {
+			helper_reportError("SDWL_Session_GetLoginCookies", error);
+		}
+		wchar_t* clientID = NULL;
+		for (int i = 0; i < len_Cookies; i++) {
+			wchar_t* key = (pCookies + i)->key;
+			wchar_t* value = (pCookies + i)->values;
+			std::wcout << L"key:" << key << "\t\t" << L"value:" << value << endl;
+			if (!_wcsicmp(key, L"clientid")) {
+				clientID = value;
+			}
+		}
 
-	//// Tears down the test fixture.
-	//virtual void TearDown() {
-	//}
+		// call python to simulate login
+		std::wstring wcmd = L"python rms-login.py -u osmond.ye@nextlabs.com -p 123blue! -o userLgonJson.txt -c ";
+		wcmd += clientID;
+		system(std::string(wcmd.begin(), wcmd.end()).c_str());
+
+		// python will store user login info in a txt file, load its contents into userLoginStr
+		helper_readLoginJson("userLgonJson.txt", userLoginStr);
+
+
+		error = SDWL_Session_GetCurrentTenant(hSession, &hTenant);
+		if (error || hTenant == NULL) {
+			helper_reportError("SDWL_Session_GetCurrentTenant", error);
+		}
+		else {
+			cout << "hTenant: 0x" << hex << hTenant << endl;
+		}
+
+		error = SDWL_Session_SetLoginRequest(hSession, (char*)userLoginStr.c_str(), &hUser);
+		if (error) {
+			helper_reportError("SDWL_Session_SetLoginRequest", error);
+		}
+		else {
+			cout << "hUser: 0x" << hex << hUser << endl;
+		}
+
+		ASSERT_EQ(error, 0) << "error occurs\n";
+	}
 
 private:
 	static void helper_readLoginJson(std::string path, std::string& buf) {
@@ -226,6 +248,30 @@ public:
 		//restore
 		::SetConsoleTextAttribute(hConsole, scbi.wAttributes);
 		return ss.str();
+	}
+
+	static void save_login_user(std::string email, std::string passcode) {
+		cout << "save user session into a file called running_session.txt" << endl;
+
+		{
+			ofstream("running_session.txt") << email << "\n" << passcode << endl;
+		}
+		
+	}
+
+	static bool load_login_user(string& email, string& passcode) {
+		ifstream ifs("running_session.txt", ios_base::in | ios_base::_Nocreate);
+		if (!ifs.good()) {
+			return false;
+		}
+
+		ifs >> email >> passcode;
+
+		cout << "load_login_user:"
+			<< email << passcode
+			<< endl;
+
+		return true;
 	}
 };
 
@@ -304,62 +350,65 @@ TEST_F(RMCSKDWrapperTest, UserBasic) {
 	EXPECT_EQ(error, 0)<< helper_reportError("SDWL_User_GetPasscode", error);
 	EXPECT_NE((int)code, NULL);
 	cout << "Passcode:\t" << code << endl;
+
+	// once login ok, save User Session infos into a file called runnning_session;
+	// do it when test user basic info 
+	// save user session into a file called running_session.txt
 	
+	wstring wstrEmail(email);
+
+	save_login_user(string(wstrEmail.begin(), wstrEmail.end()), code);
 	
 }
 
-//TEST_F(RMCSKDWrapperTest, UserSync) {
-//	// update user info
-//	DWORD error = -1;
-//	error = SDWL_User_UpdateUserInfo(hUser);
-//	EXPECT_EQ(error,0)<< helper_reportError("SDWL_User_UpdateUserInfo", error);
-//	
-//	// update mydrive info
-//	error = SDWL_User_UpdateMyDriveInfo(hUser);
-//	EXPECT_EQ(error, 0) << helper_reportError("SDWL_User_UpdateMyDriveInfo", error);
-//	
-//	// get mydrive info
-//	DWORD64 u, t;
-//	error = SDWL_User_GetMyDriveInfo(hUser, &u, &t);
-//	EXPECT_EQ(error, 0) << helper_reportError("SDWL_User_GetMyDriveInfo", error);
-//	cout << "My Drive Info:" << "Used: 0x" << hex << u << '\t' << "Total: 0x" << hex << t << endl;
-//}
+TEST_F(RMCSKDWrapperTest, UserSync) {
+	// update user info
+	DWORD error = -1;
+	error = SDWL_User_UpdateUserInfo(hUser);
+	EXPECT_EQ(error,0)<< helper_reportError("SDWL_User_UpdateUserInfo", error);
+	
+	// update mydrive info
+	error = SDWL_User_UpdateMyDriveInfo(hUser);
+	EXPECT_EQ(error, 0) << helper_reportError("SDWL_User_UpdateMyDriveInfo", error);
+	
+	// get mydrive info
+	DWORD64 u, t;
+	error = SDWL_User_GetMyDriveInfo(hUser, &u, &t);
+	EXPECT_EQ(error, 0) << helper_reportError("SDWL_User_GetMyDriveInfo", error);
+	cout << "My Drive Info:" << "Used: 0x" << hex << u << '\t' << "Total: 0x" << hex << t << endl;
+}
 
 TEST_F(RMCSKDWrapperTest, UserProtectFile) {
 	DWORD error = -1;
-	int rights[] = { 1,2,4,8,0x10,0x20,0x40,0x80,0x100,0x200,0x400,0x40000000 };
 
 	std::wstring path(L"D:\\test\\dump.log");
 	ASSERT_TRUE(win::file::is_file_exist(path.c_str())) << L"Path not exist" << path;
 
-
 	const char* t = "{\"a\":\"1.0\",\"b\":\"m39@skydrm.com\",\"c\":\"2018-01-10T09:36:21Z\",\"d\":[{\"a\":0,\"b\":\"Ad-hoc\",\"c\":1,\"d\":[\"DOWNLOAD\",\"VIEW\",\"PRINT\"],\"e\":{\"a\":{\"a\":1,\"b\":\"=\",\"c\":\"application.is_associated_app\",\"d\":true}},\"f\":[]}]}";
 
-	error = SDWL_User_ProtectFile(hUser, (wchar_t*)path.c_str(), rights, 12, watermark, expiration, (char*)t);
+	error = SDWL_User_ProtectFile(hUser, (wchar_t*)path.c_str(), 
+		adhoc_full_rights, adhoc_full_rights_len, 
+		watermark, expiration, (char*)t);
+
 	EXPECT_EQ(error, 0) << helper_reportError("SDWL_User_ProtectFile", error);
 
 	wcout << L"OK to Protect the File" << path.c_str() << endl;
-
-
 }
 
 TEST_F(RMCSKDWrapperTest, UserShareFile) {
 	DWORD error = -1;
-	int rights[] = { 0,1,2,3,4,5,6,7,8,9,10 };
-	const char* recipients[] = {
-		"henry.hu@nextlabs.com",
-		"jach.zhou@nextlabs.com",
-		"allen.ning@nextlabs.com"
-	};
-	const wchar_t* comments = L"this is a comments";
+	
 	std::wstring path(L"D:\\test\\dump.log");
 	ASSERT_TRUE(win::file::is_file_exist(path.c_str())) << L"Path not exist" << path;
 
-	const char* t = "";
-
-	error = SDWL_User_ShareFile(hUser, (wchar_t*)path.c_str(), rights, 11, (char**)recipients, 3, (wchar_t*)comments, watermark, expiration, (char*)t);
+	error = SDWL_User_ShareFile(hUser, (wchar_t*)path.c_str(), 
+		adhoc_full_rights, adhoc_full_rights_len,
+		(char**)recipients, 3, 
+		(wchar_t*)comments, 
+		watermark, expiration, 
+		(char*)tags);
+	
 	EXPECT_EQ(error, 0) << helper_reportError("SDWL_User_ShareFile", error);
-
 
 	wcout << L"OK to share the File" << path.c_str() << endl;
 }
@@ -443,3 +492,101 @@ TEST_F(RMCSKDWrapperTest, UserLocalFiles) {
 	//error = SDWL_File_GetList(_hLocalFiles, p, &pSize);
 }
 
+
+
+
+void dump_projects(HANDLE hUser, ProjtectInfo*& pInfo, int& size) {
+	SDWL_User_GetListProjtects(hUser, 1, 1000, (char*)"name", ProjtectFilter::All);
+
+	DWORD rt = SDWL_User_GetProjectsInfo(hUser, &pInfo, &size);
+
+	EXPECT_EQ(rt, 0);
+
+	//dump pInfo
+	cout << separate_line << "Dump Projects:\n" << separate_line << endl;
+	for (int i = 0; i < size; i++) {
+		ProjtectInfo *p = pInfo + i;
+
+		cout << separate_line
+			<< "project:\n"
+			<< "id:\t" << p->id << "\n"
+			<< "name:\t" << p->name << "\n"
+			<< "display_name:\t" << p->displayname << "\n"
+			<< "description:\t" << p->description << "\n"
+			<< "owner:\t" << std::boolalpha << p->owner << "\n"
+			<< "total_files:" << p->totalfiles << "\n"
+			<< separate_line
+			<< endl;
+	}
+}
+
+void dump_project_files_internal(HANDLE hUser,uint32_t project_id,const char* path_id) {
+	ProjectFileInfo * pFiles = NULL;
+	uint32_t file_size = NULL;
+	auto rt = SDWL_User_ProjectListFiles(hUser, project_id, 1, 1000, (char*)"name", (char*)path_id, (char*)"", &pFiles, &file_size);
+	EXPECT_EQ(rt, 0);
+
+	for (size_t i = 0; i < file_size; i++)
+	{
+		ProjectFileInfo* pp = pFiles + i;
+
+		cout << "id:\t" << pp->id << "\n"
+			<< "duid:\t" << pp->duid << "\n"
+			<< "display_path:\t" << pp->displayPath << "\n"
+			<< "nxl_name:\t" << pp->nxlName << "\n"
+			<< "path_id:\t" << pp->pathId << "\n"
+			<< endl;
+
+		// once fount path_id end with /, 
+		// regar path_id as a foder and call SDWL_User_ProjectListFiles again to list path_id forder contents
+		auto predict_root = [](string path) {return path.size() == 1 && path.front() == '/';};
+		auto predict_folder_non_root = [predict_root](string path) {return !predict_root(path) && path.back() == '/';};
+
+		if (predict_root(path_id)){
+			if (predict_folder_non_root(pp->pathId)) {
+				dump_project_files_internal(hUser, project_id, pp->pathId);
+			}
+		}
+		else {
+			if (predict_folder_non_root(pp->pathId) && 
+				!boost::equals(pp->pathId, path_id) &&
+				boost::starts_with(pp->pathId, path_id)) {
+				dump_project_files_internal(hUser, project_id, pp->pathId);
+			}
+		}
+
+
+		// download the file
+		if (!predict_folder_non_root(pp->pathId)) {
+			string f(pp->pathId);
+			wstring fileName(f.begin(),f.end());
+			
+			wstring path = RMCSKDWrapperTest::workingPath;
+			auto rt=SDWL_User_ProjectDownloadFile(hUser, project_id, fileName.c_str(), path.c_str(), true);
+			EXPECT_EQ(rt, 0);
+			
+		}
+
+	}
+
+}
+
+void dump_project_files(HANDLE hUser, const ProjtectInfo* pInfo) {	
+		cout << "======" << pInfo->name << " " << pInfo->totalfiles << "======" << endl;
+		dump_project_files_internal(hUser, pInfo->id, "/");
+}
+
+TEST_F(RMCSKDWrapperTest, Projects) {
+
+	ProjtectInfo * pInfo = NULL;
+	int size = 0;
+
+	dump_projects(hUser, pInfo, size);
+
+	cout << separate_line << "Dump all files in each project:\n" << separate_line << endl;
+	for (int i = 0; i < size; i++) {
+		dump_project_files(hUser, pInfo + i);
+
+
+	}
+}

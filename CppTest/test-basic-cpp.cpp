@@ -20,8 +20,44 @@ public:
 };
 
 
-//use DISABLED_ prefix to filter out 
 using namespace std;
+
+
+// traits with case-insensitive eq:
+struct custom_traits : std::char_traits<char> {
+	static bool eq(char c, char d) { 
+		return std::tolower(c) == std::tolower(d); 
+	}
+	// some (non-conforming) implementations of basic_string::find call this instead of eq:
+	static const char* find(const char* s, std::size_t n, char c)
+	{
+		while (n-- && (!eq(*s, c))) ++s; return s;
+	}
+};
+
+
+
+
+//use DISABLED_ prefix to filter out 
+TEST(CppLanguage, CppBasicStringStudy) {
+	// basic_string<> code research:
+/*
+<数据,数据的逻辑模型,数据的物理模型> + 模型能实现的功能
+<Elem,Traits_Elem,Allocator_Elem>  + class String
+*/
+	std::string aCharString("Hello World");
+	std::basic_string<char, char_traits<char>, allocator<char>>   aCharString2("Hello world");
+
+	std::wstring	aWCharString(L"Hello World");
+	std::basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t>> aWCharString2(L"Hello World");
+
+
+	std::basic_string<char, custom_traits, allocator<char>> case_insensitive_str1("HELLO WORLD");
+	std::basic_string<char, custom_traits, allocator<char>> case_insensitive_str2("hello world");
+
+}
+
+
 TEST(CppLanguage, String) {
 //TEST(CppLanguage, DISABLED_String) {
 	// str has 54 chars
@@ -42,7 +78,12 @@ TEST(CppLanguage, String) {
 
 	wcout << L"Use wstring:" << w.c_str() << L"\tSize:" << w.size() << endl;
 
+
+	
+
 }
+
+
 
 //TEST(CppLanguage, StringStream) {
 TEST(CppLanguage, DISABLED_StringStream) {
