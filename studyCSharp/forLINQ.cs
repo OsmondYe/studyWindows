@@ -22,8 +22,6 @@ namespace studyCSharp
     class forLINQ
     {
 
-
-
         Student[] stuArray;
         public forLINQ()
         {

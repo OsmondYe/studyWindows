@@ -54,3 +54,36 @@ TEST(Windows, RegOperation) {
 	EXPECT_FALSE(path.empty());
 
 }
+
+TEST(Windows, RegOperation2) {
+	HKEY root = HKEY_CURRENT_USER;
+	const wchar_t* parent = L"Software\\AAA\\BBB\\CCC\\DDD\\EEE\\FFF\\GGG";
+	DWORD rt = 0;
+	HKEY result = 0;
+
+	rt=RegCreateKey(root, parent, &result);
+
+	rt=RegSetValueW(result, L"null", 1, parent, wcslen(parent));
+
+
+
+	static const wchar_t* hSKYDRM = L"Software\\Nextlabs\\SkyDRM\\LocalApp";
+
+	wchar_t skydrm_cmd[MAX_PATH] = { 0 };
+	DWORD size = MAX_PATH;
+
+	if (ERROR_SUCCESS != ::RegGetValueW(HKEY_CURRENT_USER, hSKYDRM, L"Executable", RRF_RT_REG_SZ, NULL, skydrm_cmd, &size)) {
+		rt = E_UNEXPECTED;
+	}
+
+
+	// cat str with format "%path%" -view "%1"
+	wchar_t nxl_cmd[MAX_PATH] = { 0 };
+	::swprintf_s(nxl_cmd,L"\"%s\" -view \"%%1\"", skydrm_cmd);
+
+
+	EXPECT_TRUE(1);
+
+
+
+}

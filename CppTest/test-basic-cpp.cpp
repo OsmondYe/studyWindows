@@ -81,20 +81,82 @@ struct custom_traits2 : custom_traits {
 };
 
 
+struct MyTraits : public char_traits<char> {
+	 static  int compare(
+		 const char * const l,
+		const char * const r, const size_t c) noexcept // strengthened
+	{	
+		 return _strcmpi(l, r);
+	}
+};
+
 
 //use DISABLED_ prefix to filter out 
 TEST(CppLanguage, CppBasicStringStudy) {
 	// basic_string<> code research:
-/*
-<数据,数据的逻辑模型,数据的物理模型> + 模型能实现的功能
-<Elem,Traits_Elem,Allocator_Elem>  + class String
-*/
-	std::string aCharString("Hello World");
-	std::basic_string<char, char_traits<char>, allocator<char>>   aCharString2("Hello world");
+	{
+		std::basic_string<char, char_traits<char>, allocator<char>> str(1,'c');
+		
 
-	std::wstring	aWCharString(L"Hello World");
-	std::basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t>> aWCharString2(L"Hello World");
+		str = "Hello world Hello world Hello world";
+		char a = str[6];
 
+		const char* p = "China China China China China China";
+
+		str.insert(6, p, std::strlen(p));
+
+		auto aaa = str.substr(6, 0x23);
+
+		auto index=str.find('l', 0);
+
+
+	}
+
+	{
+		int i = 12; {
+			int i = 7;
+
+			int c = i;
+		}
+		basic_string<char, MyTraits, allocator<char>> s1(" C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Enterprise\\Common7\\Packages\\Debugger\\Visualizers\\stl.natvis(751,10): Successfully parsed expression");
+		auto b = s1.begin();
+		auto e = s1.end();
+
+		std::sort(b, e);
+
+
+		for (int i = 0; i < s1.size(); i++) {
+			s1[i] = std::toupper(s1[i]);
+		}
+
+		std::transform(s1.begin(), s1.end(), s1.begin(), std::tolower);
+
+		
+
+		std::random_shuffle(b, e);
+
+		EXPECT_TRUE(std::all_of(b, e, [](auto c) {return c < 'w'; }));
+
+		std::remove_if(b, e, [](auto c) {return c > 'i'; });
+
+
+		EXPECT_TRUE(true);
+	}
+
+	return;
+
+	{
+		/*
+		<数据,数据的逻辑模型,数据的物理模型> + 模型能实现的功能
+		<Elem,Traits_Elem,Allocator_Elem>  + class String
+		*/
+		std::string aCharString("Hello World");
+		std::basic_string<char, char_traits<char>, allocator<char>>   aCharString2("Hello world");
+		aCharString2 = "Hello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello world";
+
+		std::wstring	aWCharString(L"Hello World");
+		std::basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t>> aWCharString2(L"Hello World");
+	}
 
 
 	//
@@ -139,8 +201,42 @@ TEST(CppLanguage, CppBasicStringStudy) {
 
 	}
 
+	// with algorithm
+	{
+		std::basic_string<char, char_traits<char>, allocator<char>>  str = "Hello world";
+
+		// to upper
+		std::transform(str.begin(), str.end(), str.begin(), std::toupper);
+		// to lower
+		std::transform(str.begin(), str.end(), str.begin(), std::tolower);
+
+		// how many 'o'
+		int c = std::count_if(str.begin(), str.end(), [](auto& c) {return c == 'o'; });
+		EXPECT_EQ(2, c);
+
+		// find world
+		
+
 	
+		// equals
+		const char* p = "HeLLO world";
+		bool bEqual = std::equal(str.begin(), str.end(), p);
+		
+		EXPECT_TRUE(bEqual);
+
+		bEqual = std::equal(str.begin(), str.end(), p, [](auto& a, auto& b) {return custom_traits::eq(a,b); });
+
+		EXPECT_TRUE(bEqual);
+
+		// sort
+		std::sort(str.begin(), str.end());
+
+
+		EXPECT_TRUE(true);
+	}
 	EXPECT_TRUE(true);
+
+	
 }
 
 

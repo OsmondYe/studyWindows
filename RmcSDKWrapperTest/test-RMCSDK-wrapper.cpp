@@ -4,9 +4,11 @@
 
 
 namespace {
-	wchar_t gRouter[] = L"https://rmtest.nextlabs.solutions";
+	wchar_t gRouter[] = L"https://rms-centos7303.qapf1.qalab01.nextlabs.com:8443";
+	wchar_t gTenant[] = L"caee73af-c572-4ddc-b784-7e1f46190fde";
+	//wchar_t gRouter[] = L"https://rmtest.nextlabs.solutions";
 	//wchar_t gRouter[] = L"https://r.skydrm.com";
-	wchar_t gTenant[] = L"skydrm.com";
+	//wchar_t gTenant[] = L"skydrm.com";
 	//wchar_t gURL[] = L"https://rms-centos7303.qapf1.qalab01.nextlabs.com:8444/rms";
 
 	int full_rights[] = { 1,2,4,8,0x10,0x20,0x40,0x80,0x100,0x200,0x400,0x40000000 };
@@ -403,7 +405,7 @@ TEST_F(RMCSKDWrapperTest, UserShareFile) {
 
 	error = SDWL_User_ShareFile(hUser, (wchar_t*)path.c_str(), 
 		adhoc_full_rights, adhoc_full_rights_len,
-		(char**)recipients, 3, 
+		(const char**)recipients, 3,
 		(wchar_t*)comments, 
 		watermark, expiration, 
 		(char*)tags);
@@ -492,7 +494,7 @@ TEST_F(RMCSKDWrapperTest, UserLocalFiles) {
 	//error = SDWL_File_GetList(_hLocalFiles, p, &pSize);
 }
 
-
+  
 
 
 void dump_projects(HANDLE hUser, ProjtectInfo*& pInfo, int& size) {

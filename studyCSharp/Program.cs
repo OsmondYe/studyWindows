@@ -13,7 +13,7 @@ namespace studyCSharp
         static void Main(string[] args)
         {
 
-
+            //forHelper.Study();
             //forDotNetBasic.Study();
             //forClassExtension.Study();
             //forDelegate.Study();
@@ -21,9 +21,10 @@ namespace studyCSharp
             //forIndexer.Study();
             //forLINQ.Study();
             //forInvokeCpp.Study();
-            forThread.Study();
+            //forThread.Study();
             //forAsync.Study();
             //forRegisty.Study();
+            forCsDll.Study();
 
         }
     }
