@@ -6,3 +6,7 @@
 
 
 DLL_FUN_EXPORT bool HookIXmlHttpRequestInterface();
+
+
+
+DLL_FUN_EXPORT bool HookForScreenCapture();

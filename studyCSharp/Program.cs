@@ -24,7 +24,8 @@ namespace studyCSharp
             //forThread.Study();
             //forAsync.Study();
             //forRegisty.Study();
-            forCsDll.Study();
+            //forCsDll.Study();
+            forRegex.Study();
 
         }
     }

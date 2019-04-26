@@ -80,6 +80,7 @@
     <Compile Include="forInvokeCpp.cs" />
     <Compile Include="forLambda.cs" />
     <Compile Include="forLINQ.cs" />
+    <Compile Include="forRegex.cs" />
     <Compile Include="forRegisty.cs" />
     <Compile Include="forThread.cs" />
     <Compile Include="Program.cs" />

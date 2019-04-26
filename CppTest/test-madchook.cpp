@@ -24,3 +24,15 @@ TEST_F(MadchookTest, Basic) {
 	// inject cppdll.dll into target process
 	EXPECT_TRUE(InjectLibraryW(L"cppdll.dll", hTargetProcess)) << "Hook failed";
 }
+
+
+TEST_F(MadchookTest, ScreenCapture) {
+	// basic
+
+	// get target process handle
+
+	HANDLE hTargetProcess = win::get_process(L"SnippingTool.exe");
+	EXPECT_NE(hTargetProcess, INVALID_HANDLE_VALUE) << "Can not find the process of SnippingTool";
+	// inject cppdll.dll into target process
+	EXPECT_TRUE(InjectLibraryW(L"cppdll.dll", hTargetProcess)) << "Hook failed";
+}
