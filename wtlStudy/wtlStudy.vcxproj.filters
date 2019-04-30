@@ -53,6 +53,9 @@
     <ClCompile Include="watermark\watermark.cpp">
       <Filter>watermark</Filter>
     </ClCompile>
+    <ClCompile Include="common_ui_components.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="wtlStudy.rc">

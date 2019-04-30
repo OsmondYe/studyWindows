@@ -19,6 +19,7 @@
 
 // c++
 #include <string>
+#include <fstream>
 
 // reference additional headers your program requires here
 
@@ -29,6 +30,7 @@
 #include "atlwinx.h"	// wtl::CWindowEx
 #include "atlctrls.h"
 #include "atlmisc.h"
+#include "atlcrack.h"
 
 
 #include "resource.h"

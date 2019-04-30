@@ -6,9 +6,13 @@ using namespace Gdiplus;
 #pragma comment(lib,"gdiplus.lib")
 
 
+#ifndef USING_GDI_PLUS
+#define USING_GDI_PLUS
 
-ULONG_PTR gGidplusToken = 0;
-Gdiplus::GdiplusStartupInput gGdipulsInput;
+extern ULONG_PTR gGidplusToken;
+extern Gdiplus::GdiplusStartupInput gGdipulsInput;
+
+#endif // ! USING_GDI_PLUS
 
 
 
@@ -32,15 +36,19 @@ namespace {
 
 OverlayChildWnd::OverlayChildWnd()
 {
+#ifdef USING_GDI_PLUS
 	Gdiplus::GdiplusStartup(&gGidplusToken, &gGdipulsInput, NULL);
+#endif // USING_GDI_PLUS
 	
 }
 
 OverlayChildWnd::~OverlayChildWnd()
 {
+#ifdef USING_GDI_PLUS
 	if (gGidplusToken != NULL) {
 		Gdiplus::GdiplusShutdown(gGidplusToken);
 	}
+#endif // USING_GDI_PLUS
 }
 
 CRect OldTarget(-1, -1, -1, -1);

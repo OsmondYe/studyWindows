@@ -89,7 +89,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(OSMOND_EXTERNAL)\wtl\WTL10_8356\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OSMOND_EXTERNAL)\wtl\WTL10_8356\Include;.</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -159,6 +159,7 @@
     <ClInclude Include="watermark\watermark.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="common_ui_components.cpp" />
     <ClCompile Include="main_ui.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

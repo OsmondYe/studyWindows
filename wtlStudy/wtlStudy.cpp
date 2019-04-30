@@ -3,6 +3,23 @@
 
 #include "main_ui.h"
 
+#include <gdiplus.h>
+using namespace Gdiplus;
+#pragma comment(lib,"gdiplus.lib")
+
+
+
+#ifndef USING_GDI_PLUS
+#define USING_GDI_PLUS
+
+ULONG_PTR gGidplusToken = 0;
+Gdiplus::GdiplusStartupInput gGdipulsInput;
+
+#endif // !USING_GDI_PLUS
+
+
+
+
 
 CAppModule _Module;
 
@@ -23,7 +40,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	AtlInitCommonControls(ICC_COOL_CLASSES | ICC_BAR_CLASSES);	// add flags to support other controls
 
 	_Module.Init(NULL, hInstance);
-	   
+	
+#ifdef USING_GDI_PLUS
+	Gdiplus::GdiplusStartup(&gGidplusToken, &gGdipulsInput, NULL);
+#endif // USING_GDI_PLUS
+
+
 
 	CMessageLoop theLoop;
 	_Module.AddMessageLoop(&theLoop);
@@ -34,24 +56,33 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	
 
-	pWnd =new OverlayChildWnd();
+	/*pWnd =new OverlayChildWnd();
 	CRect rc(0, 0, 1000, 400);
 	pWnd->Create(NULL,rc);
 	
 	pWnd->ShowWindow(SW_SHOW);
-	pWnd->UpdateWindow();
-	pWnd->UpdateOverlay(pMainWnd->m_hWnd);
+	pWnd->UpdateWindow();*/
+	//pWnd->UpdateOverlay(pMainWnd->m_hWnd);
 
-	_beginthread([](void*) {
-		while (1) {
-			// 
-			pWnd->UpdateOverlay(pMainWnd->m_hWnd);
-			::Sleep(2000);
-		}
-	}, 0, 0);
+	//_beginthread([](void*) {
+	//	while (1) {
+	//		// 
+	//		pWnd->UpdateOverlay(pMainWnd->m_hWnd);
+	//		::Sleep(2000);
+	//	}
+	//}, 0, 0);
 
 	
 	int nRet = theLoop.Run();
+
+
+#ifdef USING_GDI_PLUS
+	if (gGidplusToken != NULL) {
+		Gdiplus::GdiplusShutdown(gGidplusToken);
+	}
+#endif // USING_GDI_PLUS
+
+
 
 	_Module.RemoveMessageLoop();
 	_Module.Term();

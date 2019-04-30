@@ -1,60 +1,68 @@
 ﻿#pragma once
 #include "stdafx.h"
 #include "common_ui_components.h"
-
 #include "atlcrack.h"
-
 #include "watermark/watermark.h"
 
-//typedef CWinTraits<WS_CHILD | WS_VISIBLE,
-//					WS_EX_TRANSPARENT | WS_EX_LAYERED | WS_EX_ACCEPTFILES>									OyeMainWindowTraits;
-typedef CWinTraits<WS_CHILD | WS_VISIBLE, WS_EX_CLIENTEDGE>	OyeMainWindowTraits;
-class OyeMainWindow :
-	public CWindowImpl<OyeMainWindow, CWindow, OyeMainWindowTraits>,
-	public CPaintBkgnd<OyeMainWindow, RGB(0, 0,255 )>
+
+
+typedef CWinTraits<WS_CHILD | WS_VISIBLE, WS_EX_CLIENTEDGE>	OyeClientWindowTraits;
+class OyeClientWindow :
+	public CWindowImpl<OyeClientWindow, CWindow, OyeClientWindowTraits>,
+	public CPaintBkgnd<OyeClientWindow, RGB(0, 0,255 )>
 {
+public:
+	OyeClientWindow() : m_bTractInfo(false) {}
+private:
+		bool m_bTractInfo;
+
+public:
+	bool isFullScreen();
+	void ToggleFullScreen();
 
 public:
 	DECLARE_WND_CLASS(L"OyeClientWindow");
 
-	typedef CPaintBkgnd<OyeMainWindow, RGB(0, 0, 255)> CPaintBkgndBase;
+	typedef CPaintBkgnd<OyeClientWindow, RGB(0, 0, 255)> CPaintBkgndBase;
 
-	BEGIN_MSG_MAP(OyeMainWindow)
-		MESSAGE_HANDLER(WM_CREATE, OnCreate)
-		MESSAGE_HANDLER(WM_CLOSE, OnClose)
-		MESSAGE_HANDLER(WM_DESTROY, OnDestory)
-		MESSAGE_HANDLER(WM_LBUTTONDOWN, OnLBUTTONDOWN)
-		MSG_WM_RBUTTONDOWN(OnRButtonDown)
-		MSG_WM_CHAR(OnChar)
+	BEGIN_MSG_MAP_EX(OyeClientWindow)
+		// wnd common msg
 		MESSAGE_HANDLER(WM_PAINT, OnPaint)
+		// Mouse
+		MSG_WM_LBUTTONDOWN(OnLButtonDown)
+		MSG_WM_LBUTTONUP(OnLButtonUp)
+		MSG_WM_MOUSEMOVE(OnMouseMove)
+		MSG_WM_RBUTTONDOWN(OnRButtonDown)
+		// keyboard
+		//MSG_WM_CHAR(OnChar)
+		MSG_WM_KEYDOWN(OnKeyDown)
+		MSG_WM_SYSKEYDOWN(OnSysKeyDown)
 
-
-		COMMAND_ID_HANDLER(IDM_FILE_ABOUT, OnAbout)
+		
 		CHAIN_MSG_MAP(CPaintBkgndBase)
 
 	END_MSG_MAP()
 
+public:// Message
 
-	LRESULT OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
-	{
-		return 0;
-	}
+	void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 
-	void OnChar(TCHAR chChar, UINT nRepCnt, UINT nFlags) {
-		RedrawWindow();
-	}
+	void OnSysKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 
 	LRESULT OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 
-	LRESULT OnLBUTTONDOWN(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	void OnLButtonDown(UINT nFlags, CPoint point);
+
+	void OnLButtonUp(UINT nFlags, CPoint point);
+
+	void OnMouseMove(UINT nFlags, CPoint point);
 
 	void OnRButtonDown(UINT nFlags, CPoint point);
 
-	LRESULT OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 
-	LRESULT OnDestory(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+private:
 
-	LRESULT OnAbout(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
+	void CaptureScreen(bool bvirtualScreen=false);
 };
 
 
@@ -64,43 +72,84 @@ typedef CWinTraits<WS_OVERLAPPEDWINDOW | WS_CLIPSIBLINGS| WS_CLIPCHILDREN,
 	OyeFrameWndTraits;
 class OyeFrameWnd : 
 	public CFrameWindowImpl<OyeFrameWnd,CWindow, OyeFrameWndTraits>,
-	public CIdleHandler,
-	public CMessageFilter,
 	public CUpdateUI<OyeFrameWnd>,
+	public CMessageFilter,
+	public CIdleHandler,
 	public CPaintBkgnd<OyeFrameWnd, RGB(255, 0, 0)>
 {
 private:
-	OyeMainWindow client;
+	OyeClientWindow m_Client;
 public:
 	typedef CPaintBkgnd<OyeFrameWnd, RGB(255, 0, 0)> CPaintBkgndBase;
 	typedef CFrameWindowImpl<OyeFrameWnd, CWindow, OyeFrameWndTraits> COyeFrameBase;
 	 
 	//IDR_MAINFRAME : some id with ICON, Menu, Accelerator
-	DECLARE_FRAME_WND_CLASS_EX(L"OyeFrameWnd", IDR_FRAME, 
-						CS_HREDRAW | CS_HREDRAW,
-						(HBRUSH)(COLOR_WINDOW + 1))
+	DECLARE_FRAME_WND_CLASS_EX(L"OyeFrameWnd", IDR_FRAME,
+					CS_HREDRAW | CS_HREDRAW,
+					(HBRUSH)(COLOR_WINDOW + 1));
+
 
 	BEGIN_UPDATE_UI_MAP(OyeFrameWnd)
+		UPDATE_ELEMENT(ID_FUNCS_FULLSCREEN,UPDUI_MENUPOPUP)
+		UPDATE_ELEMENT(ID_FUNCS_CAPTURESCREEN, UPDUI_MENUPOPUP)
 	END_UPDATE_UI_MAP()
 
 
-	BEGIN_MSG_MAP(OyeFrameWnd)
+	BEGIN_MSG_MAP_EX(OyeFrameWnd)
 		MSG_WM_CREATE(OnCreate)
+		//MSG_WM_COMMAND()
+		//com
+		COMMAND_ID_HANDLER_EX(ID_FUNCS_FULLSCREEN,OnScreen)
+		COMMAND_ID_HANDLER_EX(ID_FUNCS_CAPTURESCREEN, OnCaptureScreen)
+		COMMAND_ID_HANDLER_EX(IDM_FILE_ABOUT, OnAbout)
 		CHAIN_MSG_MAP(COyeFrameBase)
 		CHAIN_MSG_MAP(CPaintBkgndBase)
+		CHAIN_MSG_MAP(CUpdateUI<OyeFrameWnd>)
 	END_MSG_MAP()
 
 public:
 	// derived from CIdleHandler
-	virtual  BOOL OnIdle() override;
-	// derived from CMessageFilter
-	virtual BOOL PreTranslateMessage(MSG* pMsg)override;
-	int OnCreate(LPCREATESTRUCT lpCreateStruct) {
+	virtual  BOOL OnIdle() override{
+		UIUpdateMenuBar();
+		return false;
+		//::OutputDebugString(__FUNCTIONW__ L"\n");
+		//return false;
+	}
+	// derived from CMessageFilter	 
+	virtual BOOL PreTranslateMessage(MSG * pMsg) override {
+		if (COyeFrameBase::PreTranslateMessage(pMsg)) {
+			return true;
+		}
+		//return m_Client.pre;
+		// some times in futrue, give child wnd a chance to handle 
+		return false;
+	}
+
+	int OnCreate(LPCREATESTRUCT lpCreateStruct);
+
+
+	void OnAbout(UINT uNotifyCode, int nID, CWindow wndCtl);
+
+
+	void OnScreen(UINT uNotifyCode, int nID, CWindow wndCtl) {
 		::OutputDebugString(__FUNCTIONW__ L"\n");
-			   
-		m_hWndClient=client.Create(m_hWnd);
-		return 0;
-	}	
+		//UIEnable(ID_FUNCS_FULLSCREEN, false);
+		
+		//make client as WS_Popus
+		m_Client.ModifyStyle(WS_CHILD, WS_POPUP);
+		m_Client.ModifyStyleEx(WS_EX_CLIENTEDGE, 0);
+		m_Client.SetParent(NULL);
+		m_Client.MoveWindow(GetVirtualScreenRect());
+
+	}
+
+	void OnCaptureScreen(UINT uNotifyCode, int nID, CWindow wndCtl) {
+		::OutputDebugString(__FUNCTIONW__ L"\n");
+		CaptureWholeScreens();
+	}
+
+
+
 };
 
 

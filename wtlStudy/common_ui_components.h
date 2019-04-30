@@ -29,3 +29,32 @@ protected:
 	HBRUSH m_hbrBkgnd;
 };
 
+
+HRESULT CatureImageBy(HWND hwnd, CRect rc);
+
+HRESULT CatureImageBy(HDC hdc, CRect rc);
+
+// for multi screen used
+inline CRect GetVirtualScreenRect() {
+	return CRect(
+		GetSystemMetrics(SM_XVIRTUALSCREEN),
+		GetSystemMetrics(SM_YVIRTUALSCREEN),
+		GetSystemMetrics(SM_CXVIRTUALSCREEN),
+		GetSystemMetrics(SM_CYVIRTUALSCREEN)
+	);
+}
+
+inline CRect GetPrimayScreenRect() {
+	return CRect(
+		0,
+		0,
+		GetSystemMetrics(SM_CXSCREEN),
+		GetSystemMetrics(SM_CYSCREEN)
+	);
+}
+
+
+inline void CaptureWholeScreens() {
+	CDC dc = ::GetDC(NULL);
+	CatureImageBy(dc, GetVirtualScreenRect());
+}

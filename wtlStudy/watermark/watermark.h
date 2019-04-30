@@ -24,15 +24,12 @@ public:
 
 	void UpdateOverlay(HWND target);
 
-
 private:
 	inline bool GetParentClientSize(LPRECT lpRect) {
 		return this->GetParent().GetClientRect(lpRect);
 	}
 
 	void _DrawOverlay(HDC dc, LPRECT lpRect);
-
-	
 
 
 public:	// WM_XXX
@@ -47,7 +44,7 @@ public:	// WM_XXX
 public:
 	DECLARE_WND_CLASS_EX(L"NextlabsViewOverlay", 0, (HBRUSH)(COLOR_WINDOW + 1));
 
-	BEGIN_MSG_MAP_EX(OyeMainWindow)
+	BEGIN_MSG_MAP_EX(OyeClientWindow)
 		//MSG_WM_SHOWWINDOW(OnShowWindow)
 		/*MSG_WM_ERASEBKGND(OnEraseBkgnd)*/
 		//MSG_WM_CREATE(OnCreate)
@@ -55,6 +52,5 @@ public:
 		//MSG_WM_NCPAINT(OnNcPaint)
 		//MESSAGE_HANDLER(WM_ERASEBKGND, OnEraseBkgnd)
 		END_MSG_MAP()
-
 };
 
