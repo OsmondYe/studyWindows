@@ -34,7 +34,7 @@ namespace {
 	}
 }
 
-OverlayChildWnd::OverlayChildWnd()
+OverlayWnd::OverlayWnd()
 {
 #ifdef USING_GDI_PLUS
 	Gdiplus::GdiplusStartup(&gGidplusToken, &gGdipulsInput, NULL);
@@ -42,7 +42,7 @@ OverlayChildWnd::OverlayChildWnd()
 	
 }
 
-OverlayChildWnd::~OverlayChildWnd()
+OverlayWnd::~OverlayWnd()
 {
 #ifdef USING_GDI_PLUS
 	if (gGidplusToken != NULL) {
@@ -53,7 +53,7 @@ OverlayChildWnd::~OverlayChildWnd()
 
 CRect OldTarget(-1, -1, -1, -1);
 
-void OverlayChildWnd::UpdateOverlay(HWND target)
+void OverlayWnd::UpdateOverlay(HWND target)
 {
 	
 	CRect ScreenRC = { 0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN) };
@@ -102,7 +102,7 @@ void OverlayChildWnd::UpdateOverlay(HWND target)
 }
 
 
-void OverlayChildWnd::_DrawOverlay(HDC dcScreen, LPRECT lpRestrictDrawingRect)
+void OverlayWnd::_DrawOverlay(HDC dcScreen, LPRECT lpRestrictDrawingRect)
 {
 	if (dcScreen == NULL) {
 		return;
@@ -160,12 +160,12 @@ void OverlayChildWnd::_DrawOverlay(HDC dcScreen, LPRECT lpRestrictDrawingRect)
 }
 
 
-int OverlayChildWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
+int OverlayWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	return 0;
 }
 
-void OverlayChildWnd::OnPaint(CDCHandle) {
+void OverlayWnd::OnPaint(CDCHandle) {
 	::OutputDebugString(__FUNCTIONW__ L"\n");
 	CPaintDC dc(this->m_hWnd);
 

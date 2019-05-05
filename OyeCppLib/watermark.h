@@ -15,12 +15,12 @@ typedef CWinTraits
 //	| WS_EX_TRANSPARENT 
 >OverlayWindowTraits;
 
-class OverlayChildWnd :
-	public CWindowImpl<OverlayChildWnd, CWindow, OverlayWindowTraits>
+class OverlayWnd :
+	public CWindowImpl<OverlayWnd, CWindow, OverlayWindowTraits>
 {
 public:
-	OverlayChildWnd();
-	~OverlayChildWnd();
+	OverlayWnd();
+	~OverlayWnd();
 
 	void UpdateOverlay(HWND target);
 
@@ -37,7 +37,6 @@ public:	// WM_XXX
 	void OnPaint(CDCHandle);
 
 	LRESULT OnEraseBkgnd(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
-		// 屏蔽背景绘制
 		return TRUE;
 	}
 

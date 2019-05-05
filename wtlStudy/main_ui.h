@@ -2,9 +2,8 @@
 #include "stdafx.h"
 #include "common_ui_components.h"
 #include "atlcrack.h"
-#include "watermark/watermark.h"
-
-
+#include "watermark.h"
+#include "oye_cpp.h"
 
 typedef CWinTraits<WS_CHILD | WS_VISIBLE, WS_EX_CLIENTEDGE>	OyeClientWindowTraits;
 class OyeClientWindow :
@@ -12,13 +11,25 @@ class OyeClientWindow :
 	public CPaintBkgnd<OyeClientWindow, RGB(0, 0,255 )>
 {
 public:
-	OyeClientWindow() : m_bTractInfo(false) {}
-private:
-		bool m_bTractInfo;
-
-public:
 	bool isFullScreen();
 	void ToggleFullScreen();
+
+
+public:// Message
+
+	void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
+
+	void OnSysKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
+
+	LRESULT OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+
+	void OnLButtonDown(UINT nFlags, CPoint point);
+
+	void OnLButtonUp(UINT nFlags, CPoint point);
+
+	void OnMouseMove(UINT nFlags, CPoint point);
+
+	void OnRButtonDown(UINT nFlags, CPoint point);
 
 public:
 	DECLARE_WND_CLASS(L"OyeClientWindow");
@@ -43,22 +54,6 @@ public:
 
 	END_MSG_MAP()
 
-public:// Message
-
-	void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
-
-	void OnSysKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
-
-	LRESULT OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
-
-	void OnLButtonDown(UINT nFlags, CPoint point);
-
-	void OnLButtonUp(UINT nFlags, CPoint point);
-
-	void OnMouseMove(UINT nFlags, CPoint point);
-
-	void OnRButtonDown(UINT nFlags, CPoint point);
-
 
 private:
 
@@ -67,9 +62,10 @@ private:
 
 
 
-typedef CWinTraits<WS_OVERLAPPEDWINDOW | WS_CLIPSIBLINGS| WS_CLIPCHILDREN,
-	WS_EX_APPWINDOW | WS_EX_OVERLAPPEDWINDOW | WS_EX_WINDOWEDGE >
-	OyeFrameWndTraits;
+typedef CWinTraits<
+	WS_OVERLAPPEDWINDOW | WS_CLIPSIBLINGS| WS_CLIPCHILDREN,
+	WS_EX_APPWINDOW | WS_EX_OVERLAPPEDWINDOW | WS_EX_WINDOWEDGE 
+	>OyeFrameWndTraits;
 class OyeFrameWnd : 
 	public CFrameWindowImpl<OyeFrameWnd,CWindow, OyeFrameWndTraits>,
 	public CUpdateUI<OyeFrameWnd>,
@@ -112,8 +108,6 @@ public:
 	virtual  BOOL OnIdle() override{
 		UIUpdateMenuBar();
 		return false;
-		//::OutputDebugString(__FUNCTIONW__ L"\n");
-		//return false;
 	}
 	// derived from CMessageFilter	 
 	virtual BOOL PreTranslateMessage(MSG * pMsg) override {
@@ -132,23 +126,15 @@ public:
 
 
 	void OnScreen(UINT uNotifyCode, int nID, CWindow wndCtl) {
-		::OutputDebugString(__FUNCTIONW__ L"\n");
-		//UIEnable(ID_FUNCS_FULLSCREEN, false);
-		
-		//make client as WS_Popus
-		m_Client.ModifyStyle(WS_CHILD, WS_POPUP);
-		m_Client.ModifyStyleEx(WS_EX_CLIENTEDGE, 0);
-		m_Client.SetParent(NULL);
-		m_Client.MoveWindow(GetVirtualScreenRect());
-
+		DBGFUNC
+		m_Client.ToggleFullScreen();
 	}
 
 	void OnCaptureScreen(UINT uNotifyCode, int nID, CWindow wndCtl) {
-		::OutputDebugString(__FUNCTIONW__ L"\n");
+		DBGFUNC
 		CaptureWholeScreens();
+
 	}
-
-
 
 };
 

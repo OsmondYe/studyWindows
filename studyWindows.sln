@@ -30,6 +30,15 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wtlStudy", "wtlStudy\wtlStu
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UpdateRgn", "..\goodDemo\wtl\updatergn_src\UpdateRgn.vcxproj", "{173DA48D-AF9E-47FF-A071-81D3E5E8F998}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OyeCppLib", "OyeCppLib", "{07AB6B9F-19CB-4D68-BA69-35FBF14CFE81}"
+	ProjectSection(SolutionItems) = preProject
+		OyeCppLib\common_ui_components.cpp = OyeCppLib\common_ui_components.cpp
+		OyeCppLib\common_ui_components.h = OyeCppLib\common_ui_components.h
+		OyeCppLib\oye_cpp.h = OyeCppLib\oye_cpp.h
+		OyeCppLib\watermark.cpp = OyeCppLib\watermark.cpp
+		OyeCppLib\watermark.h = OyeCppLib\watermark.h
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

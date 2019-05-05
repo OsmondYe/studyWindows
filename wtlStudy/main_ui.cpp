@@ -1,6 +1,6 @@
 ﻿#include "stdafx.h"
 #include "main_ui.h"
-
+#include <atlimage.h>
 
 extern OyeFrameWnd* pMainWnd;
 
@@ -106,6 +106,8 @@ LRESULT OyeClientWindow::OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL &
 	CPaintDC dc(m_hWnd);
 	return 0;
 }
+
+bool m_bTractInfo;
 
 void OyeClientWindow::OnLButtonDown(UINT nFlags, CPoint point)
 {
@@ -296,8 +298,17 @@ void OyeClientWindow::OnRButtonDown(UINT nFlags, CPoint point) {
 	 pLoop->AddIdleHandler(this);
 
 
-	 UIEnable(ID_FUNCS_FULLSCREEN, FALSE);
-	 UIEnable(ID_FUNCS_CAPTURESCREEN, FALSE);
+	 UIEnable(ID_FUNCS_FULLSCREEN, true);
+	 UIEnable(ID_FUNCS_CAPTURESCREEN, true);
+
+	 BITMAP bp = { 1,2,3,4,5,6,(void*)0x123456789abcdef };
+	 
+	 int a = sizeof(BITMAP);
+	 int b = sizeof(DIBSECTION);
+
+	 //CImageList
+
+	 //::GetWindowLongW(NULL,GWLP_HWNDPARENT)
 
 	 return 0;
  }

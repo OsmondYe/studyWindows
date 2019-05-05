@@ -24,7 +24,7 @@ Gdiplus::GdiplusStartupInput gGdipulsInput;
 CAppModule _Module;
 
 OyeFrameWnd* pMainWnd = NULL;
-OverlayChildWnd* pWnd = NULL;
+OverlayWnd* pWnd = NULL;
 
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,

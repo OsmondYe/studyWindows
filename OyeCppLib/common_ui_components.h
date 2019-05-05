@@ -57,4 +57,6 @@ inline CRect GetPrimayScreenRect() {
 inline void CaptureWholeScreens() {
 	CDC dc = ::GetDC(NULL);
 	CatureImageBy(dc, GetVirtualScreenRect());
+
+
 }
