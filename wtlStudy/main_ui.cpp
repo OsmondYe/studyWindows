@@ -271,6 +271,67 @@ void OyeClientWindow::OnRButtonDown(UINT nFlags, CPoint point) {
 	
  }
 
+ void OyeClientWindow::DrawSth(CString str)
+ {	 
+	 
+	 static auto chooseColour = []()->COLORREF {
+		 static COLORREF c = 0;
+		 static COLORREF f = RGB(255, 255, 255);
+		 COLORREF rt = c++;
+		/* if (c == f) {
+			 c=0;
+		 }*/
+
+		 return rt;
+	 };
+
+	 
+	 this->RedrawWindow();
+
+	 	 
+	 CClientDC dc(m_hWnd);
+	 CRect rc;
+	 GetClientRect(rc);
+	 CMemoryDC mdc(dc, rc);
+
+	 //mdc.BitBlt(0, 0, rc.Width(), rc.Height(), dc, 0, 0, SRCCOPY);
+	 
+	 //mdc.SetBkMode(TRANSPARENT);
+	 for(int col=0;col<10;col++)
+	 for (int i = 0; i < 30; i++ ) {
+		CString s = str;
+		COLORREF color = chooseColour();
+		mdc.SetTextColor(color);
+		s.AppendFormat(L"0x%06X", color);
+		mdc.TextOutW(col*120, i*20,  s);
+	 } 
+ }
+
+ void OyeClientWindow::DrawColourRect()
+ {
+	 CClientDC dc(m_hWnd);
+	 CRect rc;
+	 GetClientRect(rc);
+	 COLORREF color = 0;
+
+
+	 int delta = 5;
+
+	 for (size_t i = 0; i < rc.Width(); i+= delta)
+	 {
+		 for (size_t j = 0; j < rc.Height(); j+= delta)
+		 {
+			 dc.SetDCPenColor(color);
+			 dc.SetDCBrushColor(color);			 			 
+			 dc.FillSolidRect(i, j, i + delta, j + delta, color);
+			 //color -= 100;
+			 color =RGB(rand()%255, rand() % 255, rand() % 255);
+			 //dc.Rectangle);
+			 //dc.TextOutW(i, j, L"w", -1);
+		 }
+	 }
+ }
+
  
 
 
@@ -283,6 +344,70 @@ void OyeClientWindow::OnRButtonDown(UINT nFlags, CPoint point) {
 	 CAboutDlg dlg;
 	 dlg.DoModal();
  }
+
+ void OyeFrameWnd::OnClipboard(UINT uNotifyCode, int nID, CWindow wndCtl)
+ {
+	 switch (nID)
+	 {
+	 case ID_CLIPBOARD_COPY:
+		 //::MessageBox(m_hWnd, L"ID_CLIPBOARD_COPY", L"", MB_OK);
+		 break;
+	 case ID_CLIPBOARD_CUT:
+		 //::MessageBox(m_hWnd, L"ID_CLIPBOARD_CUT", L"", MB_OK);
+		 break;
+	 case ID_CLIPBOARD_PASTE:
+		 OnPaste();
+		 return;
+	 default:
+		 break;
+	 }
+	 //
+	 CString str = L"this is a test";
+	 int len = (str.GetLength() + 1) * 2;
+	 HGLOBAL h = ::GlobalAlloc(GPTR, len);
+	 ::memcpy(h, str, len);	 
+	 ::OpenClipboard(m_hWnd);
+	 ::EmptyClipboard();
+	 ::SetClipboardData(CF_UNICODETEXT, h);
+	 ::CloseClipboard();
+		 
+ }
+
+ void OyeFrameWnd::OnPaste()
+ {
+	 if (!::OpenClipboard(m_hWnd)) {
+		 return;
+	 }
+	 HANDLE h = ::GetClipboardData(CF_UNICODETEXT);
+	 if (NULL == h) {
+		 return;
+	 }
+	 int size=::GlobalSize(h);
+	 CString s((wchar_t*)h);
+	 ::CloseClipboard();
+
+	 ::MessageBox(m_hWnd, s, s, 0);
+
+ }
+
+ void OyeFrameWnd::OnColourful(UINT uNotifyCode, int nID, CWindow wndCtl)
+ {
+	 SetTimer(1, 50);
+ }
+
+ void OyeFrameWnd::OnDrawColourRect(UINT uNotifyCode, int nID, CWindow wndCtl)
+ {
+	 m_Client.DrawColourRect();
+ }
+
+ void OyeFrameWnd::OnTimer(UINT_PTR nIDEvent)
+ {
+	 if (nIDEvent == 1) {
+		 m_Client.DrawSth("c:");
+	 }
+ }
+
+
 
  int OyeFrameWnd::OnCreate(LPCREATESTRUCT lpCreateStruct) {
 	 ::OutputDebugString(__FUNCTIONW__ L"\n");
@@ -301,10 +426,10 @@ void OyeClientWindow::OnRButtonDown(UINT nFlags, CPoint point) {
 	 UIEnable(ID_FUNCS_FULLSCREEN, true);
 	 UIEnable(ID_FUNCS_CAPTURESCREEN, true);
 
-	 BITMAP bp = { 1,2,3,4,5,6,(void*)0x123456789abcdef };
+	/* BITMAP bp = { 1,2,3,4,5,6,(void*)0x123456789abcdef };
 	 
 	 int a = sizeof(BITMAP);
-	 int b = sizeof(DIBSECTION);
+	 int b = sizeof(DIBSECTION);*/
 
 	 //CImageList
 

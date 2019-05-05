@@ -26,8 +26,9 @@
 //for wtl
 #include <atlbase.h>
 #include "atlapp.h"
-#include "atlframe.h"	//CFrameWindowImpl
 #include "atlwinx.h"	// wtl::CWindowEx
+#include "atluser.h"
+#include "atlframe.h"	//CFrameWindowImpl
 #include "atlctrls.h"
 #include "atlmisc.h"
 #include "atlcrack.h"

@@ -14,7 +14,6 @@
 #define IDI_SMALL                       108
 #define IDC_WTLSTUDY                    109
 #define IDR_MAINFRAME                   128
-#define IDR_MENU                        129
 #define IDB_BITMAP1                     132
 #define ATL_IDC_TAB_CONTROL             0x3020
 #define ID_APPLY_NOW                    0x3021
@@ -30,6 +29,12 @@
 #define ID_FUNCS_FULLSCREEN             32779
 #define ID_FUNCS_CAPTURESCREEN          32780
 #define ID_FILE_ABOUT32784              32784
+#define ID_CLIPBOARD                    32785
+#define ID_CLIPBOARD_COPY               32786
+#define ID_CLIPBOARD_CUT                32787
+#define ID_CLIPBOARD_PASTE              32788
+#define ID_FUNCS_COLOURFUL              32793
+#define ID_FUNCS_DRAWCOLORRECT          32794
 #define ATL_IDS_IDLEMESSAGE             0xE001
 #define ID_FILE_NEW                     0xE100
 #define ID_FILE_OPEN                    0xE101
@@ -138,7 +143,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        133
-#define _APS_NEXT_COMMAND_VALUE         32785
+#define _APS_NEXT_COMMAND_VALUE         32795
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           110
 #endif

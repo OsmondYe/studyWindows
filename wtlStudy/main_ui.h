@@ -8,11 +8,13 @@
 typedef CWinTraits<WS_CHILD | WS_VISIBLE, WS_EX_CLIENTEDGE>	OyeClientWindowTraits;
 class OyeClientWindow :
 	public CWindowImpl<OyeClientWindow, CWindow, OyeClientWindowTraits>,
-	public CPaintBkgnd<OyeClientWindow, RGB(0, 0,255 )>
+	public CPaintBkgnd<OyeClientWindow, RGB(255, 255, 255)>
 {
 public:
 	bool isFullScreen();
 	void ToggleFullScreen();
+	void DrawSth(CString str);
+	void DrawColourRect();
 
 
 public:// Message
@@ -34,7 +36,7 @@ public:// Message
 public:
 	DECLARE_WND_CLASS(L"OyeClientWindow");
 
-	typedef CPaintBkgnd<OyeClientWindow, RGB(0, 0, 255)> CPaintBkgndBase;
+	typedef CPaintBkgnd<OyeClientWindow, RGB(255, 255, 255)> CPaintBkgndBase;
 
 	BEGIN_MSG_MAP_EX(OyeClientWindow)
 		// wnd common msg
@@ -71,12 +73,12 @@ class OyeFrameWnd :
 	public CUpdateUI<OyeFrameWnd>,
 	public CMessageFilter,
 	public CIdleHandler,
-	public CPaintBkgnd<OyeFrameWnd, RGB(255, 0, 0)>
+	public CPaintBkgnd<OyeFrameWnd, RGB(255, 255, 255)>
 {
 private:
 	OyeClientWindow m_Client;
 public:
-	typedef CPaintBkgnd<OyeFrameWnd, RGB(255, 0, 0)> CPaintBkgndBase;
+	typedef CPaintBkgnd<OyeFrameWnd, RGB(255, 255, 255)> CPaintBkgndBase;
 	typedef CFrameWindowImpl<OyeFrameWnd, CWindow, OyeFrameWndTraits> COyeFrameBase;
 	 
 	//IDR_MAINFRAME : some id with ICON, Menu, Accelerator
@@ -98,6 +100,17 @@ public:
 		COMMAND_ID_HANDLER_EX(ID_FUNCS_FULLSCREEN,OnScreen)
 		COMMAND_ID_HANDLER_EX(ID_FUNCS_CAPTURESCREEN, OnCaptureScreen)
 		COMMAND_ID_HANDLER_EX(IDM_FILE_ABOUT, OnAbout)
+		//ID_FUNCS_COLOURFUL
+		COMMAND_ID_HANDLER_EX(ID_FUNCS_COLOURFUL, OnColourful)
+		COMMAND_ID_HANDLER_EX(ID_FUNCS_DRAWCOLORRECT, OnDrawColourRect)
+
+		// Command Clipboard
+		COMMAND_ID_HANDLER_EX(ID_CLIPBOARD_COPY, OnClipboard)
+		COMMAND_ID_HANDLER_EX(ID_CLIPBOARD_CUT, OnClipboard)
+		COMMAND_ID_HANDLER_EX(ID_CLIPBOARD_PASTE, OnClipboard)
+		// timer
+		MSG_WM_TIMER(OnTimer)
+		//
 		CHAIN_MSG_MAP(COyeFrameBase)
 		CHAIN_MSG_MAP(CPaintBkgndBase)
 		CHAIN_MSG_MAP(CUpdateUI<OyeFrameWnd>)
@@ -124,6 +137,16 @@ public:
 
 	void OnAbout(UINT uNotifyCode, int nID, CWindow wndCtl);
 
+
+	void OnClipboard(UINT uNotifyCode, int nID, CWindow wndCtl);
+
+	void OnPaste();
+
+	void OnColourful(UINT uNotifyCode, int nID, CWindow wndCtl);
+
+	void OnDrawColourRect(UINT uNotifyCode, int nID, CWindow wndCtl);
+
+	void OnTimer(UINT_PTR nIDEvent);
 
 	void OnScreen(UINT uNotifyCode, int nID, CWindow wndCtl) {
 		DBGFUNC
