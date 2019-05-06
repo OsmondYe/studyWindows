@@ -57,6 +57,51 @@ inline CRect GetPrimayScreenRect() {
 inline void CaptureWholeScreens() {
 	CDC dc = ::GetDC(NULL);
 	CatureImageBy(dc, GetVirtualScreenRect());
-
-
 }
+
+
+class RGBEnum{
+public:
+	RGBEnum(COLORREF b = RGB(0, 0, 0)) :base(b) {}
+
+	COLORREF cur() {
+		static byte r = GetRValue(base);
+		static byte g = GetGValue(base);
+		static byte b = GetBValue(base);
+
+		if (r < 255) {
+			r++;
+			base = RGB(r, g, b);
+			return base;
+		}
+		r = 0;
+		g++;
+		if (g < 255) {
+			base = RGB(r, g, b);
+			return base;
+		}
+		g = 0;
+		b++;
+		if (b < 255) {
+			base = RGB(r, g, b);
+			return base;
+		}
+		r = b = g = 0;
+		base = RGB(r, g, b);
+		return base;
+		
+			
+	}
+
+
+	COLORREF operator++() {
+		return cur();
+	}
+
+	COLORREF operator++(int) {
+		return cur();
+	}
+
+	COLORREF base;
+
+};
