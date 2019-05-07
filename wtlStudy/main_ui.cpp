@@ -104,6 +104,32 @@ LRESULT OyeClientWindow::OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL &
 {
 	::OutputDebugStringW(__FUNCTIONW__ L"\n");
 	CPaintDC dc(m_hWnd);
+
+	CRect rc;
+	GetClientRect(rc);
+	CMemoryDC*  mdc=new CMemoryDC(dc, CRect(0,0,95,95));
+
+	mdc->Draw3dRect(5, 5, 95, 95, RGB(255, 0, 0), RGB(0, 255, 0));
+
+	mdc->TextOutW(0, 0, L"test");
+
+
+	//dc.BitBlt(0, 0, rc.Width(), rc.Height(), mdc, 0, 0, SRCCOPY);
+
+	CBrush myBrush;
+	myBrush.CreatePatternBrush(mdc->m_bmp);
+
+	dc.SelectBrush(myBrush);
+	dc.PatBlt(0, 0, rc.Width(), rc.Height(), PATCOPY);
+
+	dc.Rectangle(10, 0, 110, 110);
+	dc.Rectangle(550, 0, 600, 100);
+	dc.Rectangle(950, 0, 1000, 100);
+
+
+	delete mdc;
+
+
 	return 0;
 }
 
