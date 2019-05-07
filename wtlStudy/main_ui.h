@@ -97,12 +97,14 @@ public:
 		MSG_WM_CREATE(OnCreate)
 		//MSG_WM_COMMAND()
 		//com
-		COMMAND_ID_HANDLER_EX(ID_FUNCS_FULLSCREEN,OnScreen)
+		COMMAND_ID_HANDLER_EX(ID_FUNCS_FULLSCREEN,OnFullScreen)
 		COMMAND_ID_HANDLER_EX(ID_FUNCS_CAPTURESCREEN, OnCaptureScreen)
 		COMMAND_ID_HANDLER_EX(IDM_FILE_ABOUT, OnAbout)
 		//ID_FUNCS_COLOURFUL
 		COMMAND_ID_HANDLER_EX(ID_FUNCS_COLOURFUL, OnColourful)
 		COMMAND_ID_HANDLER_EX(ID_FUNCS_DRAWCOLORRECT, OnDrawColourRect)
+		//OnScramble
+		COMMAND_ID_HANDLER_EX(ID_FUNCS_SCRAMBLESCREEN, OnScramble)
 
 		// Command Clipboard
 		COMMAND_ID_HANDLER_EX(ID_CLIPBOARD_COPY, OnClipboard)
@@ -148,16 +150,47 @@ public:
 
 	void OnTimer(UINT_PTR nIDEvent);
 
-	void OnScreen(UINT uNotifyCode, int nID, CWindow wndCtl) {
+	void OnFullScreen(UINT uNotifyCode, int nID, CWindow wndCtl) {
 		DBGFUNC
 		m_Client.ToggleFullScreen();
 	}
 
 	void OnCaptureScreen(UINT uNotifyCode, int nID, CWindow wndCtl) {
 		DBGFUNC
-		CaptureWholeScreens();
+			//CaptureWholeScreens();
+
+		/*CDC dc = ::GetDC(NULL);
+		CRect rc = GetVirtualScreenRect();
+		CMemoryDC mdc(dc, rc);
+		mdc.BitBlt(0, 0, rc.Width(), rc.Height(), dc, 0, 0, SRCCOPY);
+
+		::OpenClipboard(m_hWnd);
+		::EmptyClipboard();
+		::SetClipboardData(CF_BITMAP, mdc.m_bmp);
+		::CloseClipboard();*/
+
+
+		CDC dc = ::GetDC(m_Client.m_hWnd);
+		CRect rc(0,0,255,255);
+		CMemoryDC mdc(dc, rc);
+		
+		DWORD c = 0;
+		for (size_t i = 0; i < 255; i++)
+		{
+			for (size_t j = 0; j < 255; j++)
+			{
+				mdc.SetPixel(i, j, (c++)<<0);
+			}
+		}
+
+		::OpenClipboard(m_hWnd);
+		::EmptyClipboard();
+		::SetClipboardData(CF_BITMAP, mdc.m_bmp);
+		::CloseClipboard();
 
 	}
+
+	void OnScramble(UINT uNotifyCode, int nID, CWindow wndCtl);
 
 };
 

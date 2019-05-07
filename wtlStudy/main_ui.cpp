@@ -304,10 +304,9 @@ void OyeClientWindow::OnRButtonDown(UINT nFlags, CPoint point) {
 		 static COLORREF c = 0;
 		 static COLORREF f = RGB(255, 255, 255);
 		 COLORREF rt = c++;
-		/* if (c == f) {
+		 if (c == f) {
 			 c=0;
-		 }*/
-
+		 }		 
 		 return rt;
 	 };
 
@@ -319,10 +318,11 @@ void OyeClientWindow::OnRButtonDown(UINT nFlags, CPoint point) {
 	 CRect rc;
 	 GetClientRect(rc);
 	 CMemoryDC mdc(dc, rc);
+	 mdc.BitBlt(0, 0, rc.Width(), rc.Height(), dc, 0, 0, PATCOPY);
 
 	 //mdc.BitBlt(0, 0, rc.Width(), rc.Height(), dc, 0, 0, SRCCOPY);
 	 
-	 //mdc.SetBkMode(TRANSPARENT);
+	 mdc.SetBkMode(TRANSPARENT);
 	 for(int col=0;col<10;col++)
 	 for (int i = 0; i < 30; i++ ) {
 		CString s = str;
@@ -338,20 +338,30 @@ void OyeClientWindow::OnRButtonDown(UINT nFlags, CPoint point) {
 	 CClientDC dc(m_hWnd);
 	 CRect rc;
 	 GetClientRect(rc);
-	 COLORREF color = 0;
+
+	 CMemoryDC mdc(dc, rc);
+
+	 RGBEnum color;
 
 
-	 int delta = 5;
+	 int delta = 1;
+	 const int count = 4;
+	 int cur = 0;
 
-	 for (size_t i = 0; i < rc.Width(); i+= delta)
-	 {
 		 for (size_t j = 0; j < rc.Height(); j+= delta)
+	 {
+	 for (size_t i = 0; i < rc.Width(); i+= delta)
 		 {
-			 dc.SetDCPenColor(color);
-			 dc.SetDCBrushColor(color);			 			 
-			 dc.FillSolidRect(i, j, i + delta, j + delta, color);
-			 //color -= 100;
-			 color =RGB(rand()%255, rand() % 255, rand() % 255);
+			 //dc.SetDCPenColor(color);
+			 //dc.SetDCBrushColor(color);			 			 
+			 //dc.FillSolidRect(i, j, i + delta, j + delta, color);
+		 if (cur++ == 4) {
+			 cur = 0;
+			 color++;
+		 }
+		 mdc.SetPixel(j,i, color.base);
+			 //color++;
+			 //color =RGB(rand()%255, rand() % 255, rand() % 255);
 			 //dc.Rectangle);
 			 //dc.TextOutW(i, j, L"w", -1);
 		 }
@@ -415,10 +425,18 @@ void OyeClientWindow::OnRButtonDown(UINT nFlags, CPoint point) {
 	 ::MessageBox(m_hWnd, s, s, 0);
 
  }
-
+ 
  void OyeFrameWnd::OnColourful(UINT uNotifyCode, int nID, CWindow wndCtl)
  {
-	 SetTimer(1, 50);
+	 static bool bset = false;
+	 if (!bset) {
+		 bset = true;
+		 SetTimer(1, 50);
+	 }
+	 else {
+		 bset = false;
+		 KillTimer(1);
+	 }
  }
 
  void OyeFrameWnd::OnDrawColourRect(UINT uNotifyCode, int nID, CWindow wndCtl)
@@ -431,6 +449,55 @@ void OyeClientWindow::OnRButtonDown(UINT nFlags, CPoint point) {
 	 if (nIDEvent == 1) {
 		 m_Client.DrawSth("c:");
 	 }
+ }
+
+ void OyeFrameWnd::OnScramble(UINT uNotifyCode, int nID, CWindow wndCtl)
+ {
+	 // 利用内存dc当做暂存区域，然后把屏幕分成100份，随机打乱
+	 const int NUM = 300;
+
+	 HWND hscreen= GetDesktopWindow();
+	 if (!::LockWindowUpdate(hscreen)) {
+		 return;
+	 }
+
+
+	 CDC dc = ::GetDCEx(hscreen, NULL, DCX_CACHE | DCX_LOCKWINDOWUPDATE);
+	 auto cx = GetSystemMetrics(SM_CXSCREEN) / 10;
+	 auto cy = GetSystemMetrics(SM_CYSCREEN) / 10;
+
+	 CRect rc(0, 0, cx, cy);
+
+	 CMemoryDC mdc(dc, rc);
+	 int iKeep[NUM][4];
+	 int i, j, x1, y1, x2, y2;
+	 for (i = 0; i < 2; i++)
+		 for (j = 0; j < NUM; j++)
+		 {
+			 if (i == 0)
+			 {
+				 iKeep[j][0] = x1 = cx * (rand() % 10);
+				 iKeep[j][1] = y1 = cy * (rand() % 10);
+				 iKeep[j][2] = x2 = cx * (rand() % 10);
+				 iKeep[j][3] = y2 = cy * (rand() % 10);
+			 }
+			 else
+			 {
+				 x1 = iKeep[NUM - 1 - j][0];
+				 y1 = iKeep[NUM - 1 - j][1];
+				 x2 = iKeep[NUM - 1 - j][2];
+				 y2 = iKeep[NUM - 1 - j][3];
+			 }
+			 BitBlt(mdc, 0, 0, cx, cy, dc, x1, y1, SRCCOPY);
+			 BitBlt(dc, x1, y1, cx, cy, dc, x2, y2, SRCCOPY);
+			 BitBlt(dc, x2, y2, cx, cy, mdc, 0, 0, SRCCOPY);
+
+			 Sleep(1);
+		 }
+	LockWindowUpdate(NULL);
+
+
+
  }
 
 
