@@ -77,6 +77,16 @@ class OyeFrameWnd :
 {
 private:
 	OyeClientWindow m_Client;
+	CStatusBarCtrl m_StatusBar;
+
+	enum {
+		status_bar_1 = 0,
+		status_bar_2 = 0,
+		status_bar_3 = 0,
+		status_bar_4 = 0
+
+	};
+
 public:
 	typedef CPaintBkgnd<OyeFrameWnd, RGB(255, 255, 255)> CPaintBkgndBase;
 	typedef CFrameWindowImpl<OyeFrameWnd, CWindow, OyeFrameWndTraits> COyeFrameBase;

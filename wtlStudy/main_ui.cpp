@@ -510,6 +510,15 @@ void OyeClientWindow::OnRButtonDown(UINT nFlags, CPoint point) {
 	 // client
 	 m_hWndClient = m_Client.Create(m_hWnd);
 
+	 // statusbar	
+	 CreateSimpleStatusBar();
+	 m_StatusBar.Attach(m_hWndStatusBar);
+	 int barCX[3]={ 100,200,-1 };
+	 m_StatusBar.SetParts(3, barCX);
+	 m_StatusBar.SetText(0, L"status bar 0");
+	 m_StatusBar.SetText(1, L"status bar 1");
+	 m_StatusBar.SetText(2, L"status bar 2");	 
+
 	 //must Register msg-filtering and idle
 	 CMessageLoop* pLoop = _Module.GetMessageLoop();
 	 pLoop->AddMessageFilter(this);

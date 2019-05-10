@@ -24,7 +24,6 @@ Gdiplus::GdiplusStartupInput gGdipulsInput;
 CAppModule _Module;
 
 OyeFrameWnd* pMainWnd = NULL;
-OverlayWnd* pWnd = NULL;
 
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -50,28 +49,26 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	CMessageLoop theLoop;
 	_Module.AddMessageLoop(&theLoop);
 	
+
+	// Main wnd
 	pMainWnd= new OyeFrameWnd();
 	pMainWnd->CreateEx();
+	//auto rgn=::CreateEllipticRgn(50, 50, 200, 400);
+	//pMainWnd->SetWindowRgn(rgn);
 	pMainWnd->ShowWindow(nCmdShow);
-
 	
-
-	/*pWnd =new OverlayChildWnd();
-	CRect rc(0, 0, 1000, 400);
-	pWnd->Create(NULL,rc);
-	
-	pWnd->ShowWindow(SW_SHOW);
-	pWnd->UpdateWindow();*/
+	// Overly Wnd
+	//pWnd =new OverlayWnd();
+	//CRect rc(0, 0, 1000, 400);
+	//pWnd->Create(NULL,rc);
+	//
+	//pWnd->ShowWindow(SW_SHOW);
+	//pWnd->UpdateWindow();
+	//// set ovlery wnd target on man wnd
 	//pWnd->UpdateOverlay(pMainWnd->m_hWnd);
 
-	//_beginthread([](void*) {
-	//	while (1) {
-	//		// 
-	//		pWnd->UpdateOverlay(pMainWnd->m_hWnd);
-	//		::Sleep(2000);
-	//	}
-	//}, 0, 0);
-
+	//ViewOverlyController c;
+	//c.SetOverlyTarget(*pMainWnd);
 	
 	int nRet = theLoop.Run();
 
