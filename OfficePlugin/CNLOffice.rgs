@@ -1,0 +1,21 @@
+HKCR
+{
+	OyeTestOfficePlguin = s 'OyeTestOfficePlguin'
+	{
+		CLSID = s '{9dfeac9d-4630-442f-a227-010e534241f9}'
+	}
+
+	NoRemove CLSID
+	{
+		ForceRemove {9dfeac9d-4630-442f-a227-010e534241f9} = s 'OyeTestOfficePlguin'
+		{
+			ForceRemove Programmable
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			TypeLib = s '{c4d5c990-0bf3-4f85-8e78-6303801664a4}'
+			Version = s '1.0'
+		}
+	}
+}

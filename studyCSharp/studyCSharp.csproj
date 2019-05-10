@@ -72,7 +72,6 @@
     <Compile Include="forAsync.cs" />
     <Compile Include="forClassExtension.cs" />
     <Compile Include="forCommonInterface.cs" />
-    <Compile Include="forCsDll.cs" />
     <Compile Include="forDelegate.cs" />
     <Compile Include="forDotNetBasic.cs" />
     <Compile Include="forHelper.cs" />
@@ -100,12 +99,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CsDll\CsDll.csproj">
-      <Project>{be85fcdd-e6fb-4849-be18-4a623db741c7}</Project>
-      <Name>CsDll</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
