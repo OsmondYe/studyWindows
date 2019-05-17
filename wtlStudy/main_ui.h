@@ -1,9 +1,9 @@
 ﻿#pragma once
 #include "stdafx.h"
-#include "common_ui_components.h"
+#include "../OyeCppLib/common_ui_components.h"
 #include "atlcrack.h"
-#include "watermark.h"
-#include "oye_cpp.h"
+#include "../OyeCppLib/watermark.h"
+#include "../OyeCppLib/oye_cpp.h"
 
 typedef CWinTraits<WS_CHILD | WS_VISIBLE, WS_EX_CLIENTEDGE>	OyeClientWindowTraits;
 class OyeClientWindow :

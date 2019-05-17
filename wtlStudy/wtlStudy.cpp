@@ -46,6 +46,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 
 
+	int i = sizeof(MENUITEMINFO);
+
 	CMessageLoop theLoop;
 	_Module.AddMessageLoop(&theLoop);
 	

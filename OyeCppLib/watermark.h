@@ -47,3 +47,7 @@ private:
 private:
 	static LRESULT CALLBACK HookProxy(int code, WPARAM wParam, LPARAM lParam);
 };
+
+
+
+void DrawPrintWatermark_Test(HDC hdc);

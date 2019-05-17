@@ -2,6 +2,8 @@
 #include "main_ui.h"
 #include <atlimage.h>
 
+#include <gdiplus.h>
+
 extern OyeFrameWnd* pMainWnd;
 
 
@@ -99,35 +101,220 @@ void OyeClientWindow::OnSysKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 }
 
 
+void TestGDIPlus1(Gdiplus::Graphics& g) {
+	using namespace Gdiplus;
+	Gdiplus::Pen p(Color(100, 255, 0, 255), 10);
+	Gdiplus::Point pt1(0, 0);
+	Gdiplus::Point pt2(100, 100);
+	g.DrawLine(&p, pt1, pt2);
+
+	g.DrawLine(&p, 100, 100, 300, 100);
+	g.DrawLine(&p, 100.0f, 120.0, 300.0, 120.0);
+
+	g.DrawRectangle(&p, 300, 0, 400, 50);
+
+	g.DrawPie(&p, 200, 200, 200, 500, 0, 170);
+
+	Gdiplus::FontFamily ff(L"宋体");
+
+	Gdiplus::Font font(&ff, 30);
+	Gdiplus::SolidBrush brush(Color(100, 0, 0, 0));
+
+	g.DrawString(L"Hello GDI+", -1, &font, Gdiplus::PointF(10, 10), &brush);
+
+	Gdiplus::Image image(L"wall.png");
+	Gdiplus::TextureBrush tb(&image);
+	Gdiplus::Pen p2(&tb, 30);
+
+	g.DrawLine(&p2, 300, 0, 400, 1000);
+	g.FillRectangle(&tb, 300, 0, 400, 400);
+}
+
+void TestGDIPlus2(Gdiplus::Graphics& g) {
+	using namespace Gdiplus;
+
+	// blue
+	Pen blue(Color(255, 0, 0, 255));
+	Pen red(Color(255, 255, 0, 0));
+
+	int y = 256;
+	for (size_t x = 0; x < 256; x+=10)
+	{
+		g.DrawLine(&blue, 0, y, x, 0);
+		g.DrawLine(&red, 256, x, y, 256);
+		y -= 10;
+		::Sleep(10);
+	}
+
+	for (size_t y = 0; y < 256; y++)
+	{
+		Pen pen(Color(y, 0, 255, 0));
+		g.DrawLine(&pen, 0, y, 256, y);
+		::Sleep(10);
+	}
+
+	for (size_t x = 0; x < 256; x++)
+	{
+		Pen pen(Color(x, 255, 0, 255));
+		g.DrawLine(&pen, x, 0, x, 256);
+		::Sleep(10);
+	}
+
+}
+
+void TestGDIPlus3(Gdiplus::Graphics& g) {
+	using namespace Gdiplus;
+	// hatch brush
+
+	Color black(255, 0, 0, 0);
+	Color white(255, 255, 255, 255);
+
+
+	HatchBrush b1(HatchStyle::HatchStyleHorizontal, black, white);
+	g.FillRectangle(&b1, 20, 20, 100, 50);
+
+	HatchBrush b2(HatchStyle::HatchStyleVertical, black, white);
+	g.FillRectangle(&b2, 120, 20, 100, 50);
+
+	HatchBrush b3(HatchStyle::HatchStyleForwardDiagonal, black, white);
+	g.FillRectangle(&b3, 220, 20, 100, 50);
+
+	HatchBrush b4(HatchStyle::HatchStyleBackwardDiagonal, black, white);
+	g.FillRectangle(&b4, 320, 20, 100, 50);
+
+	HatchBrush b5(HatchStyle::HatchStyleCross, black, white);
+	g.FillRectangle(&b5, 420, 20, 100, 50);
+
+	HatchBrush b6(HatchStyle::HatchStyleDiagonalCross, black, white);
+	g.FillRectangle(&b6, 520, 20, 100, 50);
+
+	HatchBrush b7(HatchStyle::HatchStyleSolidDiamond, black, white);
+	g.FillRectangle(&b7, 620, 20, 100, 50);
+
+
+}
+
+void TestGDIPlus4(Gdiplus::Graphics& g, CRect& rc) {
+	using namespace Gdiplus;
+
+	Color black(255, 0, 0, 0);
+	Color white(255, 255, 255, 255);
+	SolidBrush redBrush(Color(100, 255, 0, 0));
+	Pen pen(Color(255, 255, 0, 0));
+
+	int width = rc.Width();
+	int column_count = (int)width / 100;
+
+	int rol = 0;
+	int column = 0;
+	Font myfont(L"Arial", 16);
+	for (size_t i = 0; i < 53; i++)
+	{
+		// may need change line
+		if (rol > column_count - 3) {
+			column += 1;
+			rol = 0;
+		}
+
+		HatchBrush bursh_tmp(HatchStyle(i), black, white);
+		g.FillRectangle(&bursh_tmp, rol * 120, column * 120, 100, 100);
+		g.DrawRectangle(&pen, rol * 120, column * 120, 100, 100);
+
+		// draw ids
+		CString str;
+		str.Format(L"%d", i);
+
+		RectF layout(rol * 120, column * 120, 100, 100);
+		StringFormat sf;
+		sf.SetAlignment(StringAlignment::StringAlignmentCenter);
+		sf.SetLineAlignment(StringAlignment::StringAlignmentCenter);
+
+		g.DrawString(str, -1, &myfont, layout,&sf, &redBrush);
+
+		rol += 1;
+	}
+}
+
+void TestGDIPlus5(Gdiplus::Graphics& g, CRect& rc) {
+	using namespace Gdiplus;
+	Image im(L"myIcon.PNG");
+	SolidBrush redBrush(Color(100, 255, 0, 0));
+	Pen pen(Color(255, 255, 0, 0),2);
+	Font myfont(L"Arial", 16);
+
+	RectF rect1(10, 10, 400, 400);
+	RectF rect2(410, 10, 400, 400);
+	RectF rect3(810, 10, 400, 400);
+
+	TextureBrush tb(&im);
+	for (size_t i = 0; i < 100; i+=10)
+	{
+		//tb.RotateTransform(i);
+		tb.ScaleTransform(2,2);
+		//tb.TranslateTransform(i, 0);
+		g.FillRectangle(&tb, rect1);
+		::Sleep(500);
+	}
+	
+
+	TextureBrush tb2(&im,Rect(0,0,30,50));
+	g.FillEllipse(&tb2, rect2);
+	// 缩放画刷
+	TextureBrush tb3(&im);
+	tb3.SetTransform(&Matrix(1.3f, 0, 0, 1.3, 0, 0));
+	g.FillEllipse(&tb3, rect3);
+
+}
+
+void TestGDIPlus6(Gdiplus::Graphics& g, CRect& rc) {
+	using namespace Gdiplus;
+	Color red(255, 255, 0, 0);
+	Color blue(255, 0, 0, 255);
+
+	LinearGradientBrush lgb(
+		Point(0, 0),
+		Point(0, 40),
+		red,
+		blue);
+	g.FillRectangle(&lgb, 0, 0, 500, 500);
+
+}
+
+void TestGDIPlus7(Gdiplus::Graphics& g, CRect& rc) {
+	using namespace Gdiplus;
+	FontFamily ff(L"Arial");
+	Font f(&ff, 16, FontStyle::FontStyleRegular, UnitPixel);
+
+	// Enum all fonts
+	InstalledFontCollection ifc;
+	int c = ifc.GetFamilyCount();
+
+	FontFamily* pff = new FontFamily[c];
+
+	ifc.GetFamilies(c, pff, NULL);
+
+
+	
+	
+
+
+}
 
 LRESULT OyeClientWindow::OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
-	::OutputDebugStringW(__FUNCTIONW__ L"\n");
 	CPaintDC dc(m_hWnd);
-
+	
 	CRect rc;
 	GetClientRect(rc);
-	CMemoryDC*  mdc=new CMemoryDC(dc, CRect(0,0,95,95));
 
-	mdc->Draw3dRect(5, 5, 95, 95, RGB(255, 0, 0), RGB(0, 255, 0));
-
-	mdc->TextOutW(0, 0, L"test");
-
-
-	//dc.BitBlt(0, 0, rc.Width(), rc.Height(), mdc, 0, 0, SRCCOPY);
-
-	CBrush myBrush;
-	myBrush.CreatePatternBrush(mdc->m_bmp);
-
-	dc.SelectBrush(myBrush);
-	dc.PatBlt(0, 0, rc.Width(), rc.Height(), PATCOPY);
-
-	dc.Rectangle(10, 0, 110, 110);
-	dc.Rectangle(550, 0, 600, 100);
-	dc.Rectangle(950, 0, 1000, 100);
-
-
-	delete mdc;
+	Gdiplus::Graphics g(dc);
+	//TestGDIPlus1(g);
+	//TestGDIPlus2(g);
+	//TestGDIPlus3(g);
+	//TestGDIPlus4(g, rc);
+	//TestGDIPlus5(g, rc);
+	//TestGDIPlus6(g, rc);
+	TestGDIPlus7(g, rc);
 
 
 	return 0;
@@ -461,11 +648,9 @@ void OyeClientWindow::OnRButtonDown(UINT nFlags, CPoint point) {
 		 return;
 	 }
 
-
 	 CDC dc = ::GetDCEx(hscreen, NULL, DCX_CACHE | DCX_LOCKWINDOWUPDATE);
 	 auto cx = GetSystemMetrics(SM_CXSCREEN) / 10;
 	 auto cy = GetSystemMetrics(SM_CYSCREEN) / 10;
-
 	 CRect rc(0, 0, cx, cy);
 
 	 CMemoryDC mdc(dc, rc);
@@ -495,9 +680,6 @@ void OyeClientWindow::OnRButtonDown(UINT nFlags, CPoint point) {
 			 Sleep(1);
 		 }
 	LockWindowUpdate(NULL);
-
-
-
  }
 
 

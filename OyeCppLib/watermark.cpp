@@ -262,3 +262,47 @@ LRESULT ViewOverlyController::HookProxy(int code, WPARAM wParam, LPARAM lParam)
 {
 	return pVOC->OnMessageHook(code, wParam, lParam);
 }
+
+
+void DrawPrintWatermark_Test(HDC hdc)
+{
+	if (hdc == NULL) {
+		return;
+	}
+	int dwdeviceWidth = ::GetDeviceCaps(hdc, PHYSICALWIDTH);	//the width of the physical page, in device units
+	int dwdeviceHigh = ::GetDeviceCaps(hdc, PHYSICALHEIGHT);	//the height of the physical page, in device units
+	int dwLogicX = ::GetDeviceCaps(hdc, LOGPIXELSX);
+	int dwLogicY = ::GetDeviceCaps(hdc, LOGPIXELSY);
+
+	float fPaperWidth = (float)dwdeviceWidth / dwLogicX;
+	float fPaperHigh = (float)dwdeviceHigh / dwLogicY;
+
+	CString str(L"[Chard_Cao] Nextlabs View Overlay -- V3 Investigation");
+
+	Graphics g(hdc);
+	g.SetSmoothingMode(SmoothingModeHighQuality);
+	//g.SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
+
+	// config res
+	Gdiplus::Pen myPen(Gdiplus::Color(255, 100, 255, 100), 10);
+	Gdiplus::FontFamily fontfamily(L"Arial");
+	Gdiplus::Font myFont(&fontfamily, 32, Gdiplus::FontStyleRegular, Gdiplus::UnitPixel);
+	Gdiplus::StringFormat format;
+	Gdiplus::SolidBrush brush(Gdiplus::Color(150, 255, 0, 255));
+
+	// how to play, can be used only one
+	Gdiplus::SizeF surface(dwdeviceWidth, dwdeviceHigh);
+	Gdiplus::SizeF text = GetTextBounds(myFont, format, str);
+	text.Width += 60;
+	text.Height += 120;
+	// draw
+	g.RotateTransform(-5);
+	for (int i = 0; i < surface.Width; i += text.Width) {
+		for (int j = 0; j < surface.Height; j += text.Height) {
+			g.DrawString(str, -1, &myFont,
+				PointF(i, j), &format, &brush);
+		}
+	}
+
+
+}
