@@ -31,6 +31,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OyeCppLib", "OyeCppLib", "{
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OfficePlugin", "OfficePlugin\OfficePlugin.vcxproj", "{4D598371-5AE4-48BA-85FE-85A8566C45C2}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "studyCPP", "studyCPP\studyCPP.vcxproj", "{E4A595C8-1E09-4DE1-9526-5D3053D68D0B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -121,6 +123,16 @@ Global
 		{4D598371-5AE4-48BA-85FE-85A8566C45C2}.Release|x64.Build.0 = Release|x64
 		{4D598371-5AE4-48BA-85FE-85A8566C45C2}.Release|x86.ActiveCfg = Release|Win32
 		{4D598371-5AE4-48BA-85FE-85A8566C45C2}.Release|x86.Build.0 = Release|Win32
+		{E4A595C8-1E09-4DE1-9526-5D3053D68D0B}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{E4A595C8-1E09-4DE1-9526-5D3053D68D0B}.Debug|x64.ActiveCfg = Debug|x64
+		{E4A595C8-1E09-4DE1-9526-5D3053D68D0B}.Debug|x64.Build.0 = Debug|x64
+		{E4A595C8-1E09-4DE1-9526-5D3053D68D0B}.Debug|x86.ActiveCfg = Debug|Win32
+		{E4A595C8-1E09-4DE1-9526-5D3053D68D0B}.Debug|x86.Build.0 = Debug|Win32
+		{E4A595C8-1E09-4DE1-9526-5D3053D68D0B}.Release|Any CPU.ActiveCfg = Release|Win32
+		{E4A595C8-1E09-4DE1-9526-5D3053D68D0B}.Release|x64.ActiveCfg = Release|x64
+		{E4A595C8-1E09-4DE1-9526-5D3053D68D0B}.Release|x64.Build.0 = Release|x64
+		{E4A595C8-1E09-4DE1-9526-5D3053D68D0B}.Release|x86.ActiveCfg = Release|Win32
+		{E4A595C8-1E09-4DE1-9526-5D3053D68D0B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -311,5 +311,22 @@ TEST(CppLanguage, ReturtObj) {
 	EXPECT_FALSE(a.empty());
 
 }
+
+TEST(CppLanguage, StdSet) {
+	std::set<int,std::less<int>,std::allocator<int>> ss = { 0,1,2,3,4,5 };
+	ss.insert(1);
+	ss.insert(10);
+
+	int i = 0, j = 1;
+	auto  l = std::less<int>();
+	bool c = l(i, j);
+
+	//ss.max_size();
+	//ss.count();
+	//ss.
+	ss.count(9);
+
+	std::for_each(ss.begin(), ss.end(), [](int i) {printf("%d", i); });
+}
 #pragma endregion
 

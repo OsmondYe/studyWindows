@@ -11,10 +11,11 @@ class OverlayWnd :
 	public CWindowImpl<OverlayWnd, CWindow, OverlayWindowTraits>
 {
 	friend class ViewOverlyController;
-	OverlayWnd();
+	OverlayWnd(const std::wstring& overlay);
 	~OverlayWnd();
 	void UpdateOverlay(HWND target);
-
+	inline void SetOverlay(const std::wstring& ol) { strOverlay = ol; }
+	inline void HideWnd() { this->ShowWindow(SW_HIDE); }
 private:
 	CMemoryDC* pmdc;
 	void _DrawOverlay(HDC dc, LPRECT lpRect);
@@ -23,6 +24,8 @@ public:
 	DECLARE_WND_CLASS_EX(L"NextlabsViewOverlay", 0, (HBRUSH)(COLOR_WINDOW + 1));
 	BEGIN_MSG_MAP_EX(OyeClientWindow)		
 	END_MSG_MAP()
+private:
+	std::wstring strOverlay;
 };
 
 // callback can not be used in std::bind, have to create a internal global var
@@ -32,14 +35,14 @@ class ViewOverlyController {
 	CWindow _target;
 	CWindow _targetTopMain;
 public:
-	ViewOverlyController();
+	ViewOverlyController(const std::wstring& overlay);
 	~ViewOverlyController();
 
 public:
 	void SetOverlyTarget(HWND target);
 	void SetOverlyTargetOnTopLevel(
 		const char* wndClassName, const char* caption=NULL);
-	void UpdateOverlayText(wchar_t* text) {	 /*tbd*/ }
+	void UpdateOverlayText(const wchar_t* text) { _overlay->SetOverlay(text); }
 
 private:
 	LRESULT OnMessageHook(int code, WPARAM wParam, LPARAM lParam);
@@ -50,4 +53,4 @@ private:
 
 
 
-void DrawPrintWatermark_Test(HDC hdc);
+void DrawPrintWatermark_Test(HDC hdc, std::wstring overlay);

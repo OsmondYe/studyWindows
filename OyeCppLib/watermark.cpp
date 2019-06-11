@@ -71,7 +71,7 @@ namespace {
 	}
 }
 
-OverlayWnd::OverlayWnd()
+OverlayWnd::OverlayWnd(const std::wstring& overlay): strOverlay(overlay)
 {
 	Gdiplus::GdiplusStartup(&gGidplusToken, &gGdipulsInput, NULL);
 	_PrepareOverly();	
@@ -127,7 +127,10 @@ void OverlayWnd::_DrawOverlay(HDC dcScreen, LPRECT lpRestrictDrawingRect)
 		return;
 	}
 
-	CString str(L"[Chard_Cao] Nextlabs View Overlay -- V3 Investigation");
+	CString str(strOverlay.c_str());
+	if (str.IsEmpty()) {
+		str = L"Nextlabs SkyDRM Overlay(NULL)";
+	}
 	CRect rc(lpRestrictDrawingRect);
 
 	// using gdi+
@@ -175,18 +178,18 @@ void OverlayWnd::_PrepareOverly()
 	_DrawOverlay(*pmdc, ScreenRC);
 }
 
+
 //
 //  classController
 //
 //  using ::SetWindowsHookEx to monitor window sizing msg
 //
-
 static ViewOverlyController* pVOC = NULL;
 
-ViewOverlyController::ViewOverlyController() 
+ViewOverlyController::ViewOverlyController(const std::wstring& overlay)
 	: _overlay(NULL), _swhHook(NULL)
 {
-	_overlay = new OverlayWnd();
+	_overlay = new OverlayWnd(overlay);
 	_overlay->Create(NULL);
 
 	pVOC = this;
@@ -194,6 +197,7 @@ ViewOverlyController::ViewOverlyController()
 
 ViewOverlyController::~ViewOverlyController()
 {
+	_overlay->HideWnd();
 	if (_swhHook != NULL) {
 		::UnhookWindowsHookEx(_swhHook);
 	}
@@ -259,12 +263,12 @@ LRESULT ViewOverlyController::OnMessageHook(int code, WPARAM wParam, LPARAM lPar
 }
 
 LRESULT ViewOverlyController::HookProxy(int code, WPARAM wParam, LPARAM lParam)
-{
+{	
 	return pVOC->OnMessageHook(code, wParam, lParam);
 }
 
 
-void DrawPrintWatermark_Test(HDC hdc)
+void DrawPrintWatermark_Test(HDC hdc,std::wstring overlay)
 {
 	if (hdc == NULL) {
 		return;
@@ -277,8 +281,10 @@ void DrawPrintWatermark_Test(HDC hdc)
 	float fPaperWidth = (float)dwdeviceWidth / dwLogicX;
 	float fPaperHigh = (float)dwdeviceHigh / dwLogicY;
 
-	CString str(L"[Chard_Cao] Nextlabs View Overlay -- V3 Investigation");
-
+	CString str(overlay.c_str());
+	if (str.IsEmpty()) {
+		str = L"Nextlabs SkyDRM Overlay(NULL)";
+	}
 	Graphics g(hdc);
 	g.SetSmoothingMode(SmoothingModeHighQuality);
 	//g.SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
