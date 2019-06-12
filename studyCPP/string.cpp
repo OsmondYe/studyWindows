@@ -2,7 +2,7 @@
 
 using namespace std;
 
-TEST(CppString, Basic) {
+TEST(String, Basic) {
 
 	// str has 54 chars, without \0
 	const wchar_t str[] = L"The Quick Brown Fox Jumps Over The Lazy Dog,1234567890";

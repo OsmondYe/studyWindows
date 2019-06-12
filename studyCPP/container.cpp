@@ -1,33 +1,20 @@
 #include "pch.h"
-
+#include "helper.hpp"
 /*Container:  
 	sequential
 	relative
 */
 
-#include <vector>
-#include <list>
-#include <forward_list>
+
 
 using namespace std;
+using namespace aux;
 
-template<class Iterator>
-void output(Iterator beg, Iterator end) {
-	while (beg != end) {
-		wcout << *beg++;
-	}
-	wcout << endl;
-}
 
-template<class Container>
-void output(Container& c) {
-	output(c.begin(), c.end());
-}
-
-TEST(CppContainer, Vector) {
+TEST(Container, Vector) {
 	//using std::allocator<T>  to new or delete node	
 	vector<int> vi({ 1,2,3,4,5,6 });
-
+	
 	output(vi.begin(), vi.end());
 	output(vi);
 	vi.push_back(12);
@@ -39,7 +26,7 @@ TEST(CppContainer, Vector) {
 }
 
 
-TEST(CppContainer, List) {
+TEST(Container, List) {
 	list<int> ll({ 1,1,2,2,3,3,3,3,4,5,5,5,5,5,6 });
 	output(ll.begin(), ll.end());
 	auto ll2 = ll;
@@ -52,5 +39,18 @@ TEST(CppContainer, List) {
 
 
 	output(ll3);
+}
 
+// depend on algorithem  make_heap, push_heap, pop_heap
+TEST(Container, PriorityQueue) {
+	auto l = { 12,34,33,1,3,5,9,56,457,35,87,568 };
+	priority_queue<int> pq(l.begin(),l.end());
+
+	while (!pq.empty()) {
+		cout << pq.top()<<" " ;
+		pq.pop();
+
+	}
+
+	
 }

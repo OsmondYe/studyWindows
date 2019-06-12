@@ -19,7 +19,7 @@
 
 using namespace std;
 
-TEST(CppAdapter, Basic) {
+TEST(Adapter, Basic) {
 	// test data
 	int ia[] = { 1,2,3,4,5 };
 	int* beg = ia;

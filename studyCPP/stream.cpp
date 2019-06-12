@@ -6,7 +6,7 @@
 input/output stream
 */
 
-TEST(CppStream, Stringstream) {
+TEST(Stream, Stringstream) {
 	ostringstream ss;
 	ss << "this is very good" << endl<<"hehe"<<12345604;
 	string aaa(ss.str());

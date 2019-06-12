@@ -13,6 +13,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <list>
+#include <forward_list>
+#include <queue>
 #include <algorithm>
 
 using namespace std;

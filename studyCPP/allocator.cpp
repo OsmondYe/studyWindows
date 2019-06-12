@@ -71,7 +71,7 @@ public:
 */
 
 
-TEST(CppAllocator, Basic) {
+TEST(Allocator, Basic) {
 	std::allocator<int> a;
 	cout << "a.max_size()" << a.max_size() << endl;
 		

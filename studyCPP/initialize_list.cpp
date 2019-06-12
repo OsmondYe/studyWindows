@@ -37,7 +37,7 @@ Require compile to convert {1,2,3,4,5} ->  initializer_list object -> some thing
 
 using namespace std;
 
-TEST(CppInitializerList,Basic) {
+TEST(InitializerList,Basic) {
 	// require constructor : vector(initializer_list<_Ty> _Ilist, const _Alloc& _Al = _Alloc())
 	// compile convert { 1,2,3,4,5,6 } ->  initializer_list<int>;
 	vector<int> aa{ 1,2,3,4,5,6 };
