@@ -56,5 +56,8 @@
     <ClCompile Include="sort.cpp">
       <Filter>Source Files\sort</Filter>
     </ClCompile>
+    <ClCompile Include="iterator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

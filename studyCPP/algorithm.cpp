@@ -30,9 +30,9 @@ TEST(Algorithm, ForEach) {
 }
 
 TEST(Algorithem, Predicate) {
-	// all_of  [b:e) f(x)
-	// any_of
-	// none_of
+	// all_of  [b:e)  all(f(x)) return true;
+	// any_of    has(f(x) return true
+	// none_of  !all_of
 	vector<int> v = getSorted();
 
 	cout << boolalpha;
@@ -46,5 +46,77 @@ TEST(Algorithem, Count) {
 	auto v = getSorted();
 	cout << "count 10:" << count(v.begin(), v.end(), 10) << endl;
 	cout << "cout 20<x<50:" << count_if(v.begin(), v.end(), [](int& i) {return i > 20 && i < 50; }) << endl;
+}
+
+TEST(Algorithem, Find) {
+	// find return it when found, or last iter- if not
+	/*	for (; _First != _Last; ++_First)
+			if (*_First == _Val)
+				break;
+		return (_First);
+	*/
+	auto v = getSorted();
+	cout << "find 90 is:" << *(std::find(v.begin(), v.end(), 90)) << endl;
+	// if(Pred(*it)) return it;
+	std::find_if(v.begin(), v.end(), [](int& i) {return i > 20; });
+	//if (!Pred(*it)) return it;
+	std::find_if_not(v.begin(), v.end(), [](int& i) {return i < 20; });
+	// [b1:e1), [b2:e2) find first *p1==*p2   return p1
+	// in 2 sequence, first match 1 seq
+	auto v2 = getRandom();
+	cout << *(std::find_first_of(v.begin(), v.end(), v2.begin(), v2.end())) << endl;
+	cout << *(std::find_first_of(v.begin(), v.end(), v2.begin(), v2.end(), [](int i, int j) {return i = j + 12; })) << endl;
+	// find end, last 
+	cout << "tbd find end\n";
+	//std::find_end(v.begin(), v.end(), v2.begin(), v2.end());
+}
+
+TEST(Algorithem, EqualMismatch) {
+	auto v1 = vector<int>{ 1,2,3,4,5 };
+	auto v2 = vector<int>{ 2,3,4,5,6 };
+	std::equal(v1.begin() + 1, v1.end(), v2.begin(),v2.end() - 1);
+	//std::mismatch()
+	cout << "tbd mismatch \n";
+}
+
+TEST(Algorithem, Search) {
+	//std::search()
+}
+
+
+//
+//  Mutating 
+//
+
+TEST(Algorithem, Transform) {
+	//std::search()
+	auto v1 = getSorted(10);
+	cout << "before:"; output(v1);
+	std::transform(v1.begin(), v1.end(), v1.begin(), [](int i) {return i + 1; });
+	cout << "after:"; output(v1);
+}
+
+TEST(Algorithem, Copy) {
+	/*
+	for (; _First != _Last; ++_Dest, (void)++_First)
+		{
+		*_Dest = *_First;
+		}
+	*/
+	auto v1 = getSorted(10);
+	cout << "before:"; output(v1);
+	auto v2 = v1; v2.clear();
+	// using iterator insert adapter to impl copy
+	//std::copy(v1.begin(), v1.end(), v2.begin());  // error, since v2 is empty, convert it iterator as a insert_insetror
+	std::copy(v1.begin(), v1.end(), std::inserter(v2, v2.begin()));
+	cout << "v2, using std::inserter:"; output(v2);
+
+	std::copy(v1.begin(), v1.end(), std::back_inserter(v2));// or std::front_inserter
+	cout << "v2, using std::back_inserter:"; output(v2);
+
+
+	//std::copy(v1.begin(), v1.end(), v1.end()-1);
+	std::copy_if(v1.begin(), v1.end(), std::inserter(v2, v2.end()), [](int i) {return i > 5; });
+	output(v2);
 
 }
