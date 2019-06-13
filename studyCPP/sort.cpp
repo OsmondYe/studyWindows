@@ -51,6 +51,14 @@ TEST(Sort, ExchangeBubble) {
 	cout << "after sort:\n"; output(v);
 }
 
+TEST(Sort, QuickSort_PartitionExchange) {
+	auto v = getRandom();
+	cout << "before sort:\n"; output(v);
+	// todo: add your code here
+	cout << "after sort:\n"; output(v);
+}
+
+
 TEST(Sort, DISABLED_Heap) {
 	auto v = getRandom();
 	cout << "before sort:\n"; output(v);

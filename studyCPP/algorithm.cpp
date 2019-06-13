@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "helper.hpp"
-//TEST(CppAlgorithm, Basic)
 
 using namespace std;
 using namespace aux;
@@ -119,4 +118,10 @@ TEST(Algorithem, Copy) {
 	std::copy_if(v1.begin(), v1.end(), std::inserter(v2, v2.end()), [](int i) {return i > 5; });
 	output(v2);
 
+}
+
+TEST(Algorithem, Sort) {
+	auto v = getRandom(10000);
+	std::sort(v.begin(), v.end());
+	//output(v);
 }
