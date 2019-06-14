@@ -17,6 +17,7 @@
 #include <forward_list>
 #include <queue>
 #include <algorithm>
+#include <numeric>
 
 using namespace std;
 

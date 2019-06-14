@@ -177,7 +177,8 @@
     <ClCompile Include="sort.cpp" />
     <ClCompile Include="stream.cpp" />
     <ClCompile Include="string.cpp" />
-    <ClCompile Include="studyCPP.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="syntax.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

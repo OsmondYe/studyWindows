@@ -4,7 +4,7 @@ using namespace aux;
 using namespace std;
 
 TEST(Sort, Selection) {
-	auto v = getRandom(100);
+	auto v = getRandom(100000);
 	//cout << "before sort:\n"; output(v);
 	// divide seq into left and right, left sorted, right unsorted;
 	// each time select max_val form right and put into left,
@@ -23,7 +23,7 @@ TEST(Sort, Selection) {
 
 TEST(Sort, Insertion) {
 	// like play card
-	auto v = getRandom(100);
+	auto v = getRandom(100000);
 	//cout << "before sort:\n"; output(v);
 	for (auto cur = v.begin() + 1; cur != v.end(); ++cur) {
 		for (auto q = cur; (q > v.begin()) && (*(q - 1) < *q); --q) {

@@ -28,7 +28,7 @@ TEST(Algorithm, ForEach) {
 	cout << "Sum s=" << s.sum<<endl;
 }
 
-TEST(Algorithem, Predicate) {
+TEST(Algorithm, Predicate) {
 	// all_of  [b:e)  all(f(x)) return true;
 	// any_of    has(f(x) return true
 	// none_of  !all_of
@@ -40,14 +40,14 @@ TEST(Algorithem, Predicate) {
 	cout << "none_of is 101" << none_of(v.begin(), v.end(), [](int& i) {return i == 101; }) << endl;
 }
 
-TEST(Algorithem, Count) {
+TEST(Algorithm, Count) {
 	// [b:e) if(f(x)) count++; return count
 	auto v = getSorted();
 	cout << "count 10:" << count(v.begin(), v.end(), 10) << endl;
 	cout << "cout 20<x<50:" << count_if(v.begin(), v.end(), [](int& i) {return i > 20 && i < 50; }) << endl;
 }
 
-TEST(Algorithem, Find) {
+TEST(Algorithm, Find) {
 	// find return it when found, or last iter- if not
 	/*	for (; _First != _Last; ++_First)
 			if (*_First == _Val)
@@ -70,7 +70,7 @@ TEST(Algorithem, Find) {
 	//std::find_end(v.begin(), v.end(), v2.begin(), v2.end());
 }
 
-TEST(Algorithem, EqualMismatch) {
+TEST(Algorithm, EqualMismatch) {
 	auto v1 = vector<int>{ 1,2,3,4,5 };
 	auto v2 = vector<int>{ 2,3,4,5,6 };
 	std::equal(v1.begin() + 1, v1.end(), v2.begin(),v2.end() - 1);
@@ -78,7 +78,7 @@ TEST(Algorithem, EqualMismatch) {
 	cout << "tbd mismatch \n";
 }
 
-TEST(Algorithem, Search) {
+TEST(Algorithm, Search) {
 	//std::search()
 }
 
@@ -87,7 +87,7 @@ TEST(Algorithem, Search) {
 //  Mutating 
 //
 
-TEST(Algorithem, Transform) {
+TEST(Algorithm, Transform) {
 	//std::search()
 	auto v1 = getSorted(10);
 	cout << "before:"; output(v1);
@@ -95,7 +95,7 @@ TEST(Algorithem, Transform) {
 	cout << "after:"; output(v1);
 }
 
-TEST(Algorithem, Copy) {
+TEST(Algorithm, Copy) {
 	/*
 	for (; _First != _Last; ++_Dest, (void)++_First)
 		{
@@ -120,8 +120,36 @@ TEST(Algorithem, Copy) {
 
 }
 
-TEST(Algorithem, Sort) {
-	auto v = getRandom(10000);
-	std::sort(v.begin(), v.end());
+TEST(Algorithm, Sort) {
+
+	auto gv = getRandom(1000);
+	std::sort(gv.begin(), gv.end());
 	//output(v);
+}
+
+
+//
+//  Numeric
+//
+TEST(Algorithm, Accumulate) {
+	// [_Val = _Reduce_op(_Val, *_UFirst))  return _Val
+	auto v = getSorted(100);
+	cout << accumulate(v.begin(), v.end(), 0, [](int b, int c) {return b + c; });
+}
+
+TEST(Algorithm, InnerProduct) {
+	// [s1)*[s2)init = op1(std::move(init), op2(*first1, *first2));
+	auto v = getSorted(10);
+	cout << inner_product(v.begin(), v.end(), v.begin(), 0)<<endl;
+}
+
+TEST(Algorithm, AdjacentDifference) {
+	auto v = getSorted(10);
+	for_each(v.begin(), v.end(), [](int& i) {return i *= i; });
+
+	auto v2 = vector<int>(v.size());
+	adjacent_difference(v.begin(), v.end(), v2.begin());
+	output(v);
+	output(v2);
+
 }
