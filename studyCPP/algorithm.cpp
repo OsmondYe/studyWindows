@@ -75,20 +75,48 @@ TEST(Algorithm, EqualMismatch) {
 	auto v2 = vector<int>{ 2,3,4,5,6 };
 	std::equal(v1.begin() + 1, v1.end(), v2.begin(),v2.end() - 1);
 	//std::mismatch()
-	cout << "tbd mismatch \n";
+	auto pair = std::mismatch(v1.begin()+1, v1.end() - 1, v2.begin());
+	cout << *pair.first << " " << *pair.second;
+
 }
 
 TEST(Algorithm, Search) {
 	//std::search()
 }
 
+TEST(Algorithm, MaxMin) {
+	auto v = getSorted();
+	cout << std::max(v[5], v[6], [](int i, int j) {return i < j; }) << endl
+		<< std::min(v[5], v[6], [](int i, int j) {return i < j; }) << endl
+		<< *max_element(v.begin(), v.end(), less<int>()) << endl
+		<< *min_element(v.begin(), v.end(), less<int>()) << endl;
+}
+
 
 //
 //  Mutating 
 //
+TEST(Algorithm, Fill) {
+	auto v = vector<int>(10);
+	fill(v.begin(), v.end(), 12);
+	output(v);
+	fill_n(v.begin(), 2, 100);  // count 2, value =100;
+	output(v);
+}
+
+TEST(Algorithm, Swap) {
+	auto v = getSorted(100);
+	// obj swap
+	std::swap(*v.begin(), *(v.begin() + 1));
+	// rang swap
+	std::swap_ranges(v.begin() + 10, v.begin() + 20, v.begin() + 20);
+	// iter swap  , using two iter, swap its pointed value
+	std::iter_swap(v.end() - 1, v.end() - 2);
+
+	output(v);
+}
 
 TEST(Algorithm, Transform) {
-	//std::search()
 	auto v1 = getSorted(10);
 	cout << "before:"; output(v1);
 	std::transform(v1.begin(), v1.end(), v1.begin(), [](int i) {return i + 1; });
@@ -131,6 +159,13 @@ TEST(Algorithm, Sort) {
 //
 //  Numeric
 //
+TEST(Algorithm, Iota) {
+	auto v = vector<int>(100);
+	// [b:e)  it=++i;
+	iota(v.begin(), v.end(), 0);
+	output(v);
+}
+
 TEST(Algorithm, Accumulate) {
 	// [_Val = _Reduce_op(_Val, *_UFirst))  return _Val
 	auto v = getSorted(100);
@@ -148,8 +183,38 @@ TEST(Algorithm, AdjacentDifference) {
 	for_each(v.begin(), v.end(), [](int& i) {return i *= i; });
 
 	auto v2 = vector<int>(v.size());
-	adjacent_difference(v.begin(), v.end(), v2.begin());
+	//[b:e) ->  vaule=op(b,e) -> (e-b)
+	adjacent_difference(v.begin(), v.end(), v2.begin(), [](int& first, int& second) {return second + first; });
 	output(v);
 	output(v2);
+}
 
+TEST(Algorithm, PartialSum) {
+	auto v = getSorted(10);
+	auto v2 = vector<int>(v.size());
+	//[b:e) ->  o1=b1, o2=b1+b2,o3=b1+b2+b3 ...
+	partial_sum(v.begin(), v.end(), v2.begin(), [](int& first, int& second) {return second + first; });
+	output(v);
+	output(v2);
+}
+
+
+//
+//  Comparision
+//
+
+TEST(Algorithm, Equal) {
+	auto v = getSorted(10);
+	auto v2 = v;
+	// [b1:e1) == [b2:e2)
+	cout<<equal(v.begin(), v.end(), v2.begin(), v2.end(), [](int i, int j) {return i == j; });
+}
+
+TEST(Algorithm, Lexicographic) {
+	auto v = getSorted(10);
+	auto v2 = v;
+	// [b1:e1) == [b2:e2)
+	// may triger exception when you dont use > or < , for example, use ==, will triger exception
+	// if i<j then j must > i , if not , tirgger exception
+	cout<<lexicographical_compare(v.begin(), v.end(), v2.begin(), v2.end(), [](int i, int j) {return i < j; });
 }

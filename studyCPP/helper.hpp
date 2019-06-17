@@ -5,7 +5,8 @@ namespace aux {
 	inline static vector<int> getSorted(int size=100) {
 		vector<int> rt(size);
 		int i = 0;
-		std::generate(rt.begin(), rt.end(), [&i]() {return i++; });
+		//std::generate(rt.begin(), rt.end(), [&i]() {return i++; });
+		iota(rt.begin(), rt.end(), 0);
 		return rt;
 	}
 
