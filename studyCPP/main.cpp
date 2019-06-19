@@ -28,7 +28,7 @@ int main(int argc, wchar_t** argv)
 	//	 aaa.*:bbb.*:ccc.*		->  only test aaa,bbb, ccc
 	//	 aaa.*-aaa.version		->  test all all but except aaa.version
 	//testing::FLAGS_gtest_filter = "Windows.RegOperation2";
-	testing::FLAGS_gtest_filter = "Algorithm.*:Syntax.*";
+	testing::FLAGS_gtest_filter = "Container.*:Algorithm.*:Syntax.*";
 	return RUN_ALL_TESTS();
 
 }

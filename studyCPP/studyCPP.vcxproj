@@ -165,6 +165,7 @@
     <ClCompile Include="adapter.cpp" />
     <ClCompile Include="algorithm.cpp" />
     <ClCompile Include="allocator.cpp" />
+    <ClCompile Include="aux_utils.cpp" />
     <ClCompile Include="container.cpp" />
     <ClCompile Include="initialize_list.cpp" />
     <ClCompile Include="iterator.cpp" />

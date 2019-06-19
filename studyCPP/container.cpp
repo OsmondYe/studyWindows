@@ -51,6 +51,49 @@ TEST(Container, PriorityQueue) {
 		pq.pop();
 
 	}
-
-	
 }
+
+
+/*
+	Semi-Container
+*/
+template < class _Ty, size_t _Size>
+class MyArray {
+public:
+	// must
+	using value_type = _Ty;
+	using size_type = size_t;
+	using difference_type = ptrdiff_t;  // pointer difference, result of pointer subtraction
+	using pointer = _Ty * ;
+	using const_pointer = const _Ty*;
+	using reference = _Ty & ;
+	using const_reference = const _Ty&;
+
+	// how to define Iterator?
+
+
+};
+
+TEST(Container, Array) {
+	// using template to define array, fixed N and fixed type
+	// template<class _Ty,size_t _Size > class array
+
+	array<int, 3> a1{ 1,2,3 };
+	output(a1);
+	for (int& i : a1) {
+		cout << i << " ";
+	}
+}
+
+TEST(Container, Bitset) {
+	// fixed-length seq for boolean elem
+
+	bitset<32> b1; // all 0
+	bitset<70> b2 = 0xFF00FF00;
+	bitset<10> b3("1111001100");
+}
+
+TEST(Container, VectorBool) {
+	vector<bool> a;
+}
+

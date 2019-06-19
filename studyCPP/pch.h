@@ -14,10 +14,13 @@
 #include <string>
 #include <vector>
 #include <list>
+#include <bitset>
 #include <forward_list>
+#include <array>	// psedu-container
 #include <queue>
 #include <algorithm>
 #include <numeric>
+#include <utility>
 
 using namespace std;
 
