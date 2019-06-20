@@ -1,3 +1,9 @@
+import  sys
+from random import randint
+# using pass as NULL statement
+def pythonPass():
+    pass
+
 # this is for python basic study
 def pythonBasic():
     # permit multiple set value
@@ -104,12 +110,42 @@ def pytyhonSequence():
     for c in a[0:]:
         print(c)
 
+    print([randint(1,10) for x in range(3)])
+
+
+
+
+class MyFirstClass(object):
+    'this is my first class'
+#class suite
+    # static data member
+    MFCVersion=1.0
+    MFCfirstStaticMember=100
+    #funcitons
+    def FistClassFuncton(self):
+        print("first class function calling")
+        print(self.MFCfirstStaticMember)
+        print(self.sales)
+    def __init__(self,sales=0.085,rm=0.1,aInt=10,aFloat=1.1):
+        print("this is constructor")
+        self.sales=0.085
+        self.rm=0.1
+        self.aInt=10
+        self.aFloat=1.1
+    def __del__(self):
+        print("this is destructor")
+
 
 
 # using this to study python object
 # object model?  object ( identidy, type value)
 # build-in:   id()  type()
-def pythongObject():
+def pythonObject():
+    MyFirstClass.firstStaticMember=10
+    print(MyFirstClass)
+    xx=MyFirstClass()   #set a class
+    xx.FistClassFuncton()   # calling a class function
+    print(MyFirstClass.__dict__)
     print("")
     # range ret it,    stard,end,step
     for x in list(range(0,10,3)):
@@ -137,6 +173,4 @@ def pythongObject():
 
 
 
-def pythonPass():
-    pass
 
