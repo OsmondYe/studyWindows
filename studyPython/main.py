@@ -1,4 +1,4 @@
-# basic
+# oye_basic
 
 # files:  *.py
 
@@ -12,14 +12,14 @@
 
 # using def to define a function
 
-
-import amodule
-
-import pybasic
-
+# sys
 import  sys
+# 3rd
 
-
+# self
+from oye_basic import syntax
+import oyeWebUrl
+import oyeSqlite3
 
 def aFunc(x="hello world"):
     return x+x
@@ -40,11 +40,14 @@ def main():
     print(sys.argv)
 
     # pybasic.pythonBasic()
-    pybasic.pythonBuildin()
-    pybasic.pytyhonSequence()
-    pybasic.pythonObject()
+    syntax.pythonBuildin()
+    syntax.pytyhonSequence()
+    syntax.pythonObject()
+    syntax.pythonlambda()
 
-
+    #weburl
+    oyeWebUrl.getfunc()
+    oyeSqlite3.all()
 
 
 

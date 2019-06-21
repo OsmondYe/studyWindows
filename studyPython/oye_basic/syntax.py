@@ -2,9 +2,22 @@ import  sys
 from random import randint
 # using pass as NULL statement
 def pythonPass():
+    '''
+    using pass as NULL statement
+    :return:
+    '''
     pass
 
-# this is for python basic study
+def pythonlambda():
+    add = lambda x,y : x+y # func(x,y) return x+y
+    print(add(x=12,y=555))
+
+    l=[34,6,78,34,234,87,2,6]
+
+    print(sorted(l))
+
+
+# this is for python oye_basic study
 def pythonBasic():
     # permit multiple set value
     a=b=c=d=1.3
@@ -162,9 +175,6 @@ def pythonObject():
     # lamba   [expr for iter_val in iterable]
     x= [ (i**2) for i in range(4)]
     print(x)
-
-
-
 
     # using matrix
 
