@@ -1,28 +1,18 @@
-# oye_basic
-
-# files:  *.py
-
-# print("good")
-
-# x=input("enter ")
-# print(x)
-
-# for x in range(10):
-#     print(x)
-
-# using def to define a function
-
 # sys
-import  sys
+import sys
+import os
 # 3rd
 
 # self
 from oye_basic import syntax
 import oyeWebUrl
 import oyeSqlite3
+from oye_scrawler import scrawler
+
 
 def aFunc(x="hello world"):
-    return x+x
+    return x + x
+
 
 def fileRead():
     # files
@@ -32,24 +22,17 @@ def fileRead():
 
 
 def main():
-    main.__doc__="this is main de doc"
-    main.version=0.1
+    main.__doc__ = "this is main de doc"
+    main.version = 0.1
     help(main)
 
     print(len(sys.argv))
     print(sys.argv)
 
-    # pybasic.pythonBasic()
-    syntax.pythonBuildin()
-    syntax.pytyhonSequence()
-    syntax.pythonObject()
-    syntax.pythonlambda()
-
-    #weburl
-    oyeWebUrl.getfunc()
-    oyeSqlite3.all()
-
+    l=["123","4234","hellworld"]
+    text ="+=*/".join(l)   # text =  123+=*/4234+=*/hellworld
+    print(text)
 
 
 if __name__ == '__main__':
-        main();
+    main();

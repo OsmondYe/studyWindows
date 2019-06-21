@@ -1,0 +1,153 @@
+<!DOCTYPE doctype html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+  <title>
+   SkyDRM
+  </title>
+  <link href="/rms/ui/img/favicon.ico" rel="icon" type="image/x-icon"/>
+  <link href="/rms/ui/img/favicon.ico" rel="shortcut icon"/>
+  <link href="/rms/ui/lib/bootstrap/3.3.5/css/bootstrap.min.css?v=10.4.0227" rel="stylesheet"/>
+  <link href="/rms/ui/lib/font-awesome/4.4.0/css/font-awesome.min.css?v=10.4.0227" rel="stylesheet"/>
+  <link href="/rms/ui/lib/jstree/3.2.1/css/style.min.css?v=10.4.0227" rel="stylesheet"/>
+  <link href="/rms/ui/css/main.min.css?v=10.4.0227" rel="stylesheet"/>
+  <link href="/rms/ui/css/font/fira.css?v=10.4.0227" rel="stylesheet"/>
+  <script type="text/javascript">
+   var APPNAME;
+    if (!String.prototype.endsWith) {
+        String.prototype.endsWith = function(search, this_len) {
+            if (this_len === undefined || this_len > this.length) {
+                this_len = this.length;
+            }
+            return this.substring(this_len - search.length, this_len) === search;
+        };
+    }
+    if (window.location.pathname.endsWith('admin')) {
+      APPNAME = "admin";
+    } else {
+      APPNAME = "user";
+    }
+  </script>
+  <script src="/rms/ui/app/main.min.js?v=10.4.0227" type="text/javascript">
+  </script>
+  <script type="text/javascript">
+   var CONTEXT_PATH = "/rms";
+    var VIEWER_URL = "/viewer";
+    var VERSION = "10.4.0227";
+    var PUBLIC_TENANT = "skydrmtest7513test_01";
+    var PROJECT_TERMS_URL = "/rms/ProjectTermsAndConditions.html";
+    var PROJECT_PRIVACY_URL = "/rms/ProjectPrivacyPolicy.html";
+    
+        var url = window.location.pathname + window.location.hash;
+        if(url.indexOf("/personal/viewSharedFile") !== -1 || url.indexOf("/projects/") !== -1){
+            var hrefStr = 'login?r=' + encodeURIComponent(url);
+            if (url.indexOf("/personal/viewSharedFile") !== -1) {
+                var email = getParameterByName('e');
+                if (email) {
+                    hrefStr = hrefStr + '&e=' + email;
+                }
+            }
+            window.location.href = hrefStr;
+        } else {
+            window.location.href = 'login';
+        }
+    
+    var i18n_data;
+    $(document).ready(function(){
+      $("div#index-loading-background").remove();
+      $("div#rms-header-help-container").show();
+    });
+    //prevent drag and drop outside of drag and drop area
+    window.addEventListener("dragover",function(e){
+	  e = e || event;
+	  e.preventDefault();
+    },false);
+    window.addEventListener("drop",function(e){
+	  e = e || event;
+	  e.preventDefault();
+    },false);
+    //to hide the status bar when the keyboard appears in mobile
+    var MAX_TABLET_WIDTH = 1024;
+    var initialScreenHeight = window.innerHeight;
+    var initialScreenWidth = window.innerWidth;
+    window.addEventListener("resize", function() {
+      isKeyboard = (window.innerHeight < initialScreenHeight);
+      if(initialScreenWidth > MAX_TABLET_WIDTH) {
+        isKeyboard = false;
+      }
+      if(isKeyboard){
+        $("div.rms-error-messages.alert.alert-upload").css("visibility","hidden");
+      } else {
+        $("div.rms-error-messages.alert.alert-upload").css("position","fixed");
+        $("div.rms-error-messages.alert.alert-upload").css("visibility","visible");
+      }
+  }, false);
+  </script>
+ </head>
+ <body data-ng-app="userApp" data-ng-controller="loginController">
+  <div class="cc-layout">
+   <div class="cc-header" id="nextlabs-header">
+    <a href="admin#/home">
+     <div class="cc-header-logo">
+     </div>
+    </a>
+    <div class="btn-group rms-login-wrapper" id="rms-header-help-container" style="display:none">
+     <div class="rms-help-dropdown" uib-dropdown="">
+      <button class="btn btn-sm" id="rms-header-help" type="button" uib-dropdown-toggle="">
+       <i data-ng-include="'ui/img/Help_P.svg'">
+       </i>
+      </button>
+      <ul aria-labelledby="split-button" class="uib-dropdown-menu rms-login-dropdown-menu-override" role="menu">
+       <li role="menuitem">
+        <a data-ng-click="help()" href="javascript:void(0)">
+         {{'help' | translate}}
+        </a>
+       </li>
+       <li role="menuitem">
+        <a data-ng-click="submitFeedBack()" href="javascript:void(0)">
+         {{'feedback' | translate}}
+        </a>
+       </li>
+      </ul>
+     </div>
+     <div class="rms-profile-dropdown" uib-dropdown="">
+      <button class="btn" style="padding: 0; border: none; background: none;" type="button" uib-dropdown-toggle="">
+       <div class="inline-block" id="profileImageHeader">
+        <div class="inline-block">
+         <b>
+          {{ loggedInUserName | initials}}
+         </b>
+        </div>
+       </div>
+      </button>
+      <ul aria-labelledby="split-button" class="uib-dropdown-menu rms-login-dropdown-menu-override" role="menu">
+       <li role="menuitem">
+        <a data-ng-click="manageProfile()" href="javascript:void(0)">
+         {{'profile' | translate}}
+        </a>
+       </li>
+       <li role="menuitem">
+        <a data-ng-click="doLogout()" href="javascript:void(0)">
+         {{'logout' | translate}}
+        </a>
+       </li>
+      </ul>
+     </div>
+    </div>
+   </div>
+   <div id="index-loading-background">
+    <div id="pgLoading-image">
+     <img alt="Loading..." src="/rms/ui/img/loading-icon.gif"/>
+    </div>
+   </div>
+   <div class="container-fluid rms-container-fluid" id="rms-main-container">
+    <div data-ng-controller="appController">
+     <div ui-view="">
+     </div>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>
