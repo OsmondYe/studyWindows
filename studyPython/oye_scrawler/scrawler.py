@@ -12,12 +12,24 @@ def writetofile(filename,text):
     f.close()
 
 def inbookinfo():
-    link="https://rms-centos7513.qapf1.qalab01.nextlabs.com:8444/rms/"
+    link="https://rms-centos7513.qapf1.qalab01.nextlabs.com:8444/rms/login"
     # ignore ssl
-    r= requests.get(link,verify=False)
-    text=str(r.text)
+    header={"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36" }
+    r= requests.get(link, header, verify=False)
 
-    soup=BeautifulSoup(text)
+
+    #
+    #  parse result
+    #
+    print("r.status:%d\n"
+          "r.encoding:%s\n"
+          "r.headers:%s\n"
+          "r.url:%s\n"
+          "r.cookies:%s\n"
+          "r.request:%s\n"
+          %(r.status_code,r.encoding,r.headers,r.url,r.cookies,r.request))
+
+    soup=BeautifulSoup(r.text)
     g=soup.prettify()
     # print(g)
 
@@ -44,5 +56,5 @@ def baidu():
     writetofile('result.html',bs.prettify())
 
 if __name__ == '__main__':
-    # inbookinfo()
-    baidu()
+    inbookinfo()
+    # baidu()
