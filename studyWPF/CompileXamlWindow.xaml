@@ -9,32 +9,47 @@
         ResizeMode="CanResizeWithGrip"
         Name="host"
         >
+    <Window.Resources>
+        <Style x:Key="normal">
+            <Setter Property="Control.FontSize" Value="24"/>
+            <Setter Property="Control.Foreground" Value="Blue"/>
+            <Setter Property="Control.Margin" Value="24"/>
+            <Setter Property="Control.Padding" Value="10,10,10,10"/>
+        </Style>
+    </Window.Resources>
+
     <StackPanel DataContext="{Binding ElementName=scroll}">
-        <StackPanel.Resources>  
+        <StackPanel.Resources>
             <!--this is to define staticResource
                 button can use it as <Button FontSize="{StaticResource fontSizeLarge}>"
             -->
             <cs_sys:Double x:Key="fontSizeLarge">18</cs_sys:Double>
             <cs_sys:Double x:Key="fontSizeSmall">12</cs_sys:Double>
-            
+
         </StackPanel.Resources>
-        <Button HorizontalAlignment="Center" Margin="24" Click="ButtonOnClick" FontSize="{StaticResource fontSizeLarge}">
+        <Button HorizontalAlignment="Center" Margin="24" Click="ButtonOnClick" 
+                Style="{StaticResource normal}"
+                FontSize="{StaticResource fontSizeLarge}">
             Click me
         </Button>
-        <ListBox Name="lstbox" Width="150" Height="150" Margin="24" SelectionChanged="ListBoxOnSeleciont"></ListBox>
-        <oyens:CenteredButton>
+        <ListBox Name="lstbox" Width="150" Height="150" Margin="24" 
+                 Style="{StaticResource normal}"
+                 SelectionChanged="ListBoxOnSeleciont"></ListBox>
+        <oyens:CenteredButton Style="{StaticResource normal}">
             <oyens:CenteredButton.FontSize>
                 <StaticResource ResourceKey="fontSizeSmall"/>
             </oyens:CenteredButton.FontSize>
             haha
         </oyens:CenteredButton>
-        <TextBlock FontSize="{Binding Path=Value,Mode=TwoWay}">
+        <TextBlock  Style="{StaticResource normal}"
+            FontSize="{Binding Path=Value,Mode=TwoWay}">
             <Label Content="{}{this is a good}"/>
             <LineBreak/>
             <Label Content="{x:Static cs_sys:DateTime.Now}" Foreground="{x:Static SystemColors.ActiveCaptionBrush}"/>
         </TextBlock>
 
-        <ScrollBar Name="scroll" Orientation="Horizontal" 
+        <ScrollBar  Style="{StaticResource normal}"
+            Name="scroll" Orientation="Horizontal" 
                    Margin="24" Maximum="100" LargeChange="10" SmallChange="1"
                    Value="20"
                    />
@@ -42,17 +57,54 @@
                DataContext="{Binding ElementName=scroll}"
                Content="{Binding Path=Value}"
                />
-        <StackPanel Orientation="Horizontal">
+        <StackPanel  
+            Orientation="Horizontal">
             <TextBlock Text="Width:"/>
             <TextBlock  Text="{Binding ElementName=host, Path=ActualWidth}"/>
             <TextBlock Text=" &#x00d7; Height:"/>
             <TextBlock  Text="{Binding ElementName=host, Path=ActualHeight}"/>
-            
+
         </StackPanel>
-        
+
+
+        <Grid>
+            <Grid.Resources>
+                <Style  x:Key="xbase" x:Name="xxxx"  TargetType="{x:Type TextBlock}" >
+                    <Setter Property="Control.FontSize" Value="19"/>
+                    <Setter Property="Control.Foreground" Value="Blue"/>
+
+                </Style>
+            </Grid.Resources>
+            <StackPanel>
+                <StackPanel.Resources>
+                    <Style TargetType="{x:Type Button}">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Control.FontStyle" Value="Italic"/>
+                                <Setter Property="Control.Foreground" Value="Gold"/>
+                                <Setter Property="Control.Padding" Value="0,5,0,0"/>
+                            </Trigger>
+                        </Style.Triggers>
+                        <Setter Property="Foreground" Value="Red"/>
+                    </Style>
+
+                    <Style  BasedOn="{StaticResource xbase}" TargetType="{x:Type TextBlock}">
+                        <Setter Property="FontSize" Value="20"/>
+                        <Setter Property="Control.Margin" Value="20"/>
+                        <EventSetter Event="TextBlock.MouseDown" Handler="ButtonOnClick"/>
+                    </Style>
+
+                </StackPanel.Resources>
+                <Button>btn 1</Button>
+                <Button>btn 2</Button>
+                <Button>btn 3</Button>
+                <TextBlock HorizontalAlignment="Center">this is good</TextBlock>
+            </StackPanel>
+        </Grid>
+
     </StackPanel>
 
-    
-    
-    
+
+
+
 </Window>
