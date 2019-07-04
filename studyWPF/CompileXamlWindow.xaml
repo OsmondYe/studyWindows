@@ -20,18 +20,10 @@
 
     <StackPanel DataContext="{Binding ElementName=scroll}">
         <StackPanel.Resources>
-            <!--this is to define staticResource
-                button can use it as <Button FontSize="{StaticResource fontSizeLarge}>"
-            -->
             <cs_sys:Double x:Key="fontSizeLarge">18</cs_sys:Double>
             <cs_sys:Double x:Key="fontSizeSmall">12</cs_sys:Double>
 
         </StackPanel.Resources>
-        <Button HorizontalAlignment="Center" Margin="24" Click="ButtonOnClick" 
-                Style="{StaticResource normal}"
-                FontSize="{StaticResource fontSizeLarge}">
-            Click me
-        </Button>
         <ListBox Name="lstbox" Width="150" Height="150" Margin="24" 
                  Style="{StaticResource normal}"
                  SelectionChanged="ListBoxOnSeleciont"></ListBox>
@@ -96,7 +88,6 @@
 
                 </StackPanel.Resources>
                 <Button>btn 1</Button>
-                <Button>btn 2</Button>
                 <Button>btn 3</Button>
                 <TextBlock HorizontalAlignment="Center">this is good</TextBlock>
             </StackPanel>
