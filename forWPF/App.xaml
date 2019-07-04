@@ -9,6 +9,5 @@
     <Application.Resources>
 
         <SolidColorBrush x:Key="commonFg" Color="Black"/>
-
-    </Application.Resources>
+            </Application.Resources>
 </Application>

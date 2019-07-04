@@ -14,19 +14,22 @@ using System.Diagnostics;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using System.Windows.Documents;
+using System.Xml;
+using System.Windows.Markup;
+using OyeNS;
 
 namespace studyWPF
 {
     // Window : ContentControl : Control : FrameElement : UIElement : Visual : DependencyObject : DispatcherObject
     class MyMainWind : Window
     {
-        [STAThread]
-        static void Main()
-        {
-            Application app = new Application();
-            app.ShutdownMode = ShutdownMode.OnMainWindowClose;
-            app.Run(new MyMainWind());
-        }
+        //[STAThread]
+        //static void Main()
+        //{
+        //    Application app = new Application();
+        //    app.ShutdownMode = ShutdownMode.OnMainWindowClose;
+        //    app.Run(new MyMainWind());
+        //}
 
         MyMainWind()
         {
@@ -50,7 +53,7 @@ namespace studyWPF
             Foreground = Brushes.SaddleBrown;
             Background = Brushes.Yellow;
             FontFamily = new FontFamily("Times New Roman");
-            FontSize = 32;
+            FontSize = 16;
             FontStyle = FontStyles.Italic;
             FontWeight = FontWeights.Heavy;
 
@@ -96,9 +99,57 @@ namespace studyWPF
             //
             //  for Dependency Property
             //
-            forDP1();
+            //forDP1();
+
+
+
+            //
+            //  XML
+            //
+            //forLoadEmbeddedXaml();
+            //forLoadFromResource();
+            ShowCompileXamlWindow();
         }
 
+        void ShowCompileXamlWindow()
+        {
+            CompileXamlWindow w = new CompileXamlWindow();
+            w.Show();
+        }
+
+        void forLoadFromResource()
+        {
+            Title = "forLoadFromResource";
+            Uri uri = new Uri("pack://application:,,,/XMLFile1.xml");
+            Stream stream = Application.GetResourceStream(uri).Stream;
+            FrameworkElement el = XamlReader.Load(stream) as FrameworkElement;
+            Content = el;
+            // find button
+            Button btn = el.FindName("MyButton") as Button;
+            btn.Click += (ee, ss) =>
+            {
+                MessageBox.Show("you cliked me");
+            };
+
+        }
+
+        void forLoadEmbeddedXaml()
+        {
+            Title = "Load Embedded Xaml";
+
+            string strXaml =
+                "<Button xmlns='http://schemas.microsoft.com/" +
+                                      "winfx/2006/xaml/presentation'" +
+                "        Foreground='LightSeaGreen' FontSize='24pt'>" +
+                "    Click me!" +
+                "</Button>";
+
+            StringReader strreader = new StringReader(strXaml);
+            XmlTextReader xmlreader = new XmlTextReader(strreader);
+            object obj = XamlReader.Load(xmlreader);
+
+            Content = obj;
+        }
         private void forDP1()
         {
             Title = "Set FontSize Property";

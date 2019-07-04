@@ -93,6 +93,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SKYDRM_EXTERNAL)\gtest\include</AdditionalIncludeDirectories>
       <SupportJustMyCode>false</SupportJustMyCode>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -100,6 +101,9 @@
       <AdditionalLibraryDirectories>$(SKYDRM_EXTERNAL)\gtest\lib\$(Platform)-$(Configuration)</AdditionalLibraryDirectories>
       <AdditionalDependencies>gtestd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

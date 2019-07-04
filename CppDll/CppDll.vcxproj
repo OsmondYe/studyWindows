@@ -96,6 +96,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;CPPDLL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(OSMOND_EXTERNAL)\boost_1_67_0;$(OSMOND_EXTERNAL)\wtl\WTL10_8356\Include;$(OSMOND_EXTERNAL)\madCollection\madCodeHook\Header-Libs;..\OyeCppLib;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -103,6 +104,9 @@
       <AdditionalDependencies>madCHook32.lib;msxml6.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(OSMOND_EXTERNAL)\madCollection\madCodeHook\Header-Libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

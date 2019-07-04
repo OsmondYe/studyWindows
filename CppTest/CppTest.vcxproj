@@ -93,6 +93,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SKYDRM_EXTERNAL)\doom_sdk\sources\include\SDWL\;$(SKYDRM_EXTERNAL)\gtest\include;$(OSMOND_EXTERNAL)\madCollection\madCodeHook\Header-Libs;$(OSMOND_EXTERNAL)\boost_1_67_0;$(SKYDRM_EXTERNAL)\openssl\include</AdditionalIncludeDirectories>
       <SupportJustMyCode>false</SupportJustMyCode>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -100,6 +101,9 @@
       <AdditionalDependencies>Dbghelp.lib;gtestd.lib;madCHook32.lib;Shlwapi.lib;Urlmon.lib;Bcrypt.lib;Winhttp.lib;Wtsapi32.lib;Mpr.lib;Ws2_32.lib;Secur32.lib;Crypt32.lib;libeay32.lib;legacy_stdio_definitions.lib;libcrypto.lib;libssl.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(OSMOND_EXTERNAL)\madCollection\madCodeHook\Header-Libs;$(SKYDRM_EXTERNAL)\boost\$(Platform)_$(Configuration);$(SKYDRM_EXTERNAL)\gtest\lib\$(Platform)-$(Configuration)\mtd;$(SKYDRM_EXTERNAL)\doom_core\build\build.msvc\$(Platform)_$(Configuration);$(SKYDRM_EXTERNAL)\doom_sdk\build\build.msvc\$(Platform)_$(Configuration);$(OSMOND_EXTERNAL)\boost_1_67_0\stage\lib;$(OSMOND_EXTERNAL)\openssl\lib</AdditionalLibraryDirectories>
     </Link>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

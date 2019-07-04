@@ -84,6 +84,7 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <AdditionalIncludeDirectories>$(OSMOND_EXTERNAL)\wtl\WTL10_8356\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_EMBEDDED_MANIFEST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -102,6 +103,7 @@
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <OutputFile>.\Debug/WTLExplorer.bsc</OutputFile>
+      <PreserveSbr>true</PreserveSbr>
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

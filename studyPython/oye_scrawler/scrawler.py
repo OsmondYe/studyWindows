@@ -55,6 +55,16 @@ def baidu():
 
     writetofile('result.html',bs.prettify())
 
+def wpf():
+    url = "http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    r = requests.get(url)
+    pp = pprint.PrettyPrinter(indent=0, width=10, depth=2)
+    bs = BeautifulSoup(r.text)
+    writetofile('wpf_nx.html', bs.prettify())
+
+
+
 if __name__ == '__main__':
-    inbookinfo()
+    # inbookinfo()
     # baidu()
+    wpf()
