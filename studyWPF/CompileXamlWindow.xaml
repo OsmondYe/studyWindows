@@ -21,6 +21,10 @@
         <Button HorizontalAlignment="Center" Margin="24" Click="ButtonOnClick" FontSize="{StaticResource fontSizeLarge}">
             Click me
         </Button>
+        <TextBox Name="stuName" />
+        <TextBlock Name="stuAge"/>
+
+        
         <ListBox Name="lstbox" Width="150" Height="150" Margin="24" SelectionChanged="ListBoxOnSeleciont"></ListBox>
         <oyens:CenteredButton>
             <oyens:CenteredButton.FontSize>

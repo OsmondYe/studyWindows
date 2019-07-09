@@ -57,6 +57,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CompileXamlWindow.cs" />
+    <Compile Include="LearnBinding.xaml.cs">
+      <DependentUpon>LearnBinding.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MyApplication.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -100,6 +103,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Page Include="LearnBinding.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="XamlButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
