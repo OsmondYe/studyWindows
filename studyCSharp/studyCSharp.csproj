@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{946927C5-46EE-450E-AAAA-81D727D7081B}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>studyCSharp</RootNamespace>
+    <RootNamespace>nextlabs.oye.study.cs</RootNamespace>
     <AssemblyName>studyCSharp</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

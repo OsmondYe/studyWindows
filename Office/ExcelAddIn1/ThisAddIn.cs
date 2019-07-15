@@ -7,17 +7,32 @@ using Excel = Microsoft.Office.Interop.Excel;
 using Office = Microsoft.Office.Core;
 using Microsoft.Office.Tools.Excel;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace ExcelAddIn1
 {
     public partial class ThisAddIn
     {
         Excel.Workbook cur;
+
+        protected override Microsoft.Office.Core.IRibbonExtensibility CreateRibbonExtensibilityObject()
+        {
+            Debug.WriteLine("CreateRibbonExtensibilityObject");
+            return new Ribbon();
+        }
+
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
             Application.WorkbookOpen += Application_WorkbookOpen;
-           // MessageBox.Show("ThisAddIn_Startup");
+            //MessageBox.Show("ThisAddIn_Startup");
+            Debug.WriteLine("ThisAddIn_Startup");
         }
+        
+        private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
+        {
+
+        }
+
 
         private void Application_WorkbookOpen(Excel.Workbook Wb)
         {
@@ -66,9 +81,7 @@ namespace ExcelAddIn1
             
         }
 
-        private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
-        {
-        }
+       
 
         #region VSTO generated code
 
