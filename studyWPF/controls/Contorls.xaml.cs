@@ -19,9 +19,26 @@ namespace studyWPF.controls
     /// </summary>
     public partial class Contorls : Window
     {
+        //
+        private RoutedCommand CloseCmd = new RoutedCommand("Close", typeof(Contorls));
         public Contorls()
         {
             InitializeComponent();
+            // cmd source is abtn
+
+            this.abtn.Command = CloseCmd;
+            CloseCmd.InputGestures.Add(new KeyGesture(Key.Escape));
+            // cmd target
+            this.abtn.CommandTarget = this;
+            // binding
+            CommandBinding cb = new CommandBinding();
+            cb.Command = CloseCmd;
+            cb.Executed += (ss, ee) =>
+            {
+                this.Close();
+                ee.Handled = true;
+            };
+            this.CommandBindings.Add(cb);
         }
     }
 }

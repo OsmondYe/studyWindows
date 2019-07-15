@@ -50,7 +50,7 @@
                 </ToolTip>
             </TabItem.ToolTip>
             <StackPanel>
-                <Button Content="haha">
+                <Button  x:Name="abtn" Content="haha">
                    
                 </Button>
                 <StackPanel>
