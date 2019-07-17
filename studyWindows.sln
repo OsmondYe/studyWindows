@@ -41,9 +41,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WTLExplorer", "Cpp\WTLExplo
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wtlStudy", "Cpp\wtlStudy\wtlStudy.vcxproj", "{9ECD580F-DD11-47AC-A291-4637E78EAA47}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormForOffice", "WinFormForOffice\WinFormForOffice.csproj", "{D24D5B98-F86E-4D21-A086-CE178D68ADD6}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CSharp", "CSharp", "{7EC4796F-F1D0-4971-A1BF-0EA6E2E58D55}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormForOffice", "Office\WinFormForOffice\WinFormForOffice.csproj", "{D24D5B98-F86E-4D21-A086-CE178D68ADD6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

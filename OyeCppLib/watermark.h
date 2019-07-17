@@ -7,8 +7,7 @@ typedef CWinTraits<
 	WS_EX_TOPMOST | WS_EX_LAYERED |	WS_EX_TOOLWINDOW | WS_EX_TRANSPARENT
 >OverlayWindowTraits;
 
-class OverlayWnd :
-	public CWindowImpl<OverlayWnd, CWindow, OverlayWindowTraits>
+class OverlayWnd : public CWindowImpl<OverlayWnd, CWindow, OverlayWindowTraits>
 {
 	friend class ViewOverlyController;
 	OverlayWnd(const std::wstring& overlay);
@@ -22,7 +21,7 @@ private:
 	void _PrepareOverly();
 public:
 	DECLARE_WND_CLASS_EX(L"NextlabsViewOverlay", 0, (HBRUSH)(COLOR_WINDOW + 1));
-	BEGIN_MSG_MAP_EX(OyeClientWindow)		
+	BEGIN_MSG_MAP_EX(OverlayWnd)
 	END_MSG_MAP()
 private:
 	std::wstring strOverlay;
@@ -40,9 +39,11 @@ public:
 
 public:
 	void SetOverlyTarget(HWND target);
-	void SetOverlyTargetOnTopLevel(
-		const char* wndClassName, const char* caption=NULL);
+	void SetOverlyTargetOnTopLevel(const char* wndClassName, const char* caption=NULL);
 	void UpdateOverlayText(const wchar_t* text) { _overlay->SetOverlay(text); }
+	inline void UpdateWatermark(HWND target) {
+		_overlay->UpdateOverlay(target);
+	}
 
 private:
 	LRESULT OnMessageHook(int code, WPARAM wParam, LPARAM lParam);

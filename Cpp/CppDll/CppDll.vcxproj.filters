@@ -47,7 +47,10 @@
     <ClCompile Include="forScreenCapture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\OyeCppLib\watermark.cpp">
+    <ClCompile Include="..\..\OyeCppLib\watermark.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="overlay.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

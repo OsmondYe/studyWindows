@@ -78,6 +78,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetName>CPPDLL</TargetName>
     <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetName>CPPDLL</TargetName>
@@ -116,7 +117,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;CPPDLL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(OSMOND_EXTERNAL)\boost_1_67_0;$(OSMOND_EXTERNAL)\wtl\WTL10_8356\Include;$(OSMOND_EXTERNAL)\madCollection\madCodeHook\Header-Libs;..\OyeCppLib;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OSMOND_EXTERNAL)\boost_1_67_0;$(OSMOND_EXTERNAL)\wtl\WTL10_8356\Include;$(OSMOND_EXTERNAL)\madCollection\madCodeHook\Header-Libs;..\..\OyeCppLib;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -173,11 +174,12 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\OyeCppLib\watermark.cpp" />
+    <ClCompile Include="..\..\OyeCppLib\watermark.cpp" />
     <ClCompile Include="CppDll.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="forScreenCapture.cpp" />
     <ClCompile Include="hook.cpp" />
+    <ClCompile Include="overlay.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

@@ -24,6 +24,8 @@ namespace WinFormForOffice
         public Form1()
         {
             InitializeComponent();
+
+            InitWaterMark(this.Handle);
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -33,12 +35,13 @@ namespace WinFormForOffice
 
         }
 
+        
         private void button1_Click(object sender, EventArgs e)
         {
             //t_1();
             //t_2();
-            //t_appAggregation();
-            t_usingApp();
+            t_appAggregation();
+            //t_usingApp();
 
         }
 
@@ -110,5 +113,22 @@ namespace WinFormForOffice
             app.Quit();
         }
 
+
+
+        #region CppDLL for watermark
+        [DllImport("CPPDLL.dll", CallingConvention = CallingConvention.Cdecl,
+            CharSet = CharSet.Unicode, EntryPoint = "InitWaterMark")]
+        static private extern void InitWaterMark(IntPtr hwnd);
+
+        [DllImport("CPPDLL.dll", CallingConvention = CallingConvention.Cdecl,
+            CharSet = CharSet.Unicode, EntryPoint = "UpdateWaterMark")]
+        static private extern void UpdateWaterMark(IntPtr hwnd);
+
+
+        [DllImport("CPPDLL.dll", CallingConvention = CallingConvention.Cdecl,
+            CharSet = CharSet.Unicode, EntryPoint = "DeleteWaterMark")]
+        static private extern void DeleteWaterMark();
+
+        #endregion
     }
 }

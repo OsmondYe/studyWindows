@@ -6,6 +6,14 @@
 using namespace Gdiplus;
 #pragma comment(lib,"gdiplus.lib")
 
+#ifndef MAKEULONGLONG
+#define MAKEULONGLONG(ldw, hdw) ((ULONGLONG(hdw) << 32) | ((ldw) & 0xFFFFFFFF))
+#endif
+
+#ifndef MAXULONGLONG
+#define MAXULONGLONG ((ULONGLONG)~((ULONGLONG)0))
+#endif
+
 namespace {
 
 	ULONG_PTR gGidplusToken;
@@ -26,14 +34,6 @@ namespace {
 		graphicsPathObj.GetBounds(&rcBound);
 		return SizeF(rcBound.Width, rcBound.Height);
 	}
-
-#ifndef MAKEULONGLONG
-#define MAKEULONGLONG(ldw, hdw) ((ULONGLONG(hdw) << 32) | ((ldw) & 0xFFFFFFFF))
-#endif
-
-#ifndef MAXULONGLONG
-#define MAXULONGLONG ((ULONGLONG)~((ULONGLONG)0))
-#endif
 	
 	DWORD GetMainThreadID() {
 		DWORD dwProcID = ::GetCurrentProcessId();
@@ -71,7 +71,7 @@ namespace {
 	}
 }
 
-OverlayWnd::OverlayWnd(const std::wstring& overlay): strOverlay(overlay)
+OverlayWnd::OverlayWnd(const std::wstring& overlay):strOverlay(overlay)
 {
 	Gdiplus::GdiplusStartup(&gGidplusToken, &gGdipulsInput, NULL);
 	_PrepareOverly();	
@@ -87,9 +87,9 @@ OverlayWnd::~OverlayWnd()
 CRect OldTarget(-1, -1, -1, -1);
 void OverlayWnd::UpdateOverlay(HWND target)
 {
-	
 	CRect targetRC;
 	if (target == NULL) {
+		// user physical device may changed ,you get it each tiem
 		targetRC = { 0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN) };
 	}
 	else {
@@ -97,6 +97,7 @@ void OverlayWnd::UpdateOverlay(HWND target)
 	}
 
 	if (OldTarget.EqualRect(targetRC)) {
+		//OutputDebugStringA("same CRect, return directly");
 		return;
 	}
 	else {
@@ -104,7 +105,7 @@ void OverlayWnd::UpdateOverlay(HWND target)
 	}
 
 	// make layered wnd always covered the targert Wnd
-	MoveWindow(targetRC);
+	MoveWindow(targetRC,false);
 
 	BLENDFUNCTION blend = { AC_SRC_OVER ,0,100,AC_SRC_ALPHA };
 	//CPoint p(targetRC.left, targetRC.right);
@@ -113,11 +114,18 @@ void OverlayWnd::UpdateOverlay(HWND target)
 	CSize s(targetRC.Width(), targetRC.Height());
 	
 	// draw in Screen, but always get target wnd's region info
-	::UpdateLayeredWindow(*this, 
-		NULL, 
-		&dstpt, &s, *pmdc,
-		&dstpt, NULL,
-		&blend, ULW_ALPHA);
+	if (!::UpdateLayeredWindow(this->m_hWnd,
+		NULL,
+		&dstpt, &s, 
+		*pmdc,&p,   // src dc and {left,top}
+		NULL,&blend, ULW_ALPHA)  // using alpha blend,
+		) {
+		// error occured
+		auto err = ::GetLastError();
+		std::string strErr = "Faied call UpdateLayeredWindow,error is ";
+		strErr += std::to_string(err);
+		::OutputDebugStringA(strErr.c_str());
+	}
 }
 
 
@@ -208,7 +216,7 @@ void ViewOverlyController::SetOverlyTarget(HWND target)
 	_target = target;
 	_targetTopMain = _target.GetTopLevelParent();
 
-	_swhHook = ::SetWindowsHookEx(WH_CALLWNDPROCRET,
+	_swhHook = ::SetWindowsHookEx(WH_CALLWNDPROCRET,	// after wnd had processed the message
 		ViewOverlyController::HookProxy,
 		NULL,
 		//::GetMainThreadID()
@@ -218,6 +226,8 @@ void ViewOverlyController::SetOverlyTarget(HWND target)
 	if (_swhHook == NULL) {
 		throw new std::exception("failed, call SetWindowsHookEx");
 	}
+
+	this->_overlay->UpdateOverlay(target);
 		
 }
 
@@ -230,8 +240,6 @@ void ViewOverlyController::SetOverlyTargetOnTopLevel(
 		return;
 	}
 	SetOverlyTarget(target);
-	
-		
 }
 
 
@@ -239,7 +247,7 @@ void ViewOverlyController::SetOverlyTargetOnTopLevel(
 LRESULT ViewOverlyController::OnMessageHook(int code, WPARAM wParam, LPARAM lParam)
 {
 	if (code < 0 || lParam == 0) {
-		::CallNextHookEx(_swhHook, code, wParam, lParam);
+		return ::CallNextHookEx(_swhHook, code, wParam, lParam);
 	}
 
 	CWPRETSTRUCT* p = (CWPRETSTRUCT*)lParam;
@@ -252,8 +260,16 @@ LRESULT ViewOverlyController::OnMessageHook(int code, WPARAM wParam, LPARAM lPar
 	}
 	if (msg == WM_MOVING || msg == WM_MOVE ||
 		msg == WM_WINDOWPOSCHANGING || msg == WM_WINDOWPOSCHANGED ||
-		msg == WM_SHOWWINDOW
+		msg == WM_SHOWWINDOW || 
+		msg == WM_SYSCOMMAND
+		// new added
+		//msg == WM_SIZE || msg == WM_SIZING ||
+		//msg == SW_MAXIMIZE || msg == SIZE_MAXIMIZED
 		) {
+		if (msg == WM_SYSCOMMAND) {
+			::OutputDebugStringA("catch message:WM_SYSCOMMAND ");
+		}
+
 		if (_overlay != NULL) {
 			_overlay->UpdateOverlay(_target);
 		}

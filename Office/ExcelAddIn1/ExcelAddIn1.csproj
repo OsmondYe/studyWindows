@@ -225,7 +225,6 @@
     <Compile Include="Ribbon.cs">
       <XmlRibbon>true</XmlRibbon>
     </Compile>
-    <Compile Include="Ribbon1.cs" />
     <Compile Include="ThisAddIn.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -239,9 +238,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Ribbon.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Ribbon1.xml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
