@@ -35,6 +35,8 @@ namespace ExcelAddIn1
 
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
+            Application.AutoRecover.Enabled = false;
+
             Application.WorkbookOpen += Application_WorkbookOpen;
             Application.WindowActivate += Application_WindowActivate;
             Application.WindowResize += Application_WindowResize;
