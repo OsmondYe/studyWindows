@@ -1,26 +1,25 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
+#include "overlay.h"
 #include "watermark.h"
 
 
-
-ViewOverlyController* p;
-
-
-
-DLL_FUN_EXPORT void InitWaterMark(HWND targertWnd) {
+DLL_FUN_EXPORT void InitWaterMark(HWND targertWnd, wchar_t* strOverlay) {
 	::OutputDebugStringW(L"InitWaterMark");
-	p = new ViewOverlyController(L"Test Watermark by Nextalbs SkyDRM");
-	p->SetOverlyTarget(targertWnd);
+	std::wstring str;
+	if (strOverlay == NULL ) {
+		str=L"Default viewOverlay";
+	}
+	else {
+		str = strOverlay;
+	}
+	ViewOverlyController::getInstance().Attach(targertWnd, str);
 }
 
 DLL_FUN_EXPORT void UpdateWaterMark(HWND targertWnd) {
-	p->UpdateWatermark(targertWnd);
+	ViewOverlyController::getInstance().UpdateWatermark(targertWnd);
 }
 
-
-DLL_FUN_EXPORT void DeleteWaterMark() {
-	if (p != NULL) {
-		delete p;
-		p = NULL;
-	}
+DLL_FUN_EXPORT void DeleteWaterMark(HWND targertWnd) {
+	ViewOverlyController::getInstance().Detach(targertWnd);
+	//ViewOverlyController::getInstance().Clear();
 }

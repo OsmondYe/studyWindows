@@ -1,4 +1,5 @@
 ﻿#include "stdafx.h"
+#include <mutex>
 #include "watermark.h"
 #include <functional>
 #include <TlHelp32.h>
@@ -69,23 +70,10 @@ namespace {
 		}
 		return dwMainThreadID;
 	}
-}
-
-OverlayWnd::OverlayWnd(const std::wstring& overlay):strOverlay(overlay)
-{
-	Gdiplus::GdiplusStartup(&gGidplusToken, &gGdipulsInput, NULL);
-	_PrepareOverly();	
-}
-
-OverlayWnd::~OverlayWnd()
-{
-	if (gGidplusToken != NULL) {
-		Gdiplus::GdiplusShutdown(gGidplusToken);
-	}
-}
+} // end anonymous namespace
 
 CRect OldTarget(-1, -1, -1, -1);
-void OverlayWnd::UpdateOverlay(HWND target)
+void OverlayWindow::UpdateOverlay(HWND target)
 {
 	CRect targetRC;
 	if (target == NULL) {
@@ -129,7 +117,7 @@ void OverlayWnd::UpdateOverlay(HWND target)
 }
 
 
-void OverlayWnd::_DrawOverlay(HDC dcScreen, LPRECT lpRestrictDrawingRect)
+void OverlayWindow::_DrawOverlay(HDC dcScreen, LPRECT lpRestrictDrawingRect)
 {
 	if (dcScreen == NULL) {
 		return;
@@ -171,7 +159,7 @@ void OverlayWnd::_DrawOverlay(HDC dcScreen, LPRECT lpRestrictDrawingRect)
 
 }
 
-void OverlayWnd::_PrepareOverly()
+void OverlayWindow::_PrepareOverly()
 {
 	// Get Whole Screen pixels
 	CRect ScreenRC = { 
@@ -190,32 +178,79 @@ void OverlayWnd::_PrepareOverly()
 //
 //  classController
 //
-//  using ::SetWindowsHookEx to monitor window sizing msg
 //
-static ViewOverlyController* pVOC = NULL;
 
-ViewOverlyController::ViewOverlyController(const std::wstring& overlay)
-	: _overlay(NULL), _swhHook(NULL)
+ViewOverlyController* ViewOverlyController::sgIns = NULL;
+std::recursive_mutex ViewOverlyController::sgRMutex;
+#ifdef ViewOverlyControllerScopeGurad
+	#error this is Impossible
+#endif // ViewOverlyControllerScopeGurad
+#define ViewOverlyControllerScopeGurad std::lock_guard<std::recursive_mutex> g(sgRMutex)
+
+ViewOverlyController & ViewOverlyController::getInstance()
 {
-	_overlay = new OverlayWnd(overlay);
-	_overlay->Create(NULL);
+	ViewOverlyControllerScopeGurad;
+	if (sgIns == NULL) {
+		// init gdi++
+		Gdiplus::GdiplusStartup(&gGidplusToken, &gGdipulsInput, NULL);
 
-	pVOC = this;
+		sgIns = new ViewOverlyController();
+	}
+	return *sgIns;
+	
 }
+
 
 ViewOverlyController::~ViewOverlyController()
 {
-	_overlay->HideWnd();
 	if (_swhHook != NULL) {
 		::UnhookWindowsHookEx(_swhHook);
 	}
+	// deinit gdi++
+	if (gGidplusToken != NULL) {
+		Gdiplus::GdiplusShutdown(gGidplusToken);
+		gGidplusToken = NULL;
+	}
+
+}
+
+void ViewOverlyController::Attach(HWND target, const std::wstring & overlay, int tid)
+{
+	ViewOverlyControllerScopeGurad;
+
+	if (_wnds.find(target) != _wnds.end()) {
+		// has got
+		if (_wnds[target]->strOverlay != overlay) {
+			_wnds[target]->SetOverlay(overlay);
+		}
+	}
+	else {
+		std::shared_ptr<OverlayWindow> spWnd(new OverlayWindow());
+		spWnd->Init(overlay);
+		SetOverlyTarget(target);
+
+		_wnds[target] = spWnd;
+	}
+}
+
+void ViewOverlyController::Detach(HWND target)
+{
+	ViewOverlyControllerScopeGurad;
+
+	if (_wnds.find(target) != _wnds.end()) {
+		_wnds[target]->HideWnd();
+		_wnds.erase(target);
+	}
+}
+
+void ViewOverlyController::Clear()
+{
+	ViewOverlyControllerScopeGurad;
+	_wnds.clear();
 }
 
 void ViewOverlyController::SetOverlyTarget(HWND target)
 {
-	_target = target;
-	_targetTopMain = _target.GetTopLevelParent();
-
 	_swhHook = ::SetWindowsHookEx(WH_CALLWNDPROCRET,	// after wnd had processed the message
 		ViewOverlyController::HookProxy,
 		NULL,
@@ -227,22 +262,22 @@ void ViewOverlyController::SetOverlyTarget(HWND target)
 		throw new std::exception("failed, call SetWindowsHookEx");
 	}
 
-	this->_overlay->UpdateOverlay(target);
-		
-}
-
-void ViewOverlyController::SetOverlyTargetOnTopLevel(
-	const char * wndClassName, 
-	const char * caption)
-{
-	HWND target=::FindWindowA(wndClassName, caption);
-	if (target == NULL) {
-		return;
+	if (_wnds.find(target) != _wnds.end()) {
+		_wnds[target]->UpdateOverlay(target);
 	}
-	SetOverlyTarget(target);
 }
 
 
+/*void UpdateOverlayText(const wchar_t* text) { _overlay->SetOverlay(text); }
+
+}*/
+
+void ViewOverlyController::UpdateWatermark(HWND target) {
+	ViewOverlyControllerScopeGurad;
+	if (_wnds.find(target) != _wnds.end()) {
+		_wnds[target]->UpdateOverlay(target);
+	}
+}
 
 LRESULT ViewOverlyController::OnMessageHook(int code, WPARAM wParam, LPARAM lParam)
 {
@@ -251,11 +286,11 @@ LRESULT ViewOverlyController::OnMessageHook(int code, WPARAM wParam, LPARAM lPar
 	}
 
 	CWPRETSTRUCT* p = (CWPRETSTRUCT*)lParam;
-
 	// may be main window moving
 	UINT msg = p->message;
 	HWND t = p->hwnd;
-	if (t != _target && t != _targetTopMain) {
+	ViewOverlyControllerScopeGurad;
+	if(_wnds.empty() || _wnds.find(t) == _wnds.end()){
 		return ::CallNextHookEx(_swhHook, code, wParam, lParam);
 	}
 	if (msg == WM_MOVING || msg == WM_MOVE ||
@@ -269,18 +304,21 @@ LRESULT ViewOverlyController::OnMessageHook(int code, WPARAM wParam, LPARAM lPar
 		if (msg == WM_SYSCOMMAND) {
 			::OutputDebugStringA("catch message:WM_SYSCOMMAND ");
 		}
-
-		if (_overlay != NULL) {
-			_overlay->UpdateOverlay(_target);
-		}
+		_wnds[t]->UpdateOverlay(t);
 	}
+	// target wnd wants destory tell to destory overlay wnd
+	else if (msg == WM_DESTROY) {
+		_wnds[t]->HideWnd();
+		_wnds.erase(t);
+	}
+	
 	return ::CallNextHookEx(_swhHook, code, wParam, lParam);
 
 }
 
 LRESULT ViewOverlyController::HookProxy(int code, WPARAM wParam, LPARAM lParam)
 {	
-	return pVOC->OnMessageHook(code, wParam, lParam);
+	return getInstance().OnMessageHook(code, wParam, lParam);
 }
 
 

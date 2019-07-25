@@ -71,5 +71,8 @@
     <ClCompile Include="aux_utils.cpp">
       <Filter>Source Files\stl</Filter>
     </ClCompile>
+    <ClCompile Include="concurrency.cpp">
+      <Filter>Source Files\stl</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
