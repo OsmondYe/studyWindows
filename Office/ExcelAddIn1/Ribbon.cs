@@ -40,7 +40,7 @@ namespace ExcelAddIn1
         public bool CheckMsoIdEnabled(Office.IRibbonControl control)
         {
             Debug.WriteLine(control.Id + "___" + control.Tag);
-            return false;
+            return true;
         }
 
 

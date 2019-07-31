@@ -168,7 +168,7 @@ void OverlayWindow::_PrepareOverly()
 		GetSystemMetrics(SM_CXVIRTUALSCREEN),
 		GetSystemMetrics(SM_CYVIRTUALSCREEN) };
 
-	// Get a larget surface to draw overlay
+	// Get a large surface to draw overlay
 	CDC dc=::GetDC(NULL);
 	pmdc = new CMemoryDC(dc, ScreenRC);
 	_DrawOverlay(*pmdc, ScreenRC);

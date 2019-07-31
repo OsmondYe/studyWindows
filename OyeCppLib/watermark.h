@@ -75,16 +75,7 @@ public:
 	void Clear();	// clear all watermarks
 
 	void SetOverlyTarget(HWND target);
-	inline void SetOverlyTargetOnTopLevel(const char* wndClassName, const char* caption = NULL) {
-		HWND target = ::FindWindowA(wndClassName, caption);
-		if (target == NULL) {
-			return;
-		}
-		SetOverlyTarget(target);
-	}
-	/*void UpdateOverlayText(const wchar_t* text) { _overlay->SetOverlay(text); }
 	
-	}*/
 	void UpdateWatermark(HWND target);
 
 private:
@@ -94,6 +85,18 @@ private:
 	static ViewOverlyController* sgIns;
 	static std::recursive_mutex sgRMutex;
 	static LRESULT CALLBACK HookProxy(int code, WPARAM wParam, LPARAM lParam);
+
+//
+// TBDS
+//
+private:
+	inline void SetOverlyTargetOnTopLevel(const char* wndClassName, const char* caption = NULL) {
+		HWND target = ::FindWindowA(wndClassName, caption);
+		if (target == NULL) {
+			return;
+		}
+		SetOverlyTarget(target);
+	}
 };
 
 

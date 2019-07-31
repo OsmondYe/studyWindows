@@ -59,6 +59,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	//pMainWnd->SetWindowRgn(rgn);
 	pMainWnd->ShowWindow(nCmdShow);
 	
+
+
+	ViewOverlyController::getInstance().Attach(pMainWnd->m_hWnd, L"my overlay test\nNextlabs.INC");
+
 	// Overly Wnd
 	//pWnd =new OverlayWnd();
 	//CRect rc(0, 0, 1000, 400);

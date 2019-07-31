@@ -90,6 +90,7 @@ namespace ExcelAddIn1
             Debug.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
             Wb.BeforeSave += Wb_BeforeSave;
             Wb.BeforeClose += Wb_BeforeClose;
+            Wb.BeforePrint += Wb_BeforePrint;
 
             Wb.WindowActivate += Wb_WindowActivate;
             Wb.WindowResize += Wb_WindowResize;
@@ -102,7 +103,12 @@ namespace ExcelAddIn1
 
         }
 
-       
+        private void Wb_BeforePrint(ref bool Cancel)
+        {
+            Debug.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
+
+
+        }
 
         private void Wb_WindowResize(Excel.Window Wn)
         {
