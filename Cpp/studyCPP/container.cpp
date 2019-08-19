@@ -11,6 +11,19 @@ using namespace std;
 using namespace aux;
 
 
+namespace {
+	class Obj {
+	public:
+		Obj() {
+			cout << "call Obj()" << endl;
+		}
+		~Obj()
+		{
+			cout << "~Obj()" << endl;
+		}
+	};
+}
+
 TEST(Container, Vector) {
 	//using std::allocator<T>  to new or delete node	
 	vector<int> vi({ 1,2,3,4,5,6 });
@@ -23,6 +36,20 @@ TEST(Container, Vector) {
 	vi.push_back(12);
 	vi.push_back(12);
 	// sizeof(vi)==4;
+
+
+	vector<Obj> vo;
+	for (size_t i = 0; i < 10; i++)
+	{
+		vo.push_back(Obj());
+	}
+
+	vector<Obj*> vpo;
+	for (size_t i = 0; i < 10; i++)
+	{
+		vpo.push_back(new Obj());
+	}
+
 }
 
 
