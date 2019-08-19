@@ -2,7 +2,6 @@
 
 //use DISABLED_ prefix to filter out 
 
-
 TEST(Windows, VectorAsBuf) {
 	std::vector<wchar_t> buf(1024,0);// buf[1024]={0};
 	int len = ::GetModuleFileNameW(NULL, buf.data(), 1024);
@@ -18,15 +17,12 @@ TEST(Windows, VectorAsBuf) {
 	buf2.resize(len);
 
 	wcout << buf2;
-	
 }
 
 
 TEST(Windows, DISABLED_COM) {
-
 	size_t size = sizeof(VARIANT);
 	EXPECT_EQ(size, 0x10);
-
 }
 
 
@@ -34,9 +30,6 @@ TEST(Windows, DISABLED_ShellOperation) {
 	const wchar_t* exe = L"D:\\OyeProject\\CSharp\\rmd-windows\\SkydrmLocal\\Debug\\SkydrmLocal.exe";
 	const wchar_t* cmd = L"-share c:\\aaa.txt";
 	::ShellExecuteW(NULL, L"open", exe, cmd, NULL, SW_SHOW);
-
-	
-
 }
 
 TEST(Windows, DISABLED_RegOperation) {
@@ -72,7 +65,6 @@ TEST(Windows, DISABLED_RegOperation) {
 	std::wstring path((wchar_t*)value_buffer);
 	// set value to out param
 	EXPECT_FALSE(path.empty());
-
 }
 
 TEST(Windows, DISABLED_RegOperation2) {
@@ -84,8 +76,6 @@ TEST(Windows, DISABLED_RegOperation2) {
 	rt=RegCreateKey(root, parent, &result);
 
 	rt=RegSetValueW(result, L"null", 1, parent, wcslen(parent));
-
-
 
 	static const wchar_t* hSKYDRM = L"Software\\Nextlabs\\SkyDRM\\LocalApp";
 
@@ -103,7 +93,5 @@ TEST(Windows, DISABLED_RegOperation2) {
 
 
 	EXPECT_TRUE(1);
-
-
 
 }

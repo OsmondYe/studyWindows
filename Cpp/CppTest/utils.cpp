@@ -64,6 +64,24 @@ bool win::file::is_path_exist(const wchar_t * dir)
 	return INVALID_FILE_ATTRIBUTES != GetFileAttributesW(dir);
 }
 
+
+void win::file::del_all_files(std::wstring path)
+{
+	std::vector<std::wstring::value_type> doubleNullTerminatedPath;
+	std::copy(path.begin(), path.end(), std::back_inserter(doubleNullTerminatedPath));
+	doubleNullTerminatedPath.push_back(L'\0');
+	doubleNullTerminatedPath.push_back(L'\0');
+
+	SHFILEOPSTRUCTW fileOperation;
+	fileOperation.wFunc = FO_DELETE;
+	fileOperation.pFrom = &doubleNullTerminatedPath[0];
+	fileOperation.fFlags = FOF_NO_UI | FOF_NOCONFIRMATION | FOF_SILENT;
+
+	::SHFileOperationW(&fileOperation);
+}
+
+
+
 HANDLE win::get_process(int process_id) {
 	return OpenProcess(PROCESS_ALL_ACCESS, FALSE, process_id);
 }
@@ -101,6 +119,7 @@ namespace {
 	};
 
 }
+
 
 
 // crypt needed params here
