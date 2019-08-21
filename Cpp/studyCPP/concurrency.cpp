@@ -8,6 +8,36 @@ std::mutex gMutex;
 std::recursive_mutex gRMutex;
 
 
+class thread_guard {
+	thread& _t;
+	thread_guard(const thread_guard& r) = delete;
+	thread_guard& operator=(const thread_guard& r) = delete;
+public:
+	explicit thread_guard(thread& t_) : _t(t_) {}
+	~thread_guard() {
+		if (_t.joinable()) _t.join();
+	}
+
+};
+
+
+TEST(Concurrency, MustJoinOrDetach) {
+	thread t1([]() {
+		cout << "hello world" << endl;
+	});
+	t1.detach();   // i know there is a thread but I dont need th managed it
+
+
+	thread t2([]() {
+		cout << "hello world t2" << endl;
+	});
+	thread_guard g(t2);
+
+
+
+}
+
+
 void f0() {
 	cout << "begin come with: " << hex << this_thread::get_id() << endl;
 
