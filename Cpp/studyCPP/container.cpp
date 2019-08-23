@@ -124,3 +124,29 @@ TEST(Container, VectorBool) {
 	vector<bool> a;
 }
 
+
+TEST(Container, Map) {
+	map<string, int>  aa{
+		{"aa",0x1},
+		{"bb",0x2},
+		{"cc",0x3},
+	};
+	// enum
+	for (auto& i : aa) {
+		cout << i.first << i.second << endl;
+	}
+
+	set<string> keys;
+	set<int> values;
+
+	
+	transform(cbegin(aa), cend(aa), std::inserter(keys,keys.begin()), [](decltype(aa)::value_type const& pair) {
+		return pair.first;
+	});
+
+	transform(cbegin(aa), cend(aa), std::inserter(values, values.begin()), [](decltype(aa)::value_type const& pair) {
+		return pair.second;
+	});
+	
+}
+

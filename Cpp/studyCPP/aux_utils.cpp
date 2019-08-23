@@ -17,3 +17,12 @@ TEST(Aux, Pair) {
 TEST(Aux, Tuple) {
 	// wrapper multi objs into one obj
 }
+
+
+TEST(Aux, Ref) {
+	//std::ref()
+}
+
+TEST(Aux, Bind) {
+	//std::ref()
+}

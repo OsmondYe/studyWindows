@@ -58,8 +58,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	TestMain main;
 	main.Create(NULL);
-	main.UpdateWindow();
-	main.ShowWindow(SW_NORMAL);
 
 	//
 	// attach watermark on main
@@ -67,6 +65,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	ViewOverlyController::getInstance().Attach(main.m_hWnd, 
 			L"This is test watermark by Nextlabs-CDC\n测试窗口水印-缩放拉伸最大最小显示隐藏");
+	main.UpdateWindow();
+	main.ShowWindow(SW_NORMAL);
 
 
 	int nRet = theLoop.Run();

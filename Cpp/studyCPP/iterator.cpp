@@ -19,6 +19,11 @@ using namespace aux;
 	forword : public input, output
 	bidrciton: public forward
 	random : publci forward
+
+ insertor wrapper:
+	std::inserter,
+	std::back_inserter,
+	std::front_inserter
 */
 
 

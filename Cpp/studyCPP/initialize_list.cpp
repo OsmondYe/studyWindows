@@ -37,14 +37,3 @@ Require compile to convert {1,2,3,4,5} ->  initializer_list object -> some thing
 
 using namespace std;
 
-TEST(InitializerList,Basic) {
-	// require constructor : vector(initializer_list<_Ty> _Ilist, const _Alloc& _Al = _Alloc())
-	// compile convert { 1,2,3,4,5,6 } ->  initializer_list<int>;
-	vector<int> aa{ 1,2,3,4,5,6 };
-
-	for_each(aa.begin(), aa.end(), [](int& i) {std::cout << i; });
-
-	vector<std::pair<int, string>> ll{ {1,"haha"},{2,"haha"} };
-
-	ll.size();
-}
