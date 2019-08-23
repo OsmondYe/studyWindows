@@ -22,6 +22,9 @@
     <Filter Include="Source Files\syntax">
       <UniqueIdentifier>{1c7bc209-f5d5-4b40-98a4-9b68f6873261}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\template">
+      <UniqueIdentifier>{68e202d4-2527-4335-84ee-f96eb0182846}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -73,6 +76,9 @@
     </ClCompile>
     <ClCompile Include="concurrency.cpp">
       <Filter>Source Files\stl</Filter>
+    </ClCompile>
+    <ClCompile Include="template.cpp">
+      <Filter>Source Files\template</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

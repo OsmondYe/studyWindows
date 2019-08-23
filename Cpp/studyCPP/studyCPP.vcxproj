@@ -190,6 +190,7 @@
     <ClCompile Include="string.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="syntax.cpp" />
+    <ClCompile Include="template.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

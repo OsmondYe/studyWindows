@@ -5,13 +5,20 @@ using System.Text;
 using System.Xml.Linq;
 using PowerPoint = Microsoft.Office.Interop.PowerPoint;
 using Office = Microsoft.Office.Core;
+using System.Diagnostics;
 
-namespace PowerPointAddIn1
+namespace PowerPointAddIn
 {
     public partial class ThisAddIn
     {
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
+            Application.WindowActivate += Application_WindowActivate;
+        }
+
+        private void Application_WindowActivate(PowerPoint.Presentation Pres, PowerPoint.DocumentWindow Wn)
+        {
+            Debug.WriteLine("C# Plguin AppWindw Activate:"+Pres.FullName);
         }
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
