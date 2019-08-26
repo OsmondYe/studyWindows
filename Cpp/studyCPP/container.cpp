@@ -24,6 +24,7 @@ namespace {
 	};
 }
 
+// allocator:: first,last,end
 TEST(Container, Vector) {
 	//using std::allocator<T>  to new or delete node	
 	vector<int> vi({ 1,2,3,4,5,6 });
@@ -48,6 +49,16 @@ TEST(Container, Vector) {
 	for (size_t i = 0; i < 10; i++)
 	{
 		vpo.push_back(new Obj());
+	}
+
+
+	std::allocator<int> intAlloc;
+
+	vector<int> a12(4, intAlloc);
+
+	for (size_t i = 0; i < 100; i++)
+	{
+		a12.push_back(12);
 	}
 
 }

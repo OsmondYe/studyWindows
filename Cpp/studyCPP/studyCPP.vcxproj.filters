@@ -22,7 +22,7 @@
     <Filter Include="Source Files\syntax">
       <UniqueIdentifier>{1c7bc209-f5d5-4b40-98a4-9b68f6873261}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\template">
+    <Filter Include="Source Files\syntax\template">
       <UniqueIdentifier>{68e202d4-2527-4335-84ee-f96eb0182846}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -78,7 +78,12 @@
       <Filter>Source Files\stl</Filter>
     </ClCompile>
     <ClCompile Include="template.cpp">
-      <Filter>Source Files\template</Filter>
+      <Filter>Source Files\syntax\template</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="NoUse.hpp">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

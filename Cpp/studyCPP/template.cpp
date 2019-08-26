@@ -10,4 +10,8 @@ transform(cbegin(aa), cend(aa), std::inserter(keys, keys.begin()), [](decltype(a
 	return pair.first;
 });
 
+
+	template<class... _Valty>
+		decltype(auto) emplace_back(_Valty&&... _Val)
+
 */

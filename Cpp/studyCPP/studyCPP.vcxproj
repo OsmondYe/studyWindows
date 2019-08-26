@@ -117,6 +117,7 @@
       <AdditionalIncludeDirectories>$(OSMOND_EXTERNAL)\gtest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>
       </LanguageStandard>
+      <SupportJustMyCode>false</SupportJustMyCode>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -191,6 +192,9 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="syntax.cpp" />
     <ClCompile Include="template.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="NoUse.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
