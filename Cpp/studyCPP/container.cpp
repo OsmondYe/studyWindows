@@ -1,15 +1,12 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "helper.hpp"
 /*Container:  
 	sequential
 	relative
 */
 
-
-
 using namespace std;
 using namespace aux;
-
 
 namespace {
 	class Obj {
@@ -24,41 +21,38 @@ namespace {
 	};
 }
 
-// allocator:: first,last,end
 TEST(Container, Vector) {
-	//using std::allocator<T>  to new or delete node	
-	vector<int> vi({ 1,2,3,4,5,6 });
-	
+	// c11, initialize_list, convert {1,2,3,4,5,6} into an iter with a range 
+	vector<int> vi{ 1,2,3,4,5,6 };	
 	output(vi.begin(), vi.end());
 	output(vi);
-	vi.push_back(12);
-	vi.push_back(12);
-	vi.push_back(12);
-	vi.push_back(12);
-	vi.push_back(12);
-	// sizeof(vi)==4;
 
+	auto it = vi.begin();
+	auto it2 = vi.end();
+	for (size_t i = 0; i < 20; i++)
+	{
+		vi.push_back(7);
+	}
+
+	{
+		// vi会自动寻找新的内容以容纳新的数据,先前在内存上的iterator都会失效的	
+		//auto vv = *it;
+		//auto vv2 = *it2;
+	}
 
 	vector<Obj> vo;
 	for (size_t i = 0; i < 10; i++)
 	{
-		vo.push_back(Obj());
+		vo.push_back(Obj()); // 如果buf满了,会发生buf迁移,然后对象会有内部的构造和析构
 	}
 
-	vector<Obj*> vpo;
+	// 大规模填写数据,应该先大概确定需要的size,这样不会频繁buf移动
+	vector<int> v2; v2.reserve(10);
+
+	vector<Obj*> vpo;	// 指针形式, copy/move/destruc时都不会call delete, 需要自己去call delete
 	for (size_t i = 0; i < 10; i++)
 	{
 		vpo.push_back(new Obj());
-	}
-
-
-	std::allocator<int> intAlloc;
-
-	vector<int> a12(4, intAlloc);
-
-	for (size_t i = 0; i < 100; i++)
-	{
-		a12.push_back(12);
 	}
 
 }
@@ -79,7 +73,7 @@ TEST(Container, List) {
 	output(ll3);
 }
 
-// depend on algorithem  make_heap, push_heap, pop_heap
+// depend on algorithm  make_heap, push_heap, pop_heap
 TEST(Container, PriorityQueue) {
 	auto l = { 12,34,33,1,3,5,9,56,457,35,87,568 };
 	priority_queue<int> pq(l.begin(),l.end());
@@ -150,6 +144,10 @@ TEST(Container, Map) {
 	set<string> keys;
 	set<int> values;
 
+	//需要捕获keys的引用
+	for_each(cbegin(aa), cend(aa), [&keys](decltype(aa)::value_type const& pair) {
+		keys.insert(pair.first);
+	});
 	
 	transform(cbegin(aa), cend(aa), std::inserter(keys,keys.begin()), [](decltype(aa)::value_type const& pair) {
 		return pair.first;

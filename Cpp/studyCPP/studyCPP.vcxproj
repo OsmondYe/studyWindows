@@ -178,7 +178,6 @@
     <ClCompile Include="aux_utils.cpp" />
     <ClCompile Include="concurrency.cpp" />
     <ClCompile Include="container.cpp" />
-    <ClCompile Include="initialize_list.cpp" />
     <ClCompile Include="iterator.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
