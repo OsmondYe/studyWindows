@@ -15,6 +15,11 @@
 #define IDC_EDIT1                       1000
 #define IDC_MYEDIT                      1000
 #define IDC_FONTLIST                    1001
+#define IDC_FONTSIZE                    1004
+#define IDC_SLIDE_COLOR_A               1005
+#define IDC_SLIDE_COLOR_R               1006
+#define IDC_SLIDE_COLOR_G               1007
+#define IDC_SLIDE_COLOR_B               1008
 #define IDC_STATIC                      -1
 #define IDC_FONTDEMOSTR                 -1
 
@@ -25,7 +30,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        129
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1004
+#define _APS_NEXT_CONTROL_VALUE         1008
 #define _APS_NEXT_SYMED_VALUE           110
 #endif
 #endif

@@ -1,7 +1,33 @@
-#include "pch.h"
+﻿#include "pch.h"
 
 #include <mutex>
 using namespace std;
+
+TEST(Concurrency, Basic) {
+	cout << "hardware_concurrency" << thread::hardware_concurrency() << endl;
+	cout << "this id:"<<this_thread::get_id() << endl;
+	cout << "yield to let other thread to runing"<< endl;
+	this_thread::yield();
+
+
+	this_thread::sleep_for(chrono::seconds(3));
+	//this_thread::sleep_for(3s); // same with above
+	cout << "sellp 10 seconds";
+
+
+}
+
+TEST(Concurrency, Threads) {
+	// 可以让容器管理线程
+	vector<thread> vt; vt.reserve(20);
+	for (size_t i = 0; i < 20; i++)
+	{
+		// push_back 多了一个 移动放入
+		vt.push_back(thread(expe::test_fun,i));
+	}
+	// 自动绑成员函数
+	for_each(vt.begin(), vt.end(), mem_fn(&thread::join));
+}
 
 
 std::mutex gMutex;
@@ -32,9 +58,6 @@ TEST(Concurrency, MustJoinOrDetach) {
 		cout << "hello world t2" << endl;
 	});
 	thread_guard g(t2);
-
-
-
 }
 
 
@@ -82,6 +105,4 @@ TEST(Concurrency, Mutex) {
 	for (auto& t : ll) {
 		t.join();
 	}
-
-
 }

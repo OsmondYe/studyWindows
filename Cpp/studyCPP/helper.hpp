@@ -1,3 +1,4 @@
+#pragma once
 #include "pch.h"
 
 namespace aux {
@@ -31,3 +32,54 @@ namespace aux {
 	}
 }
 
+
+
+namespace expe {
+
+	class ExperimentObj {
+	public:
+		ExperimentObj() {
+			cout << "ExperimentObj contructor" << endl;
+		}
+
+		ExperimentObj(ExperimentObj&& other)
+			: str_(other.str_),wstr_(other.wstr_)
+		{
+			cout << "ExperimentObj contructor with move-constructor" << endl;
+			// set other 's data member is null
+			
+		}
+
+		~ExperimentObj() {
+			cout << "ExperimentObj destructor" << endl;
+		}
+
+		ExperimentObj& operator=(ExperimentObj&& other) {
+			return MoveOjb(other);
+		}
+
+		ExperimentObj(const ExperimentObj&) = delete;
+		ExperimentObj& operator=(const ExperimentObj&) = delete;
+
+
+	private:
+		ExperimentObj& MoveOjb(ExperimentObj& other) {
+			this->str_ = other.str_;
+			this->wstr_ = other.wstr_;
+			return *this;
+		}
+
+	private:
+		string str_;
+		wstring wstr_;
+	};
+
+
+	inline void test_fun(int i) {
+		for (size_t i = 0; i < 100; i++)
+		{
+			cout << i<<" ";
+		}
+	};
+
+}

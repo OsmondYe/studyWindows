@@ -32,7 +32,7 @@ int main(int argc, wchar_t** argv)
 	//testing::FLAGS_gtest_filter = "Concurrency.MustJoinOrDetach";
 	testing::FLAGS_gtest_filter = "Container.*";
 
-	testing::FLAGS_gtest_filter = "Syntax.*:Container.*";
+	testing::FLAGS_gtest_filter = "Syntax.*:Container.*:Concurrency.*";
 
 	return RUN_ALL_TESTS();
 

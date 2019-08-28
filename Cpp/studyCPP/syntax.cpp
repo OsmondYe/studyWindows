@@ -87,13 +87,19 @@ TEST(Syntax, RVauleReference) {
 	cout << "the combination of rvalue references and lvalue references is just what is needed to easily code move semantics\n";
 }
 
-
-
 TEST(Syntax, Move) {
 	// move constructor
-	// move assignment operator
+	// move assignment operator  对于一个类而言,2个都需要有
 	// std::move
 	// if ojb is movable, so it isnt copyable
+	expe::ExperimentObj a ;
+	{
+		expe::ExperimentObj b = std::move(a);
+	}
+
+	expe::ExperimentObj c;
+	c = std::move(a);
+
 }
 
 TEST(Syntax, Ref) {

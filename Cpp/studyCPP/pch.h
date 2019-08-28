@@ -26,4 +26,10 @@ using namespace std;
 
 // gtest
 #include <gtest/gtest.h>
+
+
+
+// helper
+#include "helper.hpp"
+
 #endif //PCH_H

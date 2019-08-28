@@ -9,6 +9,8 @@
 // Windows Header Files
 #include <windows.h>
 
+
+
 // C RunTime Header Files
 #include <stdlib.h>
 #include <malloc.h>
@@ -23,6 +25,8 @@
 #include <map>
 #include <algorithm>
 #include <mutex>
+#include <string>
+#include <vector>
 
 
 // atl & wtl
@@ -35,4 +39,11 @@
 #include "atlctrls.h"
 #include "atlmisc.h"
 #include "atlcrack.h"
+#include "atlddx.h"
 
+
+// gdi+ above win_xp
+#include <gdiplus.h>
+#pragma comment(lib,"gdiplus.lib")
+
+#include "resource.h"
