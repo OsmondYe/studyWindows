@@ -22,6 +22,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <set>
 #include <map>
 #include <algorithm>
 #include <mutex>

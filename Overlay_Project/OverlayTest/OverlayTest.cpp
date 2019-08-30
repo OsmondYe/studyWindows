@@ -8,8 +8,6 @@
 //
 #include "watermark.h"
 
-
-
 using namespace std;
 
 // atl&wtl required
@@ -19,9 +17,6 @@ CAppModule _Module;
 // gdi+ global
 ULONG_PTR gGidplusToken = 0;
 Gdiplus::GdiplusStartupInput gGdipulsInput;
-
-
-
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -56,6 +51,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	ViewOverlyController::getInstance().Attach(main.m_hWnd, 
 			L"This is test watermark by Nextlabs-CDC\n测试窗口水印-缩放拉伸最大最小显示隐藏");
+
 	main.UpdateWindow();
 	main.ShowWindow(SW_NORMAL);
 

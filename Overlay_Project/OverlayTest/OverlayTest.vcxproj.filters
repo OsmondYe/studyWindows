@@ -30,6 +30,9 @@
     <ClInclude Include="MainDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gdi_util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -42,6 +45,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MainDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gdip_util.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gdi_util.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

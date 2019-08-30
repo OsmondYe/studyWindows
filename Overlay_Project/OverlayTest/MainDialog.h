@@ -8,6 +8,7 @@ class MainDialog : public CDialogImpl<MainDialog>,
 public:
 	enum { IDD = IDD_ABOUTBOX };
 
+
 	void OnListDBClick(UINT uNotifyCode, int nID, CWindow wndCtl) {
 		ShowWatermarkDemo();
 	}
@@ -15,27 +16,6 @@ public:
 	void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar pScrollBar);
 
 	BOOL OnInitDialog(CWindow wndFocus, LPARAM lInitParam);
-
-	wstring EnumGDIPlugInstalledFont() {
-		wstring rt;
-		Gdiplus::InstalledFontCollection ifc;
-
-		auto count = ifc.GetFamilyCount();
-		int actualFound = 0;
-
-		Gdiplus::FontFamily* buf = new Gdiplus::FontFamily[count];
-		ifc.GetFamilies(count, buf, &actualFound);
-		for (int i = 0; i < actualFound; i++) {
-			wchar_t name[0x20] = { 0 };
-			buf[i].GetFamilyName(name);
-			m_wList.AddString(name);
-		}
-
-		delete[] buf;
-		return rt;
-	}
-
-	BOOL OnEraseBkgnd(CDCHandle dc);
 
 	void OnClose() {
 		DestroyWindow();
@@ -45,6 +25,10 @@ public:
 		::PostQuitMessage(0);
 	}
 
+	void OnDrawBtnDown(UINT uNotifyCode, int nID, CWindow wndCtl);
+	void OnClearBtnDown(UINT uNotifyCode, int nID, CWindow wndCtl);
+
+	void OnShowColorEffect(BYTE a, BYTE r, BYTE g, BYTE b);
 
 private:
 
@@ -58,6 +42,9 @@ private:
 
 	void ShowWatermarkDemo();
 
+	void CreatePngImageWithWaterMark();
+
+
 protected:
 	CEdit m_wEdit;
 	CListBox m_wList;
@@ -70,6 +57,7 @@ protected:
 	// DDE
 	CString m_EditContent;
 	int m_FontSize;
+	int m_FontRotate;
 
 	// Color{A,R,G,B}
 	int m_FontColorA;
@@ -81,8 +69,12 @@ public:
 		MSG_WM_INITDIALOG(OnInitDialog)
 		MSG_WM_CLOSE(OnClose)
 		MSG_WM_DESTROY(OnDestroy)
+
 		//MSG_WM_ERASEBKGND(OnEraseBkgnd)
+		COMMAND_HANDLER_EX(IDC_BUTTON1, BN_CLICKED, OnDrawBtnDown)
+		COMMAND_HANDLER_EX(IDC_BUTTON2, BN_CLICKED, OnClearBtnDown)
 		COMMAND_HANDLER_EX(IDC_FONTLIST, LBN_DBLCLK, OnListDBClick)
+
 		MSG_WM_HSCROLL(OnHScroll)
 
 		END_MSG_MAP()
@@ -92,7 +84,9 @@ public:
 		//DDX_CONTROL(IDC_MYEDIT, m_wEdit)
 		DDX_TEXT(IDC_MYEDIT, m_EditContent)
 		DDX_INT(IDC_FONTSIZE, m_FontSize)
+		DDX_INT(IDC_FONTROTATE, m_FontRotate)
 	END_DDX_MAP()
+	
 };
 
 
