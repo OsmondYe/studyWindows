@@ -1,7 +1,7 @@
 ﻿#include "stdafx.h"
+#include "watermark.h"
 #include "MainDialog.h"
 #include <cmath>
-#include "gdi_util.h"
 
 
 BOOL MainDialog::OnInitDialog(CWindow wndFocus, LPARAM lInitParam) {
@@ -75,13 +75,19 @@ void MainDialog::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar pScrollBar) {
 
 void MainDialog::OnDrawBtnDown(UINT uNotifyCode, int nID, CWindow wndCtl)
 {
+	OnClearBtnDown(uNotifyCode, nID, wndCtl);
 	ShowWatermarkDemo();
 }
 
 void MainDialog::OnClearBtnDown(UINT uNotifyCode, int nID, CWindow wndCtl)
 {
+	CRect rc;
 	CWindow desktop(::GetDesktopWindow());
-	desktop.SendMessageW(WM_SETTINGCHANGE);
+	//desktop.GetWindowRect(&rc);
+	//desktop.RedrawWindow(&rc,0, RDW_INVALIDATE | RDW_ALLCHILDREN | RDW_ERASE);
+
+	::RedrawWindow(NULL,NULL,NULL, RDW_INVALIDATE | RDW_ALLCHILDREN | RDW_ERASE);
+
 }
 
 void MainDialog::OnShowColorEffect(BYTE a, BYTE r, BYTE g, BYTE b)
@@ -114,12 +120,51 @@ void MainDialog::OnShowColorEffect(BYTE a, BYTE r, BYTE g, BYTE b)
 
 }
 
+
+void MainDialog::FillBuilder(OverlayConfigBuilder & builder)
+{
+	DoDataExchange(true);
+	wstring demostr(m_EditContent);
+	wstring font_name = GetSelFontName();
+	int fontSize = m_FontSize;
+	int colorA = m_FontColorA;
+	int colorB = m_FontColorB;
+	int colorR = m_FontColorR;
+	int colorG = m_FontColorG;
+	int rotate = m_FontRotate;
+
+
+	builder.SetFontColor(colorA, colorR, colorG, colorB)
+		.SetFontName(font_name)
+		.SetString(demostr)
+		.SetFontSize(fontSize)
+		.SetFontRotation(rotate);
+
+
+}
+
+
 void MainDialog::ShowWatermarkDemo() {
-	for(int i=0;i<100000;i++)
-	CreatePngImageWithWaterMark();
+	
+	// update watermark
+	ViewOverlyController::getInstance().Detach(this->m_hWnd);
+	
+
+	OverlayConfigBuilder builder;
+	this->FillBuilder(builder);
+	ViewOverlyController::getInstance().Attach(this->m_hWnd, builder.Build());
+
+	//this->UpdateWindow();
+
+
+	// print effect into screen
+	//for(int i=0;i<100000;i++)   //debug if memory leak
+	//CreatePngImageWithWaterMark();
 
 	
 }
+
+
 
 void MainDialog::CreatePngImageWithWaterMark()
 {
@@ -139,53 +184,49 @@ void MainDialog::CreatePngImageWithWaterMark()
 	CWindow desktop(::GetDesktopWindow());
 	desktop.GetWindowRect(&rc);
 	// bind with desktop
-
 	using namespace Gdiplus;
 
-	desktop.RedrawWindow();
+	desktop.RedrawWindow(&rc);
 	Graphics g(desktop);
 
 	// set params
-	Gdiplus::Color font_color(colorA, colorR, colorG, colorB);
-	Pen pen(font_color);
+	Gdiplus::Color font_color = GetFontColor();
+	Pen pen(Gdiplus::Color::Black);
 	SolidBrush brush(font_color);
 	Gdiplus::FontFamily font_family(font_name.c_str());
-	Gdiplus::Font font(&font_family, fontSize, FontStyle::FontStyleBold, Unit::UnitPixel);
+	Gdiplus::Font font(&font_family, fontSize, FontStyle::FontStyleBoldItalic, Unit::UnitPixel);
 	Gdiplus::RectF layout(0, 0, rc.Width(), rc.Height());
 	// calc str outbound rect
-	Gdiplus::RectF strRect;
-	g.MeasureString(demostr.c_str(), -1, &font, PointF(0,0), &strRect);
+	Gdiplus::RectF str_org_rect;
+	g.MeasureString(demostr.c_str(), -1, &font, PointF(0,0), &str_org_rect);
 
-	REAL imSize =  2* std::ceil(std::hypot(strRect.Width, strRect.Height));
+	REAL imSize =  2* std::ceil(std::hypot(str_org_rect.Width, str_org_rect.Height));
 
 	// how to determine rotated outBound size
-
 	Gdiplus::Bitmap* bk = NULL;
-
 	Gdiplus::Bitmap image(imSize, imSize);
 	{
 		Graphics g2(&image);
 		{
 			// Draw coordinate
 			// X
-			g2.DrawLine(&pen, PointF(0, imSize / 2), PointF(imSize, imSize / 2));
+			//g2.DrawLine(&pen, PointF(0, imSize / 2), PointF(imSize, imSize / 2));
 			// Y
-			g2.DrawLine(&pen, PointF(imSize / 2, 0), PointF(imSize / 2, imSize));
+			//g2.DrawLine(&pen, PointF(imSize / 2, 0), PointF(imSize / 2, imSize));
 		}
-
-		
-
+			
+		// set centre point as the base point
 		g2.TranslateTransform(imSize / 2, imSize / 2);
 		
 
 		//
 		// for debug uesed
 		// 
-		Pen pen(Color(255, 255, 0, 0));
+		Pen pen(Gdiplus::Color::Black);
 		// Draw a line after rotate
 
 		PointF org[4] = {
-			{0,0},{0,strRect.Height},{strRect.Width, strRect.Height},  {strRect.Width, 0}
+			{0,0},{0,str_org_rect.Height},{str_org_rect.Width, str_org_rect.Height},  {str_org_rect.Width, 0}
 		};
 
 		PointF org_r[4];
@@ -193,12 +234,12 @@ void MainDialog::CreatePngImageWithWaterMark()
 			org_r[i] = gdi::CaculateRotated(org[i], rotate);
 		}
 			
-		g2.DrawLines(&pen, org, 4);
-		g2.DrawLines(&pen, org_r, 4);
+		//g2.DrawLines(&pen, org, 4);
+		//g2.DrawLines(&pen, org_r, 4);
 
 
 		RectF myRect = gdi::CaculateOutbound(org_r);
-		g2.DrawRectangle(&pen, myRect);
+		//g2.DrawRectangle(&pen, myRect);
 
 		// amend myRect
 		myRect.Offset(imSize / 2, imSize / 2);
@@ -214,7 +255,7 @@ void MainDialog::CreatePngImageWithWaterMark()
 		
 		// set string
 		g2.DrawString(demostr.c_str(), -1, &font,
-			Gdiplus::RectF(0,0, strRect.Width, strRect.Height),
+			Gdiplus::RectF(0,0, str_org_rect.Width, str_org_rect.Height),
 			&string_format,
 			&brush);
 
@@ -246,5 +287,7 @@ void MainDialog::CreatePngImageWithWaterMark()
 	}
 
 }
+
+
 
 

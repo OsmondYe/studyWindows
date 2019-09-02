@@ -32,17 +32,26 @@ public:
 
 private:
 
+	void FillBuilder(OverlayConfigBuilder& builder);
+
 	inline wstring GetSelFontName() {
 		wstring font_name;
 		int curSel = m_wList.GetCurSel();
 		font_name.reserve(m_wList.GetTextLen(curSel));
 		m_wList.GetText(curSel, (wchar_t*)font_name.c_str());
-		return std::move(font_name);
+		return std::wstring(font_name.c_str());
 	}
 
 	void ShowWatermarkDemo();
 
 	void CreatePngImageWithWaterMark();
+
+	
+
+
+	inline Gdiplus::Color GetFontColor() {
+		return Gdiplus::Color(m_FontColorA, m_FontColorR, m_FontColorG, m_FontColorB);
+	}
 
 
 protected:

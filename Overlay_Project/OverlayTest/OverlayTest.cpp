@@ -1,12 +1,12 @@
 ﻿// using WTL for easy demo
 #include "stdafx.h"
 
-#include "MainDialog.h"
-
 //
 // watermark lib here, you need watermark.h cand watermark.cpp
 //
 #include "watermark.h"
+#include "MainDialog.h"
+
 
 using namespace std;
 
@@ -49,8 +49,21 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	// attach watermark on main
 	//
 
-	ViewOverlyController::getInstance().Attach(main.m_hWnd, 
-			L"This is test watermark by Nextlabs-CDC\n测试窗口水印-缩放拉伸最大最小显示隐藏");
+	OverlayConfigBuilder builder;
+	builder
+		.SetString(L"Watermark Test\nNextlabs SkyDRM Product\n这是中文测试,信领达(杭州)软件有限公司\n~!@#$%^&*(){}[];:,.<>")
+		.SetFontSize(20)
+		.SetFontName(L"Microsfot YaHei UI Light")
+		//.SetFontName(L"Arial")
+		.SetFontTransparency(50)
+		.SetFontColor(255, 0, 0)
+		.SetFontStyle(OverlayConfig::FontStyle::FS_BoldItalic)
+		.SetTextAlignment(OverlayConfig::TextAlignment::TA_Centre)
+		.SetLineAlignment(OverlayConfig::TextAlignment::TA_Left)
+		.SetFontRotation(-20);
+
+
+	ViewOverlyController::getInstance().Attach(main.m_hWnd, builder.Build()	);
 
 	main.UpdateWindow();
 	main.ShowWindow(SW_NORMAL);
