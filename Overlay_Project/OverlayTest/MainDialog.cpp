@@ -1,6 +1,50 @@
 ﻿#include "stdafx.h"
 #include "MainDialog.h"
+#include <cmath>
 #include "gdi_util.h"
+
+
+BOOL MainDialog::OnInitDialog(CWindow wndFocus, LPARAM lInitParam) {
+	CenterWindow(GetParent());
+	// Associate:
+	m_wEdit.Attach(GetDlgItem(IDC_MYEDIT));
+	m_wList.Attach(GetDlgItem(IDC_FONTLIST));
+	m_wFontDemo.Attach(GetDlgItem(IDC_FONTDEMOSTR));
+
+	m_ColorA.Attach(GetDlgItem(IDC_SLIDE_COLOR_A));
+	m_ColorR.Attach(GetDlgItem(IDC_SLIDE_COLOR_R));
+	m_ColorG.Attach(GetDlgItem(IDC_SLIDE_COLOR_G));
+	m_ColorB.Attach(GetDlgItem(IDC_SLIDE_COLOR_B));
+
+
+
+	m_FontColorA = 150;
+	m_FontColorR = 100;
+	m_FontColorG = 0;
+	m_FontColorB = 100;
+
+	auto fin = gdi::GetInstalledFonts();
+	for (auto& i : fin) {
+		m_wList.AddString(i.c_str());
+	}
+
+	m_wList.SetCurSel(1);
+
+
+	m_ColorA.SetRange(0, 255); m_ColorA.SetPos(m_FontColorA);
+	m_ColorR.SetRange(0, 255); m_ColorR.SetPos(m_FontColorR);
+	m_ColorG.SetRange(0, 255); m_ColorG.SetPos(m_FontColorG);
+	m_ColorB.SetRange(0, 255); m_ColorB.SetPos(m_FontColorB);
+
+
+	m_EditContent = L"Watermark by Nextlabs-CDC\r\n缩放拉伸最大最小显示隐藏\r\nOsmond.ye@Nextlabs.com";
+	m_FontSize = 30;
+	m_FontRotate = -20;
+
+	DoDataExchange(false);
+
+	return True;
+}
 
 
 void MainDialog::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar pScrollBar) {
@@ -27,47 +71,7 @@ void MainDialog::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar pScrollBar) {
 	}
 }
 
-BOOL MainDialog::OnInitDialog(CWindow wndFocus, LPARAM lInitParam) {
-	CenterWindow(GetParent());
-	// Associate:
-	m_wEdit.Attach(GetDlgItem(IDC_MYEDIT));
-	m_wList.Attach(GetDlgItem(IDC_FONTLIST));
-	m_wFontDemo.Attach(GetDlgItem(IDC_FONTDEMOSTR));
 
-	m_ColorA.Attach(GetDlgItem(IDC_SLIDE_COLOR_A));
-	m_ColorR.Attach(GetDlgItem(IDC_SLIDE_COLOR_R));
-	m_ColorG.Attach(GetDlgItem(IDC_SLIDE_COLOR_G));
-	m_ColorB.Attach(GetDlgItem(IDC_SLIDE_COLOR_B));
-
-	
-
-	m_FontColorA = 150;
-	m_FontColorR = 200;
-	m_FontColorG = 50;
-	m_FontColorB = 100;
-	
-	auto fin = gdi::GetInstalledFonts();
-	for (auto& i : fin) {
-		m_wList.AddString(i.c_str());
-	}
-
-	m_wList.SetCurSel(1);
-
-
-	m_ColorA.SetRange(0, 255); m_ColorA.SetPos(m_FontColorA);
-	m_ColorR.SetRange(0, 255); m_ColorR.SetPos(m_FontColorR);
-	m_ColorG.SetRange(0, 255); m_ColorG.SetPos(m_FontColorG);
-	m_ColorB.SetRange(0, 255); m_ColorB.SetPos(m_FontColorB);
-
-
-	m_EditContent=L"Watermark by Nextlabs-CDC\r\n缩放拉伸最大最小显示隐藏\r\nOsmond.ye@Nextlabs.com";
-	m_FontSize = 20;
-	m_FontRotate = 30;
-
-	DoDataExchange(false);
-
-	return True;
-}
 
 void MainDialog::OnDrawBtnDown(UINT uNotifyCode, int nID, CWindow wndCtl)
 {
@@ -111,49 +115,9 @@ void MainDialog::OnShowColorEffect(BYTE a, BYTE r, BYTE g, BYTE b)
 }
 
 void MainDialog::ShowWatermarkDemo() {
-	//DoDataExchange(true);
-
-	//wstring demostr(m_EditContent);	
-	//wstring font_name = GetSelFontName();
-
-	//m_wFontDemo.RedrawWindow();
-	//
-	//CRect rc;
-	//m_wFontDemo.GetWindowRect(&rc);
-
-
-	//using namespace Gdiplus;
-	//Gdiplus::Graphics g(m_wFontDemo.GetDC());
-	//FontFamily font_family(font_name.c_str());
-	//Font font(&font_family, m_FontSize, FontStyle::FontStyleBold, Unit::UnitPixel);
-	//SolidBrush brush(Color(m_FontColorA, m_FontColorR, m_FontColorG, m_FontColorB));
-	//Gdiplus::RectF layout(0, 0, rc.Width(), rc.Height());
-	//StringFormat string_format;
-
-	//Pen pen(Color(255, 0, 0));
-
-	//g.DrawRectangle(&pen, layout);
-
-	//// calc needed layout
-
-	//Gdiplus::RectF outLayout;
-	//g.MeasureString(demostr.c_str(), -1, &font, layout, &outLayout);
-	//g.DrawRectangle(&pen, outLayout);
-
-
-
-	////REAL X = outLayout.Width / 2, Y = outLayout.Height / 2;
-	//g.RotateTransform(m_FontRotate);
-	//Gdiplus::RectF outLayout2;
-	//g.MeasureString(demostr.c_str(), -1, &font, layout, &outLayout2);
-	//g.DrawRectangle(&pen, outLayout2);
-
-
-	//g.DrawString(demostr.c_str(), -1, &font, layout, &string_format, &brush);
-
-
-
+	for(int i=0;i<100000;i++)
 	CreatePngImageWithWaterMark();
+
 	
 }
 
@@ -182,7 +146,7 @@ void MainDialog::CreatePngImageWithWaterMark()
 	Graphics g(desktop);
 
 	// set params
-	Color font_color(colorA, colorR, colorG, colorB);
+	Gdiplus::Color font_color(colorA, colorR, colorG, colorB);
 	Pen pen(font_color);
 	SolidBrush brush(font_color);
 	Gdiplus::FontFamily font_family(font_name.c_str());
@@ -192,7 +156,7 @@ void MainDialog::CreatePngImageWithWaterMark()
 	Gdiplus::RectF strRect;
 	g.MeasureString(demostr.c_str(), -1, &font, PointF(0,0), &strRect);
 
-	REAL imSize = std::max<REAL>(strRect.Width, strRect.Height)*2;
+	REAL imSize =  2* std::ceil(std::hypot(strRect.Width, strRect.Height));
 
 	// how to determine rotated outBound size
 
@@ -266,16 +230,12 @@ void MainDialog::CreatePngImageWithWaterMark()
 			return;
 		}
 		// save to disk
-		if (rotate == 70) {
-			//gdi::SaveFileAsBitmap(bk, L"d:\\allTestFile\\aaaa.bmp");
-		}
+		/*if (rotate == -2) {
+			gdi::SaveFileAsBitmap(bk, L"d:\\allTestFile\\aaaa.bmp");
+		}*/
 	}
 
-
-
 	// since g is the demoWnd, let TextrueBrush to fill this rect
-	
-
 
 	Gdiplus::TextureBrush tbrush(bk);
 	
@@ -284,9 +244,6 @@ void MainDialog::CreatePngImageWithWaterMark()
 	if (bk != NULL) {
 		delete bk;
 	}
-
-
-	// how to tell watermark to update its overlay?
 
 }
 
