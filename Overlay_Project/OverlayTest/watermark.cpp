@@ -1,4 +1,5 @@
 ﻿#include "stdafx.h"
+
 #include <mutex>
 #include <cctype>
 #include "watermark.h"

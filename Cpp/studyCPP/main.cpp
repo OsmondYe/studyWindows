@@ -30,9 +30,9 @@ int main(int argc, wchar_t** argv)
 	//testing::FLAGS_gtest_filter = "Windows.RegOperation2";
 	//testing::FLAGS_gtest_filter = "*Container.*:Algorithm.*:Syntax.*";
 	//testing::FLAGS_gtest_filter = "Concurrency.MustJoinOrDetach";
-	testing::FLAGS_gtest_filter = "Container.*";
+	//testing::FLAGS_gtest_filter = "Container.*";
 
-	testing::FLAGS_gtest_filter = "Syntax.*:Container.*:Concurrency.*";
+	testing::FLAGS_gtest_filter = "Idiom.*:Syntax.*:Container.*:Concurrency.*";
 
 	return RUN_ALL_TESTS();
 

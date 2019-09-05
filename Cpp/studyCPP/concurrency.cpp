@@ -1,6 +1,17 @@
 ﻿#include "pch.h"
+#include <thread>
+#include <mutex>   // plain try timed recursive
+#include <condition_variable>
+#include <future>
 
-#include <mutex>
+/*
+直接wrapper win32 API, 施加了访问限制,这样更加安全,可以强制我们写出安全和框架思路良好的代码,而屏蔽底层差异
+c11_thread 建模非常漂亮
+如何学习到里面的惊奇思路
+*/
+
+
+
 using namespace std;
 
 TEST(Concurrency, Basic) {
@@ -9,12 +20,9 @@ TEST(Concurrency, Basic) {
 	cout << "yield to let other thread to runing"<< endl;
 	this_thread::yield();
 
-
 	this_thread::sleep_for(chrono::seconds(3));
 	//this_thread::sleep_for(3s); // same with above
 	cout << "sellp 10 seconds";
-
-
 }
 
 TEST(Concurrency, Threads) {
@@ -70,6 +78,9 @@ void f0() {
 }
 
 void f1() {
+
+	std::mutex aM;
+
 	std::lock_guard<std::mutex> g(gMutex);
 	std::lock_guard<std::mutex> g2(gMutex);
 	std::lock_guard<std::mutex> g3(gMutex);

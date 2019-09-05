@@ -208,10 +208,16 @@ public:
 	}
 
 
-	OverlayConfig Build() {
+	OverlayConfig Build() {		
+		ThrowIfInvalidParam();
 		return _config;
 	}
 private:
+	inline void ThrowIfInvalidParam() {
+		if (_config.m_str.length() < 1) {
+			throw std::exception("too little chars in watermark string");
+		}
+	}
 	std::wstring GetDefaultFontName();
 	bool IsFontNameSupported(const std::wstring& font_name);
 };

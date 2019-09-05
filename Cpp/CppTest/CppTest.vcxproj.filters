@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\ATL">
+      <UniqueIdentifier>{bde26370-5c14-454f-8d3e-9880a4de5668}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -49,6 +52,9 @@
     </ClCompile>
     <ClCompile Include="Monitor.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test-atl-api.cpp">
+      <Filter>Source Files\ATL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

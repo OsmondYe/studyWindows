@@ -25,6 +25,9 @@
     <Filter Include="Source Files\template">
       <UniqueIdentifier>{68e202d4-2527-4335-84ee-f96eb0182846}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\stl\Concurrency">
+      <UniqueIdentifier>{5622c9f2-50fe-470f-a520-2cfbb5f715ac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -71,11 +74,14 @@
     <ClCompile Include="aux_utils.cpp">
       <Filter>Source Files\stl</Filter>
     </ClCompile>
-    <ClCompile Include="concurrency.cpp">
-      <Filter>Source Files\stl</Filter>
-    </ClCompile>
     <ClCompile Include="template.cpp">
       <Filter>Source Files\template</Filter>
+    </ClCompile>
+    <ClCompile Include="concurrency.cpp">
+      <Filter>Source Files\stl\Concurrency</Filter>
+    </ClCompile>
+    <ClCompile Include="idiom.cpp">
+      <Filter>Source Files\syntax</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

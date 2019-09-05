@@ -139,8 +139,6 @@ void MainDialog::FillBuilder(OverlayConfigBuilder & builder)
 		.SetString(demostr)
 		.SetFontSize(fontSize)
 		.SetFontRotation(rotate);
-
-
 }
 
 
