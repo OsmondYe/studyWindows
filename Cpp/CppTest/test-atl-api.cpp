@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include <atlbase.h>
+#include <atlpath.h>
 
 //use DISABLED_ prefix to filter out 
 
@@ -24,6 +25,11 @@ TEST(ATL, ComAllocator) {
 TEST(ATL, CRBTree) {
 
 	cout << "atl CRBTree" << endl;
+	//ATL::cRBtree
+}
+
+TEST(ATL, CPath) {
+	ATL::CPath path;
 
 }
 

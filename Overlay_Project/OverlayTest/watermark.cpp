@@ -319,6 +319,30 @@ Gdiplus::Bitmap * OverlayWindow::_GetOverlayBitmap(const Gdiplus::Graphics& draw
 	return surface.Clone(absolute_layout, PixelFormat32bppARGB);
 }
 
+Gdiplus::Bitmap * OverlayWindow::_GetOverlayBitmapFromFile(const std::wstring & path)
+{
+	Gdiplus::Bitmap* im = Gdiplus::Bitmap::FromFile(L"D:\\allTestFile\\pics\\keng.png");
+	if (im == NULL) {
+		return im;
+	}
+
+	auto h = im->GetHeight();
+	auto w = im->GetWidth();
+
+	// change alpha
+	for(int i=0;i<h;i++)
+		for (int j = 0; j < w; j++) {
+			Gdiplus::Color c;
+			im->GetPixel(i, j, &c);
+			Gdiplus::Color c_(Gdiplus::Color::MakeARGB(_config.GetFontColor().GetA(), c.GetR(), c.GetG(), c.GetB()));
+			im->SetPixel(i, j, c_);
+		}
+		
+
+	return im;
+
+}
+
 
 void OverlayWindow::_DrawOverlay(HDC dcScreen, LPRECT lpRestrictDrawingRect)
 {
@@ -331,8 +355,11 @@ void OverlayWindow::_DrawOverlay(HDC dcScreen, LPRECT lpRestrictDrawingRect)
 	g.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
 	g.SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
 	// beging drawing
-	Gdiplus::Bitmap* bk = _GetOverlayBitmap(g);
+	//Gdiplus::Bitmap* bk = _GetOverlayBitmap(g);
+	Gdiplus::Bitmap* bk = _GetOverlayBitmapFromFile(L"D:\\allTestFile\\pics\\keng.png");
+	
 	Gdiplus::TextureBrush brush(bk,Gdiplus::WrapModeTile);
+	brush.RotateTransform(_config.GetFontRotation());
 	Gdiplus::RectF surface(0,0,rc.Width(), rc.Height());		
 	g.FillRectangle(&brush, surface);
 	delete bk;

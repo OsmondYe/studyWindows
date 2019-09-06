@@ -264,6 +264,8 @@ private:
 private:
 	Gdiplus::Bitmap* _GetOverlayBitmap(const Gdiplus::Graphics& drawing_surface);
 
+	Gdiplus::Bitmap* _GetOverlayBitmapFromFile(const std::wstring& path);
+
 public: // section for wnd_registration and msg_handler
 	DECLARE_WND_CLASS_EX(L"NextlabsOverlay", 0, (HBRUSH)(COLOR_WINDOW + 1));
 	// don't need handle msg, using win_default_msg_handler is enough

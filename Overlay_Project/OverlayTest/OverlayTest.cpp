@@ -55,7 +55,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		.SetFontSize(20)
 		.SetFontName(L"Microsfot YaHei UI Light")
 		//.SetFontName(L"Arial")
-		.SetFontTransparency(50)
+		.SetFontTransparency(10)
 		.SetFontColor(255, 0, 0)
 		.SetFontStyle(OverlayConfig::FontStyle::FS_BoldItalic)
 		.SetTextAlignment(OverlayConfig::TextAlignment::TA_Centre)
