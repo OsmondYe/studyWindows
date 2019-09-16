@@ -355,11 +355,11 @@ void OverlayWindow::_DrawOverlay(HDC dcScreen, LPRECT lpRestrictDrawingRect)
 	g.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
 	g.SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
 	// beging drawing
-	//Gdiplus::Bitmap* bk = _GetOverlayBitmap(g);
-	Gdiplus::Bitmap* bk = _GetOverlayBitmapFromFile(L"D:\\allTestFile\\pics\\keng.png");
+	Gdiplus::Bitmap* bk = _GetOverlayBitmap(g);
+	//Gdiplus::Bitmap* bk = _GetOverlayBitmapFromFile(L"D:\\allTestFile\\pics\\keng.png");
 	
 	Gdiplus::TextureBrush brush(bk,Gdiplus::WrapModeTile);
-	brush.RotateTransform(_config.GetFontRotation());
+	//brush.RotateTransform(_config.GetFontRotation());  // for picture using rotatTransfrom
 	Gdiplus::RectF surface(0,0,rc.Width(), rc.Height());		
 	g.FillRectangle(&brush, surface);
 	delete bk;

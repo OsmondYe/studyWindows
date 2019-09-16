@@ -4,6 +4,11 @@
 
 
 /*
+
+return (pointer_traits<pointer>::pointer_to(**this));
+
+const auto _Mycont =123;
+
  bool _Has_unused_capacity() const noexcept
    const noexcept
 
@@ -149,3 +154,11 @@ TEST(Syntax, MemFunConstOverride) {
 }
 
 // some good template tech
+
+/*
+	using iterator_category = random_access_iterator_tag;
+	using value_type = typename _Mystr::value_type;
+	using difference_type = typename _Mystr::difference_type;
+	using pointer = typename _Mystr::const_pointer;
+	using reference = const value_type&;
+*/
