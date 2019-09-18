@@ -33,7 +33,7 @@ int main(int argc, wchar_t** argv)
 	//testing::FLAGS_gtest_filter = "Container.*";
 
 	//testing::FLAGS_gtest_filter = "Idiom.*:Syntax.*:Container.*:Concurrency.*";
-	testing::FLAGS_gtest_filter = "String.*";
+	testing::FLAGS_gtest_filter = "Stream.*";
 
 	return RUN_ALL_TESTS();
 

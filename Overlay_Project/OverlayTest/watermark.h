@@ -163,6 +163,9 @@ public:
 	}
 
 	OverlayConfigBuilder& SetFontSize(int size) {
+		if (size <= 0) {
+			size = 20;// bydefault
+		}
 		_config.m_font_size = size;
 		return *this;
 	}

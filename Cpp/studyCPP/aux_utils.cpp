@@ -5,13 +5,12 @@ using namespace aux;
 
 TEST(Aux, Pair) {
 	// wrapper two obj into a one obj
-	pair<vector<int>, string> a;
-
+	pair<vector<int>, string> a(getSorted(),"hello world");
 	a.first = getSorted();
 	a.second = "hello world";
-
+	a = make_pair(getSorted(), "hello world");
 	pair<vector<int>, string> b = make_pair(a.first, a.second);
-
+	pair<vector<int>, string> c(a.first, a.second);
 }
 
 TEST(Aux, Tuple) {

@@ -10,7 +10,9 @@
 #define PCH_H
 
 // c++
+#include <iosfwd>
 #include <iostream>
+#include <cctype>  // isalnum, isalpha, tolower, toupper
 #include <string>
 #include <vector>
 #include <list>

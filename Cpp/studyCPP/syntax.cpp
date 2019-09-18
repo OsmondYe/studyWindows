@@ -5,6 +5,13 @@
 
 /*
 
+value_type{char, wchar_t, int32, int64}
+
+_ALLOC_MASK = sizeof (value_type) <= 1 ? 15
+	: sizeof (value_type) <= 2 ? 7
+	: sizeof (value_type) <= 4 ? 3
+	: sizeof (value_type) <= 8 ? 1 : 0
+
 return (pointer_traits<pointer>::pointer_to(**this));
 
 const auto _Mycont =123;
