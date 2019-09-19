@@ -28,6 +28,9 @@
     <Filter Include="Source Files\stl\Concurrency">
       <UniqueIdentifier>{5622c9f2-50fe-470f-a520-2cfbb5f715ac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\stl\msic">
+      <UniqueIdentifier>{5a0bd96d-2f34-4882-8da8-af4084dc1fe1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -82,6 +85,9 @@
     </ClCompile>
     <ClCompile Include="idiom.cpp">
       <Filter>Source Files\syntax</Filter>
+    </ClCompile>
+    <ClCompile Include="limits.cpp">
+      <Filter>Source Files\stl\msic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

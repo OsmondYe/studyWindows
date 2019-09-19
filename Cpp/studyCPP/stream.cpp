@@ -9,17 +9,24 @@
 #include <sstream>	// stringstream
 #include <fstream>  // filestream
 #include <iomanip>  // setbase setfill setw  setprecision
+
+
 /*
-
-
-
 input/output stream
 
-input:   stream send data to int,double
+input:   stream send data to int
 output:   data out to stream
 
 
+
 File; ofstream ifstream  fstream
+	std::ios::  
+		in			input
+		out			output
+		app			append      每次输出都在末尾
+		ate			at end      to end in openning
+		trunc		truncate
+		binary		binary
 
 >>: will skip white space
 
@@ -45,10 +52,10 @@ Manipulator:
    left/right (where to fill)
 
 Stream state:   std::ios_base
-	goodbit
-	eofbit
-	failbit
-	badbit
+	goodbit		无错误
+	eofbit		结束
+	failbit		没有产生期望的结果
+	badbit		流不完整
 
 tellg seekg
 	
@@ -99,10 +106,36 @@ TEST(Stream, StreamBuf) {  // #include<streambuf>
 }
 
 TEST(Stream, StringBuf) {
-	std::stringbuf sb;  // inheriting from std::streambuf
+	std::stringbuf sb;  // inheriting from std::streambuf,也有深远意义， 把字符序列和内存序列关联起来
+	   
+	// default constructor (mode = in|out)
+	std::stringbuf buf1;
+	buf1.sputc('1');
+	std::cout << &buf1 << '\n';
+
+	// string constructor in at-end mode (C++11)
+	std::stringbuf buf2("test", std::ios_base::in
+		| std::ios_base::out
+		| std::ios_base::ate);
+	buf2.sputc('1');
+	std::cout << &buf2 << '\n';
+
+	// append mode test (results differ among compilers)
+	std::stringbuf buf3("test", std::ios_base::in
+		| std::ios_base::out
+		| std::ios_base::app);
+	buf3.sputc('1');
+	buf3.pubseekpos(1);
+	buf3.sputc('2');
+	std::cout << &buf3 << '\n';
+
+
 }
 
 TEST(Stream, Stringstream) {
+
+	// >>代表了格式化， 会有很多限制
+
 	stringstream ss;//basic_stringstream<char, char_traits<char>, allocator<char>>;
 	ss << "this is very good" << endl << "hehe" << 12345604 << 12.45 << false << "this is good for that good";
 	string a(ss.str());
@@ -115,11 +148,72 @@ TEST(Stream, Stringstream) {
 	
 	ss >> a;  // 只能读到 this ,碰到空格自动退出
 
+	/*
+	   抽取str时碰到4中情况会自动终止
+			1 white space
+			2 \0
+			3 eof
+			4 设置了本次位宽
+	*/
+
 	//ss.get()
-
-
 }
 
+
+TEST(Stream, IStream) {
+	std::istringstream input("1\n"
+							"some non-numeric input\n"
+							"2\n");
+	for (;;) {
+		int n;
+		input >> n;
+
+		if (input.eof() || input.bad()) {
+			break;
+		}
+		else if (input.fail()) {
+			input.clear(); // unset failbit
+			input.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // skip bad input
+		}
+		else {
+			std::cout << n << '\n';
+		}
+	}
+}
+
+
+TEST(Stream, FStream) {
+
+	const char* fname = "test_ofstream.txt";
+
+	ofstream ofs(fname, ios::out | ios::trunc);
+
+	ofs << hex << showbase << uppercase << setprecision(10);
+
+	ofs << "some extra code" << "fdsfdssd\a" << endl;
+
+	int i = 0;
+	while (i++<100)
+	{
+		ofs << i << " ";
+	}
+	ofs.close();
+
+	ifstream ifs(fname);
+
+	ifs.ignore(numeric_limits<streamsize>::max(), '\n');
+		
+	i = 0;
+	while (i++<100 && ifs)
+	{
+		int k = 0;
+		ifs >> hex >> showbase >> uppercase;	 //格式必须一样，否则读不出来
+		ifs >> k;
+		cout << k << " ";
+	}
+	
+
+}
 
 TEST(Stream, Redirect) {
 	ostringstream ss;
