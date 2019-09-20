@@ -12,14 +12,17 @@
 
 
 /*
-input/output stream
 
-input:   stream send data to int
-output:   data out to stream
+rdbuf  -> raw data buf
+
+Direction:
+	input:   stream send data to int
+	output:   data out to stream
 
 
 
-File; ofstream ifstream  fstream
+File; 
+	{ofstream, ifstream, fstream}
 	std::ios::  
 		in			input
 		out			output
@@ -28,11 +31,9 @@ File; ofstream ifstream  fstream
 		trunc		truncate
 		binary		binary
 
->>: will skip white space
+	>>: will skip white space
 
 namesapce std::ios_base
-
-stream : setf unsetf
 
 Manipulator:   
 
@@ -47,14 +48,14 @@ Manipulator:
    endl ends flush ws(读入并忽略空格)
 
    setprecision,
-   setw(wide)   // 每次用完会被归0
+   setw(wide)   // 每次格式化<<, >>这样的IO时都会判断width,如果设置了就按照这个来, 结束前归0,因此每次都需要设置
    setfill()
    left/right (where to fill)
 
 Stream state:   std::ios_base
 	goodbit		无错误
 	eofbit		结束
-	failbit		没有产生期望的结果
+	failbit		没有产生期望的结果,  if (!_Changed)  _State |= ios_base::failbit;  看代码, 每次格式化时,都期望Changed改变,如果没变,那肯定是这次操作没成功
 	badbit		流不完整
 
 tellg seekg
@@ -88,24 +89,98 @@ TEST(Stream, Basic) {
 TEST(Disabled_Stream, NoEvaled) {
 	char buffer[81];
 	cin >> setw(81) >> buffer;
+	//-
+	ostreambuf_iterator<char> it(cout);
+	string s{ "hello" };
+	copy(s.begin(), s.end(), it);
+
+	//-
+	cout << cin.rdbuf();
+	//-
+	cin >>noskipws>> cout.rdbuf();
+
 }
 
 
-TEST(Stream, StreamBuf) {  // #include<streambuf>
-	// 其构造函数 protected,只能内部使用
+TEST(Stream, BasicStreamBuf) {  // #include<streambuf>
+	// 其构造函数 protected,只能内部使用,, stringbuf and filebuf 由此继承
 	//std::streambuf sb;
+
+	//rdbuf -> raw device buf
+
+	/*
+		输出肯定默认从尾部开始
+		output{
+			pbase,  //put base 
+			pptr,	//put pointer
+			epptr	//end put pointer
+		}
+
+		- [pbase(), pptr)  等待flush的数据
+		- pptr()== epptr(),  缓冲区满了,调用overflow把对应的数据给送走
+		
+	*/
+
+	/*
+		输入默认从头部开始
+		input{
+			ebase,	// end back
+			egptr   // get pointer
+			egptr  // end get pointer
+		}
+	*/
 
 	// 同时考虑 in out
 	// input:  get_area,   从stream取值给data    {eback,gptr,egptr}
-	// output:  put_area,  把data放入stream      {pbase,pptr,epptr}
+	// output:  put_area,  把data放入stream      
 
 	// 里面有不少函数 以pub开头, 意思是public
 	//  以s开头:  source(input), sink(output)
 
+
+	/*
+		public:
+			sputc, sputn // 放入缓冲区
+			sgetc,		 // 返回当前字符,但不consume
+			sbumpc,		 // 返回当前c,同时consume	
+			sgetn, 
+			snextc
+			sputbackc,		// 把字符放回缓冲区
+			sungetc,		// 回退到前一个字符
+
+		pub* -> 可以让iostream之类的类去使用的,会把请求直接转发给派生类类 
+		        pubseekpos  ->  virtual seekpos, 
+
+
+
+		派生类需要实现
+		virtual :  seekoff, seekpos, setbuf, sync, imbue
+
+		virtual :  _Lock  _Unlock  overflow/underflow  pbackfail showmanyc uflow xsgetn xsputn
+
+		private:  
+		//G* for read in   
+		//P* for write  out
+			_Elem *_Gfirst;	// beginning of read buffer
+			_Elem *_Pfirst;	// beginning of write buffer
+			_Elem **_IGfirst;	// pointer to beginning of read buffer
+			_Elem **_IPfirst;	// pointer to beginning of write buffer
+			_Elem *_Gnext;	// current position in read buffer
+			_Elem *_Pnext;	// current position in write buffer
+			_Elem **_IGnext;	// pointer to current position in read buffer
+			_Elem **_IPnext;	// pointer to current position in write buffer
+
+			int _Gcount;	// length of read buffer
+			int _Pcount;	// length of write buffer
+			int *_IGcount;	// pointer to length of read buffer
+			int *_IPcount;	// pointer to length of write buffer
+	*/
+
+
 	// ostream 里面必然会用到streambuf
 }
 
-TEST(Stream, StringBuf) {
+TEST(Stream, BasicStringBuf) {
 	std::stringbuf sb;  // inheriting from std::streambuf,也有深远意义， 把字符序列和内存序列关联起来
 	   
 	// default constructor (mode = in|out)
@@ -129,12 +204,15 @@ TEST(Stream, StringBuf) {
 	buf3.sputc('2');
 	std::cout << &buf3 << '\n';
 
-
 }
 
-TEST(Stream, Stringstream) {
+TEST(Stream, BasicFileBuf) {
+	std::filebuf fb;
+}
 
-	// >>代表了格式化， 会有很多限制
+TEST(Stream, StringStream) {
+
+	// operator >> 代表了格式化， 会有很多限制
 
 	stringstream ss;//basic_stringstream<char, char_traits<char>, allocator<char>>;
 	ss << "this is very good" << endl << "hehe" << 12345604 << 12.45 << false << "this is good for that good";
@@ -159,8 +237,26 @@ TEST(Stream, Stringstream) {
 	//ss.get()
 }
 
-
 TEST(Stream, IStream) {
+	// 输入流必须关联一个streambuf,但可以其不可以直接构造,但是可以使用其派生类比如stringbuf
+	stringbuf sb("hello world this is a test for that test",ios::in ||ios::out); // 提供一个字符串来初始化buf, 并且指派buf的模式
+	std::istream is(&sb);   // must associate stream with a streambuf,  streambuf means a raw memory  (stringbuf or filebuf)
+	
+	while (is.good()) {
+		string s;
+		is >> s; // string 自己定义的 >> operator重载, 
+		/*
+		  is 虽然是输入流,但是更多情况下其把指责委托给了stringbuf来做通过 is.rdbuf()就额可以获取缓冲区了  
+		*/
+		cout << s;
+	}
+
+	
+}
+
+
+TEST(Stream, IStringStream) {
+
 	std::istringstream input("1\n"
 							"some non-numeric input\n"
 							"2\n");
@@ -182,11 +278,13 @@ TEST(Stream, IStream) {
 }
 
 
+
+
 TEST(Stream, FStream) {
 
 	const char* fname = "test_ofstream.txt";
 
-	ofstream ofs(fname, ios::out | ios::trunc);
+	ofstream ofs(fname, ios::out | ios::trunc);  // will be bound with a basic_filebuf
 
 	ofs << hex << showbase << uppercase << setprecision(10);
 
@@ -254,6 +352,13 @@ TEST(Stream, SelfManipulator) {
 	TestManipulator t;
 	t << bye;
 
+}
+
+// using this self-manipulator to skip a line
+template<typename _Elem, typename _Traits>
+inline std::basic_istream<_Elem, _Traits>& skipln(std::basic_istream<_Elem, _Traits>& is) {
+	is.ignore(numeric_limits<streamsize>::max(), is.widen('\n'));
+	return is;
 }
 
 
