@@ -5,6 +5,9 @@
 
 /*
 
+noexcept  函数不抛出异常
+constexpr int square(int x){return x*x;}  在编译时直接帮square的结果作为const
+
 value_type{char, wchar_t, int32, int64}
 
 _ALLOC_MASK = sizeof (value_type) <= 1 ? 15
@@ -85,9 +88,36 @@ Require compile to convert {1,2,3,4,5} ->  initializer_list object -> some thing
 	vector<int> aa{ 1,2,3,4,5,6 };
 	for_each(aa.begin(), aa.end(), [](int& i) {std::cout << i; });
 
+	for (auto i : { 1,2,3,4,5,6 }) {
+		cout << i << ' ';
+	}
 
 	vector<std::pair<int, string>> ll{ {1,"haha"},{2,"haha"} };
 	ll.size();
+
+	//
+	// 一致初始化
+	//
+	int values[]{ 1,2,3,4,5,6 };
+	vector<int> v{ 2,3,4,5,6,76 };
+	vector<string> cities{ "changan","xian","beijing","tianjing" };
+	int j{};  //  j=0;
+	int* ppp{}; // ppp=nullptr;
+
+
+
+}
+
+
+TEST(Syntax, NULLPTR) {
+	void* p = nullptr;
+	/*
+		void f(int)
+		void f(void*)
+		
+		if f(p) ?
+	*/
+
 }
 
 TEST(Syntax, RVauleReference) {
@@ -101,6 +131,7 @@ TEST(Syntax, RVauleReference) {
 
 	cout << "the combination of rvalue references and lvalue references is just what is needed to easily code move semantics\n";
 }
+
 
 TEST(Syntax, Move) {
 	// move constructor
@@ -160,7 +191,88 @@ TEST(Syntax, MemFunConstOverride) {
 
 }
 
-// some good template tech
+
+namespace vt {
+
+	//作为递归调用出口,必须提供
+	template<typename T>
+	void print(const T& arg) {
+		cout << arg << endl;
+	}
+	// 会被解释成递归调用
+	template <typename T, typename ... Types>
+	void print(const T& first, const Types& ... args) {
+		// handle first
+		print<T>(first);
+		// handle others
+		print(args ...);
+	}
+	
+	/*
+	  print(1, 12.34, "hello world", 'c');
+		print 会被编译成多个函数
+			print<int,double,char*,char>
+			print<double,char*,char>
+			print<char*,char>
+			print<char>
+	*/
+
+
+}
+
+TEST(Syntax, VariadicTemplate) {
+
+	vt::print(1, 12.34, "hello world", 'c');
+	/*
+		print 会被编译成多个函数
+			print<int,double,char*,char> 
+			print<double,char*,char> 
+			print<char*,char> 
+			print<char> 
+	*/
+}
+
+template<typename T> 
+using ThisIsMyVec= std::vector<T>;
+TEST(Syntax, AliasTemplate) {
+
+	// using可以应用于模板的简写行驶了
+	ThisIsMyVec<int> v{ 1,2,3,4,5,6 };
+	vt::print(v[0], v[1], v[2]);
+}
+
+TEST(Syntax, TemplateDecltype) {
+	// keyword decytype(var) 可以让编译器找到这个变量的类型
+	vector<int> v{ 1,2,3,4,5,6,7,8,9 };
+	decltype(v)::const_iterator cit = v.cbegin();
+}
+
+
+TEST(Syntax,TemplateNewFunctionDeclaration) {
+	/*
+	template<typename T1, typename T2>
+	auto add(T1 x, T2 y) -> decltype(x + y);
+
+	add 模板函数的具体返回值取决于 x+y后的类型  c11
+
+	*/
+}
+
+enum class Salutation : char {
+	mr,
+	ms,
+	co,
+	none
+};
+
+TEST(Syntax, ScoptedEnumeration) {
+	/*
+	*/
+	Salutation s = Salutation::mr;
+	s = Salutation::ms;
+	s = (Salutation)12;
+}
+
 
 /*
 	using iterator_category = random_access_iterator_tag;

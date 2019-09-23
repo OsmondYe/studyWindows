@@ -28,6 +28,28 @@ TEST(String, Basic) {
 	w.reserve(100);
 }
 
+TEST(String, EncodingPrefix) {
+	// u8,u,U,L,R
+	string str1 = "你好中国";
+	string str2 = u8"你好中国";  // u8-> utf8
+	u16string str3 = u"你好中国";  // u ->  char16_t
+	u32string str4 = U"你好中国";  // U -> char32_t
+	wstring str5 = L"你好中国";   //  L -> wide string literal
+	string str6 =R"rs(
+this is a row string \n
+you can use any char you want and to insert escapiing char with out using any \
+)rs";
+	wstring str7 = LR"rs(
+this is a row string \n
+you can use any char you want and to insert escapiing char with out using any \
+)rs";
+
+
+	cout << str1 << str2<<str6 << endl;
+	wcout << str5 << str7 << endl;
+
+}
+
 TEST(String, Advanced) {
 	EXPECT_TRUE(sizeof(wstring) == sizeof(int*) * 4);
 }

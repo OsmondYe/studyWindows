@@ -23,7 +23,11 @@
 #include <algorithm>
 #include <numeric>
 #include <utility>
-
+// c++ excption
+#include <exception>
+#include <stdexcept>
+#include <system_error>
+// end c++ excpetion
 using namespace std;
 
 // gtest

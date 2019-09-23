@@ -86,6 +86,15 @@ TEST(Stream, Basic) {
 	cout << hex << noshowbase << i << endl;
 }
 
+TEST(Stream, ForIOS) {
+	std::basic_ios<char, char_traits<char>>  myios(nullptr);
+	/*
+		vtbl;
+
+	*/
+	cout << "sizeof std::ios" <<dec<< sizeof(myios);  // 12个 int
+}
+
 TEST(Disabled_Stream, NoEvaled) {
 	char buffer[81];
 	cin >> setw(81) >> buffer;

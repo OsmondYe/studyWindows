@@ -31,6 +31,9 @@
     <Filter Include="Source Files\stl\msic">
       <UniqueIdentifier>{5a0bd96d-2f34-4882-8da8-af4084dc1fe1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\stream">
+      <UniqueIdentifier>{8878a3e9-eb51-4d7f-bb3b-8e0a64317a48}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -59,9 +62,6 @@
     <ClCompile Include="iterator.cpp">
       <Filter>Source Files\stl</Filter>
     </ClCompile>
-    <ClCompile Include="stream.cpp">
-      <Filter>Source Files\stl</Filter>
-    </ClCompile>
     <ClCompile Include="string.cpp">
       <Filter>Source Files\stl</Filter>
     </ClCompile>
@@ -88,6 +88,9 @@
     </ClCompile>
     <ClCompile Include="limits.cpp">
       <Filter>Source Files\stl\msic</Filter>
+    </ClCompile>
+    <ClCompile Include="stream.cpp">
+      <Filter>Source Files\stream</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
