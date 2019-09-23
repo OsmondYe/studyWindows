@@ -87,12 +87,41 @@ TEST(Stream, Basic) {
 }
 
 TEST(Stream, ForIOS) {
-	std::basic_ios<char, char_traits<char>>  myios(nullptr);
+	std::basic_ios<char, char_traits<char>>  mybios(nullptr);
 	/*
 		vtbl;
+		myState; {goodbit, eofbit,failbit,badbit}
+		myExecpte; {eofbit,failbit,badbit}  // 可以设置流为抛出异常形式的
+		fmtflags; {skipws,uppercase,dec,showbase,showpos,left,right,internal,fixed,scientifc}
+		fieldPrecision;  6 by default;
+		filedWide;  0 by default;
+		array*	// unknown
+		calls*  // unknown
+		p_locale  
+		//
+		// total 9 ints in class ios_base, of above
+		//
+		myStreamBuf ;
+		myOutputStream // pointer to tied output stream
+		myFillChar;    // which char to fill the bank, " " by default
+		//
+		//in total 12 ints;
+		//
 
 	*/
-	cout << "sizeof std::ios" <<dec<< sizeof(myios);  // 12个 int
+	cout << "sizeof std::ios" <<dec<< sizeof(mybios);  // 12个 int
+
+	/*
+	Dereived:
+		basic_istream
+		basic_ostream
+		basic_iostream
+	*/
+
+	std::basic_istream<char, char_traits<char>> myis();
+	std::basic_ostream<char, char_traits<char>> myos();
+	std::basic_iostream<char, char_traits<char>> myios();
+
 }
 
 TEST(Disabled_Stream, NoEvaled) {
@@ -113,6 +142,8 @@ TEST(Disabled_Stream, NoEvaled) {
 
 TEST(Stream, BasicStreamBuf) {  // #include<streambuf>
 	// 其构造函数 protected,只能内部使用,, stringbuf and filebuf 由此继承
+	// 把具体设备抽象成了 streambuf
+
 	//std::streambuf sb;
 
 	//rdbuf -> raw device buf
@@ -249,7 +280,7 @@ TEST(Stream, StringStream) {
 TEST(Stream, IStream) {
 	// 输入流必须关联一个streambuf,但可以其不可以直接构造,但是可以使用其派生类比如stringbuf
 	stringbuf sb("hello world this is a test for that test",ios::in ||ios::out); // 提供一个字符串来初始化buf, 并且指派buf的模式
-	std::istream is(&sb);   // must associate stream with a streambuf,  streambuf means a raw memory  (stringbuf or filebuf)
+	std::basic_istream<char, char_traits<char>> is(&sb);   // must associate stream with a streambuf,  streambuf means a raw memory  (stringbuf or filebuf)
 	
 	while (is.good()) {
 		string s;
@@ -387,4 +418,12 @@ TEST(Stream, ExplicitException) {
 	//ss >> i;
 	//ss >>noskipws>> s;
 
+}
+
+
+TEST(Stream, C11above) {
+	auto now = chrono::system_clock::now();
+	time_t t = chrono::system_clock::to_time_t(now);
+	tm* nowTM = localtime(&t);
+	cout << put_time(nowTM, "date: %x\ntime: %X\n") << endl;
 }

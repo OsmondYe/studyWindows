@@ -34,6 +34,9 @@
     <Filter Include="Source Files\stream">
       <UniqueIdentifier>{8878a3e9-eb51-4d7f-bb3b-8e0a64317a48}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\libs">
+      <UniqueIdentifier>{071d7202-391a-4b9f-b938-207ff0c003a9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -91,6 +94,9 @@
     </ClCompile>
     <ClCompile Include="stream.cpp">
       <Filter>Source Files\stream</Filter>
+    </ClCompile>
+    <ClCompile Include="regex.cpp">
+      <Filter>Source Files\libs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
