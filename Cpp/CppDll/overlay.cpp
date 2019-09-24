@@ -8,15 +8,15 @@
 
 DLL_FUN_EXPORT void InitWaterMark(HWND targertWnd, wchar_t* strOverlay) {
 	::OutputDebugStringW(L"InitWaterMark");
-	std::wstring str;
-	if (strOverlay == NULL ) {
-		str=L"Default viewOverlay";
-	}
-	else {
-		str = strOverlay;
-	}
-	ViewOverlyController::getInstance().Attach(targertWnd, str);
-	TestPrintOverlayHook(str);
+	//std::wstring str;
+	//if (strOverlay == NULL ) {
+	//	str=L"Default viewOverlay";
+	//}
+	//else {
+	//	str = strOverlay;
+	//}
+	//ViewOverlyController::getInstance().Attach(targertWnd, str);
+	//TestPrintOverlayHook(str);
 }
 
 DLL_FUN_EXPORT void UpdateWaterMark(HWND targertWnd) {
