@@ -48,6 +48,11 @@ void perm2(string& cs, int k, int m) // 1 based, not 0
 	}
 }
 
+int gcd(int x, int y) {
+	if (y == 0) return x;
+	return gcd(y, x % y);
+}
+
 
 TEST(DSBase, basic) {
 	// cacl n!
@@ -70,4 +75,13 @@ TEST(DSBase, basic) {
 	string pfx;
 	perm(s,pfx);
 	//perm2(s,0,s.length()-1); // 
+
+	// gcd
+	for (size_t i = 0; i < 101; i++)
+	{
+		for (size_t j = 0; j < 101; j++)
+		{
+			cout << i << " " << j << "=" << gcd(i, j)<<endl;
+		}
+	}
 }

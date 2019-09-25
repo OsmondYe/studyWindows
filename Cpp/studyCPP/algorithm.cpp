@@ -161,7 +161,7 @@ TEST(Algorithm, Sort) {
 //
 TEST(Algorithm, Iota) {
 	auto v = vector<int>(100);
-	// [b:e)  it=++i;
+	// [b:e)  *it=++i;
 	iota(v.begin(), v.end(), 0);
 	output(v);
 }
