@@ -321,7 +321,7 @@ Gdiplus::Bitmap * OverlayWindow::_GetOverlayBitmap(const Gdiplus::Graphics& draw
 
 Gdiplus::Bitmap * OverlayWindow::_GetOverlayBitmapFromFile(const std::wstring & path)
 {
-	Gdiplus::Bitmap* im = Gdiplus::Bitmap::FromFile(L"D:\\allTestFile\\pics\\keng.png");
+	Gdiplus::Bitmap* im = Gdiplus::Bitmap::FromFile(path.c_str());
 	if (im == NULL) {
 		return im;
 	}
@@ -357,6 +357,7 @@ void OverlayWindow::_DrawOverlay(HDC dcScreen, LPRECT lpRestrictDrawingRect)
 	// beging drawing
 	Gdiplus::Bitmap* bk = _GetOverlayBitmap(g);
 	//Gdiplus::Bitmap* bk = _GetOverlayBitmapFromFile(L"D:\\allTestFile\\pics\\keng.png");
+	//Gdiplus::Bitmap* bk = _GetOverlayBitmapFromFile(L"D:\\allTestFile\\pics\\webwxgeticon.jpg");
 	
 	Gdiplus::TextureBrush brush(bk,Gdiplus::WrapModeTile);
 	//brush.RotateTransform(_config.GetFontRotation());  // for picture using rotatTransfrom

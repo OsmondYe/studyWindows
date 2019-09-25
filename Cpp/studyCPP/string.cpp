@@ -44,9 +44,11 @@ this is a row string \n
 you can use any char you want and to insert escapiing char with out using any \
 )rs";
 
+	wstring str8 = LR"(看看能否实现ABCabc123\n\t123\n456)";
 
 	cout << str1 << str2<<str6 << endl;
 	wcout << str5 << str7 << endl;
+	wcout << str8 <<endl;
 
 }
 
@@ -155,9 +157,19 @@ TEST(String, Operations) {
 	//
 	wstring e(L"Hello world");
 	e.erase(5); // only e[0,5] left 
-	w.erase(5, 4);  // move(e[5],e[5+4]);
+	w.erase(5, 4);  // move(e[5],e[5+4]);  // 如果不说明删除几个,默认s[5]后面的全给删除了
 	w.erase(w.begin());  // erase( (it - begin),1)// only delete one 
 	w.erase(w.begin() + 3, w.begin() + 5);  // earse( [frst-beg],[lst-frst]); return new frst 
+
+	{
+		string t{"abcdefg"};
+		cout << t << endl;
+		for (int i = 0; i < 7; ++i) {
+			string t_i = t;
+			t_i.erase(i,1);
+			cout << t_i << endl;;
+		}
+	}
 
 	//
 	// push_back pop_back

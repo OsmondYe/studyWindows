@@ -180,6 +180,7 @@
     <ClCompile Include="aux_utils.cpp" />
     <ClCompile Include="concurrency.cpp" />
     <ClCompile Include="container.cpp" />
+    <ClCompile Include="dsbase.cpp" />
     <ClCompile Include="idiom.cpp" />
     <ClCompile Include="iterator.cpp" />
     <ClCompile Include="limits.cpp" />

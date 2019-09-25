@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\sort">
-      <UniqueIdentifier>{93d1c242-ade8-454d-9dfe-5bb3bbebbd51}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\stl">
       <UniqueIdentifier>{f7950e80-61e0-4dd7-987a-9fe4408eb66f}</UniqueIdentifier>
     </Filter>
@@ -34,7 +31,13 @@
     <Filter Include="Source Files\stream">
       <UniqueIdentifier>{8878a3e9-eb51-4d7f-bb3b-8e0a64317a48}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\libs">
+    <Filter Include="Source Files\data_struct">
+      <UniqueIdentifier>{130311c1-aff9-41d8-b721-c56ebedcb83a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\data_struct\sort">
+      <UniqueIdentifier>{93d1c242-ade8-454d-9dfe-5bb3bbebbd51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\lib">
       <UniqueIdentifier>{071d7202-391a-4b9f-b938-207ff0c003a9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -48,7 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sort.cpp">
-      <Filter>Source Files\sort</Filter>
+      <Filter>Source Files\data_struct\sort</Filter>
     </ClCompile>
     <ClCompile Include="adapter.cpp">
       <Filter>Source Files\stl</Filter>
@@ -77,9 +80,6 @@
     <ClCompile Include="syntax.cpp">
       <Filter>Source Files\syntax</Filter>
     </ClCompile>
-    <ClCompile Include="aux_utils.cpp">
-      <Filter>Source Files\stl</Filter>
-    </ClCompile>
     <ClCompile Include="template.cpp">
       <Filter>Source Files\template</Filter>
     </ClCompile>
@@ -96,7 +96,13 @@
       <Filter>Source Files\stream</Filter>
     </ClCompile>
     <ClCompile Include="regex.cpp">
-      <Filter>Source Files\libs</Filter>
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="aux_utils.cpp">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="dsbase.cpp">
+      <Filter>Source Files\data_struct</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
