@@ -23,6 +23,7 @@
 #include <array>	// psedu-container
 #include <queue>
 #include <algorithm>
+#include <functional>
 #include <numeric>
 #include <utility>
 // c++ excption

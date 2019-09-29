@@ -177,10 +177,12 @@
     <ClCompile Include="adapter.cpp" />
     <ClCompile Include="algorithm.cpp" />
     <ClCompile Include="allocator.cpp" />
-    <ClCompile Include="aux_utils.cpp" />
     <ClCompile Include="concurrency.cpp" />
     <ClCompile Include="container.cpp" />
     <ClCompile Include="dsbase.cpp" />
+    <ClCompile Include="dskv_hash.cpp" />
+    <ClCompile Include="dslinear.cpp" />
+    <ClCompile Include="functional.cpp" />
     <ClCompile Include="idiom.cpp" />
     <ClCompile Include="iterator.cpp" />
     <ClCompile Include="limits.cpp" />
@@ -191,12 +193,14 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="regex.cpp" />
+    <ClCompile Include="set.cpp" />
     <ClCompile Include="sort.cpp" />
     <ClCompile Include="stream.cpp" />
     <ClCompile Include="string.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="syntax.cpp" />
     <ClCompile Include="template.cpp" />
+    <ClCompile Include="utility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="NoUse.hpp" />

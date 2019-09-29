@@ -22,9 +22,6 @@
     <Filter Include="Source Files\template">
       <UniqueIdentifier>{68e202d4-2527-4335-84ee-f96eb0182846}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\stl\Concurrency">
-      <UniqueIdentifier>{5622c9f2-50fe-470f-a520-2cfbb5f715ac}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\stl\msic">
       <UniqueIdentifier>{5a0bd96d-2f34-4882-8da8-af4084dc1fe1}</UniqueIdentifier>
     </Filter>
@@ -40,6 +37,12 @@
     <Filter Include="Source Files\lib">
       <UniqueIdentifier>{071d7202-391a-4b9f-b938-207ff0c003a9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\stl\container">
+      <UniqueIdentifier>{a0213a94-8e5d-43cb-ad39-02c377a35056}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\stl\concurrency">
+      <UniqueIdentifier>{5622c9f2-50fe-470f-a520-2cfbb5f715ac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -53,16 +56,10 @@
     <ClCompile Include="sort.cpp">
       <Filter>Source Files\data_struct\sort</Filter>
     </ClCompile>
-    <ClCompile Include="adapter.cpp">
-      <Filter>Source Files\stl</Filter>
-    </ClCompile>
     <ClCompile Include="algorithm.cpp">
       <Filter>Source Files\stl</Filter>
     </ClCompile>
     <ClCompile Include="allocator.cpp">
-      <Filter>Source Files\stl</Filter>
-    </ClCompile>
-    <ClCompile Include="container.cpp">
       <Filter>Source Files\stl</Filter>
     </ClCompile>
     <ClCompile Include="iterator.cpp">
@@ -84,7 +81,7 @@
       <Filter>Source Files\template</Filter>
     </ClCompile>
     <ClCompile Include="concurrency.cpp">
-      <Filter>Source Files\stl\Concurrency</Filter>
+      <Filter>Source Files\stl\concurrency</Filter>
     </ClCompile>
     <ClCompile Include="idiom.cpp">
       <Filter>Source Files\syntax</Filter>
@@ -98,11 +95,29 @@
     <ClCompile Include="regex.cpp">
       <Filter>Source Files\lib</Filter>
     </ClCompile>
-    <ClCompile Include="aux_utils.cpp">
-      <Filter>Source Files\lib</Filter>
-    </ClCompile>
     <ClCompile Include="dsbase.cpp">
       <Filter>Source Files\data_struct</Filter>
+    </ClCompile>
+    <ClCompile Include="dslinear.cpp">
+      <Filter>Source Files\data_struct</Filter>
+    </ClCompile>
+    <ClCompile Include="dskv_hash.cpp">
+      <Filter>Source Files\data_struct</Filter>
+    </ClCompile>
+    <ClCompile Include="functional.cpp">
+      <Filter>Source Files\stl</Filter>
+    </ClCompile>
+    <ClCompile Include="set.cpp">
+      <Filter>Source Files\stl\container</Filter>
+    </ClCompile>
+    <ClCompile Include="container.cpp">
+      <Filter>Source Files\stl\container</Filter>
+    </ClCompile>
+    <ClCompile Include="adapter.cpp">
+      <Filter>Source Files\stl\container</Filter>
+    </ClCompile>
+    <ClCompile Include="utility.cpp">
+      <Filter>Source Files\lib</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

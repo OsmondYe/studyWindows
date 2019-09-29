@@ -1,8 +1,28 @@
 ﻿#include "pch.h"
 #include "helper.hpp"
-/*Container:  
-	sequential
-	relative
+
+
+
+/*
+STL { container, iterator, algorithm}
+
+Container {sequential | relative(associative)}
+	Sequential{Array, Vector, Deque, List, ForwardList}
+	Relative { set, multi_set map }
+	Container_adpater{queue | stack | priority_queue}
+
+Iterator
+iterator_adaper{ insert| stream | reverse | move}
+{back_inserter, front_inserter, inserter|
+{istream_interator,ostream_iterator}
+
+
+Elem_in_container_requried:
+	copyable | movable
+	public destructor
+	public defualt constructor
+
+
 */
 
 using namespace std;

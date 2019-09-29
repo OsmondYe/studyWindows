@@ -1,8 +1,21 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "helper.hpp"
 
 using namespace std;
 using namespace aux;
+
+/*
+Range [beg,end)  -- half-open range
+Multi_range  < [b1,e1), b2>  确保range2有效长度至少和r1相同
+
+
+Manipulating  {移除 | 重排 | 修改}
+Manipulating  {移除 | 重排 | 修改}
+predicate :  bool fun(T);
+
+*/
+
+
 
 TEST(Algorithm, Basic) {
 	// total is 80  using iterator as a range, beg ,end
@@ -159,7 +172,7 @@ TEST(Algorithm, Sort) {
 //
 //  Numeric
 //
-TEST(Algorithm, Iota) {
+TEST(Algorithm, Iota) {	// 小增量的意思, 针对c++那就是 ++i 每次都会自增
 	auto v = vector<int>(100);
 	// [b:e)  *it=++i;
 	iota(v.begin(), v.end(), 0);
@@ -218,3 +231,21 @@ TEST(Algorithm, Lexicographic) {
 	// if i<j then j must > i , if not , tirgger exception
 	cout<<lexicographical_compare(v.begin(), v.end(), v2.begin(), v2.end(), [](int i, int j) {return i < j; });
 }
+
+
+//
+//   Sort Operation
+//
+
+TEST(Algorithm, IsSorted) {
+	auto v = getSorted(10);
+	bool b = std::is_sorted(v.begin(), v.end());
+	cout << "is_sorted:" << b;
+}
+
+TEST(Algorithm, IsSortedUntil) {
+	auto v = getSorted(10);
+	auto it = std::is_sorted_until(v.begin(), v.end());
+}
+
+
