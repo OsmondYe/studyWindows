@@ -182,6 +182,7 @@
     <ClCompile Include="dsbase.cpp" />
     <ClCompile Include="dskv_hash.cpp" />
     <ClCompile Include="dslinear.cpp" />
+    <ClCompile Include="dstree.cpp" />
     <ClCompile Include="functional.cpp" />
     <ClCompile Include="idiom.cpp" />
     <ClCompile Include="iterator.cpp" />

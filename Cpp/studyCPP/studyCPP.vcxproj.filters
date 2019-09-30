@@ -119,6 +119,9 @@
     <ClCompile Include="utility.cpp">
       <Filter>Source Files\lib</Filter>
     </ClCompile>
+    <ClCompile Include="dstree.cpp">
+      <Filter>Source Files\data_struct</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="NoUse.hpp">

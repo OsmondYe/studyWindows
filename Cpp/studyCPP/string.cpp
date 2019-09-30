@@ -28,7 +28,7 @@ TEST(String, Basic) {
 	w.reserve(100);
 }
 
-TEST(String, EncodingPrefix) {
+TEST(String, DISABLED_EncodingPrefix) {
 	// u8,u,U,L,R
 	string str1 = "你好中国";
 	string str2 = u8"你好中国";  // u8-> utf8
@@ -53,7 +53,7 @@ you can use any char you want and to insert escapiing char with out using any \
 }
 
 TEST(String, Advanced) {
-	EXPECT_TRUE(sizeof(wstring) == sizeof(int*) * 4);
+	EXPECT_TRUE(sizeof(wstring) == sizeof(int*) * 5);
 }
 
 TEST(String, Access) {
@@ -211,6 +211,9 @@ TEST(String, Operations) {
 	// copy
 	//
 	//w.copy() // sent out
+	wchar_t buf[10] = { 0 };
+	w.copy(buf, 9);
+	wcout <<L"string::copy to sent out contents to a outer's buf"<< buf << endl;
 
 	//
 	// resize
@@ -222,7 +225,7 @@ TEST(String, Operations) {
 	w.swap(e);
 
 }
-
+// string的 find 只有 pos,  string::npos 没找到
 TEST(String, Search) {
 	wstring w(str);
 	//
@@ -245,44 +248,81 @@ TEST(String, Search) {
 	//
 }
 
+//
+//    common application, 组合一些常见的应用和算法
+//
+TEST(String, ReverseStr) {
+	wstring s = str;
 
-TEST(String, Mutate) {
+	std::reverse(s.begin(), s.end());
+
+	wcout << s;
+
+	//for (; _First != _Last && _First != --_Last; ++_First)
+	//{
+	//	_STD iter_swap(_First, _Last);
+	//}
+}
+
+TEST(String, ToUpperLower) {
 	wstring w(str);
 	std::transform(w.begin(), w.end(), w.begin(), std::toupper);
-	wcout << L"cctype std::toupper:" << w << endl;
+	wcout << L"std::toupper:" << w << endl;
 
 	w.assign(str);
 	std::transform(w.begin(), w.end(), w.begin(), std::tolower);
-	wcout << L"cctype std::tolower:" << w << endl;
-
-	// copy into a new str
-	w.assign(str);
-	wstring w2;
-	//w2.reserve(w.length()+1); // wrong! reserve只是修改了capacity, w2的length依旧没有改变
-	w2.assign(w.length(), 0);
-	std::transform(w.begin(), w.end(), w2.begin(), std::tolower);
-	wcout << L"w2:" << w2 << endl;
-
-	// method 2, using iterator adapter
-	w2.clear();
-	std::transform(w.begin(), w.end(), std::back_inserter(w2), std::tolower);
+	wcout << L"std::tolower:" << w << endl;
 }
 
+//
+//replace_all [c] to China;
+//
 TEST(String, ReplaceAll) {
 	wstring w(L"there is [c] in [c], but [c] is not true [c]");
 	wcout << w << endl;
 
-	//
-	//replace_all [c] to China;
-	//
-	wstring pattern(L"[c]");
-	wstring replaced(L"China");
+	wstring pattern(L"[c]");   
+	wstring replaced(L"China");  
+
+	wcout << "pattern:" << pattern << endl;
+	wcout << "replaced:" << replaced << endl;
 
 	size_t pos = 0;
 	
 	while ( (pos = w.find(pattern, pos)) != wstring::npos) {
-		w.replace(pos, pattern.length(), replaced);
+		w.replace(pos, pattern.length(), replaced);  // replace 只会影响当前的一段区间,所以pos+size就是接下来要搜索的起始点
 		pos += replaced.size();
 	}
 	wcout << w << endl;	
+}
+// abc.txt ->  abc , .txt
+TEST(String, SplitFileName) {
+	string f("abt.txt");
+	string base;
+	string suffix;
+	auto pos = f.find('.');
+	if (pos != string::npos) {
+		base = f.substr(0, pos);
+		suffix = f.substr(pos + 1);
+		cout << base << "   " << suffix << endl;
+	}
+
+}
+// 识别每一个单词
+TEST(String, ExtractWordInWords) {
+	string sentence("China's railways\t are,;., expected to see a, travel rush. in the coming 10 days as many people");
+	cout << "org:" << sentence<<endl;
+	string delim(" \t;,.");
+
+	size_t begIdx=0, endIdx=0;
+
+	begIdx = sentence.find_first_not_of(delim, begIdx);
+	while ((endIdx=sentence.find_first_of(delim,begIdx))!=string::npos)
+	{
+		cout << sentence.substr(begIdx, endIdx - begIdx) << endl;
+		//cout << sentence.substr(begIdx, endIdx - begIdx) << endl;
+
+		begIdx = sentence.find_first_not_of(delim, endIdx + 1);
+	}
+
 }
