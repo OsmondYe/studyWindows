@@ -324,5 +324,17 @@ TEST(String, ExtractWordInWords) {
 
 		begIdx = sentence.find_first_not_of(delim, endIdx + 1);
 	}
+}
+
+TEST(String, UniqueCharInStr) {
+	wstring s = str; s += str;
+	
+	wcout << s << endl;
+
+	std::sort(s.begin(), s.end());
+	//s.resize(std::unique(s.begin(), s.end())-s.begin());
+	s.erase(std::unique(s.begin(), s.end()), s.end());
+	wcout << s << endl;
+
 
 }
