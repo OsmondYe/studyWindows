@@ -13,37 +13,44 @@ Manipulating  {移除 | 重排 | 修改}
 Manipulating  {移除 | 重排 | 修改}
 predicate :  bool fun(T);
 
+
+Nonmodifying
+Modifying
+Removing
+Mutating   -- assigning or swapping
+Sorting
+sorted-range
+numeric
+
 */
 
 
 
-TEST(Algorithm, Basic) {
-	// total is 80  using iterator as a range, beg ,end
-	//[b:e)
-}
 
-struct Sum {
-	Sum() :sum(0) {}
-	int sum;
-	void operator()(int& i) { sum += i; }
-};
 
 TEST(Algorithm, ForEach) {
-	// [b:e)  void f(x); 
+	// [b:e)  void f(*iter); 
 	// return f();  this could be a class with functor obejct
 	vector<int> v = getSorted();
 	output(v);
 
-	for_each(v.begin(), v.end(), [](int& i) {i++;});
+	for_each(v.begin(), v.end(), [](int& i) {i++;}); // lamda 内参数为 int& ， 有可能改变元素的值
 	output(v);
+
+	struct Sum {
+		Sum() :sum(0) {}
+		int sum;
+		void operator()(int& i) { sum += i; }
+	};
 
 	Sum s = for_each(v.begin(), v.end(), Sum());
 	cout << "Sum s=" << s.sum<<endl;
+	
 }
 
 TEST(Algorithm, Predicate) {
 	// all_of  [b:e)  all(f(x)) return true;
-	// any_of    has(f(x) return true
+	// any_of    has(f(x)) return true
 	// none_of  !all_of
 	vector<int> v = getSorted();
 
@@ -103,6 +110,8 @@ TEST(Algorithm, MaxMin) {
 		<< std::min(v[5], v[6], [](int i, int j) {return i < j; }) << endl
 		<< *max_element(v.begin(), v.end(), less<int>()) << endl
 		<< *min_element(v.begin(), v.end(), less<int>()) << endl;
+
+	auto rt = minmax_element(v.begin(), v.end());
 }
 
 
@@ -130,10 +139,31 @@ TEST(Algorithm, Swap) {
 }
 
 TEST(Algorithm, Transform) {
+	/*
+		for (; _UFirst != _ULast; ++_UFirst, (void)++_UDest)
+		{
+		*_UDest = _Func(*_UFirst);
+		}
+	*/
 	auto v1 = getSorted(10);
 	cout << "before:"; output(v1);
 	std::transform(v1.begin(), v1.end(), v1.begin(), [](int i) {return i + 1; });
 	cout << "after:"; output(v1);
+
+	/*
+		for (; _UFirst1 != _ULast1; ++_UFirst1, (void)++_UFirst2, ++_UDest)
+		{
+		*_UDest = _Func(*_UFirst1, *_UFirst2);
+		}
+	*/
+	auto v2 = getSorted(10);
+	auto v3 = v2;
+
+	decltype(v3) v4;
+	// v2 ,v3 两个序列对应值相加，结果送v4
+	transform(v2.begin(), v2.end(), v3.begin(),  back_inserter(v4), [](int i, int j) {return i + j; });
+	output(v4);
+
 }
 
 TEST(Algorithm, Copy) {
