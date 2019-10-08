@@ -68,26 +68,37 @@ TEST(Algorithm, Count) {
 }
 
 TEST(Algorithm, Find) {
+	auto v = getSorted();
+	auto v2 = getRandom();
 	// find return it when found, or last iter- if not
 	/*	for (; _First != _Last; ++_First)
 			if (*_First == _Val)
 				break;
 		return (_First);
 	*/
-	auto v = getSorted();
 	cout << "find 90 is:" << *(std::find(v.begin(), v.end(), 90)) << endl;
 	// if(Pred(*it)) return it;
 	std::find_if(v.begin(), v.end(), [](int& i) {return i > 20; });
-	//if (!Pred(*it)) return it;
+	// if (!Pred(*it)) return it;
 	std::find_if_not(v.begin(), v.end(), [](int& i) {return i < 20; });
-	// [b1:e1), [b2:e2) find first *p1==*p2   return p1
-	// in 2 sequence, first match 1 seq
-	auto v2 = getRandom();
+
+	/*
+	[b1,e1) 区间中 第一个 元素使得 true==p(*b, b2_range)
+	第一个存在于死亡名单上的人
+	for (; first != last; ++first) {
+		for (ForwardIt it = s_first; it != s_last; ++it) {
+			if (p(*first, *it)) {
+				return first;
+			}
+		}
+	}
+	*/
 	cout << *(std::find_first_of(v.begin(), v.end(), v2.begin(), v2.end())) << endl;
-	cout << *(std::find_first_of(v.begin(), v.end(), v2.begin(), v2.end(), [](int i, int j) {return i = j + 12; })) << endl;
+	cout << *(std::find_first_of(v.begin(), v.end(), v2.begin(), v2.end(), [](int i, int j) {return i == j + 12; })) << endl;
 	// find end, last 
 	cout << "tbd find end\n";
-	//std::find_end(v.begin(), v.end(), v2.begin(), v2.end());
+	
+	std::find_end(v.begin(), v.end(), v2.begin(), v2.end());
 }
 
 TEST(Algorithm, EqualMismatch) {
@@ -101,7 +112,15 @@ TEST(Algorithm, EqualMismatch) {
 }
 
 TEST(Algorithm, Search) {
+	// std::search_n()
+	// _n 意思： 具有n个连续具备此特征
+	vector<int> v = { 1,2,3,4,5,6,6,6,6,7,8,9,10 };
+	// 这个区间里面是否有4个连续的6
+	bool rt = std::search_n(v.begin(), v.end(), 4, 6) != v.end();
+	EXPECT_TRUE(rt);
+
 	//std::search()
+
 }
 
 TEST(Algorithm, MaxMin) {
