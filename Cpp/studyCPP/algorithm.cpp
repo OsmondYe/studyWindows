@@ -69,7 +69,7 @@ TEST(Algorithm, Count) {
 
 TEST(Algorithm, Find) {
 	auto v = getSorted();
-	auto v2 = getRandom();
+	decltype(v) v2 = { 55,56,57,58 };
 	// find return it when found, or last iter- if not
 	/*	for (; _First != _Last; ++_First)
 			if (*_First == _Val)
@@ -83,8 +83,7 @@ TEST(Algorithm, Find) {
 	std::find_if_not(v.begin(), v.end(), [](int& i) {return i < 20; });
 
 	/*
-	[b1,e1) 区间中 第一个 元素使得 true==p(*b, b2_range)
-	第一个存在于死亡名单上的人
+	V区间中搜索_第一个存在于死亡名单上的人
 	for (; first != last; ++first) {
 		for (ForwardIt it = s_first; it != s_last; ++it) {
 			if (p(*first, *it)) {
@@ -93,12 +92,17 @@ TEST(Algorithm, Find) {
 		}
 	}
 	*/
+	cout << "find_first_of: the first man that appeared in the black-list" << endl;
 	cout << *(std::find_first_of(v.begin(), v.end(), v2.begin(), v2.end())) << endl;
 	cout << *(std::find_first_of(v.begin(), v.end(), v2.begin(), v2.end(), [](int i, int j) {return i == j + 12; })) << endl;
 	// find end, last 
-	cout << "tbd find end\n";
+	cout << "find_end: better to name as search_end\n";
 	
-	std::find_end(v.begin(), v.end(), v2.begin(), v2.end());
+	auto iter=std::find_end(v.begin(), v.end(), v2.begin(), v2.end());
+	if (iter != v.end()) {
+		cout << "result of find_end\n";
+		for_each(iter, iter + v2.size(), [](int i) {cout << i << " "; });
+	}
 }
 
 TEST(Algorithm, EqualMismatch) {
@@ -108,19 +112,6 @@ TEST(Algorithm, EqualMismatch) {
 	//std::mismatch()
 	auto pair = std::mismatch(v1.begin()+1, v1.end() - 1, v2.begin());
 	cout << *pair.first << " " << *pair.second;
-
-}
-
-TEST(Algorithm, Search) {
-	// std::search_n()
-	// _n 意思： 具有n个连续具备此特征
-	vector<int> v = { 1,2,3,4,5,6,6,6,6,7,8,9,10 };
-	// 这个区间里面是否有4个连续的6
-	bool rt = std::search_n(v.begin(), v.end(), 4, 6) != v.end();
-	EXPECT_TRUE(rt);
-
-	//std::search()
-
 }
 
 TEST(Algorithm, MaxMin) {
@@ -132,6 +123,33 @@ TEST(Algorithm, MaxMin) {
 
 	auto rt = minmax_element(v.begin(), v.end());
 }
+
+TEST(Algorithm, Search) {
+	// std::search_n()
+	// _n 意思： 具有n个连续具备此特征
+	vector<int> v = { 1,2,3,4,5,6,6,6,6,7,8,9,10 };
+	// 这个区间里面是否有4个连续的6
+	bool rt = std::search_n(v.begin(), v.end(), 4, 6) != v.end();
+	EXPECT_TRUE(rt);
+
+	//std::search()
+	// 查找第一个子空间, first sub_range
+	// 2 个区间, 是否有相等的子区间,如果有返回其地址
+	vector<int> v2 = { 5,6,6 };  // search 中的 v2区间内所有值,可以在v的区间内找到
+
+	auto iter = std::search(v.begin(), v.end(), v2.begin(), v2.end(), [](int i, int j) {return i == j; });
+	if (iter != v.end()) {
+		for_each(iter, v.end(), [](int i) {cout << i << " "; });
+	}
+
+	// 判断v 是否存在 4个连续偶数
+	bool dummy[4] = { true,true,true,true };
+	iter = std::search(v.begin(), v.end(), dummy, dummy + 4, [](int i, bool j) {return j == ((i % 2) == 0); });
+	if (iter != v.end()) {
+		for_each(iter, v.end(), [](int i) {cout << i << " "; });
+	}
+}
+
 
 
 //

@@ -159,5 +159,4 @@ TEST(DSBase, myMinMax) {
 		<< "Its value is " << a[theMin] << endl;
 	cout << "The max element is at " << theMax << endl
 		<< "Its value is " << a[theMax] << endl;
-	return 0;
 }

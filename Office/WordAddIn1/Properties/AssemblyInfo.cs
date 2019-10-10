@@ -6,11 +6,11 @@ using System.Security;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ExcelAddIn1")]
+[assembly: AssemblyTitle("WordAddIn1")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("ExcelAddIn1")]
+[assembly: AssemblyProduct("WordAddIn1")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -21,7 +21,7 @@ using System.Security;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("006fd9fc-dcb7-46a5-95e0-be4035fec4ba")]
+[assembly: Guid("ab26ecfb-0a5d-40c8-ab61-105813707bf7")]
 
 // Version information for an assembly consists of the following four values:
 //
