@@ -14,6 +14,7 @@
 // c++
 #include <iosfwd>
 #include <iostream>
+#include <iomanip>
 #include <cctype>  // isalnum, isalpha, tolower, toupper
 #include <string>
 #include <vector>
@@ -26,6 +27,7 @@
 #include <functional>
 #include <numeric>
 #include <utility>
+#include <random>
 // c++ excption
 #include <exception>
 #include <stdexcept>

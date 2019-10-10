@@ -30,6 +30,12 @@ namespace aux {
 	static void output(Container& c) {
 		output(c.begin(), c.end());
 	}
+
+	template<class Container>
+	static void shuffle(Container& c) {
+		std::mt19937 engine(rand());
+		std::shuffle(c.begin(), c.end(), engine);
+	}
 }
 
 

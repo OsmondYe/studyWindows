@@ -122,6 +122,9 @@
     <ClCompile Include="dstree.cpp">
       <Filter>Source Files\data_struct</Filter>
     </ClCompile>
+    <ClCompile Include="random.cpp">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="NoUse.hpp">

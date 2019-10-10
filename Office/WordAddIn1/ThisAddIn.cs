@@ -67,9 +67,9 @@ namespace WordAddIn1
                     var newFilePath = saveAsDlg.SelectedItems.Item(1);
                     //saveAsDlg.Execute();
 
-                    Doc.SaveAs2(newFilePath);
+                    //Doc.SaveAs2(newFilePath);
 
-
+                    Application.Documents.Open(Doc.FullName);                    
                     //MessageBox.Show("new file created:" + newFilePath, "safe save as ok");
                     //MessageBox.Show("demo for show ClassifyDlg");
                     // copy the new plain file to a nxl new one

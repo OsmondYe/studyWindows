@@ -96,19 +96,32 @@ TEST(Algorithm, Find) {
 	cout << *(std::find_first_of(v.begin(), v.end(), v2.begin(), v2.end())) << endl;
 	cout << *(std::find_first_of(v.begin(), v.end(), v2.begin(), v2.end(), [](int i, int j) {return i == j + 12; })) << endl;
 	// find end, last 
-	cout << "find_end: better to name as search_end\n";
+	cout << "find_end: better to name as search_end, last occurrence of the v2 in v\n";
 	
 	auto iter=std::find_end(v.begin(), v.end(), v2.begin(), v2.end());
 	if (iter != v.end()) {
 		cout << "result of find_end\n";
 		for_each(iter, iter + v2.size(), [](int i) {cout << i << " "; });
 	}
+
+	// adjacent_find :
+	cout << "std::adjacent_find: two consecutive identical elemetns";
+	std::adjacent_find(v.begin(), v.end());
 }
 
 TEST(Algorithm, EqualMismatch) {
 	auto v1 = vector<int>{ 1,2,3,4,5 };
 	auto v2 = vector<int>{ 2,3,4,5,6 };
+	// 2 sets of elems are same
 	std::equal(v1.begin() + 1, v1.end(), v2.begin(),v2.end() - 1);
+
+	// 忽略大小写比较
+	string s1{ "china" }, s2{ "ChinA" };
+	cout << s1 << "==" << s2 << "?" << std::equal(s1.begin(), s1.end(), s2.begin(), s2.end(),
+		[](char i, char j) {return ::tolower(i) == tolower(j); 
+		})<< endl;
+
+
 	//std::mismatch()
 	auto pair = std::mismatch(v1.begin()+1, v1.end() - 1, v2.begin());
 	cout << *pair.first << " " << *pair.second;
@@ -299,6 +312,21 @@ TEST(Algorithm, Lexicographic) {
 	cout<<lexicographical_compare(v.begin(), v.end(), v2.begin(), v2.end(), [](int i, int j) {return i < j; });
 }
 
+TEST(Algorithm, IsPermutation) {
+	// 不考虑顺序,2个区间数据相同, 不同的排列组合而已
+	auto v = getSorted(10);
+	cout << "v:";
+	aux::output(v);
+	auto v2 = v;
+	//std::shuffle(v2.begin(),v2.end(),std::)
+	aux::shuffle(v2);
+	cout << "v2:";
+	aux::output(v2);
+
+	cout << "std::isPermutation:" << std::is_permutation(v.begin(), v.end(), v2.begin()) << endl;
+}
+
+
 
 //
 //   Sort Operation
@@ -314,5 +342,7 @@ TEST(Algorithm, IsSortedUntil) {
 	auto v = getSorted(10);
 	auto it = std::is_sorted_until(v.begin(), v.end());
 }
+
+
 
 
