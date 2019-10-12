@@ -23,11 +23,6 @@ sorted-range
 numeric
 
 */
-
-
-
-
-
 TEST(Algorithm, ForEach) {
 	// [b:e)  void f(*iter); 
 	// return f();  this could be a class with functor obejct
@@ -109,23 +104,6 @@ TEST(Algorithm, Find) {
 	std::adjacent_find(v.begin(), v.end());
 }
 
-TEST(Algorithm, EqualMismatch) {
-	auto v1 = vector<int>{ 1,2,3,4,5 };
-	auto v2 = vector<int>{ 2,3,4,5,6 };
-	// 2 sets of elems are same
-	std::equal(v1.begin() + 1, v1.end(), v2.begin(),v2.end() - 1);
-
-	// 忽略大小写比较
-	string s1{ "china" }, s2{ "ChinA" };
-	cout << s1 << "==" << s2 << "?" << std::equal(s1.begin(), s1.end(), s2.begin(), s2.end(),
-		[](char i, char j) {return ::tolower(i) == tolower(j); 
-		})<< endl;
-
-
-	//std::mismatch()
-	auto pair = std::mismatch(v1.begin()+1, v1.end() - 1, v2.begin());
-	cout << *pair.first << " " << *pair.second;
-}
 
 TEST(Algorithm, MaxMin) {
 	auto v = getSorted();
@@ -168,53 +146,6 @@ TEST(Algorithm, Search) {
 //
 //  Mutating 
 //
-TEST(Algorithm, Fill) {
-	auto v = vector<int>(10);
-	fill(v.begin(), v.end(), 12);
-	output(v);
-	fill_n(v.begin(), 2, 100);  // count 2, value =100;
-	output(v);
-}
-
-TEST(Algorithm, Swap) {
-	auto v = getSorted(100);
-	// obj swap
-	std::swap(*v.begin(), *(v.begin() + 1));
-	// rang swap
-	std::swap_ranges(v.begin() + 10, v.begin() + 20, v.begin() + 20);
-	// iter swap  , using two iter, swap its pointed value
-	std::iter_swap(v.end() - 1, v.end() - 2);
-
-	output(v);
-}
-
-TEST(Algorithm, Transform) {
-	/*
-		for (; _UFirst != _ULast; ++_UFirst, (void)++_UDest)
-		{
-		*_UDest = _Func(*_UFirst);
-		}
-	*/
-	auto v1 = getSorted(10);
-	cout << "before:"; output(v1);
-	std::transform(v1.begin(), v1.end(), v1.begin(), [](int i) {return i + 1; });
-	cout << "after:"; output(v1);
-
-	/*
-		for (; _UFirst1 != _ULast1; ++_UFirst1, (void)++_UFirst2, ++_UDest)
-		{
-		*_UDest = _Func(*_UFirst1, *_UFirst2);
-		}
-	*/
-	auto v2 = getSorted(10);
-	auto v3 = v2;
-
-	decltype(v3) v4;
-	// v2 ,v3 两个序列对应值相加，结果送v4
-	transform(v2.begin(), v2.end(), v3.begin(),  back_inserter(v4), [](int i, int j) {return i + j; });
-	output(v4);
-
-}
 
 TEST(Algorithm, Copy) {
 	/*
@@ -235,11 +166,84 @@ TEST(Algorithm, Copy) {
 	cout << "v2, using std::back_inserter:"; output(v2);
 
 
-	//std::copy(v1.begin(), v1.end(), v1.end()-1);
+	//std::copy_if
 	std::copy_if(v1.begin(), v1.end(), std::inserter(v2, v2.end()), [](int i) {return i > 5; });
 	output(v2);
 
+	// std::copy_backward,  从后往前进行复制
+	vector<string> vs{ "hello","this","is","an","example" };
+	deque<string> ll(vs.begin(),vs.end());
+	std::copy_backward(vs.begin(), vs.end(), ll.end());
 }
+
+
+TEST(Algorithm, Transform) {
+	/*
+		for (; _UFirst != _ULast; ++_UFirst, (void)++_UDest)
+		{
+		*_UDest = _Func(*_UFirst);
+		}
+	*/
+	auto v1 = getSorted(10);
+	cout << "before:"; output(v1);
+	std::transform(v1.begin(), v1.end(), v1.begin(), [](int i) {return i + 1; });
+	cout << "after:"; output(v1);
+
+	// 应用, toupper, tolower
+	string a{ "haha_hehe_heihei" }; 
+	println(a);
+	transform(a.begin(), a.end(), a.begin(), std::toupper);
+	println(a);
+
+	/*
+		for (; _UFirst1 != _ULast1; ++_UFirst1, (void)++_UFirst2, ++_UDest)
+		{
+		*_UDest = _Func(*_UFirst1, *_UFirst2);
+		}
+	*/
+	auto v2 = getSorted(10);
+	auto v3 = v2;
+
+	decltype(v3) v4;
+	// v2 ,v3 两个序列对应值相加，结果送v4
+	transform(v2.begin(), v2.end(), v3.begin(), back_inserter(v4), [](int i, int j) {return i + j; });
+	output(v4);
+
+	// 应用,计算区间内的间差,
+	// 错位相减,各间差组成区间
+	v1 = getSorted();
+	v4.clear();
+	std::transform(v1.begin(), v1.end() - 1, v1.begin() + 1,back_inserter(v4), 
+		[](int i, int j) {return j - i; }
+	);
+	output(v4);
+}
+
+
+TEST(Algorithm, Fill) {
+	auto v = vector<int>(10);
+	fill(v.begin(), v.end(), 12);
+	output(v);
+	fill_n(v.begin(), 2, 100);  // count 2, value =100;
+	output(v);
+	
+	// app:
+	fill_n(ostream_iterator<char>(cout), 10, '-');
+	fill_n(ostream_iterator<char>(cout), 10, '=');
+}
+
+TEST(Algorithm, Swap) {
+	auto v = getSorted(100);
+	// obj swap
+	std::swap(*v.begin(), *(v.begin() + 1));
+	// rang swap
+	std::swap_ranges(v.begin() + 10, v.begin() + 20, v.begin() + 20);
+	// iter swap  , using two iter, swap its pointed value
+	std::iter_swap(v.end() - 1, v.end() - 2);
+
+	output(v);
+}
+
 
 TEST(Algorithm, Sort) {
 
@@ -247,7 +251,6 @@ TEST(Algorithm, Sort) {
 	std::sort(gv.begin(), gv.end());
 	//output(v);
 }
-
 
 //
 //  Numeric
@@ -298,10 +301,49 @@ TEST(Algorithm, PartialSum) {
 
 TEST(Algorithm, Equal) {
 	auto v = getSorted(10);
-	auto v2 = v;
+	auto v_ = v;
 	// [b1:e1) == [b2:e2)
-	cout<<equal(v.begin(), v.end(), v2.begin(), v2.end(), [](int i, int j) {return i == j; });
+	cout<<equal(v.begin(), v.end(), v_.begin(), v_.end(), [](int i, int j) {return i == j; });
+
+
+	auto v1 = vector<int>{ 1,2,3,4,5 };
+	auto v2 = vector<int>{ 2,3,4,5,6 };
+	// 2 sets of elems are same
+	std::equal(v1.begin() + 1, v1.end(), v2.begin(), v2.end() - 1);
+
+	// 忽略大小写比较
+	string s1{ "china" }, s2{ "ChinA" };
+	cout << s1 << "==" << s2 << "?" << std::equal(s1.begin(), s1.end(), s2.begin(), s2.end(),
+		[](char i, char j) {return ::tolower(i) == tolower(j);
+		}) << endl;
+
+
 }
+
+
+TEST(Algorithm, Mismatch) {
+	auto v1 = vector<int>{ 1,2,3,4,5 };
+	auto v2 = vector<int>{ 2,3,4,5,6 };
+	//std::mismatch()
+	auto pair = std::mismatch(v1.begin() + 1, v1.end() - 1, v2.begin());
+	if (pair.first == v1.end()) {
+		cout << "no mismatch";
+	}
+	cout << *pair.first << " " << *pair.second;
+
+}
+
+TEST(Algorithm, Partition) {
+	// partition 就是根据一个规则进行分割,符合的放前面
+	auto v = aux::getSorted(10);
+	auto is_even = [](int i) {return i % 2 == 0; };
+
+	cout << "before parition:";
+	aux::output(v);
+	std::partition(v.begin(), v.end(), is_even);
+	cout << "after partiton:"; output(v);
+}
+
 
 TEST(Algorithm, Lexicographic) {
 	auto v = getSorted(10);
@@ -314,6 +356,8 @@ TEST(Algorithm, Lexicographic) {
 
 TEST(Algorithm, IsPermutation) {
 	// 不考虑顺序,2个区间数据相同, 不同的排列组合而已
+	// 比 Equal要高级一点
+	cout << "TBD, I don't understand the algo for is_permutation";
 	auto v = getSorted(10);
 	cout << "v:";
 	aux::output(v);

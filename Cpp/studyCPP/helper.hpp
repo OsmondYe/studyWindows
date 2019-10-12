@@ -31,6 +31,11 @@ namespace aux {
 		output(c.begin(), c.end());
 	}
 
+	template<typename T>
+	static inline void println(const T& c) {
+		std::cout << c << std::endl;
+	}
+
 	template<class Container>
 	static void shuffle(Container& c) {
 		std::mt19937 engine(rand());

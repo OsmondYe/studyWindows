@@ -61,19 +61,24 @@ namespace WordAddIn1
                 saveAsDlg.InitialFileName = Doc.Name;
                 saveAsDlg.ButtonName = "Protected Save AS";
 
+                saveAsDlg.Filters.Add("nextlabs", ".nxl");
+
                 if (-1 == saveAsDlg.Show())
                 {
                     System.Diagnostics.Debug.WriteLine("d.showed"+ saveAsDlg.Item);
                     var newFilePath = saveAsDlg.SelectedItems.Item(1);
-                    //saveAsDlg.Execute();
+                    saveAsDlg.Execute();
 
                     //Doc.SaveAs2(newFilePath);
 
-                    Application.Documents.Open(Doc.FullName);                    
-                    //MessageBox.Show("new file created:" + newFilePath, "safe save as ok");
-                    //MessageBox.Show("demo for show ClassifyDlg");
+                    //Application.Documents.Open(Doc.FullName); 
+                    
+                    
+
+                    MessageBox.Show("new file created:" + newFilePath, "safe save as ok");
+                    MessageBox.Show("demo for show ClassifyDlg");
                     // copy the new plain file to a nxl new one
-                    //System.IO.File.Copy(newFilePath, newFilePath + ".nxl",true);  // may throw when can not overwrite
+                    System.IO.File.Copy(newFilePath, newFilePath + ".nxl",true);  // may throw when can not overwrite
                     //var op = Word.WdSaveOptions.wdDoNotSaveChanges;
                     //Doc.Close(op);
                 }
