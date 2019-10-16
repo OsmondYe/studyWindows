@@ -90,23 +90,19 @@ private:
 };
 
 
-TEST(Utils, OverlayText) {
+TEST(Utils, DISABLED_OverlayText) {
 	OverlayText tc(L"$(User)$(BREAk)$(Email)$(Host)$(IP)--$(break)--$(date)--$(time)");
-
 	wcout << tc.GetReplacedText();
-
 }
 
 
-TEST(Utils,sha1){
-
+TEST(Utils, DISABLED_sha1){
 	std::string str = "The Quick Brown Fox Jumps Over The Lazy Dog,the quick brown fox jumps over the lazy dog";
 	std::string exp_rt("fdf652d252642deafaebf1786c17d13d604180aa");
 
 	std::vector<unsigned char> fix_buf;
 	const size_t fix_len = 20;
 	fix_buf.reserve(fix_len);
-		
 	win::crypt::sha1((const unsigned char*)str.c_str(), str.length(), fix_buf.data());
 	std::string rt = win::str::from_digits(fix_buf.data(), fix_len);
 	
@@ -131,7 +127,7 @@ void DeleteAllFiles(std::wstring path)
 	}
 }
 
-TEST(Utils, EnumFolder) {
+TEST(Utils, DISABLED_EnumFolder) {
 	using namespace boost::filesystem;
 	try {
 		const wchar_t* p = L"D:\\allTestFile\\AutoRecovery";
@@ -165,7 +161,7 @@ inline std::wstring getURLEncoderName(const std::wstring path) {
 }
 
 
-TEST(Utils, FileMonitor) {
+TEST(Utils, DISABLED_FileMonitor) {
 
 	using namespace boost::filesystem;
 	//wcout <<  << endl;
@@ -229,4 +225,53 @@ TEST(Utils, FileMonitor) {
 	m.Join();
 
 	
+}
+
+
+class Module {
+public:
+	Module(HMODULE hm = NULL) :m_hm(hm) {
+		std::vector<char> buf(255, 0);
+		buf.resize(GetModuleFileNameA(m_hm, (char*)buf.data(), 255));
+		m_path.assign(buf.begin(), buf.end());
+
+		std::vector<wchar_t> wbuf(255, 0);
+		buf.resize(GetModuleFileNameW(m_hm, (wchar_t*)wbuf.data(), 255));
+		m_wpath.assign(wbuf.begin(), wbuf.end());
+	}
+
+	inline const std::string GetPathA() { return m_path; }
+	inline const std::wstring GetPathW() { return m_wpath; }
+	inline std::string GetNameA() { return m_path.substr(m_path.find_last_of("\\/")+1); }
+	inline std::wstring GetNameW() { return m_wpath.substr(m_wpath.find_last_of(L"\\/")+1); }
+
+private:
+	HMODULE m_hm;
+	std::string m_path;
+	std::wstring m_wpath;
+};
+
+
+
+TEST(Utils, Process) {
+	Module m;
+	cout << m.GetPathA()<<endl;
+	wcout << m.GetPathW() << endl;
+	cout << m.GetNameA() << endl;
+	wcout << m.GetNameW() << endl;
+	
+	Module n(::LoadLibrary(L"kernel32.dll"));
+	cout << n.GetPathA() << endl;
+	wcout << n.GetPathW() << endl;
+	cout << n.GetNameA() << endl;
+	wcout << n.GetNameW() << endl;
+
+
+	string l{ "hello" };
+
+	string r{ "hello" };
+
+	auto i = (l.compare(r) == 0);
+	cout << i;
+
 }

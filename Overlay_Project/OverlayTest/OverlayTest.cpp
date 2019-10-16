@@ -1,6 +1,6 @@
 ﻿// using WTL for easy demo
 #include "stdafx.h"
-
+#include <dwmapi.h>
 //
 // watermark lib here, you need watermark.h cand watermark.cpp
 //
@@ -67,6 +67,22 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	main.UpdateWindow();
 	main.ShowWindow(SW_NORMAL);
+
+
+	::SetWindowDisplayAffinity(main.m_hWnd, WDA_MONITOR);
+
+
+
+	//// Create and populate the Blur Behind structure
+	//DWM_BLURBEHIND bb = { 0 };
+
+	//// Enable Blur Behind and apply to the entire client area
+	//bb.dwFlags = DWM_BB_ENABLE;
+	//bb.fEnable = true;
+	//bb.hRgnBlur = NULL;
+
+	//// Apply Blur Behind
+	//DwmEnableBlurBehindWindow(main.m_hWnd, &bb);
 
 
 	int nRet = theLoop.Run();
