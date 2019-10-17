@@ -37,9 +37,9 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "Stream.*";
 	testing::FLAGS_gtest_filter = "Regex.*";
 	testing::FLAGS_gtest_filter = "String.*";
-	testing::FLAGS_gtest_filter = "DS*.*";
 	testing::FLAGS_gtest_filter = "Random.*";
 	testing::FLAGS_gtest_filter = "Algorithm.*";
+	testing::FLAGS_gtest_filter = "DsTree.*";
 
 	return RUN_ALL_TESTS();
 

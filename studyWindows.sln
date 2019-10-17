@@ -10,15 +10,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "studyCSharp", "studyCSharp\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "forWPF", "forWPF\forWPF.csproj", "{4DE0992B-8A61-4517-B437-1D2839FB8C60}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OyeCppLib", "OyeCppLib", "{07AB6B9F-19CB-4D68-BA69-35FBF14CFE81}"
-	ProjectSection(SolutionItems) = preProject
-		OyeCppLib\common_ui_components.cpp = OyeCppLib\common_ui_components.cpp
-		OyeCppLib\common_ui_components.h = OyeCppLib\common_ui_components.h
-		OyeCppLib\oye_cpp.h = OyeCppLib\oye_cpp.h
-		OyeCppLib\watermark.cpp = OyeCppLib\watermark.cpp
-		OyeCppLib\watermark.h = OyeCppLib\watermark.h
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "studyWPF", "studyWPF\studyWPF.csproj", "{022504BC-9899-4498-BA66-B2F9544E6A94}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Office", "Office", "{73CE5A40-80F1-4533-ABCD-880121B036EF}"

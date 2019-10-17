@@ -99,8 +99,6 @@ TEST(String, Iter) {
 	//wstring w2(iter, iter2);
 }
 
-
-
 TEST(String, AssignOperEqual) {
 	/*
 	 1 iter beg, end
