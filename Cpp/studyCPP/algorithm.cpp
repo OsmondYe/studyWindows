@@ -106,13 +106,21 @@ TEST(Algorithm, Find) {
 
 
 TEST(Algorithm, MaxMin) {
+
+	cout <<"max(1,1):"<< std::max(1, 1)<<endl;
+
 	auto v = getSorted();
+
 	cout << std::max(v[5], v[6], [](int i, int j) {return i < j; }) << endl
 		<< std::min(v[5], v[6], [](int i, int j) {return i < j; }) << endl
 		<< *max_element(v.begin(), v.end(), less<int>()) << endl
 		<< *min_element(v.begin(), v.end(), less<int>()) << endl;
 
+	cout << "max_element:" << *std::max_element(v.begin(), v.end()) << endl;
+	cout << "min_element:" << *std::min_element(v.begin(), v.end()) << endl;
+
 	auto rt = minmax_element(v.begin(), v.end());
+	cout << "in minmax_element,max is:" << *rt.second << "min is:" << *rt.first << endl;
 }
 
 TEST(Algorithm, Search) {

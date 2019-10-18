@@ -25,6 +25,7 @@ struct binary_tree_node {
 
 template<typename T>
 class binary_tree   {
+	typedef typename T template_type;
 	typedef typename binary_tree_node<T> node_type;
 public:
 	binary_tree() :root(nullptr) {
@@ -43,7 +44,11 @@ public:
 
 	bool empty() { return root == nullptr; }
 
-	size_t size() { return -1; } // tbd
+	size_t size() { return _count(); } 
+
+	size_t height() {
+		return _height(root);
+	}
 
 	void preorder(const std::function<void(T)>& visit) {
 		_preorder(root, visit);
@@ -74,6 +79,14 @@ public:
 	}
 
 private:
+
+	size_t _count() {
+		size_t c = 0;
+		auto fc = [&c](const template_type& t) {++c; };
+		_preorder(root, fc);
+		return c;
+	}
+
 	void _insert(const T& t) {
 		if (root == nullptr) {
 			root = new binary_tree_node<T>(t);
@@ -153,7 +166,14 @@ private:
 		visit(node->element);
 	}
 
-
+	size_t _height(node_type* node) {
+		if (node == nullptr) {
+			return 0;
+		}
+		size_t l = _height(node->left_child);
+		size_t r = _height(node->right_child);
+		return std::max(l, r) + 1;
+	}
 
 private:
 	node_type* root;
@@ -175,7 +195,8 @@ TEST(DsTree, basic) {
 	bt.postorder(visit); cout << endl;
 	bt.levelorder(visit); cout << endl;
 
-
+	cout <<"height():"<< bt.height() << endl;
+	cout << "size():" << bt.size() << endl;
 
 
 	string expr{ R"(a+b+c+d)" };

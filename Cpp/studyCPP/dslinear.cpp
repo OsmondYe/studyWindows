@@ -2,6 +2,23 @@
 #include "helper.hpp"
 
 
+// Create a two dimensional array.
+template <class T>
+bool make2dArray(T**& x, int row, int column)
+{
+	try {
+		// create pointers for the rows
+		x = new T * [row];
+
+		// get memory for each row
+		for (int i = 0; i < row; i++)
+			x[i] = new int[column];
+		return true;
+	}
+	catch (bad_alloc) { return false; }
+}
+
+
 
 
 template<typename T>
@@ -47,6 +64,11 @@ private:
 	int capacity_;
 };
 
+
+
+TEST(DSLinear, Array2D) {
+
+}
 
 TEST(DSLinear, ArrayList) {
 
