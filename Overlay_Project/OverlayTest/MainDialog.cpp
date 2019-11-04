@@ -142,27 +142,15 @@ void MainDialog::FillBuilder(OverlayConfigBuilder & builder)
 }
 
 
-void MainDialog::ShowWatermarkDemo() {
-	
+void MainDialog::ShowWatermarkDemo() {	
 	// update watermark
 	ViewOverlyController::getInstance().Detach(this->m_hWnd);
-	
 
 	OverlayConfigBuilder builder;
 	this->FillBuilder(builder);
 	ViewOverlyController::getInstance().Attach(this->m_hWnd, builder.Build());
-
-	//this->UpdateWindow();
-
-
-	// print effect into screen
-	//for(int i=0;i<100000;i++)   //debug if memory leak
-	//CreatePngImageWithWaterMark();
-
 	
 }
-
-
 
 void MainDialog::CreatePngImageWithWaterMark()
 {

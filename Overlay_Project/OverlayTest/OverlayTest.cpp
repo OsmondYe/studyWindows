@@ -34,27 +34,24 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_Module.Init(NULL, hInstance);
 	Gdiplus::GdiplusStartup(&gGidplusToken, &gGdipulsInput, NULL);
 
-	//
-	//
-	//
+
 	CMessageLoop theLoop;
 	_Module.AddMessageLoop(&theLoop);
 
 
-
 	MainDialog main;
 	main.Create(NULL);
+	main.UpdateWindow();
+	main.ShowWindow(SW_NORMAL);
 
 	//
 	// attach watermark on main
 	//
-
 	OverlayConfigBuilder builder;
 	builder
 		.SetString(L"Watermark Test\nNextlabs SkyDRM Product\n这是中文测试,信领达(杭州)软件有限公司\n~!@#$%^&*(){}[];:,.<>")
 		.SetFontSize(20)
 		.SetFontName(L"Microsfot YaHei UI Light")
-		//.SetFontName(L"Arial")
 		.SetFontTransparency(10)
 		.SetFontColor(255, 0, 0)
 		.SetFontStyle(OverlayConfig::FontStyle::FS_BoldItalic)
@@ -65,25 +62,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	ViewOverlyController::getInstance().Attach(main.m_hWnd, builder.Build()	);
 
-	main.UpdateWindow();
-	main.ShowWindow(SW_NORMAL);
 
-
-	::SetWindowDisplayAffinity(main.m_hWnd, WDA_MONITOR);
-
-
-
-	//// Create and populate the Blur Behind structure
-	//DWM_BLURBEHIND bb = { 0 };
-
-	//// Enable Blur Behind and apply to the entire client area
-	//bb.dwFlags = DWM_BB_ENABLE;
-	//bb.fEnable = true;
-	//bb.hRgnBlur = NULL;
-
-	//// Apply Blur Behind
-	//DwmEnableBlurBehindWindow(main.m_hWnd, &bb);
-
+	//::SetWindowDisplayAffinity(main.m_hWnd, WDA_MONITOR);
 
 	int nRet = theLoop.Run();
 

@@ -59,8 +59,6 @@ namespace {
 		free(pImageCodecInfo);
 		return -1;  // Failure
 	}
-
-
 	// calculate the size art-text used
 	Gdiplus::SizeF CalcTextSizeF(const Font& font, const Gdiplus::StringFormat& strFormat, const CString& szText)
 	{
@@ -72,8 +70,7 @@ namespace {
 		graphicsPathObj.GetBounds(&rcBound);
 		return Gdiplus::SizeF(rcBound.Width, rcBound.Height);
 	}
-
-
+	
 	Gdiplus::SizeF CalcTextSizeF(
 		const Gdiplus::Graphics& drawing_surface,
 		const CString& szText,
@@ -84,9 +81,6 @@ namespace {
 		drawing_surface.MeasureString(szText, -1, &font, Gdiplus::PointF(0, 0), &strFormat, &rcBound);
 		return Gdiplus::SizeF(rcBound.Width, rcBound.Height);
 	}
-	
-
-
 
 	DWORD GetMainThreadID() {
 		DWORD dwProcID = ::GetCurrentProcessId();
@@ -153,10 +147,64 @@ namespace {
 
 	}
 
+
+	class MsgAntiReenter {
+	public:
+		MsgAntiReenter(){
+			if (InitializeCriticalSectionAndSpinCount(&cs, 0x80004000) == FALSE) {
+				InitializeCriticalSection(&cs);
+			}
+		}
+		~MsgAntiReenter() {
+			DeleteCriticalSection(&cs);
+		}
+		void thread_enable(void) {
+			EnterCriticalSection(&cs);
+			disabled_thread[GetCurrentThreadId()]--;
+			LeaveCriticalSection(&cs);
+		}
+
+		void thread_disable(void) {
+			DWORD tid = GetCurrentThreadId();
+			EnterCriticalSection(&cs);
+			if (disabled_thread.find(tid) == disabled_thread.end()) {
+				disabled_thread[tid] = 0;
+			}
+			disabled_thread[tid]++;
+			LeaveCriticalSection(&cs);
+		}
+
+		bool is_thread_disabled(void) {
+			bool result = false;
+			DWORD tid = GetCurrentThreadId();
+			EnterCriticalSection(&cs);
+			if (disabled_thread.find(tid) != disabled_thread.end()) {
+				if (disabled_thread[tid] > 0) {
+					result = true;
+				}
+			}
+			LeaveCriticalSection(&cs);
+			return result;
+		}		
+
+	private:
+		CRITICAL_SECTION     cs;
+		std::map<DWORD, int>  disabled_thread;
+	};
+	class MsgAntiRenter_Control {
+	public:
+		MsgAntiRenter_Control(MsgAntiReenter& mar):_mar(mar) {mar.thread_disable();}
+		~MsgAntiRenter_Control() { _mar.thread_enable(); }
+	private:
+		MsgAntiReenter& _mar;
+	};
+
+
+	MsgAntiReenter g_mar;
+
 } // end anonymous namespace
 
 namespace gdi {
-
 	vector<wstring> GetInstalledFonts()
 	{
 		Gdiplus::InstalledFontCollection ifc;
@@ -200,9 +248,6 @@ namespace gdi {
 		return rt;
 	}
 
-
-	// 给定四个点 如何计算 最小矩形正好包含所有信息?
-	// 最小的x,y是原点,  最小的x和最大的x的差值就是宽
 	Gdiplus::RectF CaculateOutbound(Gdiplus::PointF(&org)[4])
 	{
 
@@ -221,7 +266,6 @@ namespace gdi {
 		return Gdiplus::RectF(Xs.front(), Ys.front(), width, height);
 	}
 
-	// 给定一个矩形,默认水平放置,计算其旋转后可以包围此矩形的最小矩形
 	Gdiplus::RectF CalculateMinimumEnclosingRectAfterRotate(const Gdiplus::SizeF & size, int rotate)
 	{
 		PointF org[4] = {
@@ -250,11 +294,15 @@ void OverlayWindow::UpdateOverlaySizePosStatus(HWND target)
 	}
 
 	if (OldTarget.EqualRect(targetRC)) {
-		//OutputDebugStringA("same CRect, return directly");
+		OutputDebugStringA("same CRect, return directly");
 		return;
 	}
-	else {
+	else 
+	{
 		OldTarget = targetRC;
+		std::ostringstream oss;
+		oss << "new size:[" << targetRC.left << "," << targetRC.top << "," << targetRC.right << "," << targetRC.bottom << "]\n";
+		OutputDebugStringA(oss.str().c_str());
 	}
 
 	// make layered wnd always covered the targert Wnd
@@ -263,13 +311,15 @@ void OverlayWindow::UpdateOverlaySizePosStatus(HWND target)
 	BLENDFUNCTION blend = { AC_SRC_OVER ,0,100,AC_SRC_ALPHA };
 	//CPoint p(targetRC.left, targetRC.right);
 	CPoint p(0, 0);
-	CPoint dstpt(targetRC.left, targetRC.top);
-	CSize s(targetRC.Width(), targetRC.Height());
+	CPoint dstpt = targetRC.TopLeft();
+	CSize  s = targetRC.Size();
+	//CSize s(targetRC.Width(), targetRC.Height());
 	
 	// draw in Screen, but always get target wnd's region info
-	if (!::UpdateLayeredWindow(this->m_hWnd,
+	if (!::UpdateLayeredWindow(
+		this->m_hWnd,   // this wnd must specifying WS_EX_LAYERED 
 		NULL,
-		&dstpt, &s, 
+		&dstpt, &s,   // [Pos,+Size] new m_hWnd's posiziton
 		*pmdc,&p,   // src dc and {left,top}
 		NULL,&blend, ULW_ALPHA)  // using alpha blend,
 		) {
@@ -278,6 +328,11 @@ void OverlayWindow::UpdateOverlaySizePosStatus(HWND target)
 		std::string strErr = "Faied call UpdateLayeredWindow,error is ";
 		strErr += std::to_string(err);
 		::OutputDebugStringA(strErr.c_str());
+	}
+	else {
+		std::ostringstream oss;
+		oss << "UpdateLayeredWindow,dst[" << dstpt.x << "," << dstpt.y << "],size[" << s.cx << "," << s.cy << "]\n";
+		OutputDebugStringA(oss.str().c_str());
 	}
 }
 
@@ -367,55 +422,14 @@ void OverlayWindow::_DrawOverlay(HDC dcScreen, LPRECT lpRestrictDrawingRect)
 }
 
 
-//void OverlayWindow::_DrawOverlay(HDC dcScreen, LPRECT lpRestrictDrawingRect)
-//{
-//	if (dcScreen == NULL) {
-//		return;
-//	}
-//
-//	CString str(_config.GetString().c_str());
-//	if (str.IsEmpty()) {
-//		str = L"Nextlabs SkyDRM Overlay(NULL)";
-//	}
-//	CRect rc(lpRestrictDrawingRect);
-//
-//	// using gdi+
-//	{
-//		Gdiplus::Graphics g(dcScreen);
-//		g.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
-//		g.SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
-//		// config res
-//		Gdiplus::FontFamily fontfamily(_config.GetFontName().c_str());
-//		Gdiplus::Font myFont(&fontfamily, _config.GetFontSize(), 
-//			_config.GetGdiFontStyle(), Gdiplus::UnitPixel);
-//		Gdiplus::StringFormat format;
-//		Gdiplus::SolidBrush brush(_config.GetFontColor());
-//			
-//		// how to play, can be used only one
-//		Gdiplus::SizeF surface(rc.Width(),rc.Height());
-//		Gdiplus::SizeF text = GetTextBounds(myFont, format, str);
-//		text.Width+= 60; 
-//		text.Height+= 120;
-//		// draw
-//		g.RotateTransform(-5);
-//		g.TranslateTransform(rc.left, rc.top);
-//		for (int i = 0; i < surface.Width; i += text.Width) {
-//			for (int j = 0; j < surface.Height; j += text.Height) {
-//				g.DrawString(str, -1, &myFont, 
-//					PointF(i, j), &format, &brush);
-//			}
-//		}
-//	}
-//}
-
 void OverlayWindow::_PrepareOverly()
 {
 	// Get Whole Screen pixels
 	CRect ScreenRC = { 
 		GetSystemMetrics(SM_XVIRTUALSCREEN),
 		GetSystemMetrics(SM_YVIRTUALSCREEN),
-		GetSystemMetrics(SM_CXVIRTUALSCREEN),
-		GetSystemMetrics(SM_CYVIRTUALSCREEN) };
+		GetSystemMetrics(SM_CXVIRTUALSCREEN)+100,
+		GetSystemMetrics(SM_CYVIRTUALSCREEN)+100 };
 
 	// Get a large surface to draw overlay
 	CDC dc=::GetDC(NULL);
@@ -532,31 +546,59 @@ LRESULT ViewOverlyController::OnMessageHook(int code, WPARAM wParam, LPARAM lPar
 		return ::CallNextHookEx(_swhHook, code, wParam, lParam);
 	}
 
+	if (g_mar.is_thread_disabled()) {
+		return ::CallNextHookEx(_swhHook, code, wParam, lParam);
+	}
+	MsgAntiRenter_Control auto_control(g_mar);
+
 	CWPRETSTRUCT* p = (CWPRETSTRUCT*)lParam;
-	// may be main window moving
 	UINT msg = p->message;
 	HWND t = p->hwnd;
+
 	ViewOverlyControllerScopeGurad;
+
 	if(_wnds.empty() || _wnds.find(t) == _wnds.end()){
 		return ::CallNextHookEx(_swhHook, code, wParam, lParam);
 	}
-	if (msg == WM_MOVING || msg == WM_MOVE ||
-		msg == WM_WINDOWPOSCHANGING || msg == WM_WINDOWPOSCHANGED ||
-		msg == WM_SHOWWINDOW || 
-		msg == WM_SYSCOMMAND
-		// new added
-		//msg == WM_SIZE || msg == WM_SIZING ||
-		//msg == SW_MAXIMIZE || msg == SIZE_MAXIMIZED
-		) {
-		if (msg == WM_SYSCOMMAND) {
-			::OutputDebugStringA("catch message:WM_SYSCOMMAND ");
-		}
+
+	switch (msg)
+	{
+	case WM_MOVE:
+	case WM_MOVING:
+	case WM_WINDOWPOSCHANGING:
+	case WM_WINDOWPOSCHANGED:
+	case WM_SHOWWINDOW:
+	case WM_SIZE:
+	case WM_SIZING:
+	case WM_SYSCOMMAND:
+	{
 		_wnds[t]->UpdateOverlaySizePosStatus(t);
+		break;
 	}
-	// target wnd wants destory tell to destory overlay wnd
-	else if (msg == WM_DESTROY) {
+	case WM_ACTIVATEAPP:
+	{
+	
+		if (p->wParam == true) {
+			//activate;
+			_wnds[t]->SetTopmost(true);
+		}
+		else if (p->wParam == false) {
+			// deactivate;
+			_wnds[t]->SetTopmost(false);
+			_wnds[t]->UpdateWindow();
+		}
+
+		break;
+	}
+	case WM_DESTROY:
+	{
+		// target wnd wants destory tell to destory overlay wnd
 		_wnds[t]->HideWnd();
 		_wnds.erase(t);
+		break;
+	}
+	default:
+		break;
 	}
 	
 	return ::CallNextHookEx(_swhHook, code, wParam, lParam);
@@ -565,6 +607,7 @@ LRESULT ViewOverlyController::OnMessageHook(int code, WPARAM wParam, LPARAM lPar
 
 LRESULT ViewOverlyController::HookProxy(int code, WPARAM wParam, LPARAM lParam)
 {	
+
 	return getInstance().OnMessageHook(code, wParam, lParam);
 }
 

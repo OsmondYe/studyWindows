@@ -229,15 +229,17 @@ private:
 typedef 
 CWinTraits<	WS_POPUP | WS_VISIBLE | WS_DISABLED,
 			WS_EX_TOPMOST | WS_EX_LAYERED |	WS_EX_TOOLWINDOW | WS_EX_TRANSPARENT
+			//WS_EX_LAYERED |	WS_EX_TOOLWINDOW | WS_EX_TRANSPARENT
 		  >OverlayWindowTraits;
 
 /*
 with WS_EX_LAYERED
 with WS_EX_TOOLWINDOW, floating and convering the target windows,
+with WS_EX_TOPMOST  ????
 
 Notice:
-	- using controller to change this wnd's size and make it finedly convered with target wnd
-	- tar_wnd changing, changing this object simultaneously
+	- using controller to change this wnd's size and make it accurately cover over target wnd
+	- target window changing, changing this object simultaneously
 			   
 */
 class OverlayWindow : public CWindowImpl<OverlayWindow, CWindow, OverlayWindowTraits>
@@ -260,13 +262,22 @@ private:
 		_PrepareOverly();
 	}
 	void UpdateOverlaySizePosStatus(HWND target);
+	void SetTopmost(bool bset) {
+		auto old_ex_style = GetWindowLongW(GWL_EXSTYLE);
+		if (bset) {
+			old_ex_style |= WS_EX_TOPMOST;
+		}
+		else {
+			old_ex_style &= (~WS_EX_TOPMOST);
+		}
+		this->SetWindowLongW(GWL_EXSTYLE, old_ex_style);
+	}
 	inline void HideWnd() { this->ShowWindow(SW_HIDE); }
 	void _DrawOverlay(HDC dc, LPRECT lpRect);
 	void _PrepareOverly();
 
 private:
 	Gdiplus::Bitmap* _GetOverlayBitmap(const Gdiplus::Graphics& drawing_surface);
-
 	Gdiplus::Bitmap* _GetOverlayBitmapFromFile(const std::wstring& path);
 
 public: // section for wnd_registration and msg_handler
