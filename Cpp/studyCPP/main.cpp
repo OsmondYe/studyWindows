@@ -39,7 +39,7 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "String.*";
 	testing::FLAGS_gtest_filter = "Random.*";
 	testing::FLAGS_gtest_filter = "Algorithm.*";
-	testing::FLAGS_gtest_filter = "Ds*.*";
+	testing::FLAGS_gtest_filter = "DSBase.Perm";
 
 	return RUN_ALL_TESTS();
 

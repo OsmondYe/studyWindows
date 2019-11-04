@@ -8,7 +8,7 @@ bool make2dArray(T**& x, int row, int column)
 {
 	try {
 		// create pointers for the rows
-		x = new T * [row];
+		x = new T* [row];
 
 		// get memory for each row
 		for (int i = 0; i < row; i++)
@@ -67,6 +67,8 @@ private:
 
 
 TEST(DSLinear, Array2D) {
+	int** p2darray = NULL;
+	make2dArray<int>(p2darray, 10, 10);
 
 }
 

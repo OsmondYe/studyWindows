@@ -6,7 +6,6 @@
 //recursion:  f(n)=n!  
 // 到20!就不行了
 unsigned long long factorial(int n) {
-
 	if (n <= 1) {return 1;}			// base component, 递归出口
 	return n * factorial(n - 1);	// recursive component 朝着递归出口方向前进
 }
@@ -20,32 +19,6 @@ unsigned long long fibonacci(int n) {
 	if (n == 0) return 0;
 	if (n == 1)  return 1;
 	return fibonacci(n - 1) + fibonacci(n - 2);
-}
-
-// 还有问题,理论上都没有搞明白
-void perm(const string& cs, string& pfx) {
-	if (cs.empty()) { cout <<pfx<< endl; return; }
-
-	for (int i = 0; i < cs.length(); ++i) {
-		char c = cs[i];
-		string cs_i = cs; 
-		cs_i.erase(i,1);
-		perm(cs_i, pfx+=c);
-	}
-}
-
-void perm2(string& cs, int k, int m) // 1 based, not 0
-{
-	if (k == m) {
-		cout << cs << endl;
-		return;
-	}
-
-	for (int i = k; i <= m; ++i) {
-		std::swap(cs[k], cs[i]);
-		perm2(cs, k + 1, m);
-		std::swap(cs[k], cs[i]);
-	}
 }
 
 int gcd(int x, int y) {
@@ -70,20 +43,14 @@ TEST(DSBase, basic) {
 		cout <<"fabonacci"<< i << "=" << fibonacci(i) << endl;
 	}
 
-	string s{ "ab" };
-
-	string pfx;
-	perm(s,pfx);
-	//perm2(s,0,s.length()-1); // 
-
 	// gcd
-	//for (size_t i = 0; i < 101; i++)
-	//{
-	//	for (size_t j = 0; j < 101; j++)
-	//	{
-	//		cout << i << " " << j << "=" << gcd(i, j)<<endl;
-	//	}
-	//}
+//for (size_t i = 0; i < 101; i++)
+//{
+//	for (size_t j = 0; j < 101; j++)
+//	{
+//		cout << i << " " << j << "=" << gcd(i, j)<<endl;
+//	}
+//}
 }
 
 // divide and conquer
@@ -159,4 +126,28 @@ TEST(DSBase, myMinMax) {
 		<< "Its value is " << a[theMin] << endl;
 	cout << "The max element is at " << theMax << endl
 		<< "Its value is " << a[theMax] << endl;
+}
+
+
+
+template<typename T>
+void permutation(T l[], int beg, int end) {
+	if(beg+1 ==end){
+		std::copy(l, l + end, ostream_iterator<T>(cout, "")); 
+		cout << endl;
+		return;
+	}
+	for (int i = beg; i < end; ++i) {
+		std::swap(l[beg], l[i]);
+		permutation(l, beg+1, end);
+		std::swap(l[beg], l[i]);
+	}
+}
+
+
+
+TEST(DSBase, Perm) {
+
+	char ss[] ={ "abcde" };
+	permutation(ss, 0, 4);
 }

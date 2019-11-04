@@ -181,7 +181,7 @@ private:
 };
 
 
-TEST(DsTree, basic) {
+TEST(DSTree, basic) {
 	// how to build a tree with {1,2,3,4,5,6,7,8,9,10}
 	auto v = aux::getSorted(10);
 	int i = 1000000;

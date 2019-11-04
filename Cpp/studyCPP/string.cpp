@@ -334,5 +334,4 @@ TEST(String, UniqueCharInStr) {
 	s.erase(std::unique(s.begin(), s.end()), s.end());
 	wcout << s << endl;
 
-
 }
