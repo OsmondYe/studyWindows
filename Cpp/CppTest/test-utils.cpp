@@ -236,7 +236,7 @@ public:
 		m_path.assign(buf.begin(), buf.end());
 
 		std::vector<wchar_t> wbuf(255, 0);
-		buf.resize(GetModuleFileNameW(m_hm, (wchar_t*)wbuf.data(), 255));
+		wbuf.resize(GetModuleFileNameW(m_hm, (wchar_t*)wbuf.data(), 255));
 		m_wpath.assign(wbuf.begin(), wbuf.end());
 	}
 

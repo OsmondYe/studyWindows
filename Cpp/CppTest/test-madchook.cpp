@@ -36,6 +36,16 @@ TEST_F(MadchookTest, InjectScreenCapture) {
 }
 
 
+TEST_F(MadchookTest, InjectMsPhoto) {
+	
+	HANDLE hTargetProcess = win::get_process(L"SnippingTool.exe");
+	EXPECT_NE(hTargetProcess, INVALID_HANDLE_VALUE) << "Can not find the process of Microsoft.Photos.exe";
+	// inject cppdll.dll into target process
+	EXPECT_TRUE(InjectLibraryW(LR"(D:\NextlabsProject\rmd-windows\SkydrmLocal\x64\Debug\nxosrmx64.dll)", hTargetProcess)) << "Hook failed";
+}
+
+
+
 TEST_F(MadchookTest, ScreenCapture) {
 	STARTUPINFO si;
 	PROCESS_INFORMATION pi;
