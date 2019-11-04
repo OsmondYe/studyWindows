@@ -11,9 +11,6 @@
 #include "resource.h"		// main symbols
 
 
-// CApp:
-// See studyMFC.cpp for the implementation of this class
-//
 
 class CApp : public CWinApp
 {

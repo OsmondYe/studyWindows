@@ -1,15 +1,7 @@
 
-// studyMFC.cpp : Defines the class behaviors for the application.
-//
-
 #include "stdafx.h"
 #include "studyMFC.h"
 #include "mainDlg.h"
-
-
-
-
-
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -25,22 +17,16 @@ END_MESSAGE_MAP()
 
 // CApp construction
 
-CApp::CApp()
+CApp::CApp() : gGidplusToken(NULL), gGdipulsInput(NULL)
 {
 	// support Restart Manager
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_RESTART;
 
-	// TODO: add construction code here,
-	// Place all significant initialization in InitInstance
 }
 
 
-// The one and only CApp object
-
 CApp theApp;
 
-
-// CApp initialization
 
 BOOL CApp::InitInstance()
 {
