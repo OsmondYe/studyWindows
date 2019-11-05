@@ -52,7 +52,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		.SetString(L"Watermark Test\nNextlabs SkyDRM Product\n这是中文测试,信领达(杭州)软件有限公司\n~!@#$%^&*(){}[];:,.<>")
 		.SetFontSize(20)
 		.SetFontName(L"Microsfot YaHei UI Light")
-		.SetFontTransparency(10)
+		.SetFontTransparency(100)
 		.SetFontColor(255, 0, 0)
 		.SetFontStyle(OverlayConfig::FontStyle::FS_BoldItalic)
 		.SetTextAlignment(OverlayConfig::TextAlignment::TA_Centre)
