@@ -228,8 +228,8 @@ private:
 
 typedef 
 CWinTraits<	WS_POPUP | WS_VISIBLE | WS_DISABLED,
-			WS_EX_TOPMOST | WS_EX_LAYERED |	WS_EX_TOOLWINDOW | WS_EX_TRANSPARENT
-			//WS_EX_LAYERED |	WS_EX_TOOLWINDOW | WS_EX_TRANSPARENT
+			//WS_EX_TOPMOST | WS_EX_LAYERED |	WS_EX_TOOLWINDOW | WS_EX_TRANSPARENT
+			WS_EX_LAYERED |	WS_EX_TOOLWINDOW | WS_EX_TRANSPARENT
 		  >OverlayWindowTraits;
 
 /*
@@ -256,13 +256,13 @@ public:
 	};
 private:
 	inline void SetOverlay(const OverlayConfig& config) {_config = config;}
-	inline void Init(const OverlayConfig& ol) {
+	inline void Init(const OverlayConfig& ol,HWND target) {
 		SetOverlay(ol);
-		Create(NULL);
+		Create(target);
 		_PrepareOverly();
 	}
 	void UpdateOverlaySizePosStatus(HWND target);
-	void SetTopmost(bool bset) {
+	/*void SetTopmost(bool bset) {
 		auto old_ex_style = GetWindowLongW(GWL_EXSTYLE);
 		if (bset) {
 			old_ex_style |= WS_EX_TOPMOST;
@@ -271,7 +271,7 @@ private:
 			old_ex_style &= (~WS_EX_TOPMOST);
 		}
 		this->SetWindowLongW(GWL_EXSTYLE, old_ex_style);
-	}
+	}*/
 	inline void HideWnd() { this->ShowWindow(SW_HIDE); }
 	void _DrawOverlay(HDC dc, LPRECT lpRect);
 	void _PrepareOverly();

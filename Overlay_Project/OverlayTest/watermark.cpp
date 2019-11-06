@@ -284,6 +284,7 @@ namespace gdi {
 
 void OverlayWindow::UpdateOverlaySizePosStatus(HWND target)
 {
+	
 	CRect targetRC;
 	if (target == NULL) {
 		// user physical device may changed ,you get it each tiem
@@ -310,7 +311,7 @@ void OverlayWindow::UpdateOverlaySizePosStatus(HWND target)
 
 	BLENDFUNCTION blend = { AC_SRC_OVER ,0,100,AC_SRC_ALPHA };
 	//CPoint p(targetRC.left, targetRC.right);
-	CPoint p(0, 0);
+	CPoint zero_pt(0, 0);
 	CPoint dstpt = targetRC.TopLeft();
 	CSize  s = targetRC.Size();
 	//CSize s(targetRC.Width(), targetRC.Height());
@@ -320,7 +321,7 @@ void OverlayWindow::UpdateOverlaySizePosStatus(HWND target)
 		this->m_hWnd,   // this wnd must specifying WS_EX_LAYERED 
 		NULL,
 		&dstpt, &s,   // [Pos,+Size] new m_hWnd's posiziton
-		*pmdc,&p,   // src dc and {left,top}
+		*pmdc,&zero_pt,   // src dc and {left,top}
 		NULL,&blend, ULW_ALPHA)  // using alpha blend,
 		) {
 		// error occured
@@ -334,6 +335,7 @@ void OverlayWindow::UpdateOverlaySizePosStatus(HWND target)
 		oss << "UpdateLayeredWindow,dst[" << dstpt.x << "," << dstpt.y << "],size[" << s.cx << "," << s.cy << "]\n";
 		OutputDebugStringA(oss.str().c_str());
 	}
+	//::BringWindowToTop(this->m_hWnd);
 }
 
 Gdiplus::Bitmap * OverlayWindow::_GetOverlayBitmap(const Gdiplus::Graphics& drawing_surface)
@@ -491,7 +493,7 @@ void ViewOverlyController::Attach(HWND target, const OverlayConfig& config, int 
 	}
 	else {
 		std::shared_ptr<OverlayWindow> spWnd(new OverlayWindow());
-		spWnd->Init(config);
+		spWnd->Init(config,target);
 		_wnds[target] = spWnd;
 		SetOverlyTarget(target);
 	}
@@ -575,21 +577,21 @@ LRESULT ViewOverlyController::OnMessageHook(int code, WPARAM wParam, LPARAM lPar
 		_wnds[t]->UpdateOverlaySizePosStatus(t);
 		break;
 	}
-	case WM_ACTIVATEAPP:
-	{
-	
-		if (p->wParam == true) {
-			//activate;
-			_wnds[t]->SetTopmost(true);
-		}
-		else if (p->wParam == false) {
-			// deactivate;
-			_wnds[t]->SetTopmost(false);
-			_wnds[t]->UpdateWindow();
-		}
+	//case WM_ACTIVATEAPP:
+	//{
+	//
+	//	if (p->wParam == true) {
+	//		//activate;
+	//		_wnds[t]->SetTopmost(true);
+	//	}
+	//	else if (p->wParam == false) {
+	//		// deactivate;
+	//		_wnds[t]->SetTopmost(false);
+	//		//_wnds[t]->UpdateWindow();
+	//	}
 
-		break;
-	}
+	//	break;
+	//}
 	case WM_DESTROY:
 	{
 		// target wnd wants destory tell to destory overlay wnd
