@@ -309,7 +309,7 @@ void OverlayWindow::UpdateOverlaySizePosStatus(HWND target)
 	// make layered wnd always covered the targert Wnd
 	MoveWindow(targetRC,false);
 
-	BLENDFUNCTION blend = { AC_SRC_OVER ,0,100,AC_SRC_ALPHA };
+	BLENDFUNCTION blend = { AC_SRC_OVER ,0,255,AC_SRC_ALPHA };
 	//CPoint p(targetRC.left, targetRC.right);
 	CPoint zero_pt(0, 0);
 	CPoint dstpt = targetRC.TopLeft();

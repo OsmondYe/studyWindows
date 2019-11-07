@@ -23,6 +23,11 @@ BOOL MainDialog::OnInitDialog(CWindow wndFocus, LPARAM lInitParam) {
 	m_FontColorG = 0;
 	m_FontColorB = 100;
 
+	
+	//std::wofstream fs(LR"(D:\allTestFile\installed_font.txt)");
+	//fs << i.c_str() << endl;
+	//fs.close();
+
 	auto fin = gdi::GetInstalledFonts();
 	for (auto& i : fin) {
 		m_wList.AddString(i.c_str());
