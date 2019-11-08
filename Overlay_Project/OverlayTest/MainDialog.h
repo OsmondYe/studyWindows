@@ -8,7 +8,6 @@ class MainDialog : public CDialogImpl<MainDialog>,
 public:
 	enum { IDD = IDD_ABOUTBOX };
 
-
 	void OnListDBClick(UINT uNotifyCode, int nID, CWindow wndCtl) {
 		ShowWatermarkDemo();
 	}
@@ -18,12 +17,13 @@ public:
 	BOOL OnInitDialog(CWindow wndFocus, LPARAM lInitParam);
 
 	void OnClose() {
-		DestroyWindow();
+		KillTimer(1);
+		EndDialog(0);
 	}
 
-	void OnDestroy() {
-		::PostQuitMessage(0);
-	}
+	void OnTimer(UINT_PTR nIDEvent) {OnTimer_Mouse();}
+
+	void OnTimer_Mouse();
 
 	void OnDrawBtnDown(UINT uNotifyCode, int nID, CWindow wndCtl);
 	void OnClearBtnDown(UINT uNotifyCode, int nID, CWindow wndCtl);
@@ -46,16 +46,12 @@ private:
 
 	void CreatePngImageWithWaterMark();
 
-	
-
-
-	inline Gdiplus::Color GetFontColor() {
-		return Gdiplus::Color(m_FontColorA, m_FontColorR, m_FontColorG, m_FontColorB);
-	}
+	inline Gdiplus::Color GetFontColor() {return Gdiplus::Color(m_FontColorA, m_FontColorR, m_FontColorG, m_FontColorB);}
 
 
 protected:
 	CEdit m_wEdit;
+	CEdit m_wMousePos;
 	CListBox m_wList;
 	CStatic m_wFontDemo;
 	CTrackBarCtrl m_ColorA;
@@ -77,9 +73,8 @@ public:
 	BEGIN_MSG_MAP_EX(MainDialog)
 		MSG_WM_INITDIALOG(OnInitDialog)
 		MSG_WM_CLOSE(OnClose)
-		MSG_WM_DESTROY(OnDestroy)
+		MSG_WM_TIMER(OnTimer)
 
-		//MSG_WM_ERASEBKGND(OnEraseBkgnd)
 		COMMAND_HANDLER_EX(IDC_BUTTON1, BN_CLICKED, OnDrawBtnDown)
 		COMMAND_HANDLER_EX(IDC_BUTTON2, BN_CLICKED, OnClearBtnDown)
 		COMMAND_HANDLER_EX(IDC_FONTLIST, LBN_DBLCLK, OnListDBClick)
@@ -90,7 +85,6 @@ public:
 
 	// ddx
 	BEGIN_DDX_MAP(MainDialog)
-		//DDX_CONTROL(IDC_MYEDIT, m_wEdit)
 		DDX_TEXT(IDC_MYEDIT, m_EditContent)
 		DDX_INT(IDC_FONTSIZE, m_FontSize)
 		DDX_INT(IDC_FONTROTATE, m_FontRotate)

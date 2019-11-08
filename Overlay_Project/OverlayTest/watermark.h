@@ -81,25 +81,16 @@ public: // getter;
 		return Gdiplus::StringAlignment::StringAlignmentCenter;
 	}
 
-	inline Gdiplus::Color GetFontColor() {
-		return Gdiplus::Color(m_font_color_A, m_font_color_R, m_font_color_G, m_font_color_B);
-	}
+	inline Gdiplus::Color GetFontColor() {return Gdiplus::Color(m_font_color_A, m_font_color_R, m_font_color_G, m_font_color_B);}
+	inline int GetFontSize() {return this->m_font_size;}
+	inline int GetFontRotation() {return this->m_font_rotation;}
+	inline CRect GetDisplayOffset() { return this->m_display_offset; }
 
-	inline int GetFontSize() {
-		return this->m_font_size;
-	}
-	inline int GetFontRotation() {
-		return this->m_font_rotation;
-	}
 
 public:
-	bool operator ==(const OverlayConfig& rh) {
-		return IsSameConfig(rh);
-	}
+	bool operator ==(const OverlayConfig& rh) {return IsSameConfig(rh);}
 
-	bool operator !=(const OverlayConfig& rh) {
-		return !IsSameConfig(rh);
-	}
+	bool operator !=(const OverlayConfig& rh) {return !IsSameConfig(rh);}
 private:
 	bool IsSameConfig(const OverlayConfig& rh);
 
@@ -115,6 +106,7 @@ private:
 		m_font_style = OverlayConfig::FontStyle::FS_Regular;
 		m_line_alignment = OverlayConfig::TextAlignment::TA_Centre;
 		m_text_alignment = OverlayConfig::TextAlignment::TA_Centre;
+		m_display_offset = CRect();
 		
 	}
 
@@ -131,8 +123,8 @@ private:
 	TextAlignment m_text_alignment;
 	TextAlignment m_line_alignment;
 	std::wstring m_font_name;
+	CRect m_display_offset;
 };
-
 
 class OverlayConfigBuilder {
 	OverlayConfig _config;
@@ -210,6 +202,11 @@ public:
 		return *this;
 	}
 
+	OverlayConfigBuilder& SetDisplayOffset(const RECT& rc) {
+		_config.m_display_offset = rc;
+		return *this;
+	}
+
 
 	OverlayConfig Build() {		
 		ThrowIfInvalidParam();
@@ -229,7 +226,7 @@ private:
 typedef 
 CWinTraits<	WS_POPUP | WS_VISIBLE | WS_DISABLED,
 			//WS_EX_TOPMOST | WS_EX_LAYERED |	WS_EX_TOOLWINDOW | WS_EX_TRANSPARENT
-			WS_EX_LAYERED |	WS_EX_TOOLWINDOW | WS_EX_TRANSPARENT
+			WS_EX_LAYERED |	WS_EX_TOOLWINDOW | WS_EX_TRANSPARENT | WS_EX_NOACTIVATE
 		  >OverlayWindowTraits;
 
 /*
@@ -272,7 +269,7 @@ private:
 		}
 		this->SetWindowLongW(GWL_EXSTYLE, old_ex_style);
 	}*/
-	inline void HideWnd() { this->ShowWindow(SW_HIDE); }
+	inline void HideWnd() {  if(IsWindow()) ShowWindow(SW_HIDE); }
 	void _DrawOverlay(HDC dc, LPRECT lpRect);
 	void _PrepareOverly();
 

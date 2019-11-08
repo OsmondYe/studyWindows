@@ -27,6 +27,8 @@
 #define IDC_BUTTON1                     1011
 #define IDC_BUTTON2                     1012
 #define IDC_COLOR_EFFECT                1013
+#define IDC_EDIT3                       1014
+#define IDC_EDIT_MOUSE                  1014
 #define IDC_STATIC                      -1
 
 // Next default values for new objects
@@ -36,7 +38,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        129
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1014
+#define _APS_NEXT_CONTROL_VALUE         1015
 #define _APS_NEXT_SYMED_VALUE           110
 #endif
 #endif

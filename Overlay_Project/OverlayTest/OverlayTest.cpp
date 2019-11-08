@@ -34,48 +34,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_Module.Init(NULL, hInstance);
 	Gdiplus::GdiplusStartup(&gGidplusToken, &gGdipulsInput, NULL);
 
-
-	CMessageLoop theLoop;
-	_Module.AddMessageLoop(&theLoop);
-
-
 	MainDialog main;
-	main.Create(NULL);
-	main.UpdateWindow();
-	main.ShowWindow(SW_NORMAL);
-
-	//
-	// attach watermark on main
-	//
-	OverlayConfigBuilder builder;
-	builder
-		.SetString(L"Watermark Test\nNextlabs SkyDRM Product\n这是中文测试,信领达(杭州)软件有限公司\n~!@#$%^&*(){}[];:,.<>")
-		.SetFontSize(20)
-		.SetFontName(L"Microsfot YaHei UI Light")
-		.SetFontTransparency(100)
-		.SetFontColor(255, 0, 0)
-		.SetFontStyle(OverlayConfig::FontStyle::FS_BoldItalic)
-		.SetTextAlignment(OverlayConfig::TextAlignment::TA_Centre)
-		.SetLineAlignment(OverlayConfig::TextAlignment::TA_Left)
-		.SetFontRotation(-20);
-
-
-	ViewOverlyController::getInstance().Attach(main.m_hWnd, builder.Build()	);
-
-
-	//::SetWindowDisplayAffinity(main.m_hWnd, WDA_MONITOR);
-
-	int nRet = theLoop.Run();
-
-	main.Detach();
+	main.DoModal(NULL);
 
 	if (gGidplusToken != NULL) {
 		Gdiplus::GdiplusShutdown(gGidplusToken);
 	}	   	 
-	_Module.RemoveMessageLoop();
-	_Module.Term();
 	::CoUninitialize();
-
 
 	return 0;
 }

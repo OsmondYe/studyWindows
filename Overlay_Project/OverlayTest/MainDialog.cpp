@@ -8,6 +8,7 @@ BOOL MainDialog::OnInitDialog(CWindow wndFocus, LPARAM lInitParam) {
 	CenterWindow(GetParent());
 	// Associate:
 	m_wEdit.Attach(GetDlgItem(IDC_MYEDIT));
+	m_wMousePos.Attach(GetDlgItem(IDC_EDIT_MOUSE));
 	m_wList.Attach(GetDlgItem(IDC_FONTLIST));
 	m_wFontDemo.Attach(GetDlgItem(IDC_FONTDEMOSTR));
 
@@ -15,8 +16,7 @@ BOOL MainDialog::OnInitDialog(CWindow wndFocus, LPARAM lInitParam) {
 	m_ColorR.Attach(GetDlgItem(IDC_SLIDE_COLOR_R));
 	m_ColorG.Attach(GetDlgItem(IDC_SLIDE_COLOR_G));
 	m_ColorB.Attach(GetDlgItem(IDC_SLIDE_COLOR_B));
-
-
+	
 
 	m_FontColorA = 150;
 	m_FontColorR = 100;
@@ -42,11 +42,38 @@ BOOL MainDialog::OnInitDialog(CWindow wndFocus, LPARAM lInitParam) {
 	m_ColorB.SetRange(0, 255); m_ColorB.SetPos(m_FontColorB);
 
 
-	m_EditContent = L"Watermark by Nextlabs-CDC\r\n缩放拉伸最大最小显示隐藏\r\nOsmond.ye@Nextlabs.com";
+	m_EditContent = L"Watermark Test\nNextlabs SkyDRM Product\n这是中文测试,信领达(杭州)软件有限公司\n~!@#$%^&*(){}[];:,.<>";
 	m_FontSize = 30;
 	m_FontRotate = -20;
 
 	DoDataExchange(false);
+
+	SetTimer(1, 50);
+
+	//
+	// attach watermark on main
+	//
+	OverlayConfigBuilder builder;
+	builder
+		.SetString(m_EditContent.operator LPCWSTR())
+		.SetFontSize(m_FontSize)
+		.SetFontName(L"Microsfot YaHei UI Light")
+		.SetFontTransparency(m_FontColorA)
+		.SetFontColor(m_FontColorR, m_FontColorG, m_FontColorB)
+		.SetFontStyle(OverlayConfig::FontStyle::FS_BoldItalic)
+		.SetTextAlignment(OverlayConfig::TextAlignment::TA_Centre)
+		.SetLineAlignment(OverlayConfig::TextAlignment::TA_Left)
+		.SetFontRotation(m_FontRotate)
+		.SetDisplayOffset({ 10,0,20,20 })
+		;
+
+
+	ViewOverlyController::getInstance().Attach(m_hWnd, builder.Build());
+
+
+	//::SetWindowDisplayAffinity(main.m_hWnd, WDA_MONITOR);
+
+
 
 	return True;
 }
@@ -78,6 +105,15 @@ void MainDialog::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar pScrollBar) {
 
 
 
+void MainDialog::OnTimer_Mouse()
+{
+	POINT pos{ 0,0 };
+	::GetCursorPos(&pos);
+	std::wostringstream oss;
+	oss << L"(x,y):" << pos.x << L", " << pos.y <<L"\t"<<showbase<<hex<<pos.x<<L", "<<pos.y;
+	m_wMousePos.SetWindowText(oss.str().c_str());	
+}
+
 void MainDialog::OnDrawBtnDown(UINT uNotifyCode, int nID, CWindow wndCtl)
 {
 	OnClearBtnDown(uNotifyCode, nID, wndCtl);
@@ -88,9 +124,6 @@ void MainDialog::OnClearBtnDown(UINT uNotifyCode, int nID, CWindow wndCtl)
 {
 	CRect rc;
 	CWindow desktop(::GetDesktopWindow());
-	//desktop.GetWindowRect(&rc);
-	//desktop.RedrawWindow(&rc,0, RDW_INVALIDATE | RDW_ALLCHILDREN | RDW_ERASE);
-
 	::RedrawWindow(NULL,NULL,NULL, RDW_INVALIDATE | RDW_ALLCHILDREN | RDW_ERASE);
 
 }
@@ -143,7 +176,9 @@ void MainDialog::FillBuilder(OverlayConfigBuilder & builder)
 		.SetFontName(font_name)
 		.SetString(demostr)
 		.SetFontSize(fontSize)
-		.SetFontRotation(rotate);
+		.SetFontRotation(rotate)
+		.SetDisplayOffset({ 10,30,20,20 })
+	;
 }
 
 

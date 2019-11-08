@@ -147,10 +147,9 @@ namespace {
 
 	}
 
-
 	class MsgAntiReenter {
 	public:
-		MsgAntiReenter(){
+		MsgAntiReenter() {
 			if (InitializeCriticalSectionAndSpinCount(&cs, 0x80004000) == FALSE) {
 				InitializeCriticalSection(&cs);
 			}
@@ -193,7 +192,7 @@ namespace {
 	};
 	class MsgAntiRenter_Control {
 	public:
-		MsgAntiRenter_Control(MsgAntiReenter& mar):_mar(mar) {mar.thread_disable();}
+		MsgAntiRenter_Control(MsgAntiReenter& mar) :_mar(mar) { mar.thread_disable(); }
 		~MsgAntiRenter_Control() { _mar.thread_enable(); }
 	private:
 		MsgAntiReenter& _mar;
@@ -205,6 +204,7 @@ namespace {
 } // end anonymous namespace
 
 namespace gdi {
+
 	vector<wstring> GetInstalledFonts()
 	{
 		Gdiplus::InstalledFontCollection ifc;
@@ -306,10 +306,11 @@ void OverlayWindow::UpdateOverlaySizePosStatus(HWND target)
 		OutputDebugStringA(oss.str().c_str());
 	}
 
+	targetRC.DeflateRect(_config.GetDisplayOffset());
 	// make layered wnd always covered the targert Wnd
 	MoveWindow(targetRC,false);
 
-	BLENDFUNCTION blend = { AC_SRC_OVER ,0,255,AC_SRC_ALPHA };
+	BLENDFUNCTION blend = { AC_SRC_OVER ,0,0xFF,AC_SRC_ALPHA };
 	//CPoint p(targetRC.left, targetRC.right);
 	CPoint zero_pt(0, 0);
 	CPoint dstpt = targetRC.TopLeft();
@@ -519,15 +520,18 @@ void ViewOverlyController::SetOverlyTarget(HWND target)
 {
 	ViewOverlyControllerScopeGurad;
 
-	_swhHook = ::SetWindowsHookEx(WH_CALLWNDPROCRET,	// after wnd had processed the message
-		ViewOverlyController::HookProxy,
-		NULL,
-		//::GetMainThreadID()
-		::GetCurrentThreadId()
-	);
-
 	if (_swhHook == NULL) {
-		throw new std::exception("failed, call SetWindowsHookEx");
+		// call this function on UI thread
+		_swhHook = ::SetWindowsHookEx(WH_CALLWNDPROCRET,	// after wnd had processed the message
+			ViewOverlyController::HookProxy,
+			NULL,
+			//::GetMainThreadID()
+			::GetCurrentThreadId()
+		);
+
+		if (_swhHook == NULL) {
+			throw new std::exception("failed, call SetWindowsHookEx");
+		}
 	}
 
 	if (_wnds.find(target) != _wnds.end()) {
@@ -570,28 +574,13 @@ LRESULT ViewOverlyController::OnMessageHook(int code, WPARAM wParam, LPARAM lPar
 	case WM_WINDOWPOSCHANGING:
 	case WM_WINDOWPOSCHANGED:
 	case WM_SHOWWINDOW:
-	case WM_SIZE:
-	case WM_SIZING:
+	//case WM_SIZE:
+	//case WM_SIZING:
 	case WM_SYSCOMMAND:
 	{
 		_wnds[t]->UpdateOverlaySizePosStatus(t);
 		break;
 	}
-	//case WM_ACTIVATEAPP:
-	//{
-	//
-	//	if (p->wParam == true) {
-	//		//activate;
-	//		_wnds[t]->SetTopmost(true);
-	//	}
-	//	else if (p->wParam == false) {
-	//		// deactivate;
-	//		_wnds[t]->SetTopmost(false);
-	//		//_wnds[t]->UpdateWindow();
-	//	}
-
-	//	break;
-	//}
 	case WM_DESTROY:
 	{
 		// target wnd wants destory tell to destory overlay wnd
@@ -700,6 +689,7 @@ bool OverlayConfig::IsSameConfig(const OverlayConfig & rh)
 	if (this->m_font_color_B != rh.m_font_color_B) {return false;}
 	if (this->m_font_style!=rh.m_font_style) { return false; }
 	if (!iequal(this->m_font_name, rh.m_font_name)) { return false; }
+	if (this->m_display_offset != rh.m_display_offset) { return false; }
 
 	return true;
 }
