@@ -391,16 +391,15 @@ Gdiplus::Bitmap * OverlayWindow::_GetOverlayBitmapFromFile(const std::wstring & 
 	for(int i=0;i<h;i++)
 		for (int j = 0; j < w; j++) {
 			Gdiplus::Color c;
-			im->GetPixel(i, j, &c);
-			Gdiplus::Color c_(Gdiplus::Color::MakeARGB(_config.GetFontColor().GetA(), c.GetR(), c.GetG(), c.GetB()));
-			im->SetPixel(i, j, c_);
+			im->GetPixel(i, j, &c);	
+			if (c.GetAlpha()) {
+				Gdiplus::Color c_(Gdiplus::Color::MakeARGB(20, c.GetR(), c.GetG(), c.GetB()));
+				im->SetPixel(i, j, c_);
+			}
+
 		}
-		
-
 	return im;
-
 }
-
 
 void OverlayWindow::_DrawOverlay(HDC dcScreen, LPRECT lpRestrictDrawingRect)
 {
@@ -408,19 +407,23 @@ void OverlayWindow::_DrawOverlay(HDC dcScreen, LPRECT lpRestrictDrawingRect)
 		return;
 	}
 	CRect rc(lpRestrictDrawingRect);
+	Gdiplus::RectF surface(0,0,rc.Width(), rc.Height());		
 	Gdiplus::Graphics g(dcScreen);
 	// make a good quality
 	g.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
 	g.SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
-	// beging drawing
-	Gdiplus::Bitmap* bk = _GetOverlayBitmap(g);
+	
 	//Gdiplus::Bitmap* bk = _GetOverlayBitmapFromFile(L"D:\\allTestFile\\pics\\keng.png");
 	//Gdiplus::Bitmap* bk = _GetOverlayBitmapFromFile(L"D:\\allTestFile\\pics\\webwxgeticon.jpg");
-	
+	// lower -back ground
+	Gdiplus::Bitmap* bk = _GetOverlayBitmapFromFile(L"D:\\allTestFile\\pics\\ccp2.png");
 	Gdiplus::TextureBrush brush(bk,Gdiplus::WrapModeTile);
 	//brush.RotateTransform(_config.GetFontRotation());  // for picture using rotatTransfrom
-	Gdiplus::RectF surface(0,0,rc.Width(), rc.Height());		
 	g.FillRectangle(&brush, surface);
+	// middle background
+	Gdiplus::Bitmap* bk2 = _GetOverlayBitmap(g);
+	Gdiplus::TextureBrush brush2(bk2, Gdiplus::WrapModeTile);
+	g.FillRectangle(&brush2, surface);
 	delete bk;
 }
 

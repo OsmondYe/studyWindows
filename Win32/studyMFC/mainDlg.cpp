@@ -72,7 +72,76 @@ BEGIN_MESSAGE_MAP(CMainDlg, CDialogEx)
 END_MESSAGE_MAP()
 
 
-// CMainDlg message handlers
+int GetEncoderClsid(const WCHAR* format, CLSID* pClsid)
+{
+	UINT  num = 0;          // number of image encoders
+	UINT  size = 0;         // size of the image encoder array in bytes
+
+	ImageCodecInfo* pImageCodecInfo = NULL;
+
+	GetImageEncodersSize(&num, &size);
+	if (size == 0)
+		return -1;  // Failure
+
+	pImageCodecInfo = (ImageCodecInfo*)(malloc(size));
+	if (pImageCodecInfo == NULL)
+		return -1;  // Failure
+
+	GetImageEncoders(num, size, pImageCodecInfo);
+
+	for (UINT j = 0; j < num; ++j)
+	{
+		if (wcscmp(pImageCodecInfo[j].MimeType, format) == 0)
+		{
+			*pClsid = pImageCodecInfo[j].Clsid;
+			free(pImageCodecInfo);
+			return j;  // Success
+		}
+	}
+
+	free(pImageCodecInfo);
+	return -1;  // Failure
+}
+
+
+
+
+void changePicTransparent() {
+	Gdiplus::Bitmap* im = Gdiplus::Bitmap::FromFile(L"D:\\allTestFile\\pics\\ccp.jpg");
+	if (im == NULL) {
+		return;
+	}
+
+	auto h = im->GetHeight();
+	auto w = im->GetWidth();
+	
+	BYTE limite = 0xee;
+
+	// change alpha
+	for (int i = 0; i < h; i++)
+		for (int j = 0; j < w; j++) {
+			Gdiplus::Color c;
+			im->GetPixel(i, j, &c);
+			if (c.GetR() > limite&& c.GetG() > limite&& c.GetB() > limite) {
+				im->SetPixel(i, j, Gdiplus::Color(0,0,0,0));
+			}
+			else {
+				::OutputDebugString(L"");
+			}
+		}
+
+	// resize;
+	
+
+
+	// return back
+	CLSID clsid;
+	GetEncoderClsid(L"image/png", &clsid);
+	im->Save(L"D:\\allTestFile\\pics\\ccp2.png", &clsid);
+}
+
+
+
 
 BOOL CMainDlg::OnInitDialog()
 {
@@ -104,7 +173,7 @@ BOOL CMainDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
-
+	changePicTransparent();
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }

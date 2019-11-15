@@ -4,6 +4,12 @@
 #include <cmath>
 
 
+//#include <commctrl.h>
+//#pragma comment(lib, "comctl32.lib")
+#include <commdlg.h>
+#include <shellapi.h>
+//#include <uxtheme.h>
+
 BOOL MainDialog::OnInitDialog(CWindow wndFocus, LPARAM lInitParam) {
 	CenterWindow(GetParent());
 	// Associate:
@@ -18,10 +24,10 @@ BOOL MainDialog::OnInitDialog(CWindow wndFocus, LPARAM lInitParam) {
 	m_ColorB.Attach(GetDlgItem(IDC_SLIDE_COLOR_B));
 	
 
-	m_FontColorA = 150;
+	m_FontColorA = 50;
 	m_FontColorR = 100;
 	m_FontColorG = 0;
-	m_FontColorB = 100;
+	m_FontColorB = 0;
 
 	
 	//std::wofstream fs(LR"(D:\allTestFile\installed_font.txt)");
@@ -42,9 +48,9 @@ BOOL MainDialog::OnInitDialog(CWindow wndFocus, LPARAM lInitParam) {
 	m_ColorB.SetRange(0, 255); m_ColorB.SetPos(m_FontColorB);
 
 
-	m_EditContent = L"Watermark Test\nNextlabs SkyDRM Product\n这是中文测试,信领达(杭州)软件有限公司\n~!@#$%^&*(){}[];:,.<>";
-	m_FontSize = 30;
-	m_FontRotate = -20;
+	m_EditContent = L"空谈误国，实干兴邦\n\n不忘初心，方得始终\n\n中国共产党人的初心和使命\n就是为中国人民谋幸福\n为中华民族谋复兴\n这个初心和使命是激励中国共产党人不断前进的根本动力\n\n小康不小康，关键看老乡\n\n鞋子合不合脚，自己穿了才知道\n\n基础不牢，地动山摇\n\n政之所兴在顺民心，政之所废在逆民心\n为人民服务是党的根本宗旨";
+	m_FontSize = 20;
+	m_FontRotate = -10;
 
 	DoDataExchange(false);
 
