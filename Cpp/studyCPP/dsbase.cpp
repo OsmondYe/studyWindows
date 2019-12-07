@@ -151,3 +151,100 @@ TEST(DSBase, Perm) {
 	char ss[] ={ "abcde" };
 	permutation(ss, 0, 4);
 }
+
+// 不用任何变量,交换2个int的值
+void xor_trait() {
+	// 异或的特征是什么;
+	unsigned int a = rand();
+	cout << a << endl;
+	unsigned int b = (a ^ a); // 任何数自身异或结果为0
+	cout << b << endl;
+	b = (a ^ 0);  // 任何数xor 0 没有意义
+	cout << b << endl;
+	b = (a ^ -1); // 按位和1xor, 结果就是翻转 flip
+	cout << b << endl;
+
+}
+TEST(DSBase, Bit_Swap) {
+	xor_trait();
+	int a = rand();
+	int b = rand();
+	//wcout << L"不用任何变量,交换2个int的值\n";
+	cout << "a,b " << a << "  " << b << endl;
+
+	// swap
+
+	a = a ^ b;
+	b = a ^ b;
+	a = a ^ b;
+	cout << "a,b " << a << "  " << b << endl;
+}
+
+// 整数二进制中有多少个1
+TEST(DSBase, Bit_Count1) {
+	auto method1 = [](int i) {
+		int r_c = 0;
+		int c = 0;
+		while (r_c <= 31)
+		{
+			c += (i >> r_c++) & 1;
+		}
+		cout <<std::bitset<32>(i)<<"\t"<< c << endl;
+	};
+
+	auto method2 = [](int i) {
+		int c = 0, t = i;
+		while (i)
+		{
+			i = i & (i - 1); //  i&(i-1) 抹去1最右边的1
+			c++;
+		}
+		cout << std::bitset<32>(t) << "\t" << c << endl;
+	};
+
+	for (size_t i = 0; i < 16; i++)
+	{
+		method1(i);
+		method2(i);
+	}
+}
+
+
+//一个乱序数组, 所有数都会出现偶数次,只有一个数只有奇数次,找到这个数
+TEST(DSBase, Bit_FindOddInEvens) {
+	int a[] = { 2,2,4,4,9,9,100,8,8,8,8 };
+	int x = 0;
+	for (size_t i = 0; i< sizeof(a) / sizeof(int); i++)
+	{
+		x ^= a[i];
+	}
+	cout << x << endl;
+
+	//非算法形式虽然结构工整,但是效率不高
+	std::map<int, int> m;
+	for (size_t i = 0; i< sizeof(a) / sizeof(int); i++) {
+		m[a[i]]++;
+	}
+	// find in map
+	auto iter=std::find_if(m.begin(), m.end(), [](std::pair<int,int> i) {
+		return i.second == 1;
+		}
+	);
+	if (iter != m.end()) {
+		cout << iter->first << endl;
+	}
+
+}
+
+TEST(DSBase, Bit_FindOddInKKK) {
+	int a[] = {
+		8,8,8,
+		2,2,2,
+		7,7,7,
+		3,
+		9,9,9,
+		23,23,23,
+		67,67,67,
+	};
+
+}

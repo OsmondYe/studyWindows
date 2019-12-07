@@ -22,6 +22,8 @@ container_hearders:
 
 int main(int argc, wchar_t** argv)
 {
+	srand(time(NULL));
+
 	testing::InitGoogleTest(&argc, argv);
 
 	// filter *,?,-,:
@@ -40,6 +42,7 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "Random.*";
 	testing::FLAGS_gtest_filter = "Algorithm.*";
 	testing::FLAGS_gtest_filter = "DSBase.Perm";
+	testing::FLAGS_gtest_filter = "DSBase.*";
 
 	return RUN_ALL_TESTS();
 
