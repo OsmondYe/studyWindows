@@ -43,6 +43,8 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "Algorithm.*";
 	testing::FLAGS_gtest_filter = "DSBase.Perm";
 	testing::FLAGS_gtest_filter = "DSBase.*";
+	testing::FLAGS_gtest_filter = "DSLinear.*";
+	
 
 	return RUN_ALL_TESTS();
 
