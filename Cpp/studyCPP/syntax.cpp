@@ -284,3 +284,30 @@ TEST(Syntax, ScoptedEnumeration) {
 	using pointer = typename _Mystr::const_pointer;
 	using reference = const value_type&;
 */
+
+
+
+
+TEST(Syntax, OverrideNew) {
+	class ttt {
+	public:
+		void* operator new(size_t size) {
+			std::cout << "some one call me" << std::endl;
+			return malloc(size);
+		}
+		int a;
+		int b;
+	};
+
+	class td :public ttt {
+	public:
+		int c;
+	};
+
+	ttt* a = new ttt();
+	td* b = new td();
+
+	cout << "using this, derived calss will call base class's operator new to apply memory" << endl;
+	cout << "so , override new is a good method to detact memory leak" << endl;
+
+}

@@ -35,7 +35,7 @@ int main(int argc, wchar_t** argv)
 	//testing::FLAGS_gtest_filter = "Container.*";
 
 	//testing::FLAGS_gtest_filter = "Idiom.*:Syntax.*:Container.*:Concurrency.*";
-	testing::FLAGS_gtest_filter = "Syntax.*";
+	testing::FLAGS_gtest_filter = "Syntax.OverrideNew";
 	testing::FLAGS_gtest_filter = "Stream.*";
 	testing::FLAGS_gtest_filter = "Regex.*";
 	testing::FLAGS_gtest_filter = "String.*";
