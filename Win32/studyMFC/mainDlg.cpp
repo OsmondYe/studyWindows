@@ -61,6 +61,7 @@ CMainDlg::CMainDlg(CWnd* pParent /*=nullptr*/)
 void CMainDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_EDIT1, myEdit);
 }
 
 
@@ -69,6 +70,7 @@ BEGIN_MESSAGE_MAP(CMainDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_EN_CHANGE(IDC_EDIT1, &CMainDlg::OnEnChangeEdit1)
 END_MESSAGE_MAP()
 
 
@@ -265,3 +267,14 @@ HCURSOR CMainDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+
+void CMainDlg::OnEnChangeEdit1()
+{
+	// TODO:  If this is a RICHEDIT control, the control will not
+	// send this notification unless you override the CDialogEx::OnInitDialog()
+	// function and call CRichEditCtrl().SetEventMask()
+	// with the ENM_CHANGE flag ORed into the mask.
+
+	// TODO:  Add your control notification handler code here
+}

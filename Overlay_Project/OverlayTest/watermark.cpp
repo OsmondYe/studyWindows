@@ -417,14 +417,18 @@ void OverlayWindow::_DrawOverlay(HDC dcScreen, LPRECT lpRestrictDrawingRect)
 	//Gdiplus::Bitmap* bk = _GetOverlayBitmapFromFile(L"D:\\allTestFile\\pics\\webwxgeticon.jpg");
 	// lower -back ground
 	Gdiplus::Bitmap* bk = _GetOverlayBitmapFromFile(L"D:\\allTestFile\\pics\\ccp2.png");
-	Gdiplus::TextureBrush brush(bk,Gdiplus::WrapModeTile);
-	//brush.RotateTransform(_config.GetFontRotation());  // for picture using rotatTransfrom
-	g.FillRectangle(&brush, surface);
+	if (bk != NULL) {
+		Gdiplus::TextureBrush brush(bk,Gdiplus::WrapModeTile);
+		//brush.RotateTransform(_config.GetFontRotation());  // for picture using rotatTransfrom
+		g.FillRectangle(&brush, surface);
+	}
 	// middle background
 	Gdiplus::Bitmap* bk2 = _GetOverlayBitmap(g);
-	Gdiplus::TextureBrush brush2(bk2, Gdiplus::WrapModeTile);
-	g.FillRectangle(&brush2, surface);
-	delete bk;
+	if (bk2 != NULL) {
+		Gdiplus::TextureBrush brush2(bk2, Gdiplus::WrapModeTile);
+		g.FillRectangle(&brush2, surface);
+		delete bk;
+	}
 }
 
 

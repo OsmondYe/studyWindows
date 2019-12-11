@@ -13,17 +13,32 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="hook">
+      <UniqueIdentifier>{bcf5829e-19b8-42a7-a085-00c897edc0d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="win32api">
+      <UniqueIdentifier>{d48c8405-d320-40eb-92db-c00859fc7db4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="NxTools.cpp">
+    <ClCompile Include="OyeTools.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="hook.cpp">
+      <Filter>hook</Filter>
+    </ClCompile>
+    <ClCompile Include="win32api.cpp">
+      <Filter>win32api</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cmdline.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

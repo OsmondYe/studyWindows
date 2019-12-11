@@ -43,6 +43,9 @@
     <Filter Include="Source Files\stl\concurrency">
       <UniqueIdentifier>{5622c9f2-50fe-470f-a520-2cfbb5f715ac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\oye_algo">
+      <UniqueIdentifier>{0dd0066e-60ec-4177-8ced-bec58e0527db}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -124,6 +127,9 @@
     </ClCompile>
     <ClCompile Include="random.cpp">
       <Filter>Source Files\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="oye_algo.cpp">
+      <Filter>Source Files\oye_algo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
