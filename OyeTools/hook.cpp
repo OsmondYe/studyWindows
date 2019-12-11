@@ -14,11 +14,13 @@ int b64bit = false;
 using namespace std;
 
 
-void display_help() {
-	cout << "Inject tools, inject specific dll into running processes" << endl;
-	cout << "only " << (b64bit ? 64 : 32) << "bit dll can be supported" << endl;
-	cout << "useage: oyetools {-pid id | -pname name} {dll_path}" << endl;
-
+string hook_help_message() {
+	ostringstream oss;
+	oss << "Inject tools, inject specific dll into running processes\n"
+		<< "only " << (b64bit ? 64 : 32) << "bit dll can be supported\n"
+		<< "useage: oyetools {-pid id | -pname name} {dll_path}"
+		<< endl;
+	return oss.str();
 }
 
 

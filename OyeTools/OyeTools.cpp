@@ -8,29 +8,21 @@
 using namespace std;
 
 
-
-
-
-
-void display_help();
+string hook_help_message();
 void inject_dll(int pid, const string& dll_path);
 void inject_dll(const string& pname, const string& dll_path);
-
 
 inline void lookup_english_word_in_browser(const std::string word) {
 	::CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
 	std::string url = "http://dict.youdao.com/w/";
 	url += word;
-
 	SHELLEXECUTEINFOA data{ 0 };
-
 	data.cbSize = sizeof(SHELLEXECUTEINFOW);
 	data.lpFile = url.c_str();
 	data.fMask = SEE_MASK_FLAG_DDEWAIT | SEE_MASK_FLAG_NO_UI;
 	data.nShow = SW_SHOWNORMAL;
 	::ShellExecuteExA(&data);
 }
-
 
 cmdline::parser gp;
 // parse int got some problem, so only use string
@@ -54,7 +46,10 @@ int main(int argc, char* argv[])
 	gp.parse_check(argc, argv);
 
 	if (argc == 1 || gp.exist("help")) {
+		cout << "==============OYE_TOOLS=================\n";
 		cout << gp.usage();
+		cout << "========================================\n";
+		cout << hook_help_message();
 		return 0;
 	}
 
