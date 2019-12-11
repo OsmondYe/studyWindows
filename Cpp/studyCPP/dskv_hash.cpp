@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "helper.hpp"
 
-
 template<typename Key, typename Value>
 class base_dictionary {
 public:
