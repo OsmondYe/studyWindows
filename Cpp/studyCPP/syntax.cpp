@@ -1,8 +1,5 @@
 ﻿#include "pch.h"
 
-
-
-
 /*
 
 noexcept  函数不抛出异常
@@ -163,40 +160,8 @@ TEST(Syntax, Forward) {
 	// std::forward
 }
 
-
-class sample_const {
-public:
-	sample_const() :_i(100) {}
-
-	int& getI() {
-		return _i;
-	}
-
-	const int& getI() const  {
-		return _i;
-	}
-
-	int _i;
-};
-
-
-void tcout(const int& i) {
-	cout << i;
-}
-// 成员函数返回引用时,最好分清楚const和非const引用
-TEST(Syntax, MemFunConstOverride) {
-	sample_const ss;
-	int i = ss.getI();
-	int& ii = ss.getI();
-	const int& iii = ss.getI();
-	tcout(ss.getI());
-	cout << ii;
-
-}
-
-
+// 不定参模板
 namespace vt {
-
 	//作为递归调用出口,必须提供
 	template<typename T>
 	void print(const T& arg) {
@@ -210,7 +175,6 @@ namespace vt {
 		// handle others
 		print(args ...);
 	}
-	
 	/*
 	  print(1, 12.34, "hello world", 'c');
 		print 会被编译成多个函数
@@ -219,11 +183,8 @@ namespace vt {
 			print<char*,char>
 			print<char>
 	*/
-
-
 }
-
-TEST(Syntax, VariadicTemplate) {
+TEST(Syntax, Template_Variadic) {
 
 	vt::print(1, 12.34, "hello world", 'c');
 	/*
@@ -235,32 +196,33 @@ TEST(Syntax, VariadicTemplate) {
 	*/
 }
 
+
+// using可以应用于模板的简写行驶了
 template<typename T> 
 using ThisIsMyVec= std::vector<T>;
-TEST(Syntax, AliasTemplate) {
-
-	// using可以应用于模板的简写行驶了
+TEST(Syntax, Template_Alias) {
 	ThisIsMyVec<int> v{ 1,2,3,4,5,6 };
 	vt::print(v[0], v[1], v[2]);
 }
 
-TEST(Syntax, TemplateDecltype) {
-	// keyword decytype(var) 可以让编译器找到这个变量的类型
+// keyword decytype(var) 可以让编译器找到这个变量的类型
+TEST(Syntax, Template_Decltype) {
 	vector<int> v{ 1,2,3,4,5,6,7,8,9 };
 	decltype(v)::const_iterator cit = v.cbegin();
 }
 
 
+/* 模板支持新的声明方法, 自动推倒需要的返回值类型
+template<typename T1, typename T2>
+auto add(T1 x, T2 y) -> decltype(x + y);
+
+add 模板函数的具体返回值取决于 x+y后的类型  c11
+*/
 TEST(Syntax,TemplateNewFunctionDeclaration) {
-	/*
-	template<typename T1, typename T2>
-	auto add(T1 x, T2 y) -> decltype(x + y);
 
-	add 模板函数的具体返回值取决于 x+y后的类型  c11
-
-	*/
 }
 
+// 扩展了 enum
 enum class Salutation : char {
 	mr,
 	ms,
@@ -269,26 +231,14 @@ enum class Salutation : char {
 };
 
 TEST(Syntax, ScoptedEnumeration) {
-	/*
-	*/
 	Salutation s = Salutation::mr;
 	s = Salutation::ms;
 	s = (Salutation)12;
 }
 
 
-/*
-	using iterator_category = random_access_iterator_tag;
-	using value_type = typename _Mystr::value_type;
-	using difference_type = typename _Mystr::difference_type;
-	using pointer = typename _Mystr::const_pointer;
-	using reference = const value_type&;
-*/
-
-
-
-
-TEST(Syntax, OverrideNew) {
+// 类支持重载 new 运算符
+TEST(Syntax, Override_New) {
 	class ttt {
 	public:
 		void* operator new(size_t size) {

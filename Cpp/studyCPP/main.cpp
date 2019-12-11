@@ -24,6 +24,7 @@ int main(int argc, wchar_t** argv)
 {
 	srand(time(NULL));
 
+
 	testing::InitGoogleTest(&argc, argv);
 
 	// filter *,?,-,:
@@ -44,6 +45,8 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "DSBase.*";
 	testing::FLAGS_gtest_filter = "DSLinear.*";
 	testing::FLAGS_gtest_filter = "String.ReplaceAll";
+	testing::FLAGS_gtest_filter = "Idiom.MacroParam";
+	testing::FLAGS_gtest_filter = "OyeAlgo.*";
 	
 
 	return RUN_ALL_TESTS();

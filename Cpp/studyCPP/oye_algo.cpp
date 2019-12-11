@@ -1,40 +1,68 @@
 #include "pch.h"
 
 
-TEST(OyeAlgo, Count) {
-	static std::map<unsigned char, int> cQuickMap{
-		{0b0000, 0 },
-		{0b0001, 1 },
-		{0b0010, 1 },
-		{0b0011, 2 },
-		{0b0100, 1 },
-		{0b0101, 2 },
-		{0b0110, 2 },
-		{0b0111, 3 },
-		{0b1000, 1 },
-		{0b1001, 2 },
-		{0b1010, 2 },
-		{0b1011, 3 },
-		{0b1100, 2 },
-		{0b1101, 3 },
-		{0b1110, 3 },
-		{0b1111, 4 },
-	};
+// my strchr
+char* oye_strchr(const char* string, char ch) {
 
-	int a = sizeof(int);
-	for (int i = 0; i < 100; i++) {
-		int t = ::rand();
-		cout << showbase << std::hex << t << "\t";
-		int c = 0;
-
-		for (int s = 0; s < sizeof(int)-1; s++) {
-			unsigned char x = t >> (s*8);
-			c += cQuickMap[x&0b00001111];			
-			c += cQuickMap[x>>4];			
-		}
-		cout
-			<< std::bitset<sizeof(int) * 8>(t)<<"\t"
-			<< std::dec << c << std::endl;
-
+	while ( *string && *string!=ch ){		// c语言str以\0结尾真是个好东西,可以直接用循环判断 (*string) 为0, 循环结束
+		++string;
 	}
+	if (*string == ch) {
+		return (char*)string;
+	}
+	return (NULL);
+}
+
+// my last occurrence of ch in str
+char* oye_strrchr(const char* str, char ch) {
+	const char* begin = str;
+	// move str to end
+	while (*str++);
+
+	// search toward front
+	while (--str != begin && *str != ch);	
+
+	return (*str) == ch ? (char*)str : NULL;
+}
+// search str2 in str1
+char* oye_strstr(const char* str1, const char* str2) {
+
+	char* cp = (char*)str1;
+	char *s1, *s2;			// alarm char* s1,s2  XXXXXX s2 is char , not char*
+
+	if (!*str2) {
+		return (char*)str1;
+	}
+
+	//scan whole str1
+	while (*cp)
+	{
+		s1 = cp;
+		s2 = (char*)str2;
+
+		// each pos in str1, check sutstr , 如果真的是相等了,那么 while结束 *s2==NULL
+		while (*s1 && *s2 && !(*s2 - *s1)) {
+			s1++, s2++;
+		}
+
+		if (!*s2) {
+			return cp;
+		}
+		
+		cp++;
+	}
+
+	return NULL;
+
+}
+
+TEST(OyeAlgo, Count) {
+
+	char str[] = "hello world";
+
+	cout << oye_strchr(str, 'w') << endl;
+	cout << oye_strrchr(str, 'w') << endl;
+	cout << oye_strstr(str, "worlddgdf") << endl;			// cout<<NULL 这是一个灾难
+
+
 }
