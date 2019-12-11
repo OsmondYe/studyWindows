@@ -1,27 +1,25 @@
-// NxTools.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include "pch.h"
+#include <madCHook.h>
 
 
 #ifdef  _WIN64
 int b64bit = true;
+#pragma comment(lib,"madCHook64mt.lib")
 #else 
 int b64bit = false;
+#pragma comment(lib,"madCHook32.lib")
 #endif //  _WIN64
-
-
-#include <madCHook.h>
-
-#pragma comment(lib,"madCHook64mt.lib")
-//#pragma comment(lib,"libvcruntime.lib")
-#pragma comment(lib,"legacy_stdio_definitions.lib")
-
 
 
 using namespace std;
 
 
+void display_help() {
+	cout << "Inject tools, inject specific dll into running processes" << endl;
+	cout << "only " << (b64bit ? 64 : 32) << "bit dll can be supported" << endl;
+	cout << "useage: oyetools {-pid id | -pname name} {dll_path}" << endl;
+
+}
 
 
 HANDLE get_process(int process_id) {
@@ -57,22 +55,12 @@ std::set<HANDLE> get_processes(const wchar_t* process_name)
 	PROCESSENTRY32 pe = { sizeof(pe) };
 	BOOL fOk;
 	for (fOk = Process32First(hSnapshot, &pe); fOk; fOk = Process32Next(hSnapshot, &pe)) {
-		if (!_tcsicmp(pe.szExeFile,process_name)) {
+		if (!_tcsicmp(pe.szExeFile, process_name)) {
 			rt.insert(get_process(pe.th32ProcessID));
 		}
 	}
 	CloseHandle(hSnapshot);
 	return rt;
-}
-
-
-
-
-void display_help() {
-	cout << "Inject tools, inject specific dll into running processes" << endl;
-	cout << "only " << (b64bit ? 64 : 32) << "bit dll can be supported" << endl;
-	cout << "useage: nxtool {-pid id | -pname name} {dll_path}" << endl;
-
 }
 
 
@@ -97,7 +85,7 @@ void inject_dll(int pid, const string& dll_path) {
 
 void inject_dll(const string& pname, const string& dll_path) {
 	std::wstring wpname(pname.begin(), pname.end());
-	auto s = get_processes(wpname.c_str());	
+	auto s = get_processes(wpname.c_str());
 	if (s.empty()) {
 		cerr << "Can not find any the process which pname is " << pname << endl;
 		abort();
@@ -106,59 +94,13 @@ void inject_dll(const string& pname, const string& dll_path) {
 
 	for (auto i : s) {
 		if (!InjectLibraryA(dll_path.c_str(), i)) {
-			cerr << "can not perform inject dll, pid is:" <<::GetProcessId(i)<< endl;
+			cerr << "can not perform inject dll, pid is:" << ::GetProcessId(i) << endl;
 			continue;
 		}
 		else {
-			cout<< "inject ok for pid:"<< ::GetProcessId(i) << endl;
+			cout << "inject ok for pid:" << ::GetProcessId(i) << endl;
 		}
 	}
 	return;
-
 }
 
-
-int main(int argc,char* argv[])
-{
-	if (argc <= 1) {
-		display_help();
-		return 0;
-	}
-
-	int pid = -1;
-	std::string pname;
-	std::string dll_path;
-	for (int i = 1; i < argc; ++i) {
-		if (0==_stricmp("-pid", argv[i])) {
-			pid =  std::atoi(argv[++i]);
-			continue;
-		}
-		if (0 == _stricmp("-pname", argv[i])) {
-			pname.assign(argv[++i]);
-			continue;
-		}
-		dll_path = argv[i];
-	}
-
-	if (pid == -1 && pname.empty()) {
-		display_help();
-		return 0;
-	}
-
-	if (dll_path.empty()) {
-		display_help();
-		return 0;
-	}
-
-	if (pid != -1) {
-		inject_dll(pid, dll_path);
-		return 0;
-	}
-
-	if (!pname.empty()) {
-		inject_dll(pname, dll_path);
-		return 0;
-	}
-
-	return 0;
-}

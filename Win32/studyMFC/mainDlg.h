@@ -1,14 +1,7 @@
-
-// mainDlg.h : header file
-//
-
 #pragma once
 
-
-// CMainDlg dialog
 class CMainDlg : public CDialogEx
 {
-// Construction
 public:
 	CMainDlg(CWnd* pParent = nullptr);	// standard constructor
 
@@ -22,8 +15,6 @@ public:
 
 protected:
 	virtual void OnMyPaint(CPaintDC& dc, CRect& rc);
-
-
 
 private:
 	Gdiplus::Color m_ui_bk_color;
@@ -39,4 +30,7 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnEnChangeEdit1();
+	CEdit myEdit;
 };
