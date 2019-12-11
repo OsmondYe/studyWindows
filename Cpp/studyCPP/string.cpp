@@ -10,6 +10,7 @@ TEST(String, Basic) {
 	wcout << L"String:" << str << "\tLen:" << wcslen(str) << endl;
 	cout << "sizeof(str)" << sizeof(str) << endl;
 	// sizeof(str)==110,    55chars,(within '\0')
+
 	EXPECT_EQ(54+1, sizeof(str) / sizeof(wchar_t));
 
 	wstring w(str);
