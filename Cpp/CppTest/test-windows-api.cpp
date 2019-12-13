@@ -261,20 +261,4 @@ TEST(Windows, OSRMX) {
 	wstring list;
 
 	r.get(p2, L"", list);
-
-	
-	
-
-
-	// libeay 32 只承认 system32目录
-	const wchar_t* path = LR"(D:\NextlabsProject\rmd-windows\SkydrmLocal\x64\Debug\nxosrmx64.dll)";
-	auto hm = ::LoadLibraryW(path);
-	auto fn = ::GetProcAddress(hm, "Initialize");
-	if (fn != NULL) {
-		fn();
-	}
-
-
-
-
 }
