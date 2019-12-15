@@ -22,7 +22,7 @@ container_hearders:
 
 int main(int argc, wchar_t** argv)
 {
-	srand(time(NULL));
+	srand(time(NULL));	// give a randome seed
 
 
 	testing::InitGoogleTest(&argc, argv);
@@ -42,11 +42,14 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "Random.*";
 	testing::FLAGS_gtest_filter = "Algorithm.*";
 	testing::FLAGS_gtest_filter = "DSBase.Perm";
+	testing::FLAGS_gtest_filter = "Iterator.Vector";
 	testing::FLAGS_gtest_filter = "DSBase.*";
-	testing::FLAGS_gtest_filter = "DSLinear.*";
 	testing::FLAGS_gtest_filter = "String.ReplaceAll";
 	testing::FLAGS_gtest_filter = "Idiom.MacroParam";
 	testing::FLAGS_gtest_filter = "OyeAlgo.*";
+	testing::FLAGS_gtest_filter = "Sort.*";
+	testing::FLAGS_gtest_filter = "Sort.Merge";
+	testing::FLAGS_gtest_filter = "DSLinear.MAX_SUB_ARRAY";
 	
 
 	return RUN_ALL_TESTS();
