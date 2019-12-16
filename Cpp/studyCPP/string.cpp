@@ -336,3 +336,29 @@ TEST(String, UniqueCharInStr) {
 	wcout << s << endl;
 
 }
+
+
+TEST(String, IEqual) {
+	std::vector<std::wstring> buf{
+		L"WINWORD.EXE",
+		L"POWERPNT.EXE",
+		L"EXCEL.EXE"
+	};
+	std::wstring exe_name = L"winword.exe";
+
+	bool rt= std::any_of(buf.begin(), buf.end(), [&exe_name](const std::wstring& str) {
+		if (exe_name.empty() && str.empty()) {
+			return true;
+		}
+		if (exe_name.length() != str.length()) {
+			return false;
+		}
+		auto rt = std::mismatch(exe_name.begin(), exe_name.end(),
+			str.begin(), str.end(), [](wchar_t l, wchar_t r) {
+				return std::tolower(l) == std::tolower(r);
+			});
+		return rt.first == exe_name.end() && rt.second == str.end();
+		});
+	
+	EXPECT_TRUE(rt);
+}

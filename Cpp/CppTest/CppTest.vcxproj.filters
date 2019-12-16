@@ -16,6 +16,9 @@
     <Filter Include="Source Files\ATL">
       <UniqueIdentifier>{bde26370-5c14-454f-8d3e-9880a4de5668}</UniqueIdentifier>
     </Filter>
+    <Filter Include="misc">
+      <UniqueIdentifier>{8b0c66ba-f64b-49aa-bef9-f2a0319f9483}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -32,29 +35,29 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="utils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="test-madchook.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="test-windows-api.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="test-utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Monitor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="test-atl-api.cpp">
       <Filter>Source Files\ATL</Filter>
+    </ClCompile>
+    <ClCompile Include="test_win32_thread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="Monitor.cpp">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="utils.cpp">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
