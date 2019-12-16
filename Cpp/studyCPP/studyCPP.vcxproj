@@ -178,6 +178,7 @@
     <ClCompile Include="adapter.cpp" />
     <ClCompile Include="algorithm.cpp" />
     <ClCompile Include="allocator.cpp" />
+    <ClCompile Include="chrono.cpp" />
     <ClCompile Include="concurrency.cpp" />
     <ClCompile Include="container.cpp" />
     <ClCompile Include="dsbase.cpp" />

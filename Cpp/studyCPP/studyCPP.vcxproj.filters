@@ -131,6 +131,9 @@
     <ClCompile Include="oye_algo.cpp">
       <Filter>Source Files\data_struct_and_algo\oye_algo</Filter>
     </ClCompile>
+    <ClCompile Include="chrono.cpp">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="NoUse.hpp">
