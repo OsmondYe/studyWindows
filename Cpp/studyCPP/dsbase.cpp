@@ -15,12 +15,6 @@ unsigned long long factorial_sum(int n) {
 	return n + factorial_sum(n - 1);
 }
 
-unsigned long long fibonacci(int n) {
-	if (n == 0) return 0;
-	if (n == 1)  return 1;
-	return fibonacci(n - 1) + fibonacci(n - 2);
-}
-
 int gcd(int x, int y) {
 	if (y == 0) return x;
 	return gcd(y, x % y);
@@ -37,12 +31,7 @@ TEST(DSBase, basic) {
 	{
 		cout << "factorial_sum" << i << "=" << factorial_sum(i) << endl;
 	}
-	// calc fabonacci
-	for (int i = 0; i < 20; i++)
-	{
-		cout <<"fabonacci"<< i << "=" << fibonacci(i) << endl;
-	}
-
+	
 	// gcd
 //for (size_t i = 0; i < 101; i++)
 //{
@@ -52,6 +41,12 @@ TEST(DSBase, basic) {
 //	}
 //}
 }
+
+
+
+
+
+
 
 // divide and conquer
 template<class T>

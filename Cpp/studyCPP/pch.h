@@ -23,6 +23,7 @@
 #include <forward_list>
 #include <array>	// psedu-container
 #include <queue>
+#include <iterator>
 #include <algorithm>
 #include <functional>
 #include <numeric>

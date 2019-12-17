@@ -45,13 +45,14 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "DSBase.*";
 	testing::FLAGS_gtest_filter = "String.ReplaceAll";
 	testing::FLAGS_gtest_filter = "Idiom.MacroParam";
-	testing::FLAGS_gtest_filter = "OyeAlgo.*";
 	testing::FLAGS_gtest_filter = "Sort.*";
 	testing::FLAGS_gtest_filter = "Sort.Merge";
 	testing::FLAGS_gtest_filter = "DSLinear.MAX_SUB_ARRAY";
 	testing::FLAGS_gtest_filter = "Concurrency.Mutex";
 	testing::FLAGS_gtest_filter = "String.IEqual";
 	testing::FLAGS_gtest_filter = "Chrono.*";
+	testing::FLAGS_gtest_filter = "OyeAlgo.Fibonacci";
+	testing::FLAGS_gtest_filter = "Set.*";
 	
 
 	return RUN_ALL_TESTS();

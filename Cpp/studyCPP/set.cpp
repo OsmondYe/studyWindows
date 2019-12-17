@@ -19,5 +19,19 @@ TEST(Set, Basic) {
 	multiset<int> ms;
 
 
+
+	s.insert({ 1,2,3,4,5,6,7,8,9,10 });
+	aux::output(s);
+
+	set<int> toBeDel{ 2,8,9 };
+	// 搞笑了， s集合只能删除他自己的
+	//s.erase(toBeDel.begin(), toBeDel.end());
+	//aux::output(s);
+
+	set<int> anew;
+	// 用差集来实现
+	std::set_difference(s.begin(), s.end(), toBeDel.begin(), toBeDel.end(), inserter(anew,anew.end()));
+	aux::output(anew);
+
 	
 }

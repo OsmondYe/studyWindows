@@ -66,3 +66,20 @@ TEST(OyeAlgo, Count) {
 
 
 }
+
+static int c_fib = 0;
+unsigned long long fibonacci(int n) {
+	++c_fib;
+	if (n == 0) return 0;
+	if (n == 1)  return 1;
+	return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+
+TEST(OyeAlgo, Fibonacci) {
+	for (int i = 3; i < 21; i++) {
+		int fib_num = i;
+		c_fib = 0;
+		cout << "fib_num:" << fib_num << "\tresult:" << fibonacci(fib_num) << "\tc_fib:" << c_fib << endl;
+	}
+}
