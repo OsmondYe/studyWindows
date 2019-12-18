@@ -77,9 +77,29 @@ unsigned long long fibonacci(int n) {
 
 
 TEST(OyeAlgo, Fibonacci) {
-	for (int i = 3; i < 21; i++) {
+	int count=40;
+	/*
+		用Divide and Conqure来解决
+			把问题划分为子问题，最小的子问题解已知，本质上就是一个树， 从上到下来处理
+	*/
+	for (int i = 3; i < count; i++) {
 		int fib_num = i;
 		c_fib = 0;
 		cout << "fib_num:" << fib_num << "\tresult:" << fibonacci(fib_num) << "\tc_fib:" << c_fib << endl;
 	}
+
+	/*
+		用Dynamic Programming来解决， 智商层面的优越感，油然而生
+			根据DC得来的灵感， 如果从下到上来思考问题的解，不就常数时间搞定了
+
+	*/
+	vector<int> fn(count, 0);
+	fn[0] = 0;
+	fn[1] = 1;
+	c_fib = 0;
+	for (int i = 2; i < count; i++) {
+		fn[i] = fn[i - 1] + fn[i - 2];
+		cout << "fib_num:" << i << "\tresult:" << fn[i] << "\tc_fib:" << ++c_fib << endl;
+	}
+
 }

@@ -32,6 +32,23 @@ TEST(Set, Basic) {
 	// 用差集来实现
 	std::set_difference(s.begin(), s.end(), toBeDel.begin(), toBeDel.end(), inserter(anew,anew.end()));
 	aux::output(anew);
+}
 
-	
+TEST(Set, Multiset) {
+
+}
+
+// -未排序，也就是hash(key) o(1) 最佳情况， o(n)最坏情况
+TEST(Set, Unordered_Set) {
+	std::unordered_set<int> us{ 1,1000,2,200,3,300,4,400 };
+
+	// 存储的数据没有排序
+	for (auto s : us) {
+		cout << s << endl;
+	}
+
+}
+
+TEST(Set, Unordered_Multiset) {
+
 }
