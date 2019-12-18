@@ -1,12 +1,3 @@
-/*
-实现所有一直的排序问题
-	- 插入排序, 类似于打扑克,每摸到一张牌时,我们肯定是再已经排序的序列中,找到新牌的位置,然后插入
-		- 插入点后面的所有元素是不是需要依次后移,
-		- 腾出可插入的位置
-		- 书上说对于少量元素,这样来很快
-	- 归并排序(Merge, 分治算法的应用), 
-		- 序列分为左,右,然后merge左右 
-*/
 #include "pch.h"
 #include "helper.hpp"
 using namespace aux;
@@ -14,37 +5,21 @@ using namespace std;
 
 int counts = 1000;
 
-/*
-插入排序
-经验:
-	--out;  stl不允许--操作小于begin(), 这是绝对正确的
-	从右往左,给腾出位置,	(cur > s.begin() && *(cur-1) > key) 
-		只有cur>s.begin(), cur-1 做比较才是有意义的,否则会出现begin()左边的问题
-*/
+
 void insertion_sort(vector<int>& s) {
-	if (s.empty()) {	// 这里可以去看一下,s.end()+1 为什么会失败?
+	if (s.empty()) {	
 		return;
 	}
-	// 第一个元素不考虑, 
-	//从begin+1开始,往左边找合适的插入点
-	for (auto out = s.begin() + 1; out != s.end(); ++out) {
-		// 依次往左边找
-		//for (auto cur = out; cur > s.begin() && (*(cur - 1) > *cur); --cur) {
-		//	std::swap(*(cur - 1), *cur);
-		//}
-		
-		// 选取关键字
+
+	for (auto out = s.begin() + 1; out != s.end(); ++out) {	
 		auto key = *out;
-		auto cur = out;
-		// 和已经排序的数据从右往左依次比较
-		// 给Key腾出位置就好
+		auto cur = out;		
 		while (cur > s.begin() && *(cur-1) > key) // 
 		{
 			*(cur) = *(cur-1);
 			--cur;
 		}
-		*(cur) = key;// 如果cur根本就没有挪动,那也可以自己给自己赋值
-
+		*(cur) = key;
 	}
 }
 
@@ -72,46 +47,6 @@ TEST(Sort, Insertion) {
 
 }
 
-/*
-归并排序 Merge:
-	-把原问题分解为规模小的和原问题类似的子问题,递归的解决子问题,再合并子问题
-	-两个已经排序的序列合并为问题的解
-	-cpp下标从0开始,这个很讨厌啊
-*/
-// merging  array[p...q] array[q+1 ... r] as a sorted arrary
-//void merging(int* array, int p, int q, int r) {
-//	int n1 = q - p + 1;
-//	int n2 = r - q;
-//	int* L = new int[n1];
-//	for (int i = 0; i < n1; ++i) {
-//		L[i] = array[p+1-1];
-//	}
-//	int* R = new int[n2];
-//	for (int i = 0; i < n2; ++i) {
-//		R[i] = array[q + i];
-//	}
-//	// merge [p -> r]
-//	int i = 0; 
-//	int j = 0;
-//	for (int k = p; k != r; ++k) {
-//		if (i == n1) {
-//			array[k] = R[j++];
-//			continue;
-//		}
-//		if (j == n2) {
-//			array[k] = L[i++];
-//			continue;
-//		}
-//		if (L[i] < R[j]) {
-//			array[k] = L[i++];
-//		}
-//		else {
-//			array[k] = R[j++];
-//		}
-//	}
-//}
-
-
 void merge_helper(vector<int>& v, vector<int>::iterator p, vector<int>::iterator q, vector<int>::iterator r) {
 	vector<int> L(p, q);
 	vector<int> R(q, r);
@@ -138,15 +73,11 @@ void merge_helper(vector<int>& v, vector<int>::iterator p, vector<int>::iterator
 }
 
 void merge_sort(vector<int>& v, vector<int>::iterator begin, vector<int>::iterator end) {
-	//if (begin == end) {  // 加在这里,会形成死循环
-	//	return;
-	//}
+
 	if (begin < end) {
 		vector<int>::iterator mid = begin + (end-begin) / 2;
 		if (begin == mid) {		
-			// 这行是我半天才调试出来的,如果diff(end,begin)=1,那么begin和mid必然是同一个点
-			// 同一个点是不用再排序的,直接返回
-			// 不能加头部,必然死循环
+
 			return;
 		}
 		merge_sort(v, begin, mid);
