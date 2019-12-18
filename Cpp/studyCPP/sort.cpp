@@ -1,3 +1,11 @@
+/*
+	Insertion
+	Merge
+	Quick
+	Selection
+	Heap
+	Bubble
+*/
 #include "pch.h"
 #include "helper.hpp"
 using namespace aux;
@@ -5,7 +13,9 @@ using namespace std;
 
 int counts = 1000;
 
-
+//
+//	Insertion sort
+//
 void insertion_sort(vector<int>& s) {
 	if (s.empty()) {	
 		return;
@@ -47,6 +57,9 @@ TEST(Sort, Insertion) {
 
 }
 
+//
+//	Merge sort
+//
 void merge_helper(vector<int>& v, vector<int>::iterator p, vector<int>::iterator q, vector<int>::iterator r) {
 	vector<int> L(p, q);
 	vector<int> R(q, r);
@@ -126,6 +139,53 @@ TEST(Sort, Merge) {
 
 }
 
+//
+// quick sort
+//
+
+// find it [begin,it ,end)
+// i,j 
+vector<int>::iterator  quick_sort_partition(vector<int>& v, vector<int>::iterator begin, vector<int>::iterator end) {
+	int x = *(end-1);
+	auto i = begin;
+	for (; begin != (end-1); ++begin) {
+		if (*begin <= x) {
+			iter_swap(i++, begin);			
+		}
+	}
+
+	iter_swap(i, (end-1));
+	return i;
+}
+
+void quick_sort(vector<int>& v, vector<int>::iterator begin, vector<int>::iterator end) {
+	if (begin !=end) {
+		auto mid = quick_sort_partition(v, begin, end);
+		if (begin == mid) { // only one elem, dont need to sort
+			return;
+		}
+		quick_sort(v, begin, mid);
+		quick_sort(v, mid, end);
+	}
+}
+
+TEST(Sort, Quick) {
+	auto v = aux::getRandom_UnitForm(10,0,50);
+	aux::output(v);
+	//test partition
+	auto x = quick_sort_partition(v, v.begin(), v.end());
+	aux::output(v);
+	cout << "partition point:" << *x << endl;
+
+	// test 
+	v = aux::getRandom_UnitForm(100, 0, 200);
+	quick_sort(v, v.begin(), v.end());
+	aux::output(v);
+
+}
+
+
+
 TEST(Sort, DISABLED_Selection) {
 	auto v = getRandom(counts);
 	//cout << "before sort:\n"; output(v);
@@ -164,12 +224,7 @@ TEST(Sort, DISABLED_ExchangeBubble) {
 	cout << "after sort:\n"; output(v);
 }
 
-TEST(Sort, DISABLED_QuickSort_PartitionExchange) {
-	auto v = getRandom();
-	cout << "before sort:\n"; output(v);
-	// todo: add your code here
-	cout << "after sort:\n"; output(v);
-}
+
 
 
 TEST(Sort, DISABLED_Heap) {

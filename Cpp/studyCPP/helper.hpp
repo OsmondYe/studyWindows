@@ -17,6 +17,14 @@ namespace aux {
 		return rt;
 	}
 
+	inline static vector<int> getRandom_UnitForm(int size, int min, int max) {
+		std::default_random_engine rge(std::time(NULL));
+		std::uniform_int_distribution<int> di(min, max);
+		vector<int> rt(size);
+		std::generate(rt.begin(), rt.end(), [&rge,&di]() {return di(rge); });
+		return rt;
+	}
+
 
 	template<class Iterator>
 	static void output(Iterator beg, Iterator end, const wchar_t* delim =L" ") {

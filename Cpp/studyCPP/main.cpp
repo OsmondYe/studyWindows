@@ -52,7 +52,7 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "Chrono.*";
 	testing::FLAGS_gtest_filter = "Set.*";
 	testing::FLAGS_gtest_filter = "OyeAlgo.Fibonacci";
-	testing::FLAGS_gtest_filter = "Sort.*";
+	testing::FLAGS_gtest_filter = "Sort.Quick";
 	
 
 	return RUN_ALL_TESTS();
