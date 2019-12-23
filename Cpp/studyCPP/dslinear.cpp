@@ -266,9 +266,76 @@ TEST(DSLinear, MAX_SUB_ARRAY) {
 		}
 		});
 	cout << max.first.first << "to" << max.first.second << endl;
+	cout << max.second << endl;
 
+
+	//method 2:  DP  msa(i)= max( msa(i-1) + a[i] , a[i]);
+
+	vector<int> msa(diff.size(), 0);
+	vector<int> path = msa;
+	msa[0] = diff[0];
+	path[0] = 0;
+	for (int i = 1; i < diff.size();i++) {
+		if (msa[i - 1] + diff[i] > diff[i]) {
+			msa[i] = msa[i - 1] + diff[i];
+			path[i] = i-1;
+		}
+		else {
+			msa[i] = diff[i];
+			path[i] = 0xffff;
+		}
+
+		
+	}
+
+	/*auto mm = std::max_element(msa.begin(), msa.end());
+
+	cout << "max is:" <<*mm <<" index:"<< mm-msa.begin()  << endl;
+	for (auto i: path)
+	{
+		cout << i << " ";
+
+	}*/
+
+	for (int i = 0; i < msa.size(); i++) {
+		cout << msa[i] << "\t";
+	}
+	cout << endl;
+	for (int i = 0; i < msa.size(); i++) {
+		cout << path[i] << "\t";
+	}
 
 }
 
+TEST(DSLinear, Steal_Cut_DP) {
+	vector<int> len_price{
+		0,1,5,8,9,10,17,17,20,24,30
+	};
+
+	cout << "org: length and price\n";
+	aux::output(len_price);
+
+	/*
+		presume:  
+		 - the best is k cur
+			n=i1+i2+i3+...+ik
+		 - i.e.
+			7 = 2+2+3 
+		 -  r = pi1 +pi2 +pi3 + ... + pik
+		 - i.e.
+		   r7 = p2(5) +p2(5) = p3(8);
+
+		so max value:
+	     - r_n_max = {p_n, r_1 + r_n-1, r_2+r_n-2, ... r_n-1 +r1};
+		optimal substructure
+		 - 	
+
+	   
+
+
+
+	*/
+
+}
 
 
