@@ -229,6 +229,33 @@ TEST(DSLinear, LinkedList_ReversePrint) {
 	cout << endl;
 }
 
+
+TEST(DSLinear, Vector_Remove_duplicate_Elem) {
+	auto v = aux::getRandom_UnitForm(100, 0, 10);
+	aux::output(v);
+
+	// - method 1, using set
+	// - problem: set will sort all elem
+	{
+		auto v1 = v;
+		set<int> t(v.begin(), v.end());
+		v1.clear();
+		std::copy(t.begin(), t.end(), std::back_inserter(v1));
+		aux::output(v1);
+	}
+	// - method 2, std:: unique
+	{
+		auto v1 = v;
+		std::sort(v1.begin(), v1.end());
+		auto last=std::unique(v1.begin(), v1.end());
+		v1.erase(last, v1.end());
+		aux::output(v1);
+	}
+
+}
+
+
+
 /*最大子数组
 		
 */
@@ -329,10 +356,6 @@ TEST(DSLinear, Steal_Cut_DP) {
 	     - r_n_max = {p_n, r_1 + r_n-1, r_2+r_n-2, ... r_n-1 +r1};
 		optimal substructure
 		 - 	
-
-	   
-
-
 
 	*/
 

@@ -54,6 +54,7 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "Sort.Quick";
 	testing::FLAGS_gtest_filter = "DSLinear.MAX_SUB_ARRAY";
 	testing::FLAGS_gtest_filter = "DSLinear.Steal_Cut_DP";
+	testing::FLAGS_gtest_filter = "DSLinear.Vector_Remove_duplicate_Elem";
 	
 
 	return RUN_ALL_TESTS();

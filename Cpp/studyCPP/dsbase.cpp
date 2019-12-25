@@ -32,21 +32,7 @@ TEST(DSBase, basic) {
 		cout << "factorial_sum" << i << "=" << factorial_sum(i) << endl;
 	}
 	
-	// gcd
-//for (size_t i = 0; i < 101; i++)
-//{
-//	for (size_t j = 0; j < 101; j++)
-//	{
-//		cout << i << " " << j << "=" << gcd(i, j)<<endl;
-//	}
-//}
 }
-
-
-
-
-
-
 
 // divide and conquer
 template<class T>
