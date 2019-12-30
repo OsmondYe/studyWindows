@@ -42,12 +42,6 @@ TEST(DSBase, basic) {
 //}
 }
 
-
-
-
-
-
-
 // divide and conquer
 template<class T>
 bool minmax(T a[], int n, int& indexOfMin, int& indexOfMax)
@@ -139,12 +133,28 @@ void permutation(T l[], int beg, int end) {
 	}
 }
 
+void permutation(string& str, string::iterator beg, string::iterator end) {
+	if (beg == end) {
+		copy(str.begin(), str.end(), ostream_iterator<char>(cout, ""));
+		return;
+	}
+
+	for (auto i = beg; i != end; ++i) {
+		iter_swap(beg, i);
+		permutation(str, beg + 1, end);
+		iter_swap(beg, i);
+	}
+}
+
 
 
 TEST(DSBase, Perm) {
 
 	char ss[] ={ "abcde" };
 	permutation(ss, 0, 4);
+	string s = "abcd";
+	permutation(s, s.begin(), s.end());
+
 }
 
 // 不用任何变量,交换2个int的值

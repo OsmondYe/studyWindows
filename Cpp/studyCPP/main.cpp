@@ -4,21 +4,9 @@
 #include "pch.h"
 
 
-/*
-container_hearders:
-	vector 
-	deque
-	forward_list		:  single linked list
-	list				:  double linked list
-	-----
-	map set
-	unordered_map/set
-	-----
-	queue/ stack		:	adapter
-	-----
-	array				:  fixed dimenstion array
-	bitset				:  bool array
-*/
+
+
+
 
 int main(int argc, wchar_t** argv)
 {
@@ -42,7 +30,6 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "Algorithm.*";
 	testing::FLAGS_gtest_filter = "DSBase.Perm";
 	testing::FLAGS_gtest_filter = "Iterator.Vector";
-	testing::FLAGS_gtest_filter = "DSBase.*";
 	testing::FLAGS_gtest_filter = "String.ReplaceAll";
 	testing::FLAGS_gtest_filter = "Idiom.MacroParam";
 	testing::FLAGS_gtest_filter = "Sort.Merge";
@@ -53,6 +40,7 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "Set.*";
 	testing::FLAGS_gtest_filter = "OyeAlgo.Fibonacci";
 	testing::FLAGS_gtest_filter = "Sort.Quick";
+	testing::FLAGS_gtest_filter = "DSBase.Perm";
 	
 
 	return RUN_ALL_TESTS();

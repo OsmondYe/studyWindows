@@ -25,6 +25,23 @@ Elem_in_container_requried:
 
 */
 
+/*
+container_hearders:
+	vector
+	deque
+	forward_list		:  single linked list
+	list				:  double linked list
+	-----
+	map set
+	unordered_map/set
+	-----
+	queue/ stack		:	adapter
+	-----
+	array				:  fixed dimenstion array
+	bitset				:  bool array
+*/
+
+
 using namespace std;
 using namespace aux;
 
