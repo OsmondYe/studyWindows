@@ -29,6 +29,7 @@
 #include <numeric>
 #include <utility>
 #include <random>
+#include <memory>	// shared_ptr  unique_ptr, weak_ptr
 // c++ excption
 #include <exception>
 #include <stdexcept>

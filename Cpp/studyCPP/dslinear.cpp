@@ -230,6 +230,18 @@ TEST(DSLinear, LinkedList_ReversePrint) {
 }
 
 
+/*
+	in a seq_n,  n>=k
+	find s in seq_n is the k_th max valuse
+
+	- partly sort,
+
+*/
+TEST(DSLinear, Max_K) {
+
+}
+
+
 TEST(DSLinear, Vector_Remove_duplicate_Elem) {
 	auto v = aux::getRandom_UnitForm(100, 0, 10);
 	aux::output(v);
@@ -334,30 +346,94 @@ TEST(DSLinear, MAX_SUB_ARRAY) {
 
 }
 
-TEST(DSLinear, Steal_Cut_DP) {
-	vector<int> len_price{
-		0,1,5,8,9,10,17,17,20,24,30
-	};
 
-	cout << "org: length and price\n";
-	aux::output(len_price);
-
-	/*
-		presume:  
+/*
+for Steel Cut:
+		presume:
 		 - the best is k cur
 			n=i1+i2+i3+...+ik
-		 - i.e.
-			7 = 2+2+3 
-		 -  r = pi1 +pi2 +pi3 + ... + pik
-		 - i.e.
-		   r7 = p2(5) +p2(5) = p3(8);
-
+			- i.e.
+				7 = 2+2+3 (length is 7, using 2,2,3 is the best price
+		 -  r = pi1 +pi2 +pi3 + ... + pik   r(receive)
+			- i.e.
+				r7 = p2(5) +p2(5) + p3(8);
 		so max value:
-	     - r_n_max = {p_n, r_1 + r_n-1, r_2+r_n-2, ... r_n-1 +r1};
-		optimal substructure
-		 - 	
+		 - r_n_max = {p_n, r_1 + r_n-1, r_2+r_n-2, ... r_n-1 +r1};
+		
+		this is a recursion, top to bottom
 
-	*/
+		n_max = max{ p[1]+n_max(n-1) ,  p[2]+n_max(n-2), p[3]+n_max(n-3), ..., p[n]}
+
+*/
+int steelcut_top2bottom_n_max (const std::vector<int>& price,int n) {
+	if (n == 0) {
+		return 0;
+	}
+	int q = -1;
+	for (int i = 1; i <= n; ++i) {
+		q = std::max<int>(q, price[i] + steelcut_top2bottom_n_max(price,n - i));
+	};
+	return q;
+}
+
+
+
+int steel_cut_memoized(const std::vector<int>& price, int n, std::vector<int>& assit) {
+	if (n == 0) {
+		return 0;
+	}
+	if (assit[n] > -1) {
+		return assit[n];
+	}
+	
+	int q = -1;
+
+	for (int i = 1; i <= n; ++i) {
+		q = max(q, price[i] + steel_cut_memoized(price, n - i, assit));
+	}
+	assit[n] = q;
+	return q;
+}
+
+int steel_cut_memoized_n_max(const std::vector<int>& price, int n) {
+
+	vector<int> assit(price.size(), -1);
+	assit[0] = 0;
+	return steel_cut_memoized(price, n, assit);
+
+}
+
+
+int steel_cut_bottom_up_n_max(const std::vector<int>& price, int n) {
+	vector<int> assit(price.size(), 0);
+
+	for (int i = 1; i <= n; ++i) {
+		int q = -1;
+		for (int j = 1; j <= i; ++j) {
+			q = max(q, price[j] + assit[i - j]);
+		}
+		assit[i] = q;
+	}
+	return assit[n];
+}
+
+
+TEST(DSLinear, Steal_Cut_DP) {
+	vector<int> len_price{
+	//  0,1,2,3,4,5 ,6 ,7 ,8, 9 10
+		0,1,5,8,9,10,17,17,20,24,30
+	};
+	cout << "org: length and price\n";
+	aux::output(len_price);
+	
+	//  iter max(i)
+	for (int i = 1; i <= 10; ++i) {
+		cout << steelcut_top2bottom_n_max(len_price, i) << "\t" 
+			<< steel_cut_memoized_n_max(len_price, i) <<"\t"
+			<< steel_cut_bottom_up_n_max(len_price,i)
+			<< endl;
+	}
+
 
 }
 
