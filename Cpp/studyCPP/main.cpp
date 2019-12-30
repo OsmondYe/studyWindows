@@ -4,9 +4,21 @@
 #include "pch.h"
 
 
-
-
-
+/*
+container_hearders:
+	vector 
+	deque
+	forward_list		:  single linked list
+	list				:  double linked list
+	-----
+	map set
+	unordered_map/set
+	-----
+	queue/ stack		:	adapter
+	-----
+	array				:  fixed dimenstion array
+	bitset				:  bool array
+*/
 
 int main(int argc, wchar_t** argv)
 {
@@ -30,17 +42,20 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "Algorithm.*";
 	testing::FLAGS_gtest_filter = "DSBase.Perm";
 	testing::FLAGS_gtest_filter = "Iterator.Vector";
+	testing::FLAGS_gtest_filter = "DSBase.*";
 	testing::FLAGS_gtest_filter = "String.ReplaceAll";
 	testing::FLAGS_gtest_filter = "Idiom.MacroParam";
 	testing::FLAGS_gtest_filter = "Sort.Merge";
-	testing::FLAGS_gtest_filter = "DSLinear.MAX_SUB_ARRAY";
 	testing::FLAGS_gtest_filter = "Concurrency.Mutex";
 	testing::FLAGS_gtest_filter = "String.IEqual";
 	testing::FLAGS_gtest_filter = "Chrono.*";
 	testing::FLAGS_gtest_filter = "Set.*";
 	testing::FLAGS_gtest_filter = "OyeAlgo.Fibonacci";
 	testing::FLAGS_gtest_filter = "Sort.Quick";
-	testing::FLAGS_gtest_filter = "DSBase.Perm";
+	testing::FLAGS_gtest_filter = "DSLinear.MAX_SUB_ARRAY";
+	testing::FLAGS_gtest_filter = "DSLinear.Vector_Remove_duplicate_Elem";
+	testing::FLAGS_gtest_filter = "DSLinear.Steal_Cut_DP";
+	testing::FLAGS_gtest_filter = "Memory.SmartPtr";
 	
 
 	return RUN_ALL_TESTS();

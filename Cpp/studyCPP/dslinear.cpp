@@ -229,6 +229,45 @@ TEST(DSLinear, LinkedList_ReversePrint) {
 	cout << endl;
 }
 
+
+/*
+	in a seq_n,  n>=k
+	find s in seq_n is the k_th max valuse
+
+	- partly sort,
+
+*/
+TEST(DSLinear, Max_K) {
+
+}
+
+
+TEST(DSLinear, Vector_Remove_duplicate_Elem) {
+	auto v = aux::getRandom_UnitForm(100, 0, 10);
+	aux::output(v);
+
+	// - method 1, using set
+	// - problem: set will sort all elem
+	{
+		auto v1 = v;
+		set<int> t(v.begin(), v.end());
+		v1.clear();
+		std::copy(t.begin(), t.end(), std::back_inserter(v1));
+		aux::output(v1);
+	}
+	// - method 2, std:: unique
+	{
+		auto v1 = v;
+		std::sort(v1.begin(), v1.end());
+		auto last=std::unique(v1.begin(), v1.end());
+		v1.erase(last, v1.end());
+		aux::output(v1);
+	}
+
+}
+
+
+
 /*最大子数组
 		
 */
@@ -266,9 +305,136 @@ TEST(DSLinear, MAX_SUB_ARRAY) {
 		}
 		});
 	cout << max.first.first << "to" << max.first.second << endl;
+	cout << max.second << endl;
 
+
+	//method 2:  DP  msa(i)= max( msa(i-1) + a[i] , a[i]);
+
+	vector<int> msa(diff.size(), 0);
+	vector<int> path = msa;
+	msa[0] = diff[0];
+	path[0] = 0;
+	for (int i = 1; i < diff.size();i++) {
+		if (msa[i - 1] + diff[i] > diff[i]) {
+			msa[i] = msa[i - 1] + diff[i];
+			path[i] = i-1;
+		}
+		else {
+			msa[i] = diff[i];
+			path[i] = 0xffff;
+		}
+
+		
+	}
+
+	/*auto mm = std::max_element(msa.begin(), msa.end());
+
+	cout << "max is:" <<*mm <<" index:"<< mm-msa.begin()  << endl;
+	for (auto i: path)
+	{
+		cout << i << " ";
+
+	}*/
+
+	for (int i = 0; i < msa.size(); i++) {
+		cout << msa[i] << "\t";
+	}
+	cout << endl;
+	for (int i = 0; i < msa.size(); i++) {
+		cout << path[i] << "\t";
+	}
 
 }
 
+
+/*
+for Steel Cut:
+		presume:
+		 - the best is k cur
+			n=i1+i2+i3+...+ik
+			- i.e.
+				7 = 2+2+3 (length is 7, using 2,2,3 is the best price
+		 -  r = pi1 +pi2 +pi3 + ... + pik   r(receive)
+			- i.e.
+				r7 = p2(5) +p2(5) + p3(8);
+		so max value:
+		 - r_n_max = {p_n, r_1 + r_n-1, r_2+r_n-2, ... r_n-1 +r1};
+		
+		this is a recursion, top to bottom
+
+		n_max = max{ p[1]+n_max(n-1) ,  p[2]+n_max(n-2), p[3]+n_max(n-3), ..., p[n]}
+
+*/
+int steelcut_top2bottom_n_max (const std::vector<int>& price,int n) {
+	if (n == 0) {
+		return 0;
+	}
+	int q = -1;
+	for (int i = 1; i <= n; ++i) {
+		q = std::max<int>(q, price[i] + steelcut_top2bottom_n_max(price,n - i));
+	};
+	return q;
+}
+
+
+
+int steel_cut_memoized(const std::vector<int>& price, int n, std::vector<int>& assit) {
+	if (n == 0) {
+		return 0;
+	}
+	if (assit[n] > -1) {
+		return assit[n];
+	}
+	
+	int q = -1;
+
+	for (int i = 1; i <= n; ++i) {
+		q = max(q, price[i] + steel_cut_memoized(price, n - i, assit));
+	}
+	assit[n] = q;
+	return q;
+}
+
+int steel_cut_memoized_n_max(const std::vector<int>& price, int n) {
+
+	vector<int> assit(price.size(), -1);
+	assit[0] = 0;
+	return steel_cut_memoized(price, n, assit);
+
+}
+
+
+int steel_cut_bottom_up_n_max(const std::vector<int>& price, int n) {
+	vector<int> assit(price.size(), 0);
+
+	for (int i = 1; i <= n; ++i) {
+		int q = -1;
+		for (int j = 1; j <= i; ++j) {
+			q = max(q, price[j] + assit[i - j]);
+		}
+		assit[i] = q;
+	}
+	return assit[n];
+}
+
+
+TEST(DSLinear, Steal_Cut_DP) {
+	vector<int> len_price{
+	//  0,1,2,3,4,5 ,6 ,7 ,8, 9 10
+		0,1,5,8,9,10,17,17,20,24,30
+	};
+	cout << "org: length and price\n";
+	aux::output(len_price);
+	
+	//  iter max(i)
+	for (int i = 1; i <= 10; ++i) {
+		cout << steelcut_top2bottom_n_max(len_price, i) << "\t" 
+			<< steel_cut_memoized_n_max(len_price, i) <<"\t"
+			<< steel_cut_bottom_up_n_max(len_price,i)
+			<< endl;
+	}
+
+
+}
 
 
