@@ -189,6 +189,7 @@
     <ClCompile Include="idiom.cpp" />
     <ClCompile Include="iterator.cpp" />
     <ClCompile Include="limits.cpp" />
+    <ClCompile Include="map.cpp" />
     <ClCompile Include="memory.cpp" />
     <ClCompile Include="oye_algo.cpp" />
     <ClCompile Include="pch.cpp">

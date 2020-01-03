@@ -180,7 +180,6 @@ private:
 
 };
 
-
 TEST(DSTree, basic) {
 	// how to build a tree with {1,2,3,4,5,6,7,8,9,10}
 	auto v = aux::getSorted(10);
@@ -190,27 +189,174 @@ TEST(DSTree, basic) {
 
 	auto visit = [](int i) {cout << i << " "; };
 
+	cout << "preorder:\n";
 	bt.preorder(visit); cout << endl;
+	cout << "inorder:\n";
 	bt.inorder(visit); cout << endl;
+	cout << "postorder:\n";
 	bt.postorder(visit); cout << endl;
+	cout << "levelorder:\n";
 	bt.levelorder(visit); cout << endl;
 
 	cout <<"height():"<< bt.height() << endl;
 	cout << "size():" << bt.size() << endl;
+}
 
 
-	string expr{ R"(a+b+c+d)" };
-	vector<char> v2(expr.begin(), expr.end());
+//
+//	Bineary Search Tree  (BST)
+//
 
-	binary_tree<char> bt2(v2);
+/*
+	search, minimum, maximum, predecessor, successor
+	intsert delete
 
-	auto visit2 = [](char i) {cout << i << " "; };
+	bst:  x is a node
+		if y in x.left
+			y.key<=x.key
+		if y in x.right
+			y.key>=x.key
 
-	bt2.preorder(visit2); cout << endl;
-	bt2.inorder(visit2); cout << endl;
-	bt2.postorder(visit2); cout << endl;
-	bt2.levelorder(visit2); cout << endl;
+*/
+
+struct bst_node {
+	int key;
+	bst_node* left;
+	bst_node* right;
+	bst_node* parent;
+
+	bst_node(int key) {
+		this->key = key;
+		left = right = parent = NULL;
+	}
+};
+
+struct bst_tree
+{
+	bst_node* root;
+
+	bst_tree() :root(NULL) {}
+};
 
 
+void bst_inorder_walk(bst_node* root) {
+	if (root != NULL) {
+		bst_inorder_walk(root->left);
+		cout << root->key << " ";
+		bst_inorder_walk(root->right);
+	}
+}
+
+bst_node* bst_search(bst_node* x, int k) {
+	if (x == NULL || x->key == k) {
+		return x;
+	}
+	if (k < x->key) {
+		return bst_search(x->left, k);
+	}
+	else {
+		return bst_search(x->right, k);
+	}
+}
+
+bst_node* bst_search_iterative(bst_node* x, int k) {
+	while (x != NULL && x->key != k) {
+		if (k < x->key) {
+			x = x->left;
+		}
+		else {
+			x = x->right;
+		}
+	}
+	return x;
+}
+
+bst_node* bst_minimun(bst_node* x) {
+	while (x!=NULL && x->left!=NULL)
+	{
+		x = x->left;
+	}
+	return x;
+}
+
+bst_node* bst_maximun(bst_node* x) {
+	while (x!=NULL && x->right!=NULL)
+	{
+		x = x->right;
+	}
+	return x;
+}
+
+// the next node  in  the in_order_walk sequence
+// x->right ==NULL, from bottom to top, find first parent that p.left=x
+bst_node* bst_successor(bst_node* x) {
+	if (x->right != NULL) {
+		return bst_minimun(x);
+	}
+	bst_node* y = x->parent;
+	while (y!=NULL && x==y->right)
+	{
+		x = y;
+		y = y->parent;
+	}
+	return y;
+
+}
+
+// the previous node in the in_order_walk sequence
+bst_node* bst_predecessor(bst_node* x) {
+	if (x->left != NULL) {
+		return bst_minimun(x);
+	}
+	bst_node* y = x->parent;
+	while (y!=NULL && x==y->left)
+	{
+		x = y;
+		y = y->parent;
+	}
+	return y;
+}
+
+void bst_insert(bst_tree* T, bst_node* z) {
+	bst_node* y = NULL;
+	bst_node* x = T->root;
+	while (x!=NULL)
+	{
+		y = x;
+		if (z->key < x->key) {
+			x = x->left;
+		}
+		else
+		{
+			x = x->right;
+		}
+	}
+	z->parent = y;
+	if (y == NULL) {
+		// tree is empty
+		T->root = z;
+	}
+	else if(z->key<y->key)
+	{
+		y->left = z;
+	}
+	else
+	{
+		y->right = z;
+	}
+}
+
+
+TEST(DSTree, bst) {
+	vector<int> v{ 15,6,18,3,7,17,20,2,4,13,9 };
+	bst_tree* bstTree = new bst_tree();
+	for (auto i : v) {
+		bst_insert(bstTree,new bst_node(i));
+	}
+
+	bst_inorder_walk(bstTree->root); cout << endl;
+
+	cout << "min:" << bst_minimun(bstTree->root)->key << endl;
+	cout << "max:" << bst_maximun(bstTree->root)->key << endl;
 
 }

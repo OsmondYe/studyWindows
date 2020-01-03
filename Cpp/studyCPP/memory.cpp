@@ -42,6 +42,9 @@ TEST(Memory, SmartPtr_Unique) {
 	cout << "unique means: unique object ownershipi semantics\ncan be used in stl";
 }
 
+TEST(Memory, SmartPtr_Weak) {
+}
+
 
 TEST(Memory, SmartPtr_Shared) {
 	// shared_ptr
@@ -49,5 +52,3 @@ TEST(Memory, SmartPtr_Shared) {
 }
 
 
-TEST(Memory, SmartPtr_Weak) {
-}

@@ -137,6 +137,9 @@
     <ClCompile Include="memory.cpp">
       <Filter>Source Files\lib</Filter>
     </ClCompile>
+    <ClCompile Include="map.cpp">
+      <Filter>Source Files\stl\container</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="NoUse.hpp">

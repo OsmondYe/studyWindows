@@ -56,6 +56,8 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "DSLinear.Vector_Remove_duplicate_Elem";
 	testing::FLAGS_gtest_filter = "DSLinear.Steal_Cut_DP";
 	testing::FLAGS_gtest_filter = "Memory.SmartPtr";
+	testing::FLAGS_gtest_filter = "Map.Hash";
+	testing::FLAGS_gtest_filter = "DSTree.*";
 	
 
 	return RUN_ALL_TESTS();
