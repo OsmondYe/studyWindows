@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "helper.hpp"
 /*
-	height, depth:	index based on 1	
+	height, depth:	index based on 1
 	walk through,  traversal
 
 */
@@ -12,10 +12,10 @@ struct binary_tree_node {
 	binary_tree_node<T>* left_child;
 	binary_tree_node<T>* right_child;
 
-	binary_tree_node(): element(),left_child(nullptr), right_child(nullptr) {
+	binary_tree_node() : element(), left_child(nullptr), right_child(nullptr) {
 	}
 
-	binary_tree_node(const T& elem):element(elem), left_child(nullptr), right_child(nullptr) {
+	binary_tree_node(const T& elem) :element(elem), left_child(nullptr), right_child(nullptr) {
 	}
 
 	binary_tree_node(const T& elem, binary_tree_node* left, binary_tree_node* right) :element(elem), left_child(nullptr), right_child(nullptr) {
@@ -24,7 +24,7 @@ struct binary_tree_node {
 };
 
 template<typename T>
-class binary_tree   {
+class binary_tree {
 	typedef typename T template_type;
 	typedef typename binary_tree_node<T> node_type;
 public:
@@ -32,10 +32,10 @@ public:
 
 	}
 
-	binary_tree(const std::vector<T>& v):binary_tree() {
+	binary_tree(const std::vector<T>& v) :binary_tree() {
 		std::for_each(v.begin(), v.end(), [this](int i) {
 			_insert(i);
-		});
+			});
 	}
 
 	~binary_tree() {
@@ -44,7 +44,7 @@ public:
 
 	bool empty() { return root == nullptr; }
 
-	size_t size() { return _count(); } 
+	size_t size() { return _count(); }
 
 	size_t height() {
 		return _height(root);
@@ -68,7 +68,7 @@ public:
 		}
 		std::queue<node_type*> q;
 		q.push(root);
-		while (!q.empty() ){
+		while (!q.empty()) {
 			node_type* cur = q.front();
 			visit(cur->element);
 			if (cur->left_child) q.push(cur->left_child);
@@ -98,7 +98,7 @@ private:
 		q.push(root);
 		while (!q.empty())
 		{
-			node_type* cur = q.front();			
+			node_type* cur = q.front();
 
 			if (cur->left_child == nullptr) {
 				cur->left_child = new node_type(t);
@@ -198,7 +198,7 @@ TEST(DSTree, basic) {
 	cout << "levelorder:\n";
 	bt.levelorder(visit); cout << endl;
 
-	cout <<"height():"<< bt.height() << endl;
+	cout << "height():" << bt.height() << endl;
 	cout << "size():" << bt.size() << endl;
 }
 
@@ -272,7 +272,7 @@ bst_node* bst_search_iterative(bst_node* x, int k) {
 }
 
 bst_node* bst_minimun(bst_node* x) {
-	while (x!=NULL && x->left!=NULL)
+	while (x != NULL && x->left != NULL)
 	{
 		x = x->left;
 	}
@@ -280,7 +280,7 @@ bst_node* bst_minimun(bst_node* x) {
 }
 
 bst_node* bst_maximun(bst_node* x) {
-	while (x!=NULL && x->right!=NULL)
+	while (x != NULL && x->right != NULL)
 	{
 		x = x->right;
 	}
@@ -294,7 +294,7 @@ bst_node* bst_successor(bst_node* x) {
 		return bst_minimun(x);
 	}
 	bst_node* y = x->parent;
-	while (y!=NULL && x==y->right)
+	while (y != NULL && x == y->right)
 	{
 		x = y;
 		y = y->parent;
@@ -309,7 +309,7 @@ bst_node* bst_predecessor(bst_node* x) {
 		return bst_minimun(x);
 	}
 	bst_node* y = x->parent;
-	while (y!=NULL && x==y->left)
+	while (y != NULL && x == y->left)
 	{
 		x = y;
 		y = y->parent;
@@ -320,7 +320,8 @@ bst_node* bst_predecessor(bst_node* x) {
 void bst_insert(bst_tree* T, bst_node* z) {
 	bst_node* y = NULL;
 	bst_node* x = T->root;
-	while (x!=NULL)
+	// find insert point y;
+	while (x != NULL)
 	{
 		y = x;
 		if (z->key < x->key) {
@@ -336,7 +337,7 @@ void bst_insert(bst_tree* T, bst_node* z) {
 		// tree is empty
 		T->root = z;
 	}
-	else if(z->key<y->key)
+	else if (z->key < y->key)
 	{
 		y->left = z;
 	}
@@ -347,16 +348,66 @@ void bst_insert(bst_tree* T, bst_node* z) {
 }
 
 
+// helper in bst_delete
+void bst_transplant(bst_tree* T, bst_node* u, bst_node* v) {
+	if (u->parent == NULL) {
+		T->root = v;
+	}
+	else if (u == u->parent->left) {
+		u->parent->left = v;
+	}
+	else
+	{
+		u->parent->right = v;
+	}
+	if (v != NULL) {
+		v->parent = u->parent;
+	}
+}
+
+void bst_delete(bst_tree* T, bst_node* z) {
+	if (z->left == NULL) {
+		bst_transplant(T, z, z->right);
+	}
+	else if (z->right == NULL) {
+		bst_transplant(T, z, z->left);
+	}
+	else {
+		auto y = bst_minimun(z->right);
+		if (y->parent != z) {
+			bst_transplant(T, y, y->right);
+			y->right = z->right;
+			y->right->parent = y;
+		}
+		bst_transplant(T, z, y);
+		y->left = z->left;
+		y->left->parent = y;
+	}
+}
+
 TEST(DSTree, bst) {
 	vector<int> v{ 15,6,18,3,7,17,20,2,4,13,9 };
+
+	//
 	bst_tree* bstTree = new bst_tree();
 	for (auto i : v) {
-		bst_insert(bstTree,new bst_node(i));
+		bst_insert(bstTree, new bst_node(i));
+	}
+
+	// search
+	for (auto i : v) {
+		auto x = bst_search(bstTree->root, i);
+		if (x == NULL) {
+			cout << i << "is null" << endl;
+		}
+		else {
+			cout << i << "is:" << x << endl;
+		}
 	}
 
 	bst_inorder_walk(bstTree->root); cout << endl;
 
 	cout << "min:" << bst_minimun(bstTree->root)->key << endl;
 	cout << "max:" << bst_maximun(bstTree->root)->key << endl;
-
 }
+

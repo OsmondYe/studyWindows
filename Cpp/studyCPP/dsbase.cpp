@@ -1,6 +1,12 @@
 ﻿#include "pch.h"
 #include "helper.hpp"
-
+/*
+	keywrod:
+		trailing pointer
+		walk  traverse
+		transplant
+		recursion
+*/
 
 
 //recursion:  f(n)=n!  
