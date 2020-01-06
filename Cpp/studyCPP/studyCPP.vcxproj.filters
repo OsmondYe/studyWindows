@@ -40,12 +40,6 @@
     <Filter Include="Source Files\data_struct_and_algo">
       <UniqueIdentifier>{130311c1-aff9-41d8-b721-c56ebedcb83a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\data_struct_and_algo\sort">
-      <UniqueIdentifier>{93d1c242-ade8-454d-9dfe-5bb3bbebbd51}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\data_struct_and_algo\oye_algo">
-      <UniqueIdentifier>{0dd0066e-60ec-4177-8ced-bec58e0527db}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -56,9 +50,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="sort.cpp">
-      <Filter>Source Files\data_struct_and_algo\sort</Filter>
-    </ClCompile>
     <ClCompile Include="algorithm.cpp">
       <Filter>Source Files\stl</Filter>
     </ClCompile>
@@ -128,9 +119,6 @@
     <ClCompile Include="random.cpp">
       <Filter>Source Files\lib</Filter>
     </ClCompile>
-    <ClCompile Include="oye_algo.cpp">
-      <Filter>Source Files\data_struct_and_algo\oye_algo</Filter>
-    </ClCompile>
     <ClCompile Include="chrono.cpp">
       <Filter>Source Files\lib</Filter>
     </ClCompile>
@@ -139,6 +127,12 @@
     </ClCompile>
     <ClCompile Include="map.cpp">
       <Filter>Source Files\stl\container</Filter>
+    </ClCompile>
+    <ClCompile Include="dssort.cpp">
+      <Filter>Source Files\data_struct_and_algo</Filter>
+    </ClCompile>
+    <ClCompile Include="dsstr.cpp">
+      <Filter>Source Files\data_struct_and_algo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

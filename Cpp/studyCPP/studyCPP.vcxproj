@@ -191,7 +191,7 @@
     <ClCompile Include="limits.cpp" />
     <ClCompile Include="map.cpp" />
     <ClCompile Include="memory.cpp" />
-    <ClCompile Include="oye_algo.cpp" />
+    <ClCompile Include="dsstr.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -201,7 +201,7 @@
     <ClCompile Include="random.cpp" />
     <ClCompile Include="regex.cpp" />
     <ClCompile Include="set.cpp" />
-    <ClCompile Include="sort.cpp" />
+    <ClCompile Include="dssort.cpp" />
     <ClCompile Include="stream.cpp" />
     <ClCompile Include="string.cpp" />
     <ClCompile Include="main.cpp" />

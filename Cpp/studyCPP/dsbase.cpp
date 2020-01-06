@@ -427,3 +427,80 @@ TEST(DSBase, Str_all_char_uniq) {
 	cout << is_unique("abcd") << endl;
 }
 
+
+
+// fibonacci
+static int c_fib = 0;
+unsigned long long fibonacci(int n) {
+	++c_fib;
+	if (n == 0) return 0;
+	if (n == 1)  return 1;
+	return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+TEST(DSBase, Fibonacci) {
+	int count = 40;
+	/*
+		Divide and Conqure
+	*/
+	for (int i = 3; i < count; i++) {
+		int fib_num = i;
+		c_fib = 0;
+		cout << "fib_num:" << fib_num << "\tresult:" << fibonacci(fib_num) << "\tc_fib:" << c_fib << endl;
+	}
+
+	/*
+		Dynamic Programming
+	*/
+	vector<int> fn(count, 0);
+	fn[0] = 0;
+	fn[1] = 1;
+	c_fib = 0;
+	for (int i = 2; i < count; i++) {
+		fn[i] = fn[i - 1] + fn[i - 2];
+		cout << "fib_num:" << i << "\tresult:" << fn[i] << "\tc_fib:" << ++c_fib << endl;
+	}
+
+}
+
+
+/*
+	123 -> 321
+	-123 -> -321
+	120 -> 21;
+*/
+
+int reverser_int(int i) {
+	//bool f = i & (1 << 31);
+	// sanity check
+	// return 0, if reversed-int overflow	
+	int sum = 0;
+
+	while (i)
+	{
+		sum *= 10;
+		sum += i % 10;
+		i /= 10;
+	}
+
+	if (sum< numeric_limits<int>::min() || sum> numeric_limits<int>::max()) {
+		return 0;
+	}
+
+	//return f ? sum * -1: sum;
+	return sum;
+
+}
+
+TEST(DSBase, ReverseInt) {
+
+	aux::println(numeric_limits<int>::min());
+	aux::println(numeric_limits<int>::max());
+
+
+	EXPECT_EQ(123, reverser_int(321));
+	EXPECT_EQ(-123, reverser_int(-321));
+	EXPECT_EQ(21, reverser_int(120));
+	cout << reverser_int(1534236469);
+
+}

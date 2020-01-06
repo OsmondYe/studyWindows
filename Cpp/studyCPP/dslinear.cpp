@@ -243,29 +243,23 @@ TEST(DSLinear, Vector_Remove_duplicate_Elem) {
 }
 
 
-
-/*最大子数组
-		
-*/
 TEST(DSLinear, MAX_SUB_ARRAY) {
-	// 股票每日价格
+
 	vector<int> v = {
 		100,113,110,85,105,102,86,63,81,101,94,106,101,79,94,90,97
 	};
 
 	cout << "stock price of per day\n";
 	aux::output(v);
-	// 变换思路: 一段区间,股票delta值最大
-	// 先计算每日差值
+
 	vector<int> diff(v.size() - 1);
-	// 有一次使用到了transform的2元操作, 值右区间-值左区间, 左右区级同增
+
 	std::transform(v.begin(), v.end()-1, v.begin() + 1, diff.begin(), [](int l, int r) {return r - l; });
 	cout << "diff of price of each day\n";
 	aux::output(diff);
 	//13 -3 -25 20 -3 -16 -23 18 20 -7 12 -5 -22 15 -4 7
-	// 现在的目标转为为了: 在diff区间中寻找一个sub_array,∑最大
 
-	// 方法1: 我来暴力求解
+	// method 1:
 	std::map<std::pair<int, int>, int> range;
 	auto i = 0;
 	for (i; i < diff.size(); ++i) {

@@ -33,7 +33,7 @@ void insertion_sort(vector<int>& s) {
 	}
 }
 
-TEST(Sort, Insertion) {
+TEST(DSSort, Insertion) {
 	auto sort = [](vector<int>& v) {
 		cout << "before sort:\n"; output(v);
 		insertion_sort(v);
@@ -98,7 +98,7 @@ void merge_sort(vector<int>& v, vector<int>::iterator begin, vector<int>::iterat
 		merge_helper(v, begin, mid, end);
 	}
 }
-TEST(Sort, Merge) {
+TEST(DSSort, Merge) {
 	std::vector<int> v;
 	// test merge_helper first
 	auto sort_helper = [](vector<int>& v) {
@@ -169,7 +169,7 @@ void quick_sort(vector<int>& v, vector<int>::iterator begin, vector<int>::iterat
 	}
 }
 
-TEST(Sort, Quick) {
+TEST(DSSort, Quick) {
 	auto v = aux::getRandom_UnitForm(10,0,50);
 	aux::output(v);
 	//test partition
@@ -186,7 +186,7 @@ TEST(Sort, Quick) {
 
 
 
-TEST(Sort, DISABLED_Selection) {
+TEST(DSSort, DISABLED_Selection) {
 	auto v = getRandom(counts);
 	//cout << "before sort:\n"; output(v);
 	// divide seq into left and right, left sorted, right unsorted;
@@ -207,7 +207,7 @@ TEST(Sort, DISABLED_Selection) {
 
 
 
-TEST(Sort, DISABLED_ExchangeBubble) {
+TEST(DSSort, DISABLED_ExchangeBubble) {
 	auto v = getRandom();
 
 	auto last = v.end() - 1;
@@ -227,7 +227,7 @@ TEST(Sort, DISABLED_ExchangeBubble) {
 
 
 
-TEST(Sort, DISABLED_Heap) {
+TEST(DSSort, DISABLED_Heap) {
 	auto v = getRandom();
 	cout << "before sort:\n"; output(v);
 	// todo: add your code here

@@ -1,7 +1,6 @@
 #include "pch.h"
 
-
-
+// smart pointer
 
 TEST(Memory, SmartPtr_Basic) {
 	int* p = NULL;

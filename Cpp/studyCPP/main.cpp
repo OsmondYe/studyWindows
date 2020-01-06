@@ -42,7 +42,6 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "Algorithm.*";
 	testing::FLAGS_gtest_filter = "DSBase.Perm";
 	testing::FLAGS_gtest_filter = "Iterator.Vector";
-	testing::FLAGS_gtest_filter = "DSBase.*";
 	testing::FLAGS_gtest_filter = "String.ReplaceAll";
 	testing::FLAGS_gtest_filter = "Idiom.MacroParam";
 	testing::FLAGS_gtest_filter = "Sort.Merge";
@@ -58,6 +57,9 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "Memory.SmartPtr";
 	testing::FLAGS_gtest_filter = "Map.Hash";
 	testing::FLAGS_gtest_filter = "DSTree.*";
+	testing::FLAGS_gtest_filter = "DSStr.*";
+	testing::FLAGS_gtest_filter = "DSStr.*";
+	testing::FLAGS_gtest_filter = "DSBase.ReverseInt";
 	
 
 	return RUN_ALL_TESTS();

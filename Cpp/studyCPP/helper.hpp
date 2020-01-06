@@ -25,6 +25,14 @@ namespace aux {
 		return rt;
 	}
 
+	inline static string getRandom_LowerAlpha(int size) {
+		std::default_random_engine rge(std::clock());
+		std::uniform_int_distribution<int> di('a', 'z');
+		string rt(size,0);
+		std::generate(rt.begin(), rt.end(), [&rge, &di]() {return di(rge); });
+		return rt;
+	}
+
 
 	template<class Iterator>
 	static void output(Iterator beg, Iterator end, const wchar_t* delim =L" ") {
