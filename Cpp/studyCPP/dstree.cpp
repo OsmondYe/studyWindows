@@ -411,3 +411,94 @@ TEST(DSTree, bst) {
 	cout << "max:" << bst_maximun(bstTree->root)->key << endl;
 }
 
+//
+//  red black tree
+//
+
+struct rbt_node  {
+	enum Color {
+		black = 1,
+		red =2
+	};
+	int key;
+	rbt_node* left;
+	rbt_node* right;
+	rbt_node* parent;
+	Color color;
+
+	rbt_node(int k) :key(k), color(black) {
+		left = right = parent = NULL;
+	}
+};
+
+struct rbt_tree {
+	rbt_node* root;
+	rbt_node* nil; // sentry, black node,for each nil child
+
+	rbt_tree(): root(NULL) {
+		nil = new rbt_node(-1);		
+		root = nil;
+	}
+};
+
+void rbt_left_rotat(rbt_tree* T, rbt_node* x) {
+	auto y = x->right;		// set y
+	x->right = y->left;		// rotate anti-clockwise, y up, x down
+
+	if (y->left != T->nil) {   // x.right <- y.left
+		y->left->parent = x;		
+	}
+	y->parent = x->parent;  // up_y
+	if (x->parent == T->nil) {	// consider root
+		T->root = y;
+	}
+	else if(x == x->parent->left){ // x is a left sub tree
+		x->parent->left = y;
+	}
+	else {
+		x->parent->right = y;
+	}
+
+	// puy x on y.left
+	y->left = x;
+	x->parent = y;
+}
+
+void rbt_insert_fixup(rbt_tree* T, rbt_node* z) {
+
+}
+
+void rbt_insert(rbt_tree* T, rbt_node* z) {
+	auto y = T->nil;
+	auto x = T->root;
+
+	while (x!=T->nil)
+	{
+		y = x;
+		if (z->key < x->key) {
+			x = x->left;
+		}
+		else {
+			x = x->right;
+		}
+
+	}
+	z->parent = y;
+	if (y == T->nil) {
+		T->root = z;
+	}
+	else if (z->key<y->key) {
+		y->left = z;
+	}
+	else {
+		y->right = z;
+	}
+	z->left = z->right = T->nil;
+	z->color = rbt_node::red; // new insert node is red
+}
+
+
+
+TEST(DSTree, rbt) {
+
+}

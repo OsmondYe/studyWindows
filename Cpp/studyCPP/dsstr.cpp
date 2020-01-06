@@ -159,3 +159,68 @@ TEST(DSStr, LSWRC) {
 	}
 
 }
+
+
+/*
+longest palindromic substring
+like aba, acdca,
+
+table[size,size];  
+	- table[i][i]=1 : i in size
+	- table[i][i+1]=1  if s[i]==s[i+1]
+	- table[i][j]{
+		= table[i+1][j-1]  : s[i]==s[j]
+		= 0 :  s[i]!=s[j]
+	}
+*/
+
+std::pair<int, int> get_LPS(const string& str) {
+	// sanity check
+	if (str.empty()) return make_pair(-1, -1);
+	if (str.size() == 1) return make_pair(0, 0);
+
+	vector<vector<int>> table(str.size(),vector<int>(str.size(),0));
+
+	// construct
+	for (int delta = 0; delta < str.size(); ++delta) {
+		for (int i = 0; i < str.size(); ++i) {
+			if (i + delta < str.size()) {
+				if (delta == 0) {
+					table[i][i] = 1;
+				}
+				else if (delta == 1) {
+					table[i][i + 1] = str[i] == str[i + 1] ? 1 : 0;
+				}
+				else {
+					table[i][i+delta]= str[i] == str[i + delta] ? table[i+1][i+delta-1] : 0;
+				}
+			}
+		}
+	}
+	// debug
+	//for (auto i : table) {
+	//	for (auto j : i) {
+	//		cout << j<<" ";
+	//	}
+	//	cout << endl;
+	//}
+	// how to define maximun value?
+	pair<int, int> max_rt{ 0,0 };
+	for (int i = 0; i < table.size();++i) {
+		auto it = find(table[i].rbegin(), table[i].rend(), 1);
+		auto index = table[i].rend() - it-1;
+		if ((index - i + 1) > (max_rt.second - max_rt.first + 1)) {
+			max_rt.first = i;
+			max_rt.second = index;
+		}
+	}
+	// rt
+	return max_rt;
+}
+
+TEST(DSStr, LPS) {
+	string str = "abcba";
+	str = "aaaabbaa";
+	auto x = get_LPS(str);
+	cout << str.substr(x.first, x.second - x.first + 1);
+}

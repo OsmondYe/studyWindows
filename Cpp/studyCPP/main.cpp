@@ -58,8 +58,8 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "Map.Hash";
 	testing::FLAGS_gtest_filter = "DSTree.*";
 	testing::FLAGS_gtest_filter = "DSStr.*";
-	testing::FLAGS_gtest_filter = "DSStr.*";
 	testing::FLAGS_gtest_filter = "DSBase.ReverseInt";
+	testing::FLAGS_gtest_filter = "DSStr.LPS";
 	
 
 	return RUN_ALL_TESTS();
