@@ -134,6 +134,9 @@
     <ClCompile Include="dsstr.cpp">
       <Filter>Source Files\data_struct_and_algo</Filter>
     </ClCompile>
+    <ClCompile Include="algo-dp.cpp">
+      <Filter>Source Files\data_struct_and_algo</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="NoUse.hpp">

@@ -60,6 +60,7 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "DSStr.*";
 	testing::FLAGS_gtest_filter = "DSStr.*";
 	testing::FLAGS_gtest_filter = "DSBase.ReverseInt";
+	testing::FLAGS_gtest_filter = "DP.*";
 	
 
 	return RUN_ALL_TESTS();

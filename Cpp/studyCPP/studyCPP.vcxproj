@@ -176,6 +176,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="adapter.cpp" />
+    <ClCompile Include="algo-dp.cpp" />
     <ClCompile Include="algorithm.cpp" />
     <ClCompile Include="allocator.cpp" />
     <ClCompile Include="chrono.cpp" />
