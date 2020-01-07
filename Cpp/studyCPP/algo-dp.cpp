@@ -70,6 +70,12 @@ TEST(DP, CS) {
 
 /*
 leetcode 303, range sum query
+
+build dp[i][j] for all possible sub range, upper triangular
+delta filling data;
+
+dp[i][j]=s[j]+dp[i][j-1]
+
 */
 int dp_rsq(vector<int> nums,int i, int j) {
 	int sum = 0;
@@ -79,21 +85,44 @@ int dp_rsq(vector<int> nums,int i, int j) {
 	return sum;
 }
 TEST(DP, rsq) {
+	aux::println("dp range sum query");
 	vector<int> nums{ -2, 0, 3, -5, 2, -1 };
 
+	// Approach 1, bruthe force
+	EXPECT_EQ(1, dp_rsq(nums, 0, 2));
+	EXPECT_EQ(-1, dp_rsq(nums, 2, 5));
+	EXPECT_EQ(-3, dp_rsq(nums, 0, 5));
+
+	// Approach 2 dp with table 
 	vector< vector<int>> dp(nums.size(), vector<int>(nums.size(), 0));
+	for (int i = 0; i < nums.size(); ++i) {
+		dp[i][i] = nums[i];
+	}
 
 	// begin delta increase with upper-triangular fill
-	for (int delta = 0; delta < nums.size(); ++delta) {
-		for (int i = delta; i < nums.size(); ++i) {
-
+	for (int i = 0; i < nums.size(); ++i) {
+		for (int j = i+1; j < nums.size(); ++j) {
+			dp[i][j] = dp[i][j - 1] + nums[j];
 		}
 	}
 
+	// this dp is not good ,too slow,
+	EXPECT_EQ(1, dp[0][2]);
+	EXPECT_EQ(-1, dp[2][5]);
+	EXPECT_EQ(-3, dp[0][5]);
 
-	EXPECT_EQ(1, dp_rsq(nums,0,2));
-	EXPECT_EQ(-1, dp_rsq(nums,2,5));
-	EXPECT_EQ(-3, dp_rsq(nums,0,5));
+
+	// Approach 3, Mathematical thought,
+	// what sum(i,j) mean?  sum(0,j)-sum(0,i-1)?
+	vector<int> dp2(nums.size(), 0);
+	dp2[0] = nums[0];
+	for (int i = 1; i < nums.size(); ++i) {
+		dp2[i] = nums[i] + dp2[i - 1];
+	}
+
+	EXPECT_EQ(1, dp2[2]);
+	EXPECT_EQ(-1, dp2[5]-dp2[1]);
+	EXPECT_EQ(-3, dp2[5]);
 }
 
 
