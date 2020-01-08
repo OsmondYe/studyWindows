@@ -56,7 +56,7 @@ char* oye_strstr(const char* str1, const char* str2) {
 
 }
 
-TEST(DSStr, Count) {
+TEST(Str, Count) {
 	char str[] = "hello world";
 
 	cout << oye_strchr(str, 'w') << endl;
@@ -64,6 +64,113 @@ TEST(DSStr, Count) {
 	// SEH exception	
 	//cout << oye_strstr(str, "worlddgdf") << endl;
 }
+
+
+/*
+leetcode 20, valid parentheses
+*/
+
+bool isValid(string s) {
+	//sanity check
+	if (s.empty()) {
+		return true;
+	}
+	const char* param = "(){}[]";
+	// little init,quick test
+	if (s.size() == 1) {
+		return s.find_first_of(param, 0) == string::npos;
+	}
+	std::stack<char> assit;
+	auto pos = 0;
+	for(; pos != string::npos;++pos){
+		pos = s.find_first_of(param, pos);
+		if (pos == string::npos) {
+			break;
+		}
+		auto c = s[pos];
+		// check if match pair
+		if (assit.empty()) {
+			assit.push(c);
+		}
+		else {
+			char p = assit.top();
+			bool match = false;
+			switch (p)
+			{
+			case '(':
+				match = c == ')';
+				break;
+			case '{':
+				match = c == '}';
+				break;
+			case '[':
+				match = c == ']';
+				break;
+			}
+			if (match) {
+				assit.pop();
+			}
+			else {
+				assit.push(c);
+			}
+		}
+
+	}
+	return assit.empty();
+}
+
+TEST(Str, VP) {
+	aux::println("valid parenthesis");
+	EXPECT_TRUE(isValid(""));
+	EXPECT_TRUE(isValid("abdfdsfs"));
+	EXPECT_TRUE(isValid("()"));
+	EXPECT_TRUE(isValid("()[]{}"));
+	EXPECT_TRUE(!isValid("(]"));
+	EXPECT_TRUE(!isValid("([)]"));
+	EXPECT_TRUE(isValid("{[]}"));
+}
+
+/*
+leetcode 68, lenght of last word
+*/
+int lengthOfLastWord(string s) {
+	// sanity check
+	if (s.empty()) {
+		return 0;
+	}
+	// add extram trim suffix ' ';
+	while (s.back() == ' ') {
+		s.resize(s.length() - 1);
+	}
+
+	if (s.empty()) {
+		return 0;
+	}
+	// check boundary
+	if (s.length() == 1) {
+		// consider s[0]=' '
+		return s[0] != ' '?1:0;
+	}
+	
+	auto pos = s.rfind(' ', string::npos);
+	if (pos == string::npos) {
+		return s.size();
+	}
+	if (pos == s.size() - 1) {
+
+	}
+	return s.size()-1 - pos;
+}
+TEST(Str, LOLW) {
+	EXPECT_EQ(0, lengthOfLastWord(""));
+	EXPECT_EQ(1, lengthOfLastWord("a"));
+	EXPECT_EQ(1, lengthOfLastWord(" a"));
+	EXPECT_EQ(1, lengthOfLastWord("a "));
+	EXPECT_EQ(1, lengthOfLastWord("a b"));
+	EXPECT_EQ(1, lengthOfLastWord("a b "));
+	EXPECT_EQ(3, lengthOfLastWord("day"));	// only one word can be regard as the last word
+	EXPECT_EQ(5, lengthOfLastWord("Hello World"));
+}	
 
 
 /*Longest Substring Without Repeating Characters
@@ -125,7 +232,7 @@ int lswrc(std::string& s) {
 
 }
 
-TEST(DSStr, LSWRC) {
+TEST(Str, LSWRC) {
 	cout << "longest substr without repeating chars" << endl;
 
 
@@ -218,7 +325,7 @@ std::pair<int, int> get_LPS(const string& str) {
 	return max_rt;
 }
 
-TEST(DSStr, LPS) {
+TEST(Str, LPS) {
 	string str = "abcba";
 	str = "aaaabbaa";
 	auto x = get_LPS(str);

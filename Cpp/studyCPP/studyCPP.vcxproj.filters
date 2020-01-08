@@ -131,10 +131,13 @@
     <ClCompile Include="dssort.cpp">
       <Filter>Source Files\data_struct_and_algo</Filter>
     </ClCompile>
-    <ClCompile Include="dsstr.cpp">
+    <ClCompile Include="algo-dp.cpp">
       <Filter>Source Files\data_struct_and_algo</Filter>
     </ClCompile>
-    <ClCompile Include="algo-dp.cpp">
+    <ClCompile Include="algo-str.cpp">
+      <Filter>Source Files\data_struct_and_algo</Filter>
+    </ClCompile>
+    <ClCompile Include="algo-hash.cpp">
       <Filter>Source Files\data_struct_and_algo</Filter>
     </ClCompile>
   </ItemGroup>

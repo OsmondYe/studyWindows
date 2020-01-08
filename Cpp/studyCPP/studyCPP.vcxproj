@@ -177,6 +177,7 @@
   <ItemGroup>
     <ClCompile Include="adapter.cpp" />
     <ClCompile Include="algo-dp.cpp" />
+    <ClCompile Include="algo-hash.cpp" />
     <ClCompile Include="algorithm.cpp" />
     <ClCompile Include="allocator.cpp" />
     <ClCompile Include="chrono.cpp" />
@@ -192,7 +193,7 @@
     <ClCompile Include="limits.cpp" />
     <ClCompile Include="map.cpp" />
     <ClCompile Include="memory.cpp" />
-    <ClCompile Include="dsstr.cpp" />
+    <ClCompile Include="algo-str.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

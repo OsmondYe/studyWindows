@@ -69,6 +69,126 @@ TEST(DP, CS) {
 }
 
 /*
+leetcoce 121, best time buy and sell
+- same as maxinum sub array
+Input: [7,1,5,3,6,4]
+Output: 5
+Input: [7,6,4,3,1]
+Output: 0
+*/
+int maxProfit(vector<int> prices) {
+	//sanity check
+	if (prices.empty()) {
+		return 0;
+	}
+	if (prices.size() == 1) {
+		// exception?
+		return 0;
+	}
+	// for size >=2,  calc differ
+	vector<int> differ;
+	std::transform(prices.begin(), prices.end() - 1,
+		prices.begin() + 1,
+		back_inserter(differ),
+		[](int l, int r) {return r - l; });
+
+	/* dp: dp[i] , manxisum values that must include i
+	   dp[i] = {
+			dp[i-1]+s[i]  dp[i-1]>=0;
+			s[i];
+	   }
+	 */
+	
+	vector<int> dp(differ.size(), 0);
+	dp[0] = differ[0];
+	for (int i = 1; i < dp.size(); ++i) {
+		dp[i] = dp[i - 1] >= 0 ? dp[i - 1] + differ[i] : differ[i];
+	}
+	// if all(dp)<0, return 0;
+	auto i= *max_element(dp.begin(), dp.end());
+	return i > 0 ? i : 0;
+}
+
+TEST(DP, BTSS) {
+	aux::println("best time buy and sell");
+	vector<int> s = { 7,1,5,3,6,4 };
+	EXPECT_EQ(5, maxProfit(s));
+	EXPECT_EQ(0, maxProfit({ 7,6,4,3,1 }));
+}
+
+
+/*
+leetcode 198, house rob
+*/
+int rob(vector<int> nums) {
+	// sanity check 
+	if (nums.empty()) {
+		return 0;
+	}
+	if (nums.size() == 1) {
+		return nums.front();
+	}
+	if (nums.size() == 2) {
+		return max(nums[0], nums[1]);
+	}
+	int odd_sum = nums[1];
+	int even_sum = nums[0];
+	for (int i = 2; i < nums.size(); ++i)
+	{
+		if (i % 2) {
+			odd_sum += nums[i];
+		}
+		else {
+			even_sum += nums[i];
+		}
+	}
+	return max(odd_sum, even_sum);
+	// odd_sum and even_sum is not the answer for [2,1,1,2]
+	// [a,b,c,d] -> max may is [a,d]
+}
+
+int rob_dp(vector<int> nums) {
+	// sanity check 
+	if (nums.empty()) {
+		return 0;
+	}
+	if (nums.size() == 1) {
+		return nums.front();
+	}
+	if (nums.size() == 2) {
+		return max(nums[0], nums[1]);
+	}
+	if (nums.size() == 3) {
+		return max(nums[1], nums[0] + nums[2]);
+	}
+	/*
+	dp[i]= max( dp[i-2]+s[i], dp[i-3]+s[i] );
+	*/
+	vector<int> dp(nums.size(), 0);
+	dp[0] = nums[0];
+	dp[1] = nums[1];
+	dp[2] = max(nums[1], nums[0] + nums[2]);
+	for (int i = 3; i < nums.size(); ++i)
+	{
+		dp[i] = max(dp[i - 2] + nums[i], dp[i - 3] + nums[i]);
+	}
+	return *max_element(dp.begin(), dp.end());
+}
+
+TEST(DP, HR) {
+	aux::println("dp house rob");
+	EXPECT_EQ(4, rob({ 1,2,3,1 }));
+	EXPECT_EQ(12, rob({ 2,7,9,3,1 }));
+	EXPECT_NE(4, rob({ 2,1,1,2}));
+
+
+	EXPECT_EQ(4, rob_dp({ 1,2,3,1 }));
+	EXPECT_EQ(12, rob_dp({ 2,7,9,3,1 }));
+	EXPECT_EQ(4, rob_dp({ 2,1,1,2 }));
+
+}
+
+/*
 leetcode 303, range sum query
 
 build dp[i][j] for all possible sub range, upper triangular
