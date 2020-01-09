@@ -325,6 +325,19 @@ TEST(String, ExtractWordInWords) {
 	}
 }
 
+TEST(String, SlitSentence) {
+	string sentence("China's railways\t are,;., expected to see a, travel rush. in the coming 10 days as many people");
+	
+	std::istringstream iss(sentence);
+	vector<string> buf;
+	string w;
+	while (iss>>w)	{
+		buf.push_back(w);
+	}
+
+	for_each(buf.begin(), buf.end(), [](string s) {cout << s << "\n"; });
+}
+
 TEST(String, UniqueCharInStr) {
 	wstring s = str; s += str;
 	
