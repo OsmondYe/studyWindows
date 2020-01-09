@@ -405,6 +405,118 @@ TEST(DSLinear, Steal_Cut_DP) {
 	}
 }
 
+/*
+leet code 21. Merge Two Sorted Lists
+*/
+ struct ListNode {
+      int val;
+      ListNode *next;
+      ListNode(int x) : val(x), next(NULL) {}
+ };
+ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+	// sanity check
+	if (l1 == NULL) {
+		return l2;
+	}
+	if (l2 == NULL) {
+		return l1;
+	}
+	// l1 and l2 is not empty
+
+	// prepare head first;
+	ListNode* head = (l1->val <= l2->val ? l1 : l2);
+	ListNode* cur = head;
+	if (head == l1) {
+		l1 = l1->next;
+	}
+	else {
+		l2 = l2->next;
+	}
+
+	while (l1 || l2)
+	{
+		if (!l1 && l2 ) {
+			cur->next = l2;
+			l2 = l2->next;
+			cur = cur->next;
+			continue;
+		}
+		if (l1 && !l2) {
+			cur->next = l1;
+			l1 = l1->next;
+			cur = cur->next;
+			continue;
+		}
+		// l1 && l2
+		cur->next = (l1->val <= l2->val ? l1 : l2);
+		cur = cur->next;
+		if (cur == l1) {
+			l1 = l1->next;
+		}
+		else {
+			l2 = l2->next;
+		}
+
+	}
+
+	return head;
+}
+TEST(DSLinear, 21) {
+
+	auto fill = [](vector<int> v) {
+		ListNode* head = NULL;
+		for (auto i : v) {
+			if (head == NULL) {
+				head = new ListNode(i);
+			}
+			else {
+				auto p = head;
+				// find the last node
+				while (p->next !=NULL)
+				{
+					p = p->next;
+				}
+				p->next = new ListNode(i);
+			}
+		}
+		return head;
+	};
+
+	ListNode* l1 = fill({ 1,2,4 });	
+	ListNode* l2 = fill({ 1,3,4 });
 
 
+	auto l3 = mergeTwoLists(l1, l2);
 
+	while (l3) {
+		cout << l3->val << " ";
+		l3 = l3->next;
+	}
+
+}
+
+
+/*
+Leetcode 26. Remove Duplicates from Sorted Array
+like std::unique
+*/
+int removeDuplicates(vector<int> nums) {
+	int rt = 0;
+	for (int i = 0; i < nums.size(); ++i) {
+		int j = i + 1;
+		if (j <nums.size() && nums[i] == nums[j]) {
+			// move nums[i+1] to end;
+			while (j+1< nums.size())
+			{
+				swap(nums[j], nums[j + 1]);
+				j++;
+			}
+			rt++;
+		}
+	}
+	return rt+1;
+}
+TEST(DSLinear, 26) {
+	EXPECT_EQ(2, removeDuplicates({1,1,2}));
+	EXPECT_EQ(5, removeDuplicates({ 0,0,1,1,1,2,2,3,3,4 }));
+}

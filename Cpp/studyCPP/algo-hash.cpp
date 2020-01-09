@@ -380,18 +380,17 @@ int firstUniqChar(string s) {
     if(s.size() == 1) {
         return 0;
     }
-    // char ->  (s_index, count)
-    pair<size_t, int> cache[26];
-    size_t index[26];  // 
-    index[s[0] - 'a'] = 1; // assume first char is the answer;
-    size_t* p = index;
-    for (int i = 1; i < s.size(); ++i) {
-        char c = s[i];
-        cache[c-'a'].first = i;
-        cache[c-'a'].second += 1;
+    unordered_map<char, int> cache;
+    for (auto c : s) {
+        cache[c]++;
+    }
+    for (int i = 0; i < s.size(); ++i) {
+        if (cache[s[i]] == 1) {
+            return i;
+        }
     }
 
-    return -1;// fsdsdfsdfsdfsdfdsfsd
+    return -1;
 }
 
 TEST(AlgoHash, 387) {
