@@ -4,26 +4,10 @@
 #include "pch.h"
 
 
-/*
-container_hearders:
-	vector 
-	deque
-	forward_list		:  single linked list
-	list				:  double linked list
-	-----
-	map set
-	unordered_map/set
-	-----
-	queue/ stack		:	adapter
-	-----
-	array				:  fixed dimenstion array
-	bitset				:  bool array
-*/
 
 int main(int argc, wchar_t** argv)
 {
 	srand(time(NULL));	// give a randome seed
-
 
 	testing::InitGoogleTest(&argc, argv);
 
@@ -61,7 +45,7 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "DSStr.*";
 	testing::FLAGS_gtest_filter = "DSBase.ReverseInt";
 	testing::FLAGS_gtest_filter = "DP.*";
-	testing::FLAGS_gtest_filter = "Str.*";
+	testing::FLAGS_gtest_filter = "String.SlitSentence";
 	testing::FLAGS_gtest_filter = "AlgoHash.*";
 	
 

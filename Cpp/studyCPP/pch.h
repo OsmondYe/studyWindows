@@ -19,6 +19,9 @@
 #include <string>
 #include <vector>
 #include <list>
+#include <map>
+#include <unordered_set>
+#include <unordered_map>
 #include <bitset>
 #include <forward_list>
 #include <array>	// psedu-container
