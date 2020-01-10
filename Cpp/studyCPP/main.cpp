@@ -37,7 +37,6 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "Sort.Quick";
 	testing::FLAGS_gtest_filter = "DSLinear.MAX_SUB_ARRAY";
 	testing::FLAGS_gtest_filter = "DSLinear.Vector_Remove_duplicate_Elem";
-	testing::FLAGS_gtest_filter = "DSLinear.Steal_Cut_DP";
 	testing::FLAGS_gtest_filter = "Memory.SmartPtr";
 	testing::FLAGS_gtest_filter = "Map.Hash";
 	testing::FLAGS_gtest_filter = "DSTree.*";
@@ -47,6 +46,7 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "DP.*";
 	testing::FLAGS_gtest_filter = "String.SlitSentence";
 	testing::FLAGS_gtest_filter = "AlgoHash.*";
+	testing::FLAGS_gtest_filter = "DSLinear.26";
 	
 
 	return RUN_ALL_TESTS();
