@@ -491,8 +491,82 @@ int findDuplicate(vector<int> nums) {
     }
     return -1;
 }
+
+int findDuplicate_tortoise_hare(vector<int> nums) {
+    int tortoise = nums[0];
+    int hare = nums[0];
+
+    do {
+        tortoise = nums[tortoise];
+        hare = nums[nums[hare]];
+    } while (tortoise != hare);
+
+    // tortiose == hare , has a circle in list
+    // how to find the entry of the circle 
+
+    int ptr1 = nums[0];
+    int ptr2 = tortoise;
+    while (ptr1!= ptr2)
+    {
+        ptr1 = nums[ptr1];
+        ptr2 = nums[ptr2];
+    }
+
+    return  ptr1;
+    
+
+}
+
 TEST(AlgoHash, 287) {
     aux::println("leetcode 287, find the duplicate number");
-    EXPECT_EQ(3, findDuplicate({ 1,2,3,3 }));
+    EXPECT_EQ(3, findDuplicate_tortoise_hare({ 1,2,3,3 }));
+    EXPECT_EQ(9, findDuplicate_tortoise_hare({ 2,5,9,6,9,3,8,9,7,1 }));
+    EXPECT_EQ(2, findDuplicate_tortoise_hare({ 1,3,4,2,2 }));
+}
+
+// using cache
+vector<int> findErrorNums(vector<int> nums) {
+    vector<int> rt;
+    int dup = 0;
+    int mis = 0;
+    if (nums.size() < 2) {
+        return rt;
+    }
+    // build cache
+    std::unique_ptr<int[]> spArray(new int[nums.size()]);
+    std::fill(spArray.get(), spArray.get() + nums.size(), 0);
+
+    for (int i : nums) {
+        spArray[i - 1] += 1;
+    }
+
+    for (int i = 0; i < nums.size(); ++i) {
+        if (spArray[i] == 0) {
+            mis = i + 1;
+            continue;
+        }
+        if (spArray[i] == 2) {
+            dup = i + 1;
+        }
+    }
+
+    rt.push_back(dup);
+    rt.push_back(mis);
+   
+
+    return rt;
+}
+
+
+TEST(AlgoHash, 645) {
+    auto v = findErrorNums({ 2,2 });
+    aux::output(v);
+    v = findErrorNums({ 1,2,2,4 });
+    aux::output(v);
+
+    v = findErrorNums({ 3,2,3,4,6,5 });
+    aux::output(v);
+
+
 
 }

@@ -51,3 +51,21 @@ TEST(Memory, SmartPtr_Shared) {
 }
 
 
+
+TEST(Memory, SmartPtr_Array) {
+	// unique_prt has buildin
+
+	std::unique_ptr<int[]> spArray(new int[10]); // must init the value
+
+	// give init value
+	std::fill(spArray.get(), spArray.get() + 10, 0);
+
+
+
+	for (int i = 0; i < 10; ++i) {
+		spArray[i] = i;
+	}
+	
+
+}
+

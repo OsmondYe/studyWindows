@@ -178,6 +178,7 @@
     <ClCompile Include="adapter.cpp" />
     <ClCompile Include="algo-dp.cpp" />
     <ClCompile Include="algo-hash.cpp" />
+    <ClCompile Include="algo-linear.cpp" />
     <ClCompile Include="algorithm.cpp" />
     <ClCompile Include="allocator.cpp" />
     <ClCompile Include="chrono.cpp" />

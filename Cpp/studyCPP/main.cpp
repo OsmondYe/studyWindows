@@ -37,7 +37,6 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "Sort.Quick";
 	testing::FLAGS_gtest_filter = "DSLinear.MAX_SUB_ARRAY";
 	testing::FLAGS_gtest_filter = "DSLinear.Vector_Remove_duplicate_Elem";
-	testing::FLAGS_gtest_filter = "Memory.SmartPtr";
 	testing::FLAGS_gtest_filter = "Map.Hash";
 	testing::FLAGS_gtest_filter = "DSTree.*";
 	testing::FLAGS_gtest_filter = "DSStr.*";
@@ -45,8 +44,10 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "DSBase.ReverseInt";
 	testing::FLAGS_gtest_filter = "DP.*";
 	testing::FLAGS_gtest_filter = "String.SlitSentence";
-	testing::FLAGS_gtest_filter = "AlgoHash.*";
 	testing::FLAGS_gtest_filter = "DSLinear.26";
+	testing::FLAGS_gtest_filter = "Memory.SmartPtr_Array";
+	testing::FLAGS_gtest_filter = "AlgoHash.645";
+	testing::FLAGS_gtest_filter = "AlgoLinear.LeetCode";
 	
 
 	return RUN_ALL_TESTS();
