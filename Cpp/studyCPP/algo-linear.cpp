@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "helper.hpp"
+using namespace aux;
 
 namespace {
     struct ListNode {
@@ -209,7 +210,7 @@ ListNode* reverseList_recursively(ListNode* head) {
 }
 
 
-TEST(AlgoLinear, LeetCode) {
+TEST(AlgoLinear, LeetCodeList) {
     EXPECT_FALSE(hasCycle(new ListNode(12)));
     // remove dup
     helper_print_list(deleteDuplicates(helper_build_list({ 1,1,2,2,2,3,3,4,4,5,5,5 })));
@@ -227,6 +228,89 @@ TEST(AlgoLinear, LeetCode) {
     
     //  remove value =7;
     helper_print_list(removeElements(helper_build_list({ 4,4,1,2,3,4,5,6,4,7,8,5,4,4,4,4,9,4 }), 4));
+    
+}
 
+
+
+// 86 merge two vecotr 
+void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+
+    int i = 0;
+    while (i < n) {
+        int cur = nums2[i];
+        // merge into nums1
+        for (int j = m; j > 0; j--) {
+            nums1[j] = cur;
+            if (cur < nums1[j - 1]) {
+                swap(nums1[j], nums1[j - 1]);
+            }
+            else {
+                break;
+            }
+        }
+        m++;
+        i++;
+    }
+}
+
+TEST(AlgoLinear, LeetCodeArray) {
+
+    vector<int> n1{ 1,2,3,0,0,0 };
+    vector<int> n2{ 4,5,6 };
+    merge(n1, 3, n2, 3);
+    
+}
+
+
+
+//[[1,4],[3,6],[2,8]] remove [3,6], return count(remainde)
+int removeCoveredIntervals(vector<vector<int>> intervals) {
+    // sanity check
+    if (intervals.size() < 2) {
+        return intervals.size();
+    }
+    // sort first
+    std::sort(intervals.begin(), intervals.end(),
+        [](vector<int>& l, vector<int>& r) {
+            if (l[0] < r[0]) {
+                return true;
+            }
+            else if (l[0] == r[0]) {
+                if (l[1] >= r[1]) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+        }
+    );
+    int answer = intervals.size();
+
+    int r_max = intervals[0][1];
+    // only compare the val of right in  [left,right) is enough;
+    // fixup right_max when iterating
+    for (int i = 1; i < intervals.size(); ++i) {
+        if (intervals[i][1] < r_max) {
+            answer--;
+        }
+        else {
+            r_max = intervals[i][1];
+        }
+    }
+    return answer;
+}
+
+TEST(AlgoLinear, LeetCodeLineSweep) {
+    println("line sweep ->  remove covered range");
+
+    vector<vector<int>> data{ {1,4},{3,6},{2,8} };
+    EXPECT_EQ(2, removeCoveredIntervals(data));
+
+    
 
 }

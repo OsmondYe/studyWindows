@@ -1,6 +1,3 @@
-// studyCPP.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include "pch.h"
 
 
@@ -47,7 +44,8 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "DSLinear.26";
 	testing::FLAGS_gtest_filter = "Memory.SmartPtr_Array";
 	testing::FLAGS_gtest_filter = "AlgoHash.645";
-	testing::FLAGS_gtest_filter = "AlgoLinear.LeetCode";
+	testing::FLAGS_gtest_filter = "Template.*";
+	testing::FLAGS_gtest_filter = "AlgoLinear.LeetCode*";
 	
 
 	return RUN_ALL_TESTS();
