@@ -2,6 +2,13 @@
 #include "helper.hpp"
 using namespace aux;
 
+/*
+  List
+  Array
+  LineSweep , scan
+*/
+
+
 namespace {
     struct ListNode {
         int val;
@@ -310,7 +317,5 @@ TEST(AlgoLinear, LeetCodeLineSweep) {
 
     vector<vector<int>> data{ {1,4},{3,6},{2,8} };
     EXPECT_EQ(2, removeCoveredIntervals(data));
-
-    
 
 }

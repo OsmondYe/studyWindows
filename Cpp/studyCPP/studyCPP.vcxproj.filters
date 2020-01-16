@@ -143,6 +143,9 @@
     <ClCompile Include="algo-linear.cpp">
       <Filter>Source Files\data_struct_and_algo</Filter>
     </ClCompile>
+    <ClCompile Include="algo-tree.cpp">
+      <Filter>Source Files\data_struct_and_algo</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="NoUse.hpp">

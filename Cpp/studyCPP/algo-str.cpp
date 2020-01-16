@@ -1,4 +1,7 @@
 #include "pch.h"
+
+using namespace aux;
+
 // this is string common algo
 
 // my strchr
@@ -56,7 +59,7 @@ char* oye_strstr(const char* str1, const char* str2) {
 
 }
 
-TEST(Str, Count) {
+TEST(AlgoStr, Count) {
 	char str[] = "hello world";
 
 	cout << oye_strchr(str, 'w') << endl;
@@ -65,11 +68,9 @@ TEST(Str, Count) {
 	//cout << oye_strstr(str, "worlddgdf") << endl;
 }
 
-
 /*
 leetcode 20, valid parentheses
 */
-
 bool isValid(string s) {
 	//sanity check
 	if (s.empty()) {
@@ -119,17 +120,6 @@ bool isValid(string s) {
 	return assit.empty();
 }
 
-TEST(Str, VP) {
-	aux::println("valid parenthesis");
-	EXPECT_TRUE(isValid(""));
-	EXPECT_TRUE(isValid("abdfdsfs"));
-	EXPECT_TRUE(isValid("()"));
-	EXPECT_TRUE(isValid("()[]{}"));
-	EXPECT_TRUE(!isValid("(]"));
-	EXPECT_TRUE(!isValid("([)]"));
-	EXPECT_TRUE(isValid("{[]}"));
-}
-
 /*
 leetcode 68, lenght of last word
 */
@@ -161,17 +151,6 @@ int lengthOfLastWord(string s) {
 	}
 	return s.size()-1 - pos;
 }
-TEST(Str, LOLW) {
-	EXPECT_EQ(0, lengthOfLastWord(""));
-	EXPECT_EQ(1, lengthOfLastWord("a"));
-	EXPECT_EQ(1, lengthOfLastWord(" a"));
-	EXPECT_EQ(1, lengthOfLastWord("a "));
-	EXPECT_EQ(1, lengthOfLastWord("a b"));
-	EXPECT_EQ(1, lengthOfLastWord("a b "));
-	EXPECT_EQ(3, lengthOfLastWord("day"));	// only one word can be regard as the last word
-	EXPECT_EQ(5, lengthOfLastWord("Hello World"));
-}	
-
 
 /*Longest Substring Without Repeating Characters
 Input: "abcabcbb"
@@ -193,7 +172,6 @@ using dp, exsit optimize value
 
 
 */
-
 int lswrc(std::string& s) {
 	// sanity check
 	if (s.empty()) return 0;
@@ -232,41 +210,6 @@ int lswrc(std::string& s) {
 
 }
 
-TEST(Str, LSWRC) {
-	cout << "longest substr without repeating chars" << endl;
-
-
-	string s{ "abc" };
-	EXPECT_EQ(3, lswrc(s));
-
-	s = "aaa";
-	EXPECT_EQ(1, lswrc(s));
-
-	s = "abcda";
-	EXPECT_EQ(4, lswrc(s));
-
-	s = "pwwkew";
-	EXPECT_EQ(3, lswrc(s));
-
-	s = "abcabcbb";
-	EXPECT_EQ(3, lswrc(s));
-
-	s = "dvdf";
-	EXPECT_EQ(3, lswrc(s));
-
-	s = "ohvhjdml";
-	EXPECT_EQ(6, lswrc(s));
-
-	int i = 10;
-	while (i--)
-	{
-		auto v = aux::getRandom_LowerAlpha(30);
-		aux::output(v);
-		aux::println(lswrc(v));
-	}
-
-}
-
 
 /*
 longest palindromic substring
@@ -280,7 +223,6 @@ table[size,size];
 		= 0 :  s[i]!=s[j]
 	}
 */
-
 std::pair<int, int> get_LPS(const string& str) {
 	// sanity check
 	if (str.empty()) return make_pair(-1, -1);
@@ -325,7 +267,77 @@ std::pair<int, int> get_LPS(const string& str) {
 	return max_rt;
 }
 
-TEST(Str, LPS) {
+
+//1309. Decrypt String from Alphabet to Integer Mapping
+string freqAlphabets(string s) {	
+	stack<char> stack;
+	// reverse match
+	int i = s.size() - 1;
+	while (i >= 0){
+		if (s[i] == '#') {
+
+			int key = (s[i - 2] - '0') * 10 + (s[i - 1] - '0');
+			stack.push('a' + key - 1);
+			i -= 3;
+		}
+		else {
+			int key = s[i] - '0';
+			stack.push('a' + key - 1);
+			i--;
+		}
+	}
+	string rt;
+	while (!stack.empty())
+	{
+		rt.push_back(stack.top());
+		stack.pop();
+	}
+	return rt;
+}
+
+TEST(AlgoStr, LeetCode) {
+	println("1309. Decrypt String from Alphabet to Integer Mapping");
+	EXPECT_STREQ("jkab", freqAlphabets("10#11#12").c_str());
+	EXPECT_STREQ("acz", freqAlphabets("1326#").c_str());
+
+	aux::println("valid parenthesis");
+	EXPECT_TRUE(isValid(""));
+	EXPECT_TRUE(isValid("abdfdsfs"));
+	EXPECT_TRUE(isValid("()"));
+	EXPECT_TRUE(isValid("()[]{}"));
+	EXPECT_TRUE(!isValid("(]"));
+	EXPECT_TRUE(!isValid("([)]"));
+	EXPECT_TRUE(isValid("{[]}"));
+	//
+	aux::println("Length of last word");
+	EXPECT_EQ(0, lengthOfLastWord(""));
+	EXPECT_EQ(1, lengthOfLastWord("a"));
+	EXPECT_EQ(1, lengthOfLastWord(" a"));
+	EXPECT_EQ(1, lengthOfLastWord("a "));
+	EXPECT_EQ(1, lengthOfLastWord("a b"));
+	EXPECT_EQ(1, lengthOfLastWord("a b "));
+	EXPECT_EQ(3, lengthOfLastWord("day"));	// only one word can be regard as the last word
+	EXPECT_EQ(5, lengthOfLastWord("Hello World"));
+
+	//
+	cout << "longest substr without repeating chars" << endl;
+	string s{ "abc" };
+	EXPECT_EQ(3, lswrc(s));
+	s = "aaa";
+	EXPECT_EQ(1, lswrc(s));
+	s = "abcda";
+	EXPECT_EQ(4, lswrc(s));
+	s = "pwwkew";
+	EXPECT_EQ(3, lswrc(s));
+	s = "abcabcbb";
+	EXPECT_EQ(3, lswrc(s));
+	s = "dvdf";
+	EXPECT_EQ(3, lswrc(s));
+	s = "ohvhjdml";
+	EXPECT_EQ(6, lswrc(s));
+
+	//
+	aux::println("longest palindromic substring");
 	string str = "abcba";
 	str = "aaaabbaa";
 	auto x = get_LPS(str);

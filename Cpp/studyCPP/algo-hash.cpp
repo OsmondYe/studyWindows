@@ -1,167 +1,12 @@
 #include "pch.h"
 #include "helper.hpp"
 
-/*
-leet code 1207
-*/
-bool uniqueOccurrences(vector<int> arr) {
-    map<int, int> cache;
-    for (auto i : arr) {
-        cache[i]++;
-    }
-    if (cache.empty()) {
-        return true;
-    }
-    vector<int> counts;
-
-    for (auto i : cache) {
-        counts.push_back(i.second);
-    }
-    std::sort(counts.begin(), counts.end());
-    return std::adjacent_find(counts.begin(), counts.end()) == counts.end();
-
-}
-TEST(AlgoHash, UNOO) {
-    aux::println("Unique Number of Occurrences");
-    EXPECT_TRUE(uniqueOccurrences({ 1,2,2,1,1,3 }));
-    EXPECT_TRUE(!uniqueOccurrences({ 1,2 }));
-    EXPECT_TRUE(uniqueOccurrences({ -3,0,1,-3,1,1,1,-3,10,0 }));
-}
-
-/*
-205. Isomorphic Strings
-Input: s = "egg", t = "add"
-Output: true    e->a  g->d
-*/
-bool isIsomorphic(string s, string t) {
-    // sanity check
-    if (s.empty() && t.empty()) {
-        return true;
-    }
-    if (s.empty() && !t.empty()) {
-        return false;
-    }
-    if (!s.empty() && t.empty()) {
-        return false;
-    }
-
-    unordered_map<char, char> s2t;
-    unordered_map<char, char> t2s;
-    s2t[s[0]] = t[0];
-    t2s[t[0]] = s[0];
-
-	for (int i = 1; i < s.size(); ++i) {
-		char l = s[i], r = t[i];
-
-        if (s2t.find(l) != s2t.end()) { // exist, so to check if match
-            if (s2t[l] != r) {
-                return false;
-            }
-        }
-        else {// not exsit, 
-            if (t2s.find(r) != t2s.end() /*&& t2s[r] == l*/) {
-                return false;
-            }
-            s2t[l] = r;
-            t2s[r] = l;
-        }
-
-	}
-	return true;
-   
-}
-TEST(AlgoHash, II) {
-    aux::println("is isomorphic a->b b->a");
-    EXPECT_TRUE(isIsomorphic("egg","add"));
-    EXPECT_TRUE(!isIsomorphic("foo","bar"));
-    EXPECT_TRUE(isIsomorphic("paper","title"));
-    EXPECT_TRUE(!isIsomorphic("ab","aa"));
-}
-/*
-leet code 217 , array contain duplicate value
-*/
-bool containsDuplicate(vector<int> nums) {
-
-    unordered_set<int> cache(nums.size());
-    for (auto i : nums) {
-        if (cache.find(i) != cache.end()) {
-            // exist;
-            return true;
-        }
-        else {
-            cache.insert(i);
-        }
-    }
-    return false;
-
-}
-
-/* leet code 219;
-   exist? n[j]==n[i],  j-i<=k
-*/
-bool containsNearbyDuplicate(vector<int> nums, int k) {
-    //sanity check
-    if (nums.empty()) {
-        return false;
-    }
-    if (k == 0) {
-        return false;
-    }
-    k = std::abs(k);
-    
-    // linear search
-    // the problem is Time Limit Exceeded
-  /*  for (int i = 0; i < nums.size(); ++i) {
-        for (int j = 1; j <= k; ++j) {
-            if (i+j<nums.size() && nums[i] == nums[i + j]) {
-                return true;
-            }
-        }
-    }*/
-
-    // sliding window + cache
-    unordered_set<int> cache;
-    cache.reserve(k);
-
-    //- fill cache first at min[n.size,k]
-    int min = std::min((int)nums.size(), k);
-    for (int i = 0; i < min; ++i) {
-        if (cache.find(nums[i]) == cache.end()) {
-            cache.insert(nums[i]);
-        }else{
-            return true;
-        }
-    }
-    // - sliding cache as sliding window,
-    for (int i = cache.size(); i < nums.size(); ++i) {
-        if (cache.find(nums[i]) == cache.end()) {
-            cache.erase(nums[i - cache.size()]);
-            cache.insert(nums[i]);
-        }
-        else {
-            return true;
-        }
-    }
+using namespace aux;
 
 
-    return false;
-
-}
 
 
-TEST(AlgoHash, CD) {
-    aux::println("array contains duplicate");
-    EXPECT_TRUE(containsDuplicate({ 1,2,3,1 }));
-    EXPECT_TRUE(!containsDuplicate({ 1,2,3,4 }));
-    EXPECT_TRUE(containsDuplicate({ 1,1,1,3,3,4,3,2,4,2 }));
 
-    aux::println("arrary contains nearbyDucplicate");
-    EXPECT_TRUE(containsNearbyDuplicate({ 1,2,3,1 },3));
-    EXPECT_TRUE(containsNearbyDuplicate({ 1,0,1,1 },1));
-    EXPECT_TRUE(containsNearbyDuplicate({ 99,99},2));  // good test-case
-    EXPECT_TRUE(!containsNearbyDuplicate({ 1,2,1},0));  // good test-case
-    EXPECT_TRUE(!containsNearbyDuplicate({ 1,2,3,1,2,3 },2));
-}
 
 
 /*
@@ -566,7 +411,285 @@ TEST(AlgoHash, 645) {
 
     v = findErrorNums({ 3,2,3,4,6,5 });
     aux::output(v);
+}
 
 
+//202. Happy Number is happyNum
+bool isHappy(int n) {
+    // sanity check
+    if (n < 0) {
+        return false;
+    }
+
+}
+
+//720. Longest Word in Dictionary
+string longestWord(vector<string> words) {
+    // sort first
+    std::sort(words.begin(), words.end());
+    return "";
+}
+
+//748. Shortest Completing Word
+string shortestCompletingWord(string licensePlate, vector<string> words) {
+    // tolower and setinto multi-set
+    unordered_multiset<char> cache;
+    for (auto c : licensePlate) {
+        cache.insert(std::tolower(c));
+    }
+    vector<pair<int, int>> match; // <s_len, match_count>
+    for (auto s : words) {
+        int s_len = s.length();
+        int match_count = 0;
+        auto cc = cache;
+        for (auto c : s) {
+            auto it = cc.find(c);
+            if (it == cc.end()) {
+                continue;
+            }
+            match_count++;
+            cc.erase(it);
+        }
+        match.push_back({ s_len,match_count });
+    }
+    pair<int, int> answer = match[0];
+    int answer_index = 0;
+    for (int i = 1; i < match.size(); ++i) {
+        if (match[i].second > answer.second) {
+            answer = match[i];
+            answer_index = i;
+        }
+        else if (match[i].second == answer.second  && match[i].first <answer.first) {
+            answer = match[i];
+            answer_index = i;
+        }
+    }
+    return words[answer_index];
+}
+
+//1160. Find Words That Can Be Formed by Characters
+int countCharacters(vector<string> words, string chars) {
+    unordered_map<char, int> cache;
+    for (auto c : chars) {
+        cache[c]++;
+    }
+    int len = 0;
+    for (auto s : words) {
+        auto cc = cache;
+        bool bmatch = true;
+        for (auto c : s) {
+            if (cc.find(c) == cc.end()) {
+                bmatch = false;
+                break;
+            }
+            if (--cc[c] < 0) {
+                bmatch = false;
+                break;
+            }
+        }
+        if (bmatch) {
+            len += s.length();
+        }
+    }
+    return len;
+}
+
+//1189. Maximum Number of Balloons
+int maxNumberOfBalloons(string text) {
+    // quick map<char,int>
+    unordered_map<char, int> cache;
+    for (auto c : text) {
+        switch (c)
+        {
+        case 'b':
+        case 'a':
+        case 'l':
+        case 'o':
+        case 'n':
+            cache[c]++;
+            break;
+        }
+    }
+    int min_ban = min(cache['b'], min(cache['a'], cache['n']));
+    int min_lo = min(cache['l'], cache['o'])/2;
+    return min(min_ban, min_lo);
+}
+
+// 1270
+bool uniqueOccurrences(vector<int> arr) {
+    map<int, int> cache;
+    for (auto i : arr) {
+        cache[i]++;
+    }
+    if (cache.empty()) {
+        return true;
+    }
+    vector<int> counts;
+
+    for (auto i : cache) {
+        counts.push_back(i.second);
+    }
+    std::sort(counts.begin(), counts.end());
+    return std::adjacent_find(counts.begin(), counts.end()) == counts.end();
+
+}
+
+/*
+leet code 217 , array contain duplicate value
+*/
+bool containsDuplicate(vector<int> nums) {
+
+    unordered_set<int> cache(nums.size());
+    for (auto i : nums) {
+        if (cache.find(i) != cache.end()) {
+            // exist;
+            return true;
+        }
+        else {
+            cache.insert(i);
+        }
+    }
+    return false;
+
+}
+
+/* leet code 219;
+   exist? n[j]==n[i],  j-i<=k
+*/
+bool containsNearbyDuplicate(vector<int> nums, int k) {
+    //sanity check
+    if (nums.empty()) {
+        return false;
+    }
+    if (k == 0) {
+        return false;
+    }
+    k = std::abs(k);
+
+    // linear search
+    // the problem is Time Limit Exceeded
+  /*  for (int i = 0; i < nums.size(); ++i) {
+        for (int j = 1; j <= k; ++j) {
+            if (i+j<nums.size() && nums[i] == nums[i + j]) {
+                return true;
+            }
+        }
+    }*/
+
+    // sliding window + cache
+    unordered_set<int> cache;
+    cache.reserve(k);
+
+    //- fill cache first at min[n.size,k]
+    int min = std::min((int)nums.size(), k);
+    for (int i = 0; i < min; ++i) {
+        if (cache.find(nums[i]) == cache.end()) {
+            cache.insert(nums[i]);
+        }
+        else {
+            return true;
+        }
+    }
+    // - sliding cache as sliding window,
+    for (int i = cache.size(); i < nums.size(); ++i) {
+        if (cache.find(nums[i]) == cache.end()) {
+            cache.erase(nums[i - cache.size()]);
+            cache.insert(nums[i]);
+        }
+        else {
+            return true;
+        }
+    }
+
+
+    return false;
+
+}
+
+/*
+205. Isomorphic Strings
+Input: s = "egg", t = "add"
+Output: true    e->a  g->d
+*/
+bool isIsomorphic(string s, string t) {
+    // sanity check
+    if (s.empty() && t.empty()) {
+        return true;
+    }
+    if (s.empty() && !t.empty()) {
+        return false;
+    }
+    if (!s.empty() && t.empty()) {
+        return false;
+    }
+
+    unordered_map<char, char> s2t;
+    unordered_map<char, char> t2s;
+    s2t[s[0]] = t[0];
+    t2s[t[0]] = s[0];
+
+    for (int i = 1; i < s.size(); ++i) {
+        char l = s[i], r = t[i];
+
+        if (s2t.find(l) != s2t.end()) { // exist, so to check if match
+            if (s2t[l] != r) {
+                return false;
+            }
+        }
+        else {// not exsit, 
+            if (t2s.find(r) != t2s.end() /*&& t2s[r] == l*/) {
+                return false;
+            }
+            s2t[l] = r;
+            t2s[r] = l;
+        }
+
+    }
+    return true;
+
+}
+
+
+TEST(AlgoHash, LeetCode) {
+    //   
+    println("748,Shortest Complete Word");
+    EXPECT_STREQ("steps", shortestCompletingWord("1s3 PSt", { "step", "steps", "stripe", "stepple" }).c_str());
+    EXPECT_STREQ("pest", shortestCompletingWord("1s3 456", { "looks", "pest", "stew", "show" }).c_str());
+    //
+    println("720, Longest Word in Dictionary");
+    cout << longestWord({ "w","wo","wor","worl", "world" }) << endl;
+    // 
+    println("1160. Find Words That Can Be Formed by Characters");
+    EXPECT_EQ(6, countCharacters({ "cat","bt","hat","tree" },"atach"));
+    //
+    println("1189. Maximum Number of Balloons");
+    EXPECT_EQ(0, maxNumberOfBalloons("leetcode"));
+    EXPECT_EQ(1, maxNumberOfBalloons("nlaebolko"));
+    EXPECT_EQ(2, maxNumberOfBalloons("loonbalxballpoon"));
+    EXPECT_EQ(3, maxNumberOfBalloons("balloonballoonballoon"));
+    //
+    aux::println("1270. Unique Number of Occurrences");
+    EXPECT_TRUE(uniqueOccurrences({ 1,2,2,1,1,3 }));
+    EXPECT_TRUE(!uniqueOccurrences({ 1,2 }));
+    EXPECT_TRUE(uniqueOccurrences({ -3,0,1,-3,1,1,1,-3,10,0 }));
+
+
+    aux::println("array contains duplicate");
+    EXPECT_TRUE(containsDuplicate({ 1,2,3,1 }));
+    EXPECT_TRUE(!containsDuplicate({ 1,2,3,4 }));
+    EXPECT_TRUE(containsDuplicate({ 1,1,1,3,3,4,3,2,4,2 }));
+
+    aux::println("arrary contains nearbyDucplicate");
+    EXPECT_TRUE(containsNearbyDuplicate({ 1,2,3,1 }, 3));
+    EXPECT_TRUE(containsNearbyDuplicate({ 1,0,1,1 }, 1));
+    EXPECT_TRUE(containsNearbyDuplicate({ 99,99 }, 2));  // good test-case
+    EXPECT_TRUE(!containsNearbyDuplicate({ 1,2,1 }, 0));  // good test-case
+    EXPECT_TRUE(!containsNearbyDuplicate({ 1,2,3,1,2,3 }, 2));
+
+    aux::println("is isomorphic a->b b->a");
+    EXPECT_TRUE(isIsomorphic("egg", "add"));
+    EXPECT_TRUE(!isIsomorphic("foo", "bar"));
+    EXPECT_TRUE(isIsomorphic("paper", "title"));
+    EXPECT_TRUE(!isIsomorphic("ab", "aa"));
 
 }
