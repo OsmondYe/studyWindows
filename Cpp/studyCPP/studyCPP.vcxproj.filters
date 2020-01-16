@@ -92,12 +92,6 @@
     <ClCompile Include="dsbase.cpp">
       <Filter>Source Files\data_struct_and_algo</Filter>
     </ClCompile>
-    <ClCompile Include="dslinear.cpp">
-      <Filter>Source Files\data_struct_and_algo</Filter>
-    </ClCompile>
-    <ClCompile Include="dskv_hash.cpp">
-      <Filter>Source Files\data_struct_and_algo</Filter>
-    </ClCompile>
     <ClCompile Include="functional.cpp">
       <Filter>Source Files\stl</Filter>
     </ClCompile>
@@ -113,9 +107,6 @@
     <ClCompile Include="utility.cpp">
       <Filter>Source Files\lib</Filter>
     </ClCompile>
-    <ClCompile Include="dstree.cpp">
-      <Filter>Source Files\data_struct_and_algo</Filter>
-    </ClCompile>
     <ClCompile Include="random.cpp">
       <Filter>Source Files\lib</Filter>
     </ClCompile>
@@ -127,9 +118,6 @@
     </ClCompile>
     <ClCompile Include="map.cpp">
       <Filter>Source Files\stl\container</Filter>
-    </ClCompile>
-    <ClCompile Include="dssort.cpp">
-      <Filter>Source Files\data_struct_and_algo</Filter>
     </ClCompile>
     <ClCompile Include="algo-dp.cpp">
       <Filter>Source Files\data_struct_and_algo</Filter>
@@ -144,6 +132,18 @@
       <Filter>Source Files\data_struct_and_algo</Filter>
     </ClCompile>
     <ClCompile Include="algo-tree.cpp">
+      <Filter>Source Files\data_struct_and_algo</Filter>
+    </ClCompile>
+    <ClCompile Include="ds-hash.cpp">
+      <Filter>Source Files\data_struct_and_algo</Filter>
+    </ClCompile>
+    <ClCompile Include="ds-linear.cpp">
+      <Filter>Source Files\data_struct_and_algo</Filter>
+    </ClCompile>
+    <ClCompile Include="ds-sort.cpp">
+      <Filter>Source Files\data_struct_and_algo</Filter>
+    </ClCompile>
+    <ClCompile Include="ds-tree.cpp">
       <Filter>Source Files\data_struct_and_algo</Filter>
     </ClCompile>
   </ItemGroup>

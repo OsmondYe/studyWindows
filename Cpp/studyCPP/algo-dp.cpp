@@ -1,5 +1,85 @@
 #include "pch.h"
-#include "helper.hpp"
+
+using namespace aux;
+
+
+
+namespace steel_cut{
+
+	int steelcut_top2bottom_n_max(const std::vector<int>& price, int n) {
+		if (n == 0) {
+			return 0;
+		}
+		int q = -1;
+		for (int i = 1; i <= n; ++i) {
+			q = std::max<int>(q, price[i] + steelcut_top2bottom_n_max(price, n - i));
+		};
+		return q;
+	}
+
+
+
+	int steel_cut_memoized(const std::vector<int>& price, int n, std::vector<int>& assit) {
+		if (n == 0) {
+			return 0;
+		}
+		if (assit[n] > -1) {
+			return assit[n];
+		}
+
+		int q = -1;
+
+		for (int i = 1; i <= n; ++i) {
+			q = max(q, price[i] + steel_cut_memoized(price, n - i, assit));
+		}
+		assit[n] = q;
+		return q;
+	}
+
+	int steel_cut_memoized_n_max(const std::vector<int>& price, int n) {
+
+		vector<int> assit(price.size(), -1);
+		assit[0] = 0;
+		return steel_cut_memoized(price, n, assit);
+
+	}
+
+
+	int steel_cut_bottom_up_n_max(const std::vector<int>& price, int n) {
+		vector<int> assit(price.size(), 0);
+
+		for (int i = 1; i <= n; ++i) {
+			int q = -1;
+			for (int j = 1; j <= i; ++j) {
+				q = max(q, price[j] + assit[i - j]);
+			}
+			assit[i] = q;
+		}
+		return assit[n];
+	}
+
+
+}
+
+TEST(AlgoDP, InToAlgo_DP) {
+	using namespace steel_cut;
+	println("introduciton to algorithme DP,  steel_cut");
+	vector<int> len_price{
+		//  0,1,2,3,4,5 ,6 ,7 ,8, 9 10
+			0,1,5,8,9,10,17,17,20,24,30
+	};
+	println("org: length and price\n");
+	aux::output(len_price);
+
+	//  iter max(i)
+	for (int i = 1; i <= 10; ++i) {
+		cout << steelcut_top2bottom_n_max(len_price, i) << "\t"
+			<< steel_cut_memoized_n_max(len_price, i) << "\t"
+			<< steel_cut_bottom_up_n_max(len_price, i)
+			<< endl;
+	}
+}
+
 
 /*
 leetcode 53  maximum subarry:
@@ -30,9 +110,8 @@ int dp_maxSubArray(vector<int>& nums) {
 	return *max_element(dp.begin(), dp.end());
 }
 
-TEST(DP, MS) {
+TEST(AlgoDP, maxSubArray) {
 	vector<int> nums{ -2,1,-3,4,-1,2,1,-5,4 };
-
 	EXPECT_EQ(6, dp_maxSubArray(nums));
 }
 
@@ -63,7 +142,7 @@ int dp_climbStairs(int n) {
 	return dp.back();
 }
 
-TEST(DP, CS) {
+TEST(AlgoDP, climbStairs) {
 	aux::println("dp, climbing stairs");
 	EXPECT_EQ(3, dp_climbStairs(3));
 }
@@ -109,7 +188,7 @@ int maxProfit(vector<int> prices) {
 	return i > 0 ? i : 0;
 }
 
-TEST(DP, BTSS) {
+TEST(AlgoDP, BTSS) {
 	aux::println("best time buy and sell");
 	vector<int> s = { 7,1,5,3,6,4 };
 	EXPECT_EQ(5, maxProfit(s));
@@ -175,7 +254,7 @@ int rob_dp(vector<int> nums) {
 	return *max_element(dp.begin(), dp.end());
 }
 
-TEST(DP, HR) {
+TEST(AlgoDP, HR) {
 	aux::println("dp house rob");
 	EXPECT_EQ(4, rob({ 1,2,3,1 }));
 	EXPECT_EQ(12, rob({ 2,7,9,3,1 }));
@@ -204,8 +283,8 @@ int dp_rsq(vector<int> nums,int i, int j) {
 	}
 	return sum;
 }
-TEST(DP, rsq) {
-	aux::println("dp range sum query");
+TEST(AlgoDP, rsq) {
+	aux::println("303 dp range sum query");
 	vector<int> nums{ -2, 0, 3, -5, 2, -1 };
 
 	// Approach 1, bruthe force
@@ -256,7 +335,7 @@ Example 2:
 s = "axc", t = "ahbgdc"
 Return false.
 */
-bool is_IS_1(string s, string t) {
+bool is_subsequence(string s, string t) {
 	// sanity check
 	if (s.empty() && t.empty()) {
 		return true;
@@ -278,13 +357,6 @@ bool is_IS_1(string s, string t) {
 	return true;
 
 }
-TEST(DP, IS) {
-	aux::println("is subsequence");
-	EXPECT_TRUE(is_IS_1("abc", "ahbgdc"));
-	EXPECT_TRUE(is_IS_1("", "ahbgdc"));
-	EXPECT_TRUE(is_IS_1("leetcode", "yylyyeyyeyyeyytyycyyoyydyye"));
-	EXPECT_FALSE(is_IS_1("axc","ahbgdc"));
-}
 
 /*
 leetcode 746. Min Cost Climbing Stairs
@@ -296,8 +368,6 @@ i>=3
 dp[i]=c[i]+min(dp[i-1]+dp[i-2])
 
 return min(dp[n-1],dp[n-2]);
-
-
 */
 int dp_mccs(vector<int>& cost) {
 	if (cost.empty()) {
@@ -319,13 +389,76 @@ int dp_mccs(vector<int>& cost) {
 	return std::min(dp[dp.size() - 1], dp[dp.size() - 2]);
 
 }
-TEST(DP, mccs) {
-	aux::println("min cost climbing stairs");
+
+
+vector<vector<int>> Pascal_Triangle_Generate(int numRows) {
+	vector<vector<int>> rt;
+	if (numRows >0) {
+		rt.push_back({ 1 });
+	}
+	if (numRows >1) {
+		rt.push_back({ 1,1 });
+	}
+	if (numRows > 2) {
+		rt.push_back({ 1,2,1 });
+	}
+	for (int i = 3; i < numRows; ++i) {
+		vector<int>& pre = rt[i - 1];
+		vector<int> cur;
+		cur.push_back(1);
+
+		for (int j = 0; j < pre.size()-1; ++j) {
+			cur.push_back(pre[j] + pre[j + 1]);
+		}
+
+		cur.push_back(1);
+		rt.push_back(cur);
+	}
+	return rt;
+}
+
+
+vector<int> Pascal_Triangle_getRow(int rowIndex) {
+
+	// TBD
+
+	if (rowIndex < 0) {
+		return vector<int>();
+	}
+	vector<int> rt(rowIndex + 1, 0);
+	rt[0]=1;
+	for (int i = 1; i <= rowIndex; ++i) {
+
+	}
+	return rt;
+
+}
+
+TEST(AlgoDP, LeetCode) {
+	aux::println("392, is subsequence");
+	EXPECT_TRUE(is_subsequence("abc", "ahbgdc"));
+	EXPECT_TRUE(is_subsequence("", "ahbgdc"));
+	EXPECT_TRUE(is_subsequence("leetcode", "yylyyeyyeyyeyytyycyyoyydyye"));
+	EXPECT_FALSE(is_subsequence("axc", "ahbgdc"));
+
+	aux::println("746, min cost climbing stairs");
 	vector<int> cost{ 0,0,1,1 };
 	EXPECT_EQ(1, dp_mccs(cost));
 
 	cost = { 1,1,0,0 };
+
 	EXPECT_EQ(1, dp_mccs(cost));
 
+	{
+		auto x = Pascal_Triangle_Generate(20);
 
+		for (auto i : x) {
+			for (auto j : i) {
+				cout << j << "  ";
+			}
+			cout << endl;
+		}
+
+		auto y = Pascal_Triangle_getRow(3);
+	}
 }

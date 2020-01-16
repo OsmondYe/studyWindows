@@ -216,6 +216,44 @@ ListNode* reverseList_recursively(ListNode* head) {
     return newHead;
 }
 
+//2 Add Two Numbers
+ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+    ListNode* l1_cur = l1;
+    ListNode* l2_cur = l2;
+    ListNode* dummy_head = new ListNode(0);
+    ListNode* rt_cur = dummy_head;
+    bool carry = false;
+    while (l1_cur || l2_cur)
+    {
+        int s = 0;
+        if (carry) {
+            s += 1;
+            carry = false;
+        }
+        if (l1_cur) {
+            s += l1_cur->val;
+            l1_cur = l1_cur->next;
+        }
+        if (l2_cur) {
+            s += l2_cur->val;
+            l2_cur = l2_cur->next;
+        }
+        if (s >= 10) {
+            carry = true;
+            s -= 10;
+        }
+        //         
+        rt_cur->next = new ListNode(s);
+        rt_cur = rt_cur->next;  
+    }
+    if (carry) {
+        rt_cur->next = new ListNode(1);
+        rt_cur = rt_cur->next;
+    }
+    rt_cur = dummy_head->next;
+    delete dummy_head;
+    return rt_cur;
+}
 
 TEST(AlgoLinear, LeetCodeList) {
     EXPECT_FALSE(hasCycle(new ListNode(12)));

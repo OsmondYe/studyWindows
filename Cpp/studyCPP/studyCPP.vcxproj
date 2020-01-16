@@ -186,9 +186,9 @@
     <ClCompile Include="concurrency.cpp" />
     <ClCompile Include="container.cpp" />
     <ClCompile Include="dsbase.cpp" />
-    <ClCompile Include="dskv_hash.cpp" />
-    <ClCompile Include="dslinear.cpp" />
-    <ClCompile Include="dstree.cpp" />
+    <ClCompile Include="ds-hash.cpp" />
+    <ClCompile Include="ds-linear.cpp" />
+    <ClCompile Include="ds-tree.cpp" />
     <ClCompile Include="functional.cpp" />
     <ClCompile Include="idiom.cpp" />
     <ClCompile Include="iterator.cpp" />
@@ -205,7 +205,7 @@
     <ClCompile Include="random.cpp" />
     <ClCompile Include="regex.cpp" />
     <ClCompile Include="set.cpp" />
-    <ClCompile Include="dssort.cpp" />
+    <ClCompile Include="ds-sort.cpp" />
     <ClCompile Include="stream.cpp" />
     <ClCompile Include="string.cpp" />
     <ClCompile Include="main.cpp" />

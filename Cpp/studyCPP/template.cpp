@@ -168,3 +168,10 @@ void my_specialized_fun<0>() {
 TEST(Template, SpecializedCase) {
 	my_specialized_fun(); cout << endl;
 }
+
+
+
+TEST(Template, Concept) {
+	cout << "Concept is a new idea to decor Template T parameter\n";
+	cout << "For example, how can I konw my class object can be used for std::min()\n";
+}
