@@ -50,6 +50,78 @@ namespace {
 
 }
 
+// 100
+bool isSameTree(TreeNode* p, TreeNode* q) {
+    if (!p && !q) {
+        return true;
+    }
+    if (!p && q) {
+        return false;
+    }
+    if (p && !q) {
+        return false;
+    }
+    if (p->val != q->val) {
+        return false;
+    }
+    return isSameTree(p->left, q->left) && isSameTree(p->right, q->right);
+}
+
+bool isSameTree_iterative(TreeNode* p, TreeNode* q) {
+    auto helper_node_check = [](TreeNode* p, TreeNode* q) {
+        if (!p && !q) {
+            return true;
+        }
+        if (!p || !q) {
+            return false;
+        }
+        if (p->val != q->val) {
+            return false;
+        }
+        return true;
+    };
+
+    // sanity check
+    if (!p && !q) {
+        return true;
+    }
+    if (!p || !q) {
+        return false;
+    }
+    
+    stack< pair<TreeNode*, TreeNode*>> ss;
+    ss.push({ p,q });
+    while (!ss.empty()) {
+        auto top = ss.top();
+        ss.pop();
+        p = top.first;
+        q = top.second;
+        // p,q it-self
+        if (!helper_node_check(p,q)) {
+            return false;
+        }
+        if (!p && !q) {
+            continue;
+        }
+        // left
+        if ( (p->left && q->left) || (!p->left && !q->left) ) {
+            ss.push({ p->left ,q->left });
+        }
+        else {
+            return false;
+        }
+        
+        // right
+        if ( (p->right && q->right) || (!p->right && !q->right) ) {
+            ss.push({ p->right ,q->right });
+        }
+        else {
+            return false;
+        }
+    }
+    return true;
+}
+
 
 int maxDepth(TreeNode* root) {
     if (!root) {
