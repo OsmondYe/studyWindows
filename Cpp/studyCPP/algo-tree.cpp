@@ -25,6 +25,43 @@ int maxDepth_Iteratively(TreeNode* root) {
     return depth;
 }
 
-TEST(AlgoTree, LeetCode) {
+// good test, remove all leaves that value is targer
+TreeNode* removeLeafNodes(TreeNode* root, int target) {
+    if (root == NULL) {
+        return NULL;
+    } 
+    if (root->val != target) {
+        root->left = removeLeafNodes(root->left, target);
+        root->right =removeLeafNodes(root->right, target);
+    }
+    else {
+        if (root->left){
+            root->left = removeLeafNodes(root->left, target);
+        }
+        if (root->right) {
+            root->right = removeLeafNodes(root->right, target);
+        }
+        if (!root->left && !root->right) {
+            delete root;
+            root = NULL;
+        }
+    }
+    return root;
+}
 
+
+TEST(AlgoTree, LeetCode) {
+    TreeNode* root = new TreeNode(1);
+    root->left= new TreeNode(1);
+    root->right= new TreeNode(1);
+
+    root= removeLeafNodes(root, 1);
+
+
+    root = new TreeNode(1);
+    root->left = new TreeNode(2);
+    root->left->left = new TreeNode(2);
+    root->left->left->left = new TreeNode(2);
+    root->left->left->left->left = new TreeNode(2);
+    root = removeLeafNodes(root, 2);
 }

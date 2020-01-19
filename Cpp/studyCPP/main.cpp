@@ -40,7 +40,7 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "AlgoHash.LeetCode";
 	testing::FLAGS_gtest_filter = "AlgoStr.LeetCode";
 	testing::FLAGS_gtest_filter = "Template.*";
-	testing::FLAGS_gtest_filter = "AlgoDP.*";
+	testing::FLAGS_gtest_filter = "AlgoTree.LeetCode";
 	
 
 	return RUN_ALL_TESTS();

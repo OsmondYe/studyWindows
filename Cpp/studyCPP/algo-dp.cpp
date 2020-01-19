@@ -462,3 +462,76 @@ TEST(AlgoDP, LeetCode) {
 		auto y = Pascal_Triangle_getRow(3);
 	}
 }
+
+
+int maximum69Number(int num) {
+	int w = 0;
+	stack<int> stack;
+	while (num)
+	{
+		stack.push(num % 10);
+		num /= 10;
+		w++;
+	}
+	int rt = 0;
+	bool check = false;
+	while (!stack.empty())
+	{
+		int i = stack.top();
+		if (i == 6 && !check) {
+			i = 9;
+			check = true;
+		}
+		rt += i * pow(10, --w);
+		stack.pop();
+	}
+	return rt;
+}
+
+
+vector<string> printVertically(string s) {
+	istringstream iss(s);
+	vector<string> vs;
+	int m_len = 0;
+
+	while (iss)
+	{
+		string s;
+		iss >> s;
+		if (m_len < s.size()) {
+			m_len = s.size();
+		}
+		vs.push_back(s);
+	}
+
+	vector<string> rt;
+	for (int i = 0; i < m_len; i++) {
+		string s;
+		for (auto j : vs) {
+			if (i < j.size()) {
+				s.push_back(j[i]);
+			}
+			else {
+				s.push_back(' ');
+			}
+		}
+		s = s.substr(0, s.find_last_not_of(' ')+1);
+		rt.push_back(s);
+	}
+
+
+	return rt;
+
+}
+
+
+TEST(AlgoDP, LeetCodeContest) {
+
+	cout << maximum69Number(9996) << endl;
+	cout << maximum69Number(6699)<<endl;
+
+	auto x = printVertically("HOW ARE YOU");
+	x= printVertically("TO BE OR NOT TO BE");
+	x= printVertically("CONTEST IS COMING");
+
+}
