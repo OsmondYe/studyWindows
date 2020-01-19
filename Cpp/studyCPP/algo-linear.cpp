@@ -299,11 +299,92 @@ void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
     }
 }
 
+
+//67. Add Binary
+string addBinary(string a, string b) {
+    // sanity check
+    if (a.empty()) {
+        return b;
+    }
+    if (b.empty()) {
+        return a;
+    }
+    int i = a.size() - 1;
+    int j = b.size() - 1;
+    bool carry = false;
+    stack<char> stack;
+
+    while (i>=0 || j>=0) {
+        char c = 0;
+
+        if (i >= 0) {
+            c += a[i] - '0';
+        }
+        if (j >= 0) {
+            c += b[j] - '0';
+        }
+        if (carry) {
+            c += carry;
+            carry = false;
+        }
+        if (c >= 2) {
+            c = 0;
+            carry = true;
+        }
+        stack.push(c +'0');
+
+        i--;
+        j--;
+    }
+    if (carry) {
+        stack.push('1');
+    }
+    string rt;
+    rt.reserve(stack.size());
+
+    for (; !stack.empty(); stack.pop()) {
+        rt.push_back(stack.top());
+    }
+    return rt;
+}
+
+
+// 167 SUM II
+vector<int> twoSum(vector<int> numbers, int target) {
+    int i = 0;
+    int j = numbers.size()-1;
+
+    while (i<j)
+    {
+        if (numbers[i] + numbers[j] < target) {
+            int cur = numbers[i];
+            while (numbers[++i] == cur);
+                        
+        }
+        else if(numbers[i] + numbers[j] > target) {
+            int cur = numbers[j];
+            while (numbers[j] == cur);
+        }
+        else {
+            return vector<int>({ i + 1,j + 1 });
+        }
+    }
+
+    return vector<int>();
+}
 TEST(AlgoLinear, LeetCodeArray) {
+
+    auto x = twoSum({ 2,7,11,15 }, 9);
+    x = twoSum({ 0,0,3,4 }, 0);
+    x = twoSum({ 2,3,4 }, 6);
+    x = twoSum({ 5,25,75 }, 100);
+    x = twoSum({ 3,24,50,79,88,150,345 }, 200);
 
     vector<int> n1{ 1,2,3,0,0,0 };
     vector<int> n2{ 4,5,6 };
     merge(n1, 3, n2, 3);
+
+    EXPECT_STREQ("100", addBinary("11", "1").c_str());
     
 }
 
