@@ -1,7 +1,6 @@
 #include "pch.h"
 using namespace aux;
 
-
 namespace {
     struct TreeNode {
         int val;
