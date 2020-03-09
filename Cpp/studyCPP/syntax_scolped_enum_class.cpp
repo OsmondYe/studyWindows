@@ -27,3 +27,19 @@ TEST(Syntax, ScopedEnum) {
 	int MyRed = 12;
 	cout << MyRed << endl;       // but now MyRed is a int var
 }
+
+
+
+// À©Õ¹ÁË enum
+enum class Salutation : char {
+	mr,
+	ms,
+	co,
+	none
+};
+
+TEST(Syntax, ScoptedEnumeration) {
+	Salutation s = Salutation::mr;
+	s = Salutation::ms;
+	s = (Salutation)12;
+}

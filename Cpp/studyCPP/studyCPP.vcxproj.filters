@@ -161,6 +161,15 @@
     <ClCompile Include="syntax_scolped_enum_class.cpp">
       <Filter>Source Files\syntax</Filter>
     </ClCompile>
+    <ClCompile Include="syntax_delete.cpp">
+      <Filter>Source Files\syntax</Filter>
+    </ClCompile>
+    <ClCompile Include="syntax_kw_override.cpp">
+      <Filter>Source Files\syntax</Filter>
+    </ClCompile>
+    <ClCompile Include="syntax_move_rvref.cpp">
+      <Filter>Source Files\syntax</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="NoUse.hpp">
