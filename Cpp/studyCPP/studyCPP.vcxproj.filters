@@ -155,6 +155,12 @@
     <ClCompile Include="syntax_nullptr.cpp">
       <Filter>Source Files\syntax</Filter>
     </ClCompile>
+    <ClCompile Include="syntax_alias_declaration.cpp">
+      <Filter>Source Files\syntax</Filter>
+    </ClCompile>
+    <ClCompile Include="syntax_scolped_enum_class.cpp">
+      <Filter>Source Files\syntax</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="NoUse.hpp">
