@@ -1,8 +1,13 @@
 ﻿#include "pch.h"
 
 /*
+Compile means
+	- determine code segment
+	- determing data block
+	- organize code and date
 
 noexcept  函数不抛出异常
+
 constexpr int square(int x){return x*x;}  在编译时直接帮square的结果作为const
 
 value_type{char, wchar_t, int32, int64}
@@ -105,7 +110,6 @@ Require compile to convert {1,2,3,4,5} ->  initializer_list object -> some thing
 
 }
 
-
 TEST(Syntax, NULLPTR) {
 	void* p = nullptr;
 	/*
@@ -117,16 +121,56 @@ TEST(Syntax, NULLPTR) {
 
 }
 
+
+void arg_value(string str) {
+	cout << str;
+}
+
+void arg_value_ref(string& str) {
+	cout << str;
+}
+
+void arg_value_cref(const string& str) {
+	cout << str;
+}
+
+void arg_value_rvref(string&& str) {   // str is a l_value
+	cout << str;
+}
+
+void arg_value_crvref(const string&& str) {   // str is a l_value
+	cout << str;
+}
+
 TEST(Syntax, RVauleReference) {
-	//int& a = int(); //cannot convert from 'int' to 'int &'
+	//int& x = 12; //cannot convert from 'int' to 'int &'
 
+	int base = 12;
+	int& a = base;
+	cout << "same address for a and base\n";
+	cout << a << '\t' << &a << '\t' << &base << endl; // same address for a and base
+	
+	////////////
 
-	int&&b = int();  // var b, refer to a const value
-	int&&c = 70;
+	int&&b = 12;  // var b, refer to a const value
+	cout << &b << "\t" << b << endl;  // b is a var, point to the int 12
 
-	cout <<&b<<"\t"<< b<< "\t" << &c<<"\t"<<c;
 
 	cout << "the combination of rvalue references and lvalue references is just what is needed to easily code move semantics\n";
+
+	cout << " RBF is the base of  move and forward semantices\n";
+
+	std::string&& str = "this is good";  //"this is good" (07FF7576A8BB0h) build as string and set to str, str is a stack var
+
+	arg_value(str);  // will call basic_string(const basic_string& _Right)  to gen a str var
+	arg_value_ref(str);
+	arg_value_cref(str);
+	//arg_value_rvref(str); // error rv_ref can not be bound to lv;
+	arg_value_rvref(std::move(str));
+	arg_value_crvref(std::move(str));
+	cout << str;
+
+
 }
 
 

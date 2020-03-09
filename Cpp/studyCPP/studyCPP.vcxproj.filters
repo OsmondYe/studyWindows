@@ -146,6 +146,9 @@
     <ClCompile Include="ds-tree.cpp">
       <Filter>Source Files\data_struct_and_algo</Filter>
     </ClCompile>
+    <ClCompile Include="syntax_auto_decltype.cpp">
+      <Filter>Source Files\syntax</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="NoUse.hpp">

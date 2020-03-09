@@ -14,7 +14,6 @@ int main(int argc, wchar_t** argv)
 	//testing::FLAGS_gtest_filter = "Concurrency.MustJoinOrDetach";
 
 	//testing::FLAGS_gtest_filter = "Idiom.*:Syntax.*:Container.*:Concurrency.*";
-	testing::FLAGS_gtest_filter = "Syntax.OverrideNew";
 	testing::FLAGS_gtest_filter = "Stream.*";
 	testing::FLAGS_gtest_filter = "Regex.*";
 	testing::FLAGS_gtest_filter = "Random.*";
@@ -37,8 +36,9 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "AlgoLinear.LeetCode*";
 	testing::FLAGS_gtest_filter = "AlgoHash.LeetCode";
 	testing::FLAGS_gtest_filter = "AlgoStr.LeetCode";
-	testing::FLAGS_gtest_filter = "Template.*";
 	testing::FLAGS_gtest_filter = "AlgoTree.LeetCode";
+	testing::FLAGS_gtest_filter = "Template.*";
+	testing::FLAGS_gtest_filter = "Syntax.*";
 	
 
 	return RUN_ALL_TESTS();
