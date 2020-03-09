@@ -126,6 +126,8 @@ TEST(Syntax, Auto) {
 
 	// hiden proxcy type cannot work well with auto
 	cout << "hiden proxcy type cannot work well with auto\n";
+
+	cout << "best way: auto hightprio = static_cast<bool>(feature(w)[5]);\n";
 }
 
 

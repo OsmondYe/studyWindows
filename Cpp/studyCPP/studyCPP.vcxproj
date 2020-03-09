@@ -211,6 +211,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="syntax.cpp" />
     <ClCompile Include="syntax_auto_decltype.cpp" />
+    <ClCompile Include="syntax_define_int_var.cpp" />
+    <ClCompile Include="syntax_nullptr.cpp" />
     <ClCompile Include="template.cpp" />
     <ClCompile Include="utility.cpp" />
   </ItemGroup>
