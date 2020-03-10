@@ -1,41 +1,31 @@
 // OyeTools.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 #include "pch.h"
-
 #include "cmdline.h"
 
 
-using namespace std;
-
 
 string hook_help_message();
-void inject_dll(int pid, const string& dll_path);
-void inject_dll(const string& pname, const string& dll_path);
-
-inline void lookup_english_word_in_browser(const std::string word) {
-	::CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
-	std::string url = "http://dict.youdao.com/w/";
-	url += word;
-	SHELLEXECUTEINFOA data{ 0 };
-	data.cbSize = sizeof(SHELLEXECUTEINFOW);
-	data.lpFile = url.c_str();
-	data.fMask = SEE_MASK_FLAG_DDEWAIT | SEE_MASK_FLAG_NO_UI;
-	data.nShow = SW_SHOWNORMAL;
-	::ShellExecuteExA(&data);
-}
-
 cmdline::parser gp;
+
+
+
 // parse int got some problem, so only use string
 void config_parser(cmdline::parser& gp) {
 	gp.add("help", 'h', "show help");
+	
 	// for inject dll into target process
 	gp.add("inject_dll", 'i', "inject dll into running process, -i --target_id 1024 --dll_path [filePath]");
 	gp.add<string>("target_id", '\0', "set target process id", false);
 	gp.add<string>("target_name", '\0', "set target process name", false);
 	gp.add<string>("dll_path", '\0', "set dll to be injected into target process", false);
-
-	// for english
+	
+	// for shell api english
 	gp.add<string>("english_lookup", 'e', "lookup english work in Youdao.com", false);
+	
+	// for network
+	gp.add("hostname", 'n', "lookup hostname");
+	gp.add<string>("ipbyname", 'p', "lookup hostname", false);
 
 }
 
@@ -71,6 +61,13 @@ int main(int argc, char* argv[])
 	else if (gp.exist("english_lookup")) {
 		string word = gp.get<string>("english_lookup");
 		lookup_english_word_in_browser(word);
+	}
+	else if (gp.exist("hostname")) {
+		query_host_name();
+	}
+	else if (gp.exist("ipbyname")) {
+		string word = gp.get<string>("ipbyname");
+		query_address_by_name(word);
 	}
 	else {
 		// by default, failed to parge,	

@@ -23,7 +23,25 @@
 #include <sstream>
 
 
-
 // I always like springf, fsprintf
 #pragma comment(lib,"legacy_stdio_definitions.lib")
 #endif //PCH_H
+
+
+using namespace std;
+
+//
+//here are my utils;
+//
+
+// hook and inject
+void inject_dll(int pid, const string& dll_path);
+void inject_dll(const string& pname, const string& dll_path);
+
+// shell api
+void lookup_english_word_in_browser(const std::string& word);
+
+
+// network api
+void query_address_by_name(const string& name);
+void query_host_name();

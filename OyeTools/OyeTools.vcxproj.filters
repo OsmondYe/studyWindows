@@ -30,7 +30,13 @@
     <ClCompile Include="hook.cpp">
       <Filter>hook</Filter>
     </ClCompile>
-    <ClCompile Include="win32api.cpp">
+    <ClCompile Include="file_api.cpp">
+      <Filter>win32api</Filter>
+    </ClCompile>
+    <ClCompile Include="network_api.cpp">
+      <Filter>win32api</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_api.cpp">
       <Filter>win32api</Filter>
     </ClCompile>
   </ItemGroup>
