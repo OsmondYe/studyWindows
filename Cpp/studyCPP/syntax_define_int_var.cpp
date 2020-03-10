@@ -1,5 +1,10 @@
 ﻿#include "pch.h"
 
+// Uniform Initialization  and Initializer List
+
+// narrowing :  will degrade value's precision
+
+// class data member can using {} to give a default value;
 
 namespace syntax_init {
 	class Widget {
@@ -10,6 +15,13 @@ namespace syntax_init {
 		Widget(const Widget& rh) {
 			x_ = rh.x_;
 			y_ = rh.y_;
+		}
+
+		Widget(std::initializer_list<int> il) {
+			cout << "trying to analyze std::initializer_list<int> il\n";
+			for (auto beg = il.begin(); beg != il.end(); ++beg) {
+				cout << *beg << endl;
+			}
 		}
 
 		Widget& operator = (const  Widget& rh) {
@@ -24,13 +36,15 @@ namespace syntax_init {
 }
 
 
+using namespace syntax_init;
+
 TEST(Syntax, InitVar) {
+	cout << "{} will be called Uniform Initialization\n";
 	// using {} as many as i can 
 
 	int x2{ 12 };
 	char c{ 'd' };
 
-	using namespace syntax_init;
 
 	Widget w;		// call default ctor
 	Widget x = w;   // call copy-ctor
@@ -41,8 +55,28 @@ TEST(Syntax, InitVar) {
 
 	Widget w3();  // fuck off, w3 is a function type
 	cout << typeid(w3).name() << endl;
+
+
+//
+// 一致初始化
+//
+	int values[]{ 1,2,3,4,5,6 };
+	vector<int> v{ 2,3,4,5,6,76 };
+	vector<string> cities{ "changan","xian","beijing","tianjing" };
+	int j{};  //  j=0;
+	int* ppp{}; // ppp=nullptr;
+
+
 }
 
+TEST(Syntax, Narrowing) {
+	int x1 = 5.3;  // ok, but  x1 form double to int  -> narrowing;
+	//int x2{ 5.3 };  // error: required narrowing conversion from 'double' to 'int'
+	cout << "int x2{ 5.3 };  // error: required narrowing conversion from 'double' to 'int'" << endl;
+
+	//char x3{ 999999 }; //error C2397: conversion from 'int' to 'char' requires a narrowing conversion
+	cout << "char x3{ 999999 }; //error C2397: conversion from 'int' to 'char' requires a narrowing conversion\n";
+}
 
 
 
@@ -92,13 +126,7 @@ Require compile to convert {1,2,3,4,5} ->  initializer_list object -> some thing
 	vector<std::pair<int, string>> ll{ {1,"haha"},{2,"haha"} };
 	ll.size();
 
-	//
-	// 一致初始化
-	//
-	int values[]{ 1,2,3,4,5,6 };
-	vector<int> v{ 2,3,4,5,6,76 };
-	vector<string> cities{ "changan","xian","beijing","tianjing" };
-	int j{};  //  j=0;
-	int* ppp{}; // ppp=nullptr;
 
+	// test self define InitializerList-Constructor
+	Widget w{ 1,2,3,4,5,6 };
 }
