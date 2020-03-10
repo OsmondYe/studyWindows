@@ -170,6 +170,9 @@
     <ClCompile Include="syntax_move_rvref.cpp">
       <Filter>Source Files\syntax</Filter>
     </ClCompile>
+    <ClCompile Include="syntax_class_instance.cpp">
+      <Filter>Source Files\syntax</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="NoUse.hpp">

@@ -212,6 +212,7 @@
     <ClCompile Include="syntax.cpp" />
     <ClCompile Include="syntax_alias_declaration.cpp" />
     <ClCompile Include="syntax_auto_decltype.cpp" />
+    <ClCompile Include="syntax_class_instance.cpp" />
     <ClCompile Include="syntax_define_int_var.cpp" />
     <ClCompile Include="syntax_delete.cpp" />
     <ClCompile Include="syntax_kw_override.cpp" />
