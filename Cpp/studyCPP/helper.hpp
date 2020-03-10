@@ -33,18 +33,14 @@ namespace aux {
 		return rt;
 	}
 
-
-	template<class Iterator>
-	static void output(Iterator beg, Iterator end, const wchar_t* delim =L" ") {
-		while (beg != end) {
-			wcout << *beg++<<delim;
+	template<typename Container>
+	static void output(const Container& c) {
+		using std::cbegin;
+		using std::cend;
+		for (auto it = cbegin(c); it != cend(c); ++it) {
+			cout << *it << " ";
 		}
-		wcout << endl;
-	}
-
-	template<class Container>
-	static void output(Container& c) {
-		output(c.begin(), c.end());
+		cout << endl;
 	}
 
 	template<typename T>
@@ -57,56 +53,4 @@ namespace aux {
 		std::mt19937 engine(rand());
 		std::shuffle(c.begin(), c.end(), engine);
 	}
-}
-
-
-
-namespace expe {
-
-	class ExperimentObj {
-	public:
-		ExperimentObj() {
-			cout << "ExperimentObj contructor" << endl;
-		}
-
-		ExperimentObj(ExperimentObj&& other)
-			: str_(other.str_),wstr_(other.wstr_)
-		{
-			cout << "ExperimentObj contructor with move-constructor" << endl;
-			// set other 's data member is null
-			
-		}
-
-		~ExperimentObj() {
-			cout << "ExperimentObj destructor" << endl;
-		}
-
-		ExperimentObj& operator=(ExperimentObj&& other) {
-			return MoveOjb(other);
-		}
-
-		ExperimentObj(const ExperimentObj&) = delete;
-		ExperimentObj& operator=(const ExperimentObj&) = delete;
-
-
-	private:
-		ExperimentObj& MoveOjb(ExperimentObj& other) {
-			this->str_ = other.str_;
-			this->wstr_ = other.wstr_;
-			return *this;
-		}
-
-	private:
-		string str_;
-		wstring wstr_;
-	};
-
-
-	inline void test_fun(int i) {
-		for (size_t i = 0; i < 100; i++)
-		{
-			cout << i<<" ";
-		}
-	};
-
 }

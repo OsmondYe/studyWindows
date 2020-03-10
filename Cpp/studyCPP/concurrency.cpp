@@ -27,14 +27,7 @@ TEST(Concurrency, Basic) {
 
 TEST(Concurrency, Threads) {
 	// 可以让容器管理线程
-	vector<thread> vt; vt.reserve(20);
-	for (size_t i = 0; i < 20; i++)
-	{
-		// push_back 多了一个 移动放入
-		vt.push_back(thread(expe::test_fun,i));
-	}
-	// 自动绑成员函数
-	for_each(vt.begin(), vt.end(), mem_fn(&thread::join));
+	
 }
 
 

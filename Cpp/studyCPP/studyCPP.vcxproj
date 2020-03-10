@@ -215,6 +215,7 @@
     <ClCompile Include="syntax_class_instance.cpp" />
     <ClCompile Include="syntax_define_int_var.cpp" />
     <ClCompile Include="syntax_delete.cpp" />
+    <ClCompile Include="syntax_kw_constexpr.cpp" />
     <ClCompile Include="syntax_kw_override.cpp" />
     <ClCompile Include="syntax_move_rvref.cpp" />
     <ClCompile Include="syntax_nullptr.cpp" />

@@ -61,7 +61,6 @@ namespace {
 TEST(Container, Vector) {
 	// c11, initialize_list, convert {1,2,3,4,5,6} into an iter with a range 
 	vector<int> vi{ 1,2,3,4,5,6 };	
-	output(vi.begin(), vi.end());
 	output(vi);
 
 	auto it = vi.begin();
@@ -97,7 +96,7 @@ TEST(Container, Vector) {
 
 TEST(Container, List) {
 	list<int> ll({ 1,1,2,2,3,3,3,3,4,5,5,5,5,5,6 });
-	output(ll.begin(), ll.end());
+	output(ll);
 	auto ll2 = ll;
 	ll2.unique();
 	output(ll);

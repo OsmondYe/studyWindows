@@ -36,3 +36,15 @@ TEST(Iterator, Vector) {
 }
 
 
+TEST(Iterator, ConstIteratorPriortiry) {
+
+	vector<int> vec{ 1972,1983,2003 };
+
+	auto it = std::find(vec.cbegin(), vec.cend(), 2004); // last if no such element is found. i.e. vec.cend();
+	
+	vec.insert(it, 1998); 
+
+	aux::output(vec);
+}
+
+

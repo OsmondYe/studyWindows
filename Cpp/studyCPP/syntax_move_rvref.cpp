@@ -41,20 +41,7 @@ TEST(Syntax, RVauleReference) {
 }
 
 TEST(Syntax, Move) {
-	// move constructor
-	// move assignment operator  对于一个类而言,2个都需要有
-	// std::move
-	// if ojb is movable, so it isnt copyable
 
-	// 如果一个值,以后不再使用了,可以用move来表明移动走了
-
-	expe::ExperimentObj a;
-	{
-		expe::ExperimentObj b = std::move(a);
-	}
-
-	expe::ExperimentObj c;
-	c = std::move(a);
 }
 
 

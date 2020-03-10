@@ -19,7 +19,6 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "Random.*";
 	testing::FLAGS_gtest_filter = "Algorithm.*";
 	testing::FLAGS_gtest_filter = "DSBase.Perm";
-	testing::FLAGS_gtest_filter = "Iterator.Vector";
 	testing::FLAGS_gtest_filter = "String.ReplaceAll";
 	testing::FLAGS_gtest_filter = "Idiom.MacroParam";
 	testing::FLAGS_gtest_filter = "Sort.Merge";
@@ -38,6 +37,7 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "AlgoStr.LeetCode";
 	testing::FLAGS_gtest_filter = "AlgoTree.LeetCode";
 	testing::FLAGS_gtest_filter = "Template.*";
+	testing::FLAGS_gtest_filter = "Iterator.*";
 	testing::FLAGS_gtest_filter = "Syntax.*";
 	
 

@@ -7,7 +7,12 @@
 
 namespace clsins {
 
-    class Widget {
+    class IFun {
+    public:
+        virtual void SomeWork() noexcept = 0;  // c11 noexcept 
+    };
+
+    class Widget  :public IFun{
         using DataType = std::vector<int>;
     public:
         Widget() {}
@@ -19,10 +24,16 @@ namespace clsins {
         // Asign operator
         Widget& operator = (const Widget& rh) {data_ = rh.data_;}
 
+        virtual void SomeWork() noexcept override final {
+            cout << "SomeWork" << endl;
+        }
+
+
     private:
 
         DataType data_;
     };
+
 
 }
 
