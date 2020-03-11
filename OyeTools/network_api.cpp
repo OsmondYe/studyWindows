@@ -10,13 +10,9 @@
 #pragma comment(lib, "ws2_32.lib")
 #pragma comment(lib,"Mswsock.lib")
 
-
-
-inline void print_ws_error(int x = ::WSAGetLastError()) {
-
+#ifndef FEM
 #define FEM(x) {x,#x}
-
-	std::map<int, string> em{
+std::map<int, string> em{
 		FEM(WSA_INVALID_HANDLE),
 		FEM(WSA_NOT_ENOUGH_MEMORY),
 		FEM(WSA_INVALID_PARAMETER),
@@ -111,25 +107,32 @@ inline void print_ws_error(int x = ::WSAGetLastError()) {
 		FEM(WSA_QOS_EPSFILTERSPEC),
 		FEM(WSA_QOS_ESDMODEOBJ),
 		FEM(WSA_QOS_ESHAPERATEOBJ)
-	};
+};
 
+#endif // !FEM
+
+
+inline void print_ws_error(int x = ::WSAGetLastError()) {
+
+
+	
 	if (em.count(x) == 0) {
-		printf("error, %d, unknown", x);
+		printf("error -> unknown(%d)\n", x);
 	}
 	else {
-		printf("error,%d,%s", x, em[x].c_str());
+		printf("error -> %s(%d)\n", em[x].c_str(),x);
 	}
 
 }
 
 void query_address_by_name(const string& name);
 
-
 void init_win_sock() {
 	WSADATA data = { 0 };
 	auto rt = WSAStartup(MAKEWORD(2, 2), &data);
 	if (rt != 0) {
 		cout << "WSAStartup failed:" << rt << endl;
+		print_ws_error();
 		exit(1);
 	}
 }
@@ -249,14 +252,14 @@ void query_address_by_name(const string& name) {
 }
 
 void query_host_name() {
+	init_win_sock();
 
 	char name[255] = { 0 };
 	auto rt = ::gethostname(name, 255);
 	if (rt == 0) {
-		printf("hostname is %s\n", name);
+		cout << name << endl;
 	}
 	else {
 		print_ws_error();
-		cout << "failed: call gethostname" << endl;
 	}
 }
