@@ -1,7 +1,6 @@
 #include "pch.h"
 
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
-
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <nspapi.h>
@@ -9,6 +8,15 @@
 
 #pragma comment(lib, "ws2_32.lib")
 #pragma comment(lib,"Mswsock.lib")
+
+
+/*
+	WSAGetLastError
+	WSAStartup
+	getaddrinfo / freeaddrinfo
+	gethostname
+*/
+
 
 #ifndef FEM
 #define FEM(x) {x,#x}

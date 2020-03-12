@@ -160,6 +160,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="dll_api.cpp" />
     <ClCompile Include="hook.cpp" />
     <ClCompile Include="network_api.cpp" />
     <ClCompile Include="OyeTools.cpp" />

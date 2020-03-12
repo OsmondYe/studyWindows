@@ -39,6 +39,9 @@
     <ClCompile Include="shell_api.cpp">
       <Filter>win32api</Filter>
     </ClCompile>
+    <ClCompile Include="dll_api.cpp">
+      <Filter>win32api</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
