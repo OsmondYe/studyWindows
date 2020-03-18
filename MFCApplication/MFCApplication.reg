@@ -1,0 +1,33 @@
+REGEDIT
+; This .REG file may be used by your SETUP program.
+;   If a SETUP program is not available, the entries below will be
+;   registered in your InitInstance automatically with a call to
+;   CWinApp::RegisterShellFileTypes and COleObjectFactory::UpdateRegistryAll.
+
+HKEY_CLASSES_ROOT\.oye = MFCApplication.Document
+HKEY_CLASSES_ROOT\MFCApplication.Document\shell\open\command = MFCApplication.EXE %1
+HKEY_CLASSES_ROOT\MFCApplication.Document\shell\open\ddeexec = [open("%1")]
+HKEY_CLASSES_ROOT\MFCApplication.Document\shell\open\ddeexec\application = MFCApplication
+    ; note: the application is optional
+    ;  (it defaults to the app name in "command")
+
+HKEY_CLASSES_ROOT\MFCApplication.Document = MFCApplication.Document
+
+
+HKEY_CLASSES_ROOT\MFCApplication.Document\protocol\StdFileEditing\server = MFCApplication.EXE
+HKEY_CLASSES_ROOT\MFCApplication.Document\protocol\StdFileEditing\verb\0 = &Edit
+HKEY_CLASSES_ROOT\MFCApplication.Document\Insertable =
+HKEY_CLASSES_ROOT\MFCApplication.Document\CLSID = {a589a381-8c85-4fb3-8596-eb25cb7b8c90}
+
+HKEY_CLASSES_ROOT\CLSID\{a589a381-8c85-4fb3-8596-eb25cb7b8c90} = MFCApplication.Document
+HKEY_CLASSES_ROOT\CLSID\{a589a381-8c85-4fb3-8596-eb25cb7b8c90}\DefaultIcon = MFCApplication.EXE,1
+HKEY_CLASSES_ROOT\CLSID\{a589a381-8c85-4fb3-8596-eb25cb7b8c90}\LocalServer32 = MFCApplication.EXE
+HKEY_CLASSES_ROOT\CLSID\{a589a381-8c85-4fb3-8596-eb25cb7b8c90}\ProgId = MFCApplication.Document
+HKEY_CLASSES_ROOT\CLSID\{a589a381-8c85-4fb3-8596-eb25cb7b8c90}\MiscStatus = 32
+HKEY_CLASSES_ROOT\CLSID\{a589a381-8c85-4fb3-8596-eb25cb7b8c90}\AuxUserType\3 = MFCApplication
+HKEY_CLASSES_ROOT\CLSID\{a589a381-8c85-4fb3-8596-eb25cb7b8c90}\AuxUserType\2 = MFCApplication
+HKEY_CLASSES_ROOT\CLSID\{a589a381-8c85-4fb3-8596-eb25cb7b8c90}\Insertable =
+HKEY_CLASSES_ROOT\CLSID\{a589a381-8c85-4fb3-8596-eb25cb7b8c90}\verb\1 = &Open,0,2
+HKEY_CLASSES_ROOT\CLSID\{a589a381-8c85-4fb3-8596-eb25cb7b8c90}\verb\0 = &Edit,0,2
+HKEY_CLASSES_ROOT\CLSID\{a589a381-8c85-4fb3-8596-eb25cb7b8c90}\InprocHandler32 = ole32.dll
+
