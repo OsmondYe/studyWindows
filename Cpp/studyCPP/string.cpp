@@ -32,7 +32,7 @@ TEST(String, Basic) {
 TEST(String, DISABLED_EncodingPrefix) {
 	// u8,u,U,L,R
 	string str1 = "你好中国";
-	string str2 = u8"你好中国";  // u8-> utf8
+	u8string str2 = u8"你好中国";  // u8-> utf8
 	u16string str3 = u"你好中国";  // u ->  char16_t
 	u32string str4 = U"你好中国";  // U -> char32_t
 	wstring str5 = L"你好中国";   //  L -> wide string literal
@@ -47,7 +47,7 @@ you can use any char you want and to insert escapiing char with out using any \
 
 	wstring str8 = LR"(看看能否实现ABCabc123\n\t123\n456)";
 
-	cout << str1 << str2<<str6 << endl;
+	cout << str1 /*<< str2.c_str()*/<<str6 << endl;
 	wcout << str5 << str7 << endl;
 	wcout << str8 <<endl;
 

@@ -101,7 +101,7 @@ TEST(Algorithm, Find) {
 
 	// adjacent_find :
 	cout << "std::adjacent_find: two consecutive identical elemetns";
-	std::adjacent_find(v.begin(), v.end());
+	//std::adjacent_find(v.cbegin(), v.cend());
 }
 
 
@@ -288,7 +288,7 @@ TEST(Algorithm, AdjacentDifference) {
 
 	auto v2 = vector<int>(v.size());
 	//[b:e) ->  vaule=op(b,e) -> (e-b)
-	adjacent_difference(v.begin(), v.end(), v2.begin(), [](int& first, int& second) {return second + first; });
+	adjacent_difference(v.begin(), v.end(), v2.begin(), [](auto first, auto second) {return second + first; });
 	output(v);
 	output(v2);
 }
@@ -297,7 +297,7 @@ TEST(Algorithm, PartialSum) {
 	auto v = getSorted(10);
 	auto v2 = vector<int>(v.size());
 	//[b:e) ->  o1=b1, o2=b1+b2,o3=b1+b2+b3 ...
-	partial_sum(v.begin(), v.end(), v2.begin(), [](int& first, int& second) {return second + first; });
+	partial_sum(v.begin(), v.end(), v2.begin(), [](const  int& first, const int& second) {return second + first; });
 	output(v);
 	output(v2);
 }

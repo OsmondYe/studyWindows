@@ -42,7 +42,6 @@ TEST(Adapter, Basic) {
 	std::copy(beg, end, out);
 	cout << endl;
 	// each i= (i+3)*2;
-	for_each(beg, end, bind2nd(plus<int>(), 3));
 	for_each(beg, end, [](int& i) {i = (i + 3) * 2; });
 	for_each(beg, end, [](int& i) {cout << i<<" " ; });
 	

@@ -40,11 +40,11 @@ TEST(Template, base) {
 
 // function-pointer as the parameter of the tempalte
 // generic callback
-template<typename T, void (*f)(T & v)>
+template<typename T, void (*Func)(T & v)>
 void my_foreach(T array[], unsigned size) {
 	for (size_t i = 0; i < size; i++)
 	{
-		f(array[i]);
+		Func(array[i]);
 	}
 }
 

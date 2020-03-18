@@ -83,18 +83,5 @@ TEST(Allocator, Basic) {
 	a.deallocate(p12, 12);
 
 	std::allocator<std::string> a2;
-
-	decltype(a)::rebind<std::string>::other a2_1;
-
-	std::string* pstr = a2_1.allocate(2);
-	a2_1.construct(pstr, "this is good");
-	a2_1.construct(pstr + 1, "this is bad");
-
-	std::cout << pstr[0] << pstr[1] << endl;
-
-	a2_1.destroy(pstr);
-	a2_1.destroy(pstr + 1);
-
-	a2_1.deallocate(pstr, 2);
 	
 }

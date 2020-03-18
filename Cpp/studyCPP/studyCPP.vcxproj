@@ -116,10 +116,11 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(OSMOND_EXTERNAL)\gtest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>
-      </LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <SupportJustMyCode>false</SupportJustMyCode>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -181,7 +182,6 @@
     <ClCompile Include="algo-linear.cpp" />
     <ClCompile Include="algo-tree.cpp" />
     <ClCompile Include="algorithm.cpp" />
-    <ClCompile Include="allocator.cpp" />
     <ClCompile Include="chrono.cpp" />
     <ClCompile Include="concurrency.cpp" />
     <ClCompile Include="container.cpp" />

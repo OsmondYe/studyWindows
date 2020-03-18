@@ -31,7 +31,6 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "DSLinear.MAX_SUB_ARRAY";
 	testing::FLAGS_gtest_filter = "DSLinear.Vector_Remove_duplicate_Elem";
 	testing::FLAGS_gtest_filter = "Map.Hash";
-	testing::FLAGS_gtest_filter = "Memory.SmartPtr_Array";
 	testing::FLAGS_gtest_filter = "AlgoLinear.LeetCode*";
 	testing::FLAGS_gtest_filter = "AlgoHash.LeetCode";
 	testing::FLAGS_gtest_filter = "AlgoStr.LeetCode";
@@ -39,6 +38,7 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "Template.*";
 	testing::FLAGS_gtest_filter = "Iterator.*";
 	testing::FLAGS_gtest_filter = "Syntax.*";
+	testing::FLAGS_gtest_filter = "Memory.*";
 	
 
 	return RUN_ALL_TESTS();

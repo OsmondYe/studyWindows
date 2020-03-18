@@ -6,7 +6,10 @@ constexpr is a new keyword
 		- known value when compiler time
 		- compiling time, no this var, using its value instead
 	- apply to function, this is a new concept
-		- give compiler a hint, if can cal the value, donot using func, use a value instead
+		- give compiler a hint, 
+			if can cal the value, 
+				don't using by calling a func, 
+				use a value instead
 */
 
 TEST(Syntax, ConstExpr) {
@@ -40,7 +43,7 @@ namespace {
 }
 
 TEST(Syntax, ConstExprInFunc) {
-	constexpr int a = doubleInf(12);  //  mov   dword ptr [a],18h   , no calling function
+	constexpr int a = doubleInf(12);  //  mov dword ptr [a], 18h   , without calling function
 	aux::println(a); 
 	aux::println(doubleInf(a));
 
@@ -51,4 +54,8 @@ TEST(Syntax, ConstExprInFunc) {
 
 	// error -> param must be a compiler known value
 	//constexpr int d = doubleInf(::time(NULL));  
+}
+
+TEST(Syntax, ConstExprInStl) {
+	cout << "Constexpr ctor in stl's unique_ptr\n";
 }
