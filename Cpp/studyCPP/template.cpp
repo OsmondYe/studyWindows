@@ -1,8 +1,17 @@
 #include "pch.h"
 using namespace aux;
-
-// keyword:  decltype;
 /*
+Keyword:
+	instantiation;		-> compiler time, to produce the true fucntion according to acutal arguement passing to template function(T_F)
+	decution			-> which acutal arguement passing to T_F		
+	specialization      -> using tempalte to create the real class/function
+						   explicit
+						   partial 
+	ODR					-> one-definition rule
+*/
+
+/*
+#  for decltype
 transform(cbegin(aa), cend(aa), std::inserter(keys, keys.begin()), [](decltype(aa)::value_type const& pair) {
 	return pair.first;
 });
@@ -12,6 +21,143 @@ transform(cbegin(aa), cend(aa), std::inserter(keys, keys.begin()), [](decltype(a
 		decltype(auto) emplace_back(_Valty&&... _Val)
 
 */
+
+
+template <typename T>
+inline const T& my_max(const T& a, const T& b) {
+	return a > b ? a : b;
+}
+
+template <typename RT,typename T1, typename T2 >
+inline  const RT& my_max2(const T1& a, const T2& b) {
+	return a > b ? a : b;
+}
+
+template <typename RT, typename T1, typename T2 >
+inline   RT my_max3(const T1& a, const T2& b) {
+	return a > b ? a : b;
+}
+
+TEST(Template, GenericMax) {
+	println(my_max(1, 2));
+	println(my_max(1.1, 2.2));
+	println(my_max(string("strst"), string("hello")));
+	//println(my_max(1, 2.2));  error
+	println(my_max<double>(1, 2.2));
+	println(my_max(static_cast<double>(1), 2.2));
+	//println(my_max("str", "hello"));
+	//println(my_max('c', 2));
+	auto x = my_max2<double>(4.1, 2);
+	println(my_max2<double>( 4.1, 2));
+	println(my_max3<double>( 4.1, 2));
+}
+
+template<typename T>
+class my_stack {
+public:
+	std::vector<T> elems;
+
+	my_stack() {
+		elems.clear();
+	}
+
+	void push(const T& t) {
+		elems.push_back(t);
+	}
+	T top(); // in outside, declaration, must use full name
+	void pop() {
+		elems.pop_back();
+	}
+	// some must usingt full type
+	my_stack(const my_stack<T>&) = delete;
+	my_stack<T>&  operator = (const my_stack<T>&) = delete;
+};
+
+template<typename T>
+T my_stack<T>::top() {
+	return elems.back();
+}
+
+typedef my_stack<int> myIntStack;
+
+TEST(Template, ClassDefine) {
+	my_stack<double> ss;
+
+	ss.push(1.2);
+	ss.push(1.222);
+	println(ss.top());
+	ss.pop();
+	println(ss.top());
+	ss.pop();
+	// using typedef
+	myIntStack s;
+	s.push(1);
+	println(s.top());
+	s.pop();
+}
+template<>
+class my_stack<std::string> {   // tell compiler, if string, using this specialization version
+public:
+	std::deque<std::string> elems;  // elements
+
+	void push(const string& s) { elems.push_back(s); }
+	void pop() { elems.pop_back(); }
+	std::string top() { return elems.back(); }
+};
+
+TEST(Template, Specialization) {
+	
+	my_stack<string> ss;
+
+	ss.push("hello");
+	ss.push("hello22");
+	println(ss.top());ss.pop();
+	println(ss.top());ss.pop();
+}
+
+
+TEST(Template, LocalSpecialization) {
+
+	println("base:\t   template<typename T1, typename T2> class Myclass");
+	println("Local1:\t   template<typename T> class Myclass<T,T>");
+	println("Local2:\t   template<typename T> class Myclass<T,int>");
+	println("Local3:\t   template<typename T1, typename T2> class Myclass<T1*,T2*>");
+}
+
+
+template<typename T, typename Container = std::vector<T> >
+class my_stack2 {
+public:
+	void push(const T& t) {elems.push_back(t);}
+	T top(); // in outside, declaration, must use full name
+	void pop() {elems.pop_back();}
+
+	// using
+	Container elems;
+};
+
+
+TEST(Template, DefaultTemplateAcutalArgurment) {
+	my_stack2<int> s;
+}
+
+template<typename T, int size>
+class my_stack3 {
+public:
+	T elem[size];
+	
+};
+
+TEST(Template, NoneTypeTemplateArgurment) {
+
+	my_stack3<int, 3> ss;
+
+	ss.elem[0] = 1;
+	ss.elem[1] = 1;
+	ss.elem[2] = 1;
+
+}
+
 
 // - unified data-struct
 template<typename T = int>
@@ -32,11 +178,6 @@ public:
 		return elem[i];
 	}
 };
-
-
-TEST(Template, base) {
-	aux::println("template basic");
-}
 
 // function-pointer as the parameter of the tempalte
 // generic callback
@@ -63,6 +204,69 @@ TEST(Template, FunctionAsParam) {
 	my_foreach<int, my_print>(a, 5);
 }
 
+template<typename Container>
+void my_print_all(const Container& c) {
+	typename Container::const_iterator pos;  // if you want to use Container's sub type, you must using typename keyword
+
+	for (pos = c.cbegin(); pos != c.cend(); ++pos) {
+		cout << *pos << " ";
+	}
+	cout << endl;
+}
+
+TEST(Template, TypeNameInTemmplateTemplate) {
+	vector<int> ss{ 1,2,3,4,5 };
+	my_print_all(ss);
+}
+
+
+template<typename T, int val>
+T addVal(const T& x) {
+	return x + val;
+}
+
+TEST(Template, ConstTemmplateParam) {
+	vector<int> x{ 1,2,3,4,5 };
+	std::transform(x.begin(), x.end(), x.begin(), addVal<int, 50>);
+	my_print_all(x);
+}
+
+
+template<typename T, typename Container = std::vector<T> >
+class my_stack4 {
+public:
+	void push(const T& t) { elems.push_back(t); }
+	T top() { return elems.back(); }
+	void pop() { elems.pop_back(); }
+
+	// forceing T2 converting to T
+	template<typename T2, typename Container = std::vector<T2> >
+	void operator=(const my_stack4<T2>& r) {
+		if ((void*)this == (void*)&r) {
+			return;
+		}
+		this->elems.clear();
+		for (auto i : r.elems) {
+			this->elems.push_back((T)i);
+		}
+	}
+
+	// using
+	Container elems;
+};
+
+TEST(Template, ClassMemFunUsingTemplate) {
+	my_stack4<int> s1;
+	my_stack4<double>s2;
+
+	s2.push(1.1);
+	s2.push(2.1);
+	s2.push(3.1);
+	// different elem type can merge together 
+	s1 = s2;
+	my_print_all(s1.elems);
+	
+}
 
 /*
 	pointer and reference as template parameter

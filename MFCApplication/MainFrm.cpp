@@ -32,16 +32,13 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_WM_SETTINGCHANGE()
 END_MESSAGE_MAP()
 
-// CMainFrame construction/destruction
+
 
 CMainFrame::CMainFrame() noexcept
 {
 	EnableActiveAccessibility();
 	// TODO: add member initialization code here
 	theApp.m_nAppLook = theApp.GetInt(_T("ApplicationLook"), ID_VIEW_APPLOOK_VS_2008);
-
-
-
 }
 
 CMainFrame::~CMainFrame()
@@ -136,21 +133,6 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// Switch the order of document name and application name on the window title bar. This
 	// improves the usability of the taskbar because the document name is visible with the thumbnail.
 	ModifyStyle(0, FWS_PREFIXTITLE);
-
-
-	COleDataObject odo;
-	odo.AttachClipboard();
-	odo.IsDataAvailable(1);
-
-	COleInsertDialog oid;
-	//oid.DoModal();
-	
-
-	OLEUIINSERTOBJECTA s;
-	auto rt = ::OleUIInsertObjectA(&s);
-
-	AfxMessageBox(rt);
-
 
 	return 0;
 }

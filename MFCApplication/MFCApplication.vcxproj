@@ -98,6 +98,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <RegisterOutput>true</RegisterOutput>
+      <SetChecksum>true</SetChecksum>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
