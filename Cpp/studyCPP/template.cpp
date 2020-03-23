@@ -268,19 +268,16 @@ TEST(Template, ClassMemFunUsingTemplate) {
 	
 }
 
+
 /*
 	pointer and reference as template parameter
-
 	// must be a const value in compile time
 */
-
-
 template<int* p>   // require p must be a const, so global value is good
 struct my_wrapper {
 	int get() { return *p; }
 	void set(int i) { *p = i; }
 };
-
 
 int global_int = 12;
 
@@ -290,6 +287,9 @@ TEST(Template, PtrRefAsParam) {
 	my_wrapper<&global_int>  wrapper;
 	wrapper.set(45);
 	cout << wrapper.get();
+
+	//int local = 12;
+	//my_wrapper<&local> w2; //when compiling, local in which memory is unknown, so it is error;
 }
 
 
