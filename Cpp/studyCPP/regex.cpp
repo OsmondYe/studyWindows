@@ -200,7 +200,6 @@ TEST(Regex, NextlabsWatermarkReplace) {
 
 	}
 
-
 	wcout << rt << endl;
 
 

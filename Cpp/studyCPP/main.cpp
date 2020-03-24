@@ -15,7 +15,6 @@ int main(int argc, wchar_t** argv)
 
 	//testing::FLAGS_gtest_filter = "Idiom.*:Syntax.*:Container.*:Concurrency.*";
 	testing::FLAGS_gtest_filter = "Stream.*";
-	testing::FLAGS_gtest_filter = "Regex.*";
 	testing::FLAGS_gtest_filter = "Random.*";
 	testing::FLAGS_gtest_filter = "Algorithm.*";
 	testing::FLAGS_gtest_filter = "DSBase.Perm";
@@ -36,9 +35,10 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "AlgoStr.LeetCode";
 	testing::FLAGS_gtest_filter = "AlgoTree.LeetCode";
 	testing::FLAGS_gtest_filter = "Iterator.*";
-	testing::FLAGS_gtest_filter = "Syntax.*";
 	testing::FLAGS_gtest_filter = "Memory.*";
 	testing::FLAGS_gtest_filter = "Template.*";
+	testing::FLAGS_gtest_filter = "Syntax.*";
+	testing::FLAGS_gtest_filter = "Regex.*";
 	
 
 	return RUN_ALL_TESTS();
