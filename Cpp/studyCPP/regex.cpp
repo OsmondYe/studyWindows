@@ -142,3 +142,66 @@ TEST(Regex, PatternForAll) {
 
 
 }
+
+TEST(Regex, Replace) {
+
+
+}
+
+
+namespace {
+
+	auto getReplacemap() {
+		std::map<wstring, wstring> _tokens;
+		const static wchar_t* USER = L"$(User)";
+		const static wchar_t* EMAIL = L"$(Email)";
+		const static wchar_t* HOST = L"$(Host)";
+		const static wchar_t* IP = L"$(IP)";
+		const static wchar_t* BREAK = L"$(Break)";  //  to \n
+		const static wchar_t* DATE = L"$(DATE)";    //  "YYYY-MM-DD"
+		const static wchar_t* TIME = L"$(TIME)";	//  "HH:mm:ss"	
+
+		_tokens[USER] = L"osmond";
+		_tokens[EMAIL] = L"osmond.ye@nextlabs.com";
+		_tokens[HOST] = L"my working computer";
+		_tokens[IP] = L"127.0.0.1";
+		_tokens[BREAK] = L"\n";
+		_tokens[DATE] = L"2020-03-24";
+		_tokens[TIME] = L"14:13:00";
+
+		return _tokens;
+	}
+
+	auto escapeSpecial(const wstring& key) {
+		wstring rt;
+		for (auto i : key) {
+			if (i == '$' || i == '(' || i == ')') {
+				rt.push_back('\\');
+			}
+			rt.push_back(i);
+		}
+		return rt;
+	}
+
+}
+
+TEST(Regex, NextlabsWatermarkReplace) {
+	wstring  watermark = L"$(User)$(Break)$(Date)$(Break)\n$(User)$(email)\n$(email)\n$(email)\n$(HOST)\n$(IP)$(Break)$(Time)";
+	//cout << watermark;
+	wstring rt = watermark;
+	auto map = getReplacemap();
+
+	for (auto& i : map) {
+		const auto flag = std::regex::flag_type::ECMAScript | std::regex::flag_type::icase | std::regex::flag_type::nosubs;
+
+		wregex reg(escapeSpecial(i.first), flag);
+
+		rt = regex_replace(rt, reg, i.second);
+
+	}
+
+
+	wcout << rt << endl;
+
+
+}
