@@ -3,15 +3,22 @@
 #include "pch.h"
 #include "cmdline.h"
 
-
+const int version = 0x0001'0102;
+void print_version() {
+	char buf[255] = { 0 };
+	sprintf_s(buf, "Version %d.%02d.%04d Built on %s", 1, 0, 0102, "2020-04-01");
+	cout << buf << endl;
+}
 
 string hook_help_message();
 cmdline::parser gp;
 
 
-
 // parse int got some problem, so only use string
 void config_parser(cmdline::parser& gp) {
+	print_version();
+
+
 	gp.add("help", 'h', "show help");
 	
 	// for inject dll into target process
@@ -22,10 +29,13 @@ void config_parser(cmdline::parser& gp) {
 	
 	// for shell api english
 	gp.add<string>("english_lookup", 'e', "lookup english work in Youdao.com", false);
+	gp.add("shell_api_test", '\0', "run shell api test");
 	
 	// for network
 	gp.add("hostname", 'n', "lookup hostname");
 	gp.add<string>("ipbyname", 'p', "lookup hostname", false);
+
+	
 
 }
 
@@ -68,6 +78,9 @@ int main(int argc, char* argv[])
 	else if (gp.exist("ipbyname")) {
 		string word = gp.get<string>("ipbyname");
 		query_address_by_name(word);
+	}
+	else if (gp.exist("shell_api_test")) {
+		shell_api_test();
 	}
 	else {
 		// by default, failed to parge,	

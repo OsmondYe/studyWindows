@@ -60,4 +60,6 @@ void create_file(wstring path) {
 	DWORD dwTMP = FILE_ATTRIBUTE_TEMPORARY | FILE_FLAG_DELETE_ON_CLOSE;
 
 	//::CreateFileW(path.c_str(), dwDesiredAccess, dwShareMode,&sa,dwCreateDisposition,)
+
+	//GetFileAttributes()
 }

@@ -115,7 +115,6 @@ TEST(Template, Specialization) {
 	println(ss.top());ss.pop();
 }
 
-
 TEST(Template, LocalSpecialization) {
 
 	println("base:\t   template<typename T1, typename T2> class Myclass");
@@ -123,7 +122,6 @@ TEST(Template, LocalSpecialization) {
 	println("Local2:\t   template<typename T> class Myclass<T,int>");
 	println("Local3:\t   template<typename T1, typename T2> class Myclass<T1*,T2*>");
 }
-
 
 template<typename T, typename Container = std::vector<T> >
 class my_stack2 {
@@ -135,7 +133,6 @@ public:
 	// using
 	Container elems;
 };
-
 
 TEST(Template, DefaultTemplateAcutalArgurment) {
 	my_stack2<int> s;
@@ -157,7 +154,6 @@ TEST(Template, NoneTypeTemplateArgurment) {
 	ss.elem[2] = 1;
 
 }
-
 
 // - unified data-struct
 template<typename T = int>

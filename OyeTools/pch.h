@@ -41,6 +41,7 @@ void inject_dll(const string& pname, const string& dll_path);
 // shell api
 void lookup_english_word_in_browser(const std::string& word);
 
+void shell_api_test();
 
 // network api
 void query_address_by_name(const string& name);
