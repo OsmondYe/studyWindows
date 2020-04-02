@@ -67,7 +67,7 @@ BOOL COyeApp::InitInstance()
 	EnableTaskbarInteraction();
 
 	// AfxInitRichEdit2() is required to use RichEdit control
-	// AfxInitRichEdit2();
+	AfxInitRichEdit2();
 
 	// Standard initialization
 	// If you are not using these features and wish to reduce the size
@@ -76,7 +76,7 @@ BOOL COyeApp::InitInstance()
 	// Change the registry key under which our settings are stored
 	// TODO: You should modify this string to be something appropriate
 	// such as the name of your company or organization
-	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
+	SetRegistryKey(_T("SkyCode"));
 
 
 	InitContextMenuManager();
@@ -103,13 +103,11 @@ BOOL COyeApp::InitInstance()
 	//	additional menu types your application may need
 	HINSTANCE hInst = AfxGetResourceHandle();
 	m_hMDIMenu  = ::LoadMenu(hInst, MAKEINTRESOURCE(IDR_OyeMFCTYPE));
-	m_hMDIAccel = ::LoadAccelerators(hInst, MAKEINTRESOURCE(IDR_OyeMFCTYPE));
-
-
+	m_hMDIAccel = ::LoadAccelerators(hInst, MAKEINTRESOURCE(IDR_MAINFRAME));
 
 
 	// The main window has been initialized, so show and update it
-	pFrame->ShowWindow(SW_SHOWMAXIMIZED);
+	pFrame->ShowWindow(SW_SHOWNORMAL);
 	pFrame->UpdateWindow();
 
 	return TRUE;
@@ -202,3 +200,13 @@ void COyeApp::SaveCustomState()
 
 
 
+
+
+BOOL COyeApp::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: Add your specialized code here and/or call the base class
+	if (::TranslateAccelerator(m_pMainWnd->m_hWnd, m_hMDIAccel, pMsg)) {
+		return true;
+	}
+	return CWinAppEx::PreTranslateMessage(pMsg);
+}
