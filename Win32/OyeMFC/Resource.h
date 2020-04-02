@@ -39,16 +39,31 @@
 #define ID_WRITE_PASTEASHYPERLINK       32770
 #define ID_ACCELERATOR32771             32771
 #define ID_BUTTON2                      32774
+#define ID_BTN_QUERY                    32774
 #define ID_BUTTON3                      32775
 #define ID_BUTTON4                      32776
 #define ID_BUTTON5                      32777
+#define ID_ENGLISH_WORD                 32778
+#define ID_BUTTON6                      32781
+#define ID_CHECK2                       32782
+#define ID_EDIT3                        32783
+#define ID_SPIN2                        32784
+#define ID_COMBO3                       32785
+#define ID_COMBO4                       32786
+#define ID_BUTTON7                      32787
+#define ID_SLIDER2                      32788
+#define ID_PROGRESS2                    32789
+#define ID_SYSLINK2                     32791
+#define ID_MYONEDRIVE                   32794
+#define ID_SYSLINK4                     32795
+#define ID_RMDWIN                       32795
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        310
-#define _APS_NEXT_COMMAND_VALUE         32778
+#define _APS_NEXT_RESOURCE_VALUE        311
+#define _APS_NEXT_COMMAND_VALUE         32796
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           310
 #endif

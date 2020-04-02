@@ -38,6 +38,11 @@ protected:
 	afx_msg void OnUpdateApplicationLook(CCmdUI* pCmdUI);
 	DECLARE_MESSAGE_MAP()
 
+public:
+	afx_msg void OnBtnQuery();
+	afx_msg void OnSyslink2();
+	afx_msg void OnMyonedrive();
+	afx_msg void OnRmdWindow();
 };
 
 

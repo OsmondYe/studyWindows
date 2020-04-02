@@ -20,6 +20,10 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_COMMAND(ID_WINDOW_MANAGER, &CMainFrame::OnWindowManager)
 	ON_COMMAND_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnApplicationLook)
 	ON_UPDATE_COMMAND_UI_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnUpdateApplicationLook)
+	ON_COMMAND(ID_BTN_QUERY, &CMainFrame::OnBtnQuery)
+	ON_COMMAND(ID_SYSLINK2, &CMainFrame::OnSyslink2)
+	ON_COMMAND(ID_MYONEDRIVE, &CMainFrame::OnMyonedrive)
+	ON_COMMAND(ID_RMDWIN, &CMainFrame::OnRmdWindow)
 END_MESSAGE_MAP()
 
 // CMainFrame construction/destruction
@@ -202,3 +206,31 @@ void CMainFrame::OnUpdateApplicationLook(CCmdUI* pCmdUI)
 	pCmdUI->SetRadio(theApp.m_nAppLook == pCmdUI->m_nID);
 }
 
+
+
+void CMainFrame::OnBtnQuery()
+{
+	MessageBox(L"ehe");
+	// TODO: Add your command handler code here
+}
+
+
+void CMainFrame::OnSyslink2()
+{
+	CMFCRibbonLinkCtrl* pelem = (CMFCRibbonLinkCtrl*)m_wndRibbonBar.FindByID(ID_SYSLINK2);
+	pelem->OpenLink();
+}
+
+
+void CMainFrame::OnMyonedrive()
+{
+	CMFCRibbonLinkCtrl* pelem = (CMFCRibbonLinkCtrl*)m_wndRibbonBar.FindByID(ID_MYONEDRIVE);
+	pelem->OpenLink();
+}
+
+
+void CMainFrame::OnRmdWindow()
+{
+	CMFCRibbonLinkCtrl* pelem = (CMFCRibbonLinkCtrl*)m_wndRibbonBar.FindByID(ID_RMDWIN);
+	pelem->OpenLink();
+}
