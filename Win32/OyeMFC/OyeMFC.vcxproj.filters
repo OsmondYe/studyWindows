@@ -90,6 +90,12 @@
     <Image Include="res\Toolbar256.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="..\..\..\..\..\Users\oye\Desktop\Capture.PNG">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\xxx.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\ribbon.mfcribbon-ms">

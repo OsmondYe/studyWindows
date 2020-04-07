@@ -18,20 +18,25 @@ IMPLEMENT_DYNAMIC(CMainFrame, CMDIFrameWndEx)
 BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_WM_CREATE()
 	ON_COMMAND(ID_WINDOW_MANAGER, &CMainFrame::OnWindowManager)
-	ON_COMMAND_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnApplicationLook)
-	ON_UPDATE_COMMAND_UI_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnUpdateApplicationLook)
 	ON_COMMAND(ID_BTN_QUERY, &CMainFrame::OnBtnQuery)
 	ON_COMMAND(ID_SYSLINK2, &CMainFrame::OnSyslink2)
 	ON_COMMAND(ID_MYONEDRIVE, &CMainFrame::OnMyonedrive)
 	ON_COMMAND(ID_RMDWIN, &CMainFrame::OnRmdWindow)
+	ON_COMMAND(ID_Dialog_base, &CMainFrame::OnDialogbase)
+	ON_COMMAND(ID_CHECK_MODEL_DIALOG, &CMainFrame::OnCheckModelDialog)
+	ON_COMMAND(ID_DLG_COMMON, &CMainFrame::OnDialogCommon)
+	ON_COMMAND(ID_CFontDialog, &CMainFrame::OnCfontdialog)
+	ON_COMMAND(ID_CFileDialog, &CMainFrame::OnCfiledialog)
+	ON_COMMAND(ID_CColorDialog, &CMainFrame::OnCcolordialog)
+	ON_COMMAND(ID_CPrintDialog, &CMainFrame::OnCprintdialog)
+	ON_UPDATE_COMMAND_UI(ID_CHECK_MODEL_DIALOG, &CMainFrame::OnUpdateCheckModelDialog)
+	ON_COMMAND(ID_MyDialog, &CMainFrame::OnMydialog)
 END_MESSAGE_MAP()
 
 // CMainFrame construction/destruction
 
 CMainFrame::CMainFrame() noexcept
 {
-	// TODO: add member initialization code here
-	theApp.m_nAppLook = theApp.GetInt(_T("ApplicationLook"), ID_VIEW_APPLOOK_WINDOWS_7);
 }
 
 CMainFrame::~CMainFrame()
@@ -75,8 +80,12 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	CDockingManager::SetDockingMode(DT_SMART);
 	// enable Visual Studio 2005 style docking window auto-hide behavior
 	EnableAutoHidePanes(CBRS_ALIGN_ANY);
+
 	// set the visual manager and style based on persisted value
-	OnApplicationLook(theApp.m_nAppLook);
+	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerWindows7));
+	CDockingManager::SetDockingMode(DT_SMART);
+	m_wndRibbonBar.SetWindows7Look(FALSE);
+	RedrawWindow(nullptr, nullptr, RDW_ALLCHILDREN | RDW_INVALIDATE | RDW_UPDATENOW | RDW_FRAME | RDW_ERASE);
 
 	// Enable enhanced windows management dialog
 	EnableWindowsDialog(ID_WINDOW_MANAGER, ID_WINDOW_MANAGER, TRUE);
@@ -97,6 +106,8 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 
 	cs.style = WS_OVERLAPPED | WS_CAPTION | FWS_ADDTOTITLE
 		 | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_MAXIMIZE | WS_SYSMENU;
+
+	cs.lpszName = L"CMainFrame::MainFrm.cpp";
 
 	return TRUE;
 }
@@ -123,94 +134,9 @@ void CMainFrame::OnWindowManager()
 	ShowWindowsDialog();
 }
 
-void CMainFrame::OnApplicationLook(UINT id)
-{
-	CWaitCursor wait;
-
-	theApp.m_nAppLook = id;
-
-	switch (theApp.m_nAppLook)
-	{
-	case ID_VIEW_APPLOOK_WIN_2000:
-		CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManager));
-		m_wndRibbonBar.SetWindows7Look(FALSE);
-		break;
-
-	case ID_VIEW_APPLOOK_OFF_XP:
-		CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerOfficeXP));
-		m_wndRibbonBar.SetWindows7Look(FALSE);
-		break;
-
-	case ID_VIEW_APPLOOK_WIN_XP:
-		CMFCVisualManagerWindows::m_b3DTabsXPTheme = TRUE;
-		CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerWindows));
-		m_wndRibbonBar.SetWindows7Look(FALSE);
-		break;
-
-	case ID_VIEW_APPLOOK_OFF_2003:
-		CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerOffice2003));
-		CDockingManager::SetDockingMode(DT_SMART);
-		m_wndRibbonBar.SetWindows7Look(FALSE);
-		break;
-
-	case ID_VIEW_APPLOOK_VS_2005:
-		CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerVS2005));
-		CDockingManager::SetDockingMode(DT_SMART);
-		m_wndRibbonBar.SetWindows7Look(FALSE);
-		break;
-
-	case ID_VIEW_APPLOOK_VS_2008:
-		CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerVS2008));
-		CDockingManager::SetDockingMode(DT_SMART);
-		m_wndRibbonBar.SetWindows7Look(FALSE);
-		break;
-
-	case ID_VIEW_APPLOOK_WINDOWS_7:
-		CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerWindows7));
-		CDockingManager::SetDockingMode(DT_SMART);
-		m_wndRibbonBar.SetWindows7Look(TRUE);
-		break;
-
-	default:
-		switch (theApp.m_nAppLook)
-		{
-		case ID_VIEW_APPLOOK_OFF_2007_BLUE:
-			CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_LunaBlue);
-			break;
-
-		case ID_VIEW_APPLOOK_OFF_2007_BLACK:
-			CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_ObsidianBlack);
-			break;
-
-		case ID_VIEW_APPLOOK_OFF_2007_SILVER:
-			CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_Silver);
-			break;
-
-		case ID_VIEW_APPLOOK_OFF_2007_AQUA:
-			CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_Aqua);
-			break;
-		}
-
-		CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerOffice2007));
-		CDockingManager::SetDockingMode(DT_SMART);
-		m_wndRibbonBar.SetWindows7Look(FALSE);
-	}
-
-	RedrawWindow(nullptr, nullptr, RDW_ALLCHILDREN | RDW_INVALIDATE | RDW_UPDATENOW | RDW_FRAME | RDW_ERASE);
-
-	theApp.WriteInt(_T("ApplicationLook"), theApp.m_nAppLook);
-}
-
-void CMainFrame::OnUpdateApplicationLook(CCmdUI* pCmdUI)
-{
-	pCmdUI->SetRadio(theApp.m_nAppLook == pCmdUI->m_nID);
-}
-
-
-
 void CMainFrame::OnBtnQuery()
 {
-	MessageBox(L"ehe");
+	MessageBox(L"OnBtnQuery");
 	// TODO: Add your command handler code here
 }
 
@@ -233,4 +159,88 @@ void CMainFrame::OnRmdWindow()
 {
 	CMFCRibbonLinkCtrl* pelem = (CMFCRibbonLinkCtrl*)m_wndRibbonBar.FindByID(ID_RMDWIN);
 	pelem->OpenLink();
+}
+
+
+void CMainFrame::OnDialogbase()
+{
+	if (is_model_dialog) {
+		// model
+		CDialog dia(IDD_DIALOG_BASE);
+		dia.DoModal();
+	}
+	else {
+		// modeless
+		CDialog* pdia2 = new CDialog();
+		pdia2->Create(IDD_DIALOG_BASE);
+		pdia2->ShowWindow(SW_NORMAL);
+	}
+}
+
+void CMainFrame::OnCheckModelDialog()
+{
+	is_model_dialog = is_model_dialog ? false : true;
+}
+
+
+void CMainFrame::OnUpdateCheckModelDialog(CCmdUI* pCmdUI)
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->SetCheck(is_model_dialog);
+}
+
+
+void CMainFrame::OnDialogCommon()
+{
+	CCommonDialog* p = new CFontDialog();
+	p->DoModal();
+	
+
+	// TODO: Add your command handler code here
+}
+
+
+void CMainFrame::OnCfontdialog()
+{
+	// TODO: Add your command handler code here
+	CFontDialog x;
+	x.DoModal();
+}
+
+
+void CMainFrame::OnCfiledialog()
+{
+	CFileDialog x(true);
+	x.DoModal();
+}
+
+
+void CMainFrame::OnCcolordialog()
+{
+	CColorDialog x;
+	x.DoModal();
+}
+
+void CMainFrame::OnCprintdialog()
+{
+	CPrintDialog x(true);
+	x.DoModal();
+
+
+	CPrintDialogEx x2;
+	x2.DoModal();
+
+}
+
+
+void CMainFrame::OnMydialog()
+{
+	CDialogEx x(IDD_DIALOG_BASE);
+
+	CPngImage img;
+	img.Load(IDB_CAPTURE);
+
+	x.SetBackgroundImage(img);
+
+	x.DoModal();
 }

@@ -29,6 +29,7 @@ protected:  // control bar embedded members
 	CMFCRibbonApplicationButton m_MainButton;
 	CMFCToolBarImages m_PanelImages;
 	CMFCRibbonStatusBar  m_wndStatusBar;
+	bool is_model_dialog = false;
 
 // Generated message map functions
 protected:
@@ -43,6 +44,15 @@ public:
 	afx_msg void OnSyslink2();
 	afx_msg void OnMyonedrive();
 	afx_msg void OnRmdWindow();
+	afx_msg void OnDialogbase();
+	afx_msg void OnCheckModelDialog();
+	afx_msg void OnUpdateCheckModelDialog(CCmdUI* pCmdUI);
+	afx_msg void OnDialogCommon();
+	afx_msg void OnCfontdialog();
+	afx_msg void OnCfiledialog();
+	afx_msg void OnCcolordialog();
+	afx_msg void OnCprintdialog();
+	afx_msg void OnMydialog();
 };
 
 

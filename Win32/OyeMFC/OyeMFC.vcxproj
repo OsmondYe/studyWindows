@@ -209,6 +209,7 @@
     <ResourceCompile Include="OyeMFC.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\..\..\Users\oye\Desktop\Capture.PNG" />
     <Image Include="res\buttons.bmp" />
     <Image Include="res\filelarge.bmp" />
     <Image Include="res\filesmall.bmp" />
@@ -218,6 +219,7 @@
     <Image Include="res\Toolbar256.bmp" />
     <Image Include="res\writelarge.bmp" />
     <Image Include="res\writesmall.bmp" />
+    <Image Include="res\xxx.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\OyeMFC.rc2" />

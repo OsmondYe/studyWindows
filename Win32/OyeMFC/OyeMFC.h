@@ -24,7 +24,6 @@ protected:
 	HACCEL m_hMDIAccel;
 
 public:
-	UINT  m_nAppLook;
 	virtual void PreLoadState();
 	virtual void LoadCustomState();
 	virtual void SaveCustomState();

@@ -89,11 +89,8 @@ BOOL COyeApp::InitInstance()
 	theApp.GetTooltipManager()->SetTooltipParams(AFX_TOOLTIP_TYPE_ALL,
 		RUNTIME_CLASS(CMFCToolTipCtrl), &ttParams);
 
-	// To create the main window, this code creates a new frame window
-	// object and then sets it as the application's main window object
+
 	CMDIFrameWnd* pFrame = new CMainFrame;
-	if (!pFrame)
-		return FALSE;
 	m_pMainWnd = pFrame;
 	// create main MDI frame window
 	if (!pFrame->LoadFrame(IDR_MAINFRAME))
