@@ -45,6 +45,7 @@
 #define ID_CFileDialog                  32775
 #define ID_ENGLISH_WORD                 32778
 #define ID_CHECK2                       32782
+#define ID_CHECK_EnableMDITabbedGroups  32782
 #define ID_EDIT3                        32783
 #define ID_DLG_COMMON                   32783
 #define ID_SPIN2                        32784

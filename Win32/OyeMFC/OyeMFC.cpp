@@ -22,9 +22,6 @@ BEGIN_MESSAGE_MAP(COyeApp, CWinAppEx)
 	ON_COMMAND(ID_FILE_NEW, &COyeApp::OnFileNew)
 END_MESSAGE_MAP()
 
-
-// COyeApp construction
-
 COyeApp::COyeApp() noexcept
 {
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_ALL_ASPECTS;
@@ -33,10 +30,7 @@ COyeApp::COyeApp() noexcept
 
 }
 
-// The one and only COyeApp object
-
 COyeApp theApp;
-
 
 // COyeApp initialization
 
@@ -135,42 +129,12 @@ void COyeApp::OnFileNew()
 	pFrame->UnlockWindowUpdate();
 }
 
-// CAboutDlg dialog used for App About
 
-class CAboutDlg : public CDialogEx
-{
-public:
-	CAboutDlg() noexcept;
-
-// Dialog Data
-#ifdef AFX_DESIGN_TIME
-	enum { IDD = IDD_ABOUTBOX };
-#endif
-
-protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-
-// Implementation
-protected:
-	DECLARE_MESSAGE_MAP()
-};
-
-CAboutDlg::CAboutDlg() noexcept : CDialogEx(IDD_ABOUTBOX)
-{
-}
-
-void CAboutDlg::DoDataExchange(CDataExchange* pDX)
-{
-	CDialogEx::DoDataExchange(pDX);
-}
-
-BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
-END_MESSAGE_MAP()
 
 // App command to run the dialog
 void COyeApp::OnAppAbout()
 {
-	CAboutDlg aboutDlg;
+	CDialogEx aboutDlg(IDD_ABOUTBOX);
 	aboutDlg.DoModal();
 }
 
@@ -193,17 +157,13 @@ void COyeApp::SaveCustomState()
 {
 }
 
-// COyeApp message handlers
-
-
-
-
 
 BOOL COyeApp::PreTranslateMessage(MSG* pMsg)
 {
-	// TODO: Add your specialized code here and/or call the base class
+	// osmond, add here to support acceletator 
 	if (::TranslateAccelerator(m_pMainWnd->m_hWnd, m_hMDIAccel, pMsg)) {
 		return true;
 	}
 	return CWinAppEx::PreTranslateMessage(pMsg);
 }
+

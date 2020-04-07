@@ -30,6 +30,7 @@ protected:  // control bar embedded members
 	CMFCToolBarImages m_PanelImages;
 	CMFCRibbonStatusBar  m_wndStatusBar;
 	bool is_model_dialog = false;
+	bool is_enable_mdi_tabbed_groups = false;
 
 // Generated message map functions
 protected:
@@ -53,6 +54,8 @@ public:
 	afx_msg void OnCcolordialog();
 	afx_msg void OnCprintdialog();
 	afx_msg void OnMydialog();
+	afx_msg void OnCheckEnablemditabbedgroups();
+	afx_msg void OnUpdateCheckEnablemditabbedgroups(CCmdUI* pCmdUI);
 };
 
 

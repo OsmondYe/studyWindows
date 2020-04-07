@@ -31,6 +31,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_COMMAND(ID_CPrintDialog, &CMainFrame::OnCprintdialog)
 	ON_UPDATE_COMMAND_UI(ID_CHECK_MODEL_DIALOG, &CMainFrame::OnUpdateCheckModelDialog)
 	ON_COMMAND(ID_MyDialog, &CMainFrame::OnMydialog)
+	ON_COMMAND(ID_CHECK_EnableMDITabbedGroups, &CMainFrame::OnCheckEnablemditabbedgroups)
+	ON_UPDATE_COMMAND_UI(ID_CHECK_EnableMDITabbedGroups, &CMainFrame::OnUpdateCheckEnablemditabbedgroups)
 END_MESSAGE_MAP()
 
 // CMainFrame construction/destruction
@@ -50,13 +52,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	BOOL bNameValid;
 
-	CMDITabInfo mdiTabParams;
-	mdiTabParams.m_style = CMFCTabCtrl::STYLE_3D_ONENOTE; // other styles available...
-	mdiTabParams.m_bActiveTabCloseButton = TRUE;      // set to FALSE to place close button at right of tab area
-	mdiTabParams.m_bTabIcons = FALSE;    // set to TRUE to enable document icons on MDI taba
-	mdiTabParams.m_bAutoColor = TRUE;    // set to FALSE to disable auto-coloring of MDI tabs
-	mdiTabParams.m_bDocumentMenu = TRUE; // enable the document menu at the right edge of the tab area
-	EnableMDITabbedGroups(TRUE, mdiTabParams);
+	
 
 	m_wndRibbonBar.Create(this);
 	m_wndRibbonBar.LoadFromResource(IDR_RIBBON);
@@ -128,7 +124,6 @@ void CMainFrame::Dump(CDumpContext& dc) const
 
 
 // CMainFrame message handlers
-
 void CMainFrame::OnWindowManager()
 {
 	ShowWindowsDialog();
@@ -140,13 +135,11 @@ void CMainFrame::OnBtnQuery()
 	// TODO: Add your command handler code here
 }
 
-
 void CMainFrame::OnSyslink2()
 {
 	CMFCRibbonLinkCtrl* pelem = (CMFCRibbonLinkCtrl*)m_wndRibbonBar.FindByID(ID_SYSLINK2);
 	pelem->OpenLink();
 }
-
 
 void CMainFrame::OnMyonedrive()
 {
@@ -154,13 +147,11 @@ void CMainFrame::OnMyonedrive()
 	pelem->OpenLink();
 }
 
-
 void CMainFrame::OnRmdWindow()
 {
 	CMFCRibbonLinkCtrl* pelem = (CMFCRibbonLinkCtrl*)m_wndRibbonBar.FindByID(ID_RMDWIN);
 	pelem->OpenLink();
 }
-
 
 void CMainFrame::OnDialogbase()
 {
@@ -182,13 +173,11 @@ void CMainFrame::OnCheckModelDialog()
 	is_model_dialog = is_model_dialog ? false : true;
 }
 
-
 void CMainFrame::OnUpdateCheckModelDialog(CCmdUI* pCmdUI)
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->SetCheck(is_model_dialog);
 }
-
 
 void CMainFrame::OnDialogCommon()
 {
@@ -199,7 +188,6 @@ void CMainFrame::OnDialogCommon()
 	// TODO: Add your command handler code here
 }
 
-
 void CMainFrame::OnCfontdialog()
 {
 	// TODO: Add your command handler code here
@@ -207,13 +195,11 @@ void CMainFrame::OnCfontdialog()
 	x.DoModal();
 }
 
-
 void CMainFrame::OnCfiledialog()
 {
 	CFileDialog x(true);
 	x.DoModal();
 }
-
 
 void CMainFrame::OnCcolordialog()
 {
@@ -232,7 +218,6 @@ void CMainFrame::OnCprintdialog()
 
 }
 
-
 void CMainFrame::OnMydialog()
 {
 	CDialogEx x(IDD_DIALOG_BASE);
@@ -243,4 +228,22 @@ void CMainFrame::OnMydialog()
 	x.SetBackgroundImage(img);
 
 	x.DoModal();
+}
+
+void CMainFrame::OnCheckEnablemditabbedgroups()
+{
+	is_enable_mdi_tabbed_groups = is_enable_mdi_tabbed_groups ? false : true;
+
+	CMDITabInfo mdiTabParams;
+	mdiTabParams.m_style = CMFCTabCtrl::STYLE_3D_ROUNDED_SCROLL; // other styles available...
+	mdiTabParams.m_bActiveTabCloseButton = TRUE;      // set to FALSE to place close button at right of tab area
+	mdiTabParams.m_bTabIcons = FALSE;    // set to TRUE to enable document icons on MDI taba
+	mdiTabParams.m_bAutoColor = TRUE;    // set to FALSE to disable auto-coloring of MDI tabs
+	mdiTabParams.m_bDocumentMenu = TRUE; // enable the document menu at the right edge of the tab area
+	EnableMDITabbedGroups(is_enable_mdi_tabbed_groups, mdiTabParams);
+}
+
+void CMainFrame::OnUpdateCheckEnablemditabbedgroups(CCmdUI* pCmdUI)
+{
+	pCmdUI->SetCheck(is_enable_mdi_tabbed_groups);
 }
