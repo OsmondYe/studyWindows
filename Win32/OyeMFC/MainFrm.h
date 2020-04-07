@@ -32,6 +32,12 @@ protected:  // control bar embedded members
 	bool is_model_dialog = false;
 	bool is_enable_mdi_tabbed_groups = false;
 
+private:
+	void init_status_bar();
+	void init_ribbon_bar();
+	void init_docking();
+	void init_style();
+
 // Generated message map functions
 protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);

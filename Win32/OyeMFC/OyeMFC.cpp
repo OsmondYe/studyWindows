@@ -22,12 +22,10 @@ BEGIN_MESSAGE_MAP(COyeApp, CWinAppEx)
 	ON_COMMAND(ID_FILE_NEW, &COyeApp::OnFileNew)
 END_MESSAGE_MAP()
 
-COyeApp::COyeApp() noexcept
+COyeApp::COyeApp() noexcept :m_hMDIAccel(NULL), m_hMDIMenu(NULL)
 {
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_ALL_ASPECTS;
-
 	SetAppID(_T("SkyCode.OyeTool.1"));
-
 }
 
 COyeApp theApp;
@@ -96,7 +94,6 @@ BOOL COyeApp::InitInstance()
 	m_hMDIMenu  = ::LoadMenu(hInst, MAKEINTRESOURCE(IDR_OyeMFCTYPE));
 	m_hMDIAccel = ::LoadAccelerators(hInst, MAKEINTRESOURCE(IDR_MAINFRAME));
 
-
 	// The main window has been initialized, so show and update it
 	pFrame->ShowWindow(SW_SHOWNORMAL);
 	pFrame->UpdateWindow();
@@ -142,10 +139,8 @@ void COyeApp::OnAppAbout()
 
 void COyeApp::PreLoadState()
 {
-	BOOL bNameValid;
 	CString strName;
-	bNameValid = strName.LoadString(IDS_EDIT_MENU);
-	ASSERT(bNameValid);
+	strName.LoadString(IDS_EDIT_MENU);
 	GetContextMenuManager()->AddMenu(strName, IDR_POPUP_EDIT);
 }
 

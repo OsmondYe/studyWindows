@@ -29,9 +29,9 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_COMMAND(ID_CFileDialog, &CMainFrame::OnCfiledialog)
 	ON_COMMAND(ID_CColorDialog, &CMainFrame::OnCcolordialog)
 	ON_COMMAND(ID_CPrintDialog, &CMainFrame::OnCprintdialog)
-	ON_UPDATE_COMMAND_UI(ID_CHECK_MODEL_DIALOG, &CMainFrame::OnUpdateCheckModelDialog)
 	ON_COMMAND(ID_MyDialog, &CMainFrame::OnMydialog)
 	ON_COMMAND(ID_CHECK_EnableMDITabbedGroups, &CMainFrame::OnCheckEnablemditabbedgroups)
+	ON_UPDATE_COMMAND_UI(ID_CHECK_MODEL_DIALOG, &CMainFrame::OnUpdateCheckModelDialog)
 	ON_UPDATE_COMMAND_UI(ID_CHECK_EnableMDITabbedGroups, &CMainFrame::OnUpdateCheckEnablemditabbedgroups)
 END_MESSAGE_MAP()
 
@@ -45,51 +45,58 @@ CMainFrame::~CMainFrame()
 {
 }
 
+void CMainFrame::init_status_bar()
+{
+
+	CString strTitlePane1;
+	CString strTitlePane2;
+	strTitlePane1.LoadString(IDS_STATUS_PANE1);
+	strTitlePane2.LoadString(IDS_STATUS_PANE2);
+	m_wndStatusBar.AddElement(new CMFCRibbonStatusBarPane(ID_STATUSBAR_PANE1, strTitlePane1, TRUE), strTitlePane1);
+	m_wndStatusBar.AddSeparator();
+	m_wndStatusBar.AddExtendedElement(new CMFCRibbonStatusBarPane(ID_STATUSBAR_PANE2, strTitlePane2, TRUE), strTitlePane2);
+	m_wndStatusBar.Create(this);
+}
+
+void CMainFrame::init_ribbon_bar()
+{
+	m_wndRibbonBar.Create(this);
+	m_wndRibbonBar.LoadFromResource(IDR_RIBBON);
+	m_wndRibbonBar.SetWindows7Look(FALSE);
+	
+}
+
+void CMainFrame::init_docking()
+{
+	// enable Visual Studio 2005 style docking window behavior
+	CDockingManager::SetDockingMode(DT_SMART);
+}
+
+void CMainFrame::init_style()
+{
+	// set the visual manager and style based on persisted value
+	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerWindows7));
+	// enable Visual Studio 2005 style docking window auto-hide behavior
+	EnableAutoHidePanes(CBRS_ALIGN_ANY);
+	// Enable enhanced windows management dialog
+	EnableWindowsDialog(ID_WINDOW_MANAGER, ID_WINDOW_MANAGER, TRUE);
+	// Switch the order of document name and application name on the window title bar. This
+	// improves the usability of the taskbar because the document name is visible with the thumbnail.
+	ModifyStyle(0, FWS_PREFIXTITLE);
+}
+
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CMDIFrameWndEx::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	BOOL bNameValid;
-
+	init_style();
+	init_docking();
 	
+	init_status_bar();
+	init_ribbon_bar();
 
-	m_wndRibbonBar.Create(this);
-	m_wndRibbonBar.LoadFromResource(IDR_RIBBON);
-
-	if (!m_wndStatusBar.Create(this))
-	{
-		TRACE0("Failed to create status bar\n");
-		return -1;      // fail to create
-	}
-
-	CString strTitlePane1;
-	CString strTitlePane2;
-	bNameValid = strTitlePane1.LoadString(IDS_STATUS_PANE1);
-	ASSERT(bNameValid);
-	bNameValid = strTitlePane2.LoadString(IDS_STATUS_PANE2);
-	ASSERT(bNameValid);
-	m_wndStatusBar.AddElement(new CMFCRibbonStatusBarPane(ID_STATUSBAR_PANE1, strTitlePane1, TRUE), strTitlePane1);
-	m_wndStatusBar.AddExtendedElement(new CMFCRibbonStatusBarPane(ID_STATUSBAR_PANE2, strTitlePane2, TRUE), strTitlePane2);
-
-	// enable Visual Studio 2005 style docking window behavior
-	CDockingManager::SetDockingMode(DT_SMART);
-	// enable Visual Studio 2005 style docking window auto-hide behavior
-	EnableAutoHidePanes(CBRS_ALIGN_ANY);
-
-	// set the visual manager and style based on persisted value
-	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerWindows7));
-	CDockingManager::SetDockingMode(DT_SMART);
-	m_wndRibbonBar.SetWindows7Look(FALSE);
 	RedrawWindow(nullptr, nullptr, RDW_ALLCHILDREN | RDW_INVALIDATE | RDW_UPDATENOW | RDW_FRAME | RDW_ERASE);
-
-	// Enable enhanced windows management dialog
-	EnableWindowsDialog(ID_WINDOW_MANAGER, ID_WINDOW_MANAGER, TRUE);
-
-	// Switch the order of document name and application name on the window title bar. This
-	// improves the usability of the taskbar because the document name is visible with the thumbnail.
-	ModifyStyle(0, FWS_PREFIXTITLE);
-
 	return 0;
 }
 
