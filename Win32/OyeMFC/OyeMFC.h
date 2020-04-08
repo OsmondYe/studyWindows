@@ -32,6 +32,7 @@ public:
 	afx_msg void OnFileNew();
 	DECLARE_MESSAGE_MAP()
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	afx_msg void OnAppExit();
 };
 
 extern COyeApp theApp;

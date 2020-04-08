@@ -20,6 +20,7 @@
 BEGIN_MESSAGE_MAP(COyeApp, CWinAppEx)
 	ON_COMMAND(ID_APP_ABOUT, &COyeApp::OnAppAbout)
 	ON_COMMAND(ID_FILE_NEW, &COyeApp::OnFileNew)
+	ON_COMMAND(ID_APP_EXIT, &COyeApp::OnAppExit)
 END_MESSAGE_MAP()
 
 COyeApp::COyeApp() noexcept :m_hMDIAccel(NULL), m_hMDIMenu(NULL)
@@ -155,10 +156,16 @@ void COyeApp::SaveCustomState()
 
 BOOL COyeApp::PreTranslateMessage(MSG* pMsg)
 {
+	if(m_pMainWnd&& ::TranslateAccelerator(m_pMainWnd->m_hWnd, m_hMDIAccel, pMsg)){
 	// osmond, add here to support acceletator 
-	if (::TranslateAccelerator(m_pMainWnd->m_hWnd, m_hMDIAccel, pMsg)) {
 		return true;
 	}
 	return CWinAppEx::PreTranslateMessage(pMsg);
 }
 
+
+void COyeApp::OnAppExit()
+{
+	// TODO: Add your command handler code here
+	this->m_pMainWnd->DestroyWindow();
+}

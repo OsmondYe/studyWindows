@@ -6,6 +6,8 @@
 #include "OyeMFC.h"
 
 #include "MainFrm.h"
+#include "CMyPropertySheet.h"
+#include "CMyTaskDialogDemo.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -33,6 +35,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_COMMAND(ID_CHECK_EnableMDITabbedGroups, &CMainFrame::OnCheckEnablemditabbedgroups)
 	ON_UPDATE_COMMAND_UI(ID_CHECK_MODEL_DIALOG, &CMainFrame::OnUpdateCheckModelDialog)
 	ON_UPDATE_COMMAND_UI(ID_CHECK_EnableMDITabbedGroups, &CMainFrame::OnUpdateCheckEnablemditabbedgroups)
+	ON_COMMAND(ID_BTN_MyPropertySheet, &CMainFrame::OnBtnMypropertysheet)
+	ON_COMMAND(ID_BTN_MYTASK_DIALOG, &CMainFrame::OnBtnMytaskDialog)
 END_MESSAGE_MAP()
 
 // CMainFrame construction/destruction
@@ -253,4 +257,20 @@ void CMainFrame::OnCheckEnablemditabbedgroups()
 void CMainFrame::OnUpdateCheckEnablemditabbedgroups(CCmdUI* pCmdUI)
 {
 	pCmdUI->SetCheck(is_enable_mdi_tabbed_groups);
+}
+
+
+void CMainFrame::OnBtnMypropertysheet()
+{
+	// TODO: Add your command handler code here
+	CMyPropertySheet sheet(L"My property Sheet",this);
+	sheet.DoModal();
+}
+
+
+void CMainFrame::OnBtnMytaskDialog()
+{
+	CMyTaskDialogDemo dialog(this);
+	dialog.DoModal();
+	// TODO: Add your command handler code here
 }

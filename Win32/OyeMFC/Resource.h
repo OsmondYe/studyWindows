@@ -39,6 +39,11 @@
 #define IDD_DIALOG_BASE                 311
 #define IDB_IDB_CAPTURE                 314
 #define IDB_CAPTURE                     314
+#define IDD_MYPROPERTY_PAGE             315
+#define IDD_MYTASK_DIALOG               317
+#define IDC_BITMAP_SHOW                 1000
+#define IDC_BUTTON1                     1001
+#define IDC_EDIT1                       1002
 #define ID_WRITE_PASTEASHYPERLINK       32770
 #define ID_BTN_QUERY                    32773
 #define ID_CFontDialog                  32774
@@ -62,16 +67,19 @@
 #define ID_CPrintDialog                 32803
 #define ID_MyDialog                     32804
 #define ID_BUTTON2                      32805
+#define ID_BTN_MYTASK_DIALOG            32805
 #define ID_BUTTON3                      32806
+#define ID_BTN_MyPropertySheet          32806
 #define ID_BUTTON4                      32807
+#define ID_ACCELERATOR32808             32808
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        315
-#define _APS_NEXT_COMMAND_VALUE         32808
-#define _APS_NEXT_CONTROL_VALUE         1000
+#define _APS_NEXT_RESOURCE_VALUE        319
+#define _APS_NEXT_COMMAND_VALUE         32811
+#define _APS_NEXT_CONTROL_VALUE         1004
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif
