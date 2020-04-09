@@ -37,6 +37,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_UPDATE_COMMAND_UI(ID_CHECK_EnableMDITabbedGroups, &CMainFrame::OnUpdateCheckEnablemditabbedgroups)
 	ON_COMMAND(ID_BTN_MyPropertySheet, &CMainFrame::OnBtnMypropertysheet)
 	ON_COMMAND(ID_BTN_MYTASK_DIALOG, &CMainFrame::OnBtnMytaskDialog)
+	ON_COMMAND(ID_MFCDesktopAlertWnd2, &CMainFrame::OnMfcdesktopalertwnd)
 END_MESSAGE_MAP()
 
 // CMainFrame construction/destruction
@@ -273,4 +274,38 @@ void CMainFrame::OnBtnMytaskDialog()
 	CMyTaskDialogDemo dialog(this);
 	dialog.DoModal();
 	// TODO: Add your command handler code here
+}
+
+
+class MyCMFCDesktopAlertWnd :public CMFCDesktopAlertWnd {
+	virtual BOOL OnBeforeShow(CPoint& ptPos) { 
+		CWnd::CenterWindow(this);
+		return TRUE; }
+	virtual BOOL OnClickLinkButton(UINT /*uiCmdID*/) { 
+		::ShellExecute(NULL, L"Open", L"http://www.nextlabs.com", NULL, NULL, NULL);
+		return true; }
+};
+
+void CMainFrame::OnMfcdesktopalertwnd()
+{
+	CMFCDesktopAlertWnd* x = new MyCMFCDesktopAlertWnd();
+
+	x->SetAnimationType(CMFCPopupMenu::SLIDE);
+	x->SetAnimationSpeed(100);
+	x->SetTransparency(200);
+	x->SetSmallCaption(false);
+	x->SetAutoCloseTime(4000);
+
+	// Create indirect:
+	CMFCDesktopAlertWndInfo info;
+
+	info.m_hIcon = AfxGetApp()->LoadIconW(IDR_MAINFRAME);
+	info.m_strText = L"this is m_strText";
+	info.m_strURL = L"this is the m_nURLCmdIDL hwo to just it";
+	info.m_nURLCmdID = ID_MyDialog;
+
+
+	x->Create(this, info);
+
+	x->SetWindowTextW(L"this is the window caption");
 }

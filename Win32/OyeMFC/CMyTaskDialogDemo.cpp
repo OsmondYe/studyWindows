@@ -39,11 +39,6 @@ END_MESSAGE_MAP()
 
 // CMyTaskDialogDemo message handlers
 
-
-
-
-
-
 void CMyTaskDialogDemo::OnBnClickedButton1()
 {
 	CTaskDialog dlg(
