@@ -65,6 +65,7 @@ public:
 	afx_msg void OnBtnMypropertysheet();
 	afx_msg void OnBtnMytaskDialog();
 	afx_msg void OnMfcdesktopalertwnd();
+	afx_msg void OnButtonWaitcurosr();
 };
 
 

@@ -38,6 +38,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_COMMAND(ID_BTN_MyPropertySheet, &CMainFrame::OnBtnMypropertysheet)
 	ON_COMMAND(ID_BTN_MYTASK_DIALOG, &CMainFrame::OnBtnMytaskDialog)
 	ON_COMMAND(ID_MFCDesktopAlertWnd2, &CMainFrame::OnMfcdesktopalertwnd)
+	ON_COMMAND(ID_BUTTON_Wait_CURSOR, &CMainFrame::OnButtonWaitcurosr)
 END_MESSAGE_MAP()
 
 // CMainFrame construction/destruction
@@ -308,4 +309,16 @@ void CMainFrame::OnMfcdesktopalertwnd()
 	x->Create(this, info);
 
 	x->SetWindowTextW(L"this is the window caption");
+}
+
+
+void CMainFrame::OnButtonWaitcurosr()
+{
+	BeginWaitCursor();
+
+	::Sleep(3000);
+
+	EndWaitCursor();
+
+	// TODO: Add your command handler code here
 }
