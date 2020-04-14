@@ -66,6 +66,8 @@ public:
 	afx_msg void OnBtnMytaskDialog();
 	afx_msg void OnMfcdesktopalertwnd();
 	afx_msg void OnButtonWaitcurosr();
+	afx_msg void OnUpdateEnglishWord(CCmdUI* pCmdUI);
+	afx_msg void OnEnglishWord();
 };
 
 

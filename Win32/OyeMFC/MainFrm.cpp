@@ -1,6 +1,3 @@
-// MainFrm.cpp : implementation of the CMainFrame class
-//
-
 #include "pch.h"
 #include "framework.h"
 #include "OyeMFC.h"
@@ -39,6 +36,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_COMMAND(ID_BTN_MYTASK_DIALOG, &CMainFrame::OnBtnMytaskDialog)
 	ON_COMMAND(ID_MFCDesktopAlertWnd2, &CMainFrame::OnMfcdesktopalertwnd)
 	ON_COMMAND(ID_BUTTON_Wait_CURSOR, &CMainFrame::OnButtonWaitcurosr)
+	ON_UPDATE_COMMAND_UI(ID_ENGLISH_WORD, &CMainFrame::OnUpdateEnglishWord)
+	ON_COMMAND(ID_ENGLISH_WORD, &CMainFrame::OnEnglishWord)
 END_MESSAGE_MAP()
 
 // CMainFrame construction/destruction
@@ -53,7 +52,6 @@ CMainFrame::~CMainFrame()
 
 void CMainFrame::init_status_bar()
 {
-
 	CString strTitlePane1;
 	CString strTitlePane2;
 	strTitlePane1.LoadString(IDS_STATUS_PANE1);
@@ -66,9 +64,11 @@ void CMainFrame::init_status_bar()
 
 void CMainFrame::init_ribbon_bar()
 {
-	m_wndRibbonBar.Create(this);
+	m_wndRibbonBar.Create(this, WS_CHILD | WS_VISIBLE | CBRS_TOP);
 	m_wndRibbonBar.LoadFromResource(IDR_RIBBON);
 	m_wndRibbonBar.SetWindows7Look(FALSE);
+
+
 	
 }
 
@@ -81,7 +81,7 @@ void CMainFrame::init_docking()
 void CMainFrame::init_style()
 {
 	// set the visual manager and style based on persisted value
-	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerWindows7));
+	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerOffice2007));
 	// enable Visual Studio 2005 style docking window auto-hide behavior
 	EnableAutoHidePanes(CBRS_ALIGN_ANY);
 	// Enable enhanced windows management dialog
@@ -144,8 +144,16 @@ void CMainFrame::OnWindowManager()
 
 void CMainFrame::OnBtnQuery()
 {
-	MessageBox(L"OnBtnQuery");
-	// TODO: Add your command handler code here
+	auto x = DYNAMIC_DOWNCAST(CMFCRibbonEdit, m_wndRibbonBar.FindByID(ID_ENGLISH_WORD));
+	auto word = x->GetEditText();
+	CString url = L"http://dict.youdao.com/w/";
+	url += word;
+	SHELLEXECUTEINFO data{ 0 };
+	data.cbSize = sizeof(SHELLEXECUTEINFOW);
+	data.lpFile = url;
+	data.fMask = SEE_MASK_FLAG_DDEWAIT | SEE_MASK_FLAG_NO_UI;
+	data.nShow = SW_SHOWNORMAL;
+	::ShellExecuteEx(&data);
 }
 
 void CMainFrame::OnSyslink2()
@@ -321,4 +329,18 @@ void CMainFrame::OnButtonWaitcurosr()
 	EndWaitCursor();
 
 	// TODO: Add your command handler code here
+}
+
+
+void CMainFrame::OnUpdateEnglishWord(CCmdUI* pCmdUI)
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable();
+}
+
+
+void CMainFrame::OnEnglishWord()
+{
+	// TODO: Add your command handler code here
+
 }

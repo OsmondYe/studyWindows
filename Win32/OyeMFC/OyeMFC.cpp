@@ -142,4 +142,5 @@ void COyeApp::OnAppExit()
 {
 	// TODO: Add your command handler code here
 	this->m_pMainWnd->DestroyWindow();
+	CWinAppEx::OnAppExit();
 }
