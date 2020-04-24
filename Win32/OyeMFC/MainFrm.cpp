@@ -5,7 +5,7 @@
 #include "MainFrm.h"
 #include "CMyPropertySheet.h"
 #include "CMyTaskDialogDemo.h"
-
+#include "CTraditionDialog.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -42,7 +42,7 @@ END_MESSAGE_MAP()
 
 // CMainFrame construction/destruction
 
-CMainFrame::CMainFrame() noexcept
+CMainFrame::CMainFrame()  noexcept : m_wndRibbonBar(false)
 {
 }
 
@@ -67,9 +67,6 @@ void CMainFrame::init_ribbon_bar()
 	m_wndRibbonBar.Create(this, WS_CHILD | WS_VISIBLE | CBRS_TOP);
 	m_wndRibbonBar.LoadFromResource(IDR_RIBBON);
 	m_wndRibbonBar.SetWindows7Look(FALSE);
-
-
-	
 }
 
 void CMainFrame::init_docking()
@@ -178,14 +175,14 @@ void CMainFrame::OnDialogbase()
 {
 	if (is_model_dialog) {
 		// model
-		CDialog dia(IDD_DIALOG_BASE);
+		CTraditionDialog dia;
 		dia.DoModal();
 	}
 	else {
 		// modeless
-		CDialog* pdia2 = new CDialog();
-		pdia2->Create(IDD_DIALOG_BASE);
-		pdia2->ShowWindow(SW_NORMAL);
+		CDialog* pdlg = new CTraditionDialog(this);
+		pdlg->Create(IDD_TRADITION_WIN32_BOX);
+		pdlg->ShowWindow(SW_NORMAL);
 	}
 }
 

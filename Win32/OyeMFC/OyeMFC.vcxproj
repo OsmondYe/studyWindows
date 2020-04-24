@@ -189,6 +189,7 @@
     <ClInclude Include="CMyPropertyPage.h" />
     <ClInclude Include="CMyPropertySheet.h" />
     <ClInclude Include="CMyTaskDialogDemo.h" />
+    <ClInclude Include="CTraditionDialog.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="OyeMFC.h" />
@@ -202,6 +203,7 @@
     <ClCompile Include="CMyPropertyPage.cpp" />
     <ClCompile Include="CMyPropertySheet.cpp" />
     <ClCompile Include="CMyTaskDialogDemo.cpp" />
+    <ClCompile Include="CTraditionDialog.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="OyeMFC.cpp" />
     <ClCompile Include="pch.cpp">
