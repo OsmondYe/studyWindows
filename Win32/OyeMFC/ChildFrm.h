@@ -39,4 +39,6 @@ protected:
 	afx_msg void OnFilePrintPreview();
 	afx_msg void OnUpdateFilePrintPreview(CCmdUI* pCmdUI);
 	DECLARE_MESSAGE_MAP()
+public:
+	virtual INT_PTR OnToolHitTest(CPoint point, TOOLINFO* pTI) const;
 };

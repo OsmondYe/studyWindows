@@ -40,6 +40,9 @@
     <Filter Include="Source Files\data_struct_and_algo">
       <UniqueIdentifier>{130311c1-aff9-41d8-b721-c56ebedcb83a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\tricks_for_coding">
+      <UniqueIdentifier>{adac3b44-d83e-4d19-9130-36ccae268b98}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -175,6 +178,9 @@
     </ClCompile>
     <ClCompile Include="syntax_kw_constexpr.cpp">
       <Filter>Source Files\syntax</Filter>
+    </ClCompile>
+    <ClCompile Include="tricks_new_delete.cpp">
+      <Filter>Source Files\tricks_for_coding</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

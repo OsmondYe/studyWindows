@@ -13,6 +13,7 @@ IMPLEMENT_DYNAMIC(CTraditionDialog, CDialogEx)
 
 CTraditionDialog::CTraditionDialog(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_TRADITION_WIN32_BOX, pParent)
+	, m_folder_path(_T(""))
 {
 
 }
@@ -25,12 +26,15 @@ void CTraditionDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_BUTTON1, m_test_button);
+	//  DDX_Control(pDX, IDC_EDIT_FOLDER, m_folder_name);
+	DDX_Text(pDX, IDC_EDIT_FOLDER, m_folder_path);
 }
 
 
 BEGIN_MESSAGE_MAP(CTraditionDialog, CDialogEx)
 	ON_WM_CLOSE()
 	ON_BN_CLICKED(IDC_BUTTON1, &CTraditionDialog::OnBnClickedButton1)
+	ON_BN_CLICKED(IDC_CLEAR_FOLDER, &CTraditionDialog::OnBnClickedClearFolder)
 END_MESSAGE_MAP()
 
 
@@ -105,4 +109,39 @@ void CTraditionDialog::OnBnClickedButton1()
 	m_tool_tip.ShowWindow(SW_SHOW);
 
 	//m_test_button.ShowWindow(SW_HIDE);
+}
+
+
+INT_PTR CTraditionDialog::OnToolHitTest(CPoint point, TOOLINFO* pTI) const
+{
+	// TODO: Add your specialized code here and/or call the base class
+
+	return CDialogEx::OnToolHitTest(point, pTI);
+}
+
+// Demo: how to clear a folder's all child files
+void CTraditionDialog::OnBnClickedClearFolder()
+{
+	UpdateData();
+
+	using namespace ATL;
+	CComPtr<IFileOperation> spFO;
+
+	if (FAILED(spFO.CoCreateInstance(__uuidof(FileOperation)))) {
+		return;
+	}
+	spFO->SetOperationFlags(FOF_NO_UI);
+	// clear folder contents
+	CComPtr<IShellItem> spItem;
+	CComPtr<IEnumShellItems> spItems;
+	if (FAILED(::SHCreateItemFromParsingName(m_folder_path, NULL, __uuidof(IShellItem), (void**)&spItem))) {
+		return;
+	}
+	if (FAILED(spItem->BindToHandler(NULL, BHID_EnumItems, _uuidof(IEnumShellItems), (void**)&spItems))) {
+		return;
+	}
+	if (FAILED(spFO->DeleteItems(spItems))) {
+		return;
+	}
+	spFO->PerformOperations();
 }

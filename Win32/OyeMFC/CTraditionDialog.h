@@ -29,4 +29,8 @@ public:
 //	afx_msg BOOL OnNcCreate(LPCREATESTRUCT lpCreateStruct);
 //	afx_msg void OnNcDestroy();
 	afx_msg void OnBnClickedButton1();
+	virtual INT_PTR OnToolHitTest(CPoint point, TOOLINFO* pTI) const;
+//	CEdit m_folder_name;
+	afx_msg void OnBnClickedClearFolder();
+	CString m_folder_path;
 };

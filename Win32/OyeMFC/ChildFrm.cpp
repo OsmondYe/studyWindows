@@ -123,3 +123,11 @@ void CChildFrame::OnUpdateFilePrintPreview(CCmdUI* pCmdUI)
 {
 	pCmdUI->SetCheck(m_dockManager.IsPrintPreviewValid());
 }
+
+
+INT_PTR CChildFrame::OnToolHitTest(CPoint point, TOOLINFO* pTI) const
+{
+	// TODO: Add your specialized code here and/or call the base class
+
+	return CMDIChildWndEx::OnToolHitTest(point, pTI);
+}
