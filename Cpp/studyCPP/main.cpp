@@ -40,6 +40,7 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "Syntax.*";
 	testing::FLAGS_gtest_filter = "Regex.*";
 	testing::FLAGS_gtest_filter = "Container.Vector";
+	testing::FLAGS_gtest_filter = "Idiom.MFCSafeCallClassFunction";
 	
 
 	return RUN_ALL_TESTS();

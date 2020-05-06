@@ -48,6 +48,36 @@ void hehe() {}
 TEST(Idiom, Deprecated) {
 	//hehe();  // this will make build error C4996
 	cout <<"hello world, to deprecated" << endl;
-
 }
 
+
+namespace {
+	class Widget {
+	public:
+		int m_Value{ 0xaa };    // 通过{} 可以给数据成员默认值
+		int m_Value2{ 0xbb };
+		int m_Value3{ 0xcc };
+		int m_Value4{ 0xdd };
+		int m_Value5{ 0xee };
+		int m_Value6{ 0xff };
+
+		//From MFC , 谁说this为空,这个函数不能调用呢
+		int GetSafeValue() {
+			if (this == NULL) {
+				return NULL;
+			}
+			else {
+				return m_Value;
+			}
+		}
+	};
+}
+TEST(Idiom, MFCSafeCallClassFunction) {
+
+	Widget x;
+	cout << x.GetSafeValue() << endl;
+
+	Widget* p = NULL;
+	cout << p->GetSafeValue() << endl;
+
+}
