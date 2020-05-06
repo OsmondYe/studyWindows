@@ -68,6 +68,7 @@ public:
 	afx_msg void OnButtonWaitcurosr();
 	afx_msg void OnUpdateEnglishWord(CCmdUI* pCmdUI);
 	afx_msg void OnEnglishWord();
+	afx_msg void OnRibbonButtonWindow();
 };
 
 

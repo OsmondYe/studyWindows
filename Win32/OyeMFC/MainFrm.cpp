@@ -6,6 +6,7 @@
 #include "CMyPropertySheet.h"
 #include "CMyTaskDialogDemo.h"
 #include "CTraditionDialog.h"
+#include "ShellWindow.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -38,6 +39,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_COMMAND(ID_BUTTON_Wait_CURSOR, &CMainFrame::OnButtonWaitcurosr)
 	ON_UPDATE_COMMAND_UI(ID_ENGLISH_WORD, &CMainFrame::OnUpdateEnglishWord)
 	ON_COMMAND(ID_ENGLISH_WORD, &CMainFrame::OnEnglishWord)
+	ON_COMMAND(ID_RIBBON_BUTTON_WINDOW, &CMainFrame::OnRibbonButtonWindow)
 END_MESSAGE_MAP()
 
 // CMainFrame construction/destruction
@@ -340,4 +342,20 @@ void CMainFrame::OnEnglishWord()
 {
 	// TODO: Add your command handler code here
 
+}
+
+
+void CMainFrame::OnRibbonButtonWindow()
+{
+	//AfxMessageBox(__FUNCTIONW__);
+
+	ShellWindow* pWnd = new ShellWindow();
+	
+	CRect rc(0,0,400,400);
+	pWnd->CreateEx(0, NULL, L"new window", WS_OVERLAPPEDWINDOW, rc, NULL, 0);
+	pWnd->UpdateWindow();
+	pWnd->ShowWindow(SW_NORMAL);
+
+
+	// TODO: Add your command handler code here
 }

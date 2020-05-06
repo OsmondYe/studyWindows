@@ -81,6 +81,7 @@
 #define ID_BTN_MYTASK_DIALOG            32805
 #define ID_BTN_MyPropertySheet          32806
 #define ID_MFCDesktopAlertWnd           32807
+#define ID_RIBBON_BUTTON_WINDOW         32808
 #define ID_MFCDesktopAlertWnd2          32811
 #define ID_BUTTON3                      32812
 #define ID_BUTTON_Wait_CURSOR           32812
