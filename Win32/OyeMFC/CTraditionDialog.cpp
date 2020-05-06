@@ -40,6 +40,7 @@ BEGIN_MESSAGE_MAP(CTraditionDialog, CDialogEx)
 	ON_BN_CLICKED(IDC_TEST_WS_CLIPCHILDREN, &CTraditionDialog::OnBnClickedTestWsClipchildren)
 //	ON_WM_PAINT()
 ON_BN_CLICKED(IDC_BUTTON4, &CTraditionDialog::OnBnClickedButton4)
+ON_WM_HOTKEY()
 END_MESSAGE_MAP()
 
 
@@ -53,9 +54,6 @@ BOOL CTraditionDialog::OnInitDialog()
 	EnableToolTips();
 	EnableTrackingToolTips();
 
-	m_test_button.SetWindowTextW(L"give you a new button name");
-	//m_test_button.SetState(true);
-	
 	
 	// Tool tip
 	m_tool_tip.CreateEx(this, TTS_ALWAYSTIP | TTS_NOPREFIX, WS_EX_TOPMOST);
@@ -63,7 +61,7 @@ BOOL CTraditionDialog::OnInitDialog()
 	m_tool_tip.SetWindowPos(&wndTopMost, -1, -1, -1, -1, SWP_NOMOVE | SWP_NOACTIVATE | SWP_NOSIZE );
 	
 	
-	m_tool_tip.AddTool(&m_test_button,L"this is a button");
+	m_tool_tip.AddTool(&m_test_button,L"this is a button by call m_tool_tip.AddTool");
 
 	TOOLINFO ti;
 	ti.cbSize = sizeof(ti);
@@ -108,10 +106,25 @@ void CTraditionDialog::OnClose()
 	CDialogEx::OnClose();
 }
 
+static const int HotKeyID = 0x0100;
+
+void CTraditionDialog::OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2)
+{
+	// TODO: Add your message handler code here and/or call default
+	if (nHotKeyId == HotKeyID) {
+		//this->SetFocus();
+		CenterWindow(CWnd::GetDesktopWindow());
+		// need to check the source code
+		ActivateTopParent();
+	}
+	CDialogEx::OnHotKey(nHotKeyId, nKey1, nKey2);
+}
 
 void CTraditionDialog::OnBnClickedButton1()
 {
 	m_tool_tip.ShowWindow(SW_SHOW);
+
+	auto x = RegisterHotKey(m_hWnd, HotKeyID, MOD_CONTROL | MOD_SHIFT, 0x50);
 
 	//m_test_button.ShowWindow(SW_HIDE);
 }
@@ -222,3 +235,6 @@ void CTraditionDialog::OnBnClickedButton4()
 	}
 	// TODO: Add your control notification handler code here
 }
+
+
+

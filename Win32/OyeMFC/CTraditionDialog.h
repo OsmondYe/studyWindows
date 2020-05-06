@@ -37,4 +37,5 @@ public:
 //	afx_msg void OnPaint();
 	BOOL is_ws_clipchildren;
 	afx_msg void OnBnClickedButton4();
+	afx_msg void OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2);
 };

@@ -355,6 +355,7 @@ void CMainFrame::OnRibbonButtonWindow()
 	pWnd->CreateEx(0, NULL, L"new window", WS_OVERLAPPEDWINDOW, rc, NULL, 0);
 	pWnd->UpdateWindow();
 	pWnd->ShowWindow(SW_NORMAL);
+	pWnd->CenterWindow(this);
 
 
 	// TODO: Add your command handler code here
