@@ -33,4 +33,8 @@ public:
 //	CEdit m_folder_name;
 	afx_msg void OnBnClickedClearFolder();
 	CString m_folder_path;
+	afx_msg void OnBnClickedTestWsClipchildren();
+//	afx_msg void OnPaint();
+	BOOL is_ws_clipchildren;
+	afx_msg void OnBnClickedButton4();
 };

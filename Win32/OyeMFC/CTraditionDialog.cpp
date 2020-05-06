@@ -1,4 +1,4 @@
-// CTraditionDialog.cpp : implementation file
+﻿// CTraditionDialog.cpp : implementation file
 //
 
 #include "pch.h"
@@ -14,6 +14,7 @@ IMPLEMENT_DYNAMIC(CTraditionDialog, CDialogEx)
 CTraditionDialog::CTraditionDialog(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_TRADITION_WIN32_BOX, pParent)
 	, m_folder_path(_T(""))
+	, is_ws_clipchildren(FALSE)
 {
 
 }
@@ -28,6 +29,7 @@ void CTraditionDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON1, m_test_button);
 	//  DDX_Control(pDX, IDC_EDIT_FOLDER, m_folder_name);
 	DDX_Text(pDX, IDC_EDIT_FOLDER, m_folder_path);
+	DDX_Check(pDX, IDC_CHECK_WS_CLIPCHILDREN, is_ws_clipchildren);
 }
 
 
@@ -35,6 +37,9 @@ BEGIN_MESSAGE_MAP(CTraditionDialog, CDialogEx)
 	ON_WM_CLOSE()
 	ON_BN_CLICKED(IDC_BUTTON1, &CTraditionDialog::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_CLEAR_FOLDER, &CTraditionDialog::OnBnClickedClearFolder)
+	ON_BN_CLICKED(IDC_TEST_WS_CLIPCHILDREN, &CTraditionDialog::OnBnClickedTestWsClipchildren)
+//	ON_WM_PAINT()
+ON_BN_CLICKED(IDC_BUTTON4, &CTraditionDialog::OnBnClickedButton4)
 END_MESSAGE_MAP()
 
 
@@ -144,4 +149,76 @@ void CTraditionDialog::OnBnClickedClearFolder()
 		return;
 	}
 	spFO->PerformOperations();
+}
+
+
+// Window Style:  WS_CLIPCHILDREN
+//  - 绘制时,子窗口显示效果不受影响,但实测必须是CClientDC才行
+void CTraditionDialog::OnBnClickedTestWsClipchildren()
+{
+	UpdateData();
+	if (is_ws_clipchildren) {
+		ModifyStyle(0, WS_CLIPCHILDREN);		//add
+	}
+	else {
+		ModifyStyle(WS_CLIPCHILDREN,0);		//remove
+	}
+	// 全部重绘
+
+	//Invalidate();
+	CRect rc;
+	GetClientRect(rc);
+	//CWindowDC dc(this);
+	CClientDC dc(this);
+
+	CString str = L"Hello World";
+	CSize size = dc.GetTextExtent(str);
+
+	for (int x = 0; x < rc.Width(); x += size.cx + 10) {
+		for (int y = 0; y < rc.Height(); y += size.cy + 10) {
+			dc.TextOutW(x, y, L"hello world");
+		}
+	}
+
+	// 这三个兄弟到底啥区别
+	//Invalidate();
+	//RedrawWindow();
+	//InvalidateRect(rc);
+}
+
+
+//void CTraditionDialog::OnPaint()
+//{
+//	CPaintDC dc(this); // device context for painting
+//					   // TODO: Add your message handler code here
+//					   // Do not call CDialogEx::OnPaint() for painting messages
+//}
+
+bool bTimerSet = false;
+
+void CALLBACK MyTimer(HWND hwnd, UINT, UINT_PTR, DWORD) {
+	CWindowDC dc(CWnd::FromHandle(::GetDesktopWindow()));
+	//CClientDC dc(CWnd::FromHandle(hwnd));
+
+	CRect rc(100, 100, 500, 500);
+	
+	CTime t = CTime::GetCurrentTime();
+	CString s = t.Format(_T("%T,  %A, %B %d, %Y"));
+	dc.Draw3dRect(rc, RGB(255, 0, 0), RGB(0, 255, 0));
+	//dc.SetBkMode(TRANSPARENT);
+	dc.SetTextColor(RGB(0, 0, 255));
+	dc.DrawText(s, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+}
+
+void CTraditionDialog::OnBnClickedButton4()
+{
+	if (!bTimerSet) {
+		bTimerSet = true;
+		SetTimer(1, 200, MyTimer);
+	}
+	else {
+		bTimerSet = false;
+		KillTimer(1);
+	}
+	// TODO: Add your control notification handler code here
 }
