@@ -41,6 +41,7 @@ BEGIN_MESSAGE_MAP(CTraditionDialog, CDialogEx)
 //	ON_WM_PAINT()
 ON_BN_CLICKED(IDC_BUTTON4, &CTraditionDialog::OnBnClickedButton4)
 ON_WM_HOTKEY()
+ON_BN_CLICKED(IDC_BUTTON_HASHKEY_STUDY, &CTraditionDialog::OnBnClickedButtonHashkeyStudy)
 END_MESSAGE_MAP()
 
 
@@ -238,3 +239,48 @@ void CTraditionDialog::OnBnClickedButton4()
 
 
 
+
+int my_hash(int key)
+{
+	// (algorithm copied from STL hash in xfunctional)
+	ldiv_t HashVal = ldiv((long)key, 127773);
+	HashVal.rem = 16807 * HashVal.rem - 2836 * HashVal.quot;
+	if (HashVal.rem < 0)
+		HashVal.rem += 2147483647;
+	return ((UINT)HashVal.rem);
+}
+
+
+void CTraditionDialog::OnBnClickedButtonHashkeyStudy()
+{
+	CWaitCursor cursor;
+	std::vector<std::pair<int,int>> ks;
+
+	std::set<int> sc;
+
+	for (int i = 0; i < 0x0FFF'FFFF; i++) {
+		int hash = my_hash(i);
+		ks.push_back({i,hash});
+		sc.insert(hash);
+	}
+
+	CFileDialog open(false);
+	if (open.DoModal()) {
+		CFile  save(open.GetPathName(),CFile::modeWrite| CFile::modeCreate);
+
+		char buf[255] = { 0 };
+		sprintf_s(buf, "set size:%x, vs size=%x\n", sc.size(), ks.size());
+		save.Write(buf, strlen(buf));
+
+		/*for (size_t i = 0; i < ks.size(); i++)
+		{
+			char buf[255] = { 0 };
+			sprintf_s(buf, "%X,%X\n",ks[i].first,ks[i].second);			
+			save.Write(buf, strlen(buf));
+			
+		}*/
+		
+	}
+	
+	
+}

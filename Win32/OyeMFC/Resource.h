@@ -50,6 +50,7 @@
 #define IDC_CLEAR_FOLDER                1005
 #define IDC_TEST_WS_CLIPCHILDREN        1006
 #define IDC_BUTTON2                     1007
+#define IDC_BUTTON_HASHKEY_STUDY        1007
 #define IDC_BUTTON3                     1008
 #define IDC_BUTTON4                     1009
 #define IDC_CHECK1                      1010
