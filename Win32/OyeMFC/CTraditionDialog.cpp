@@ -42,6 +42,7 @@ BEGIN_MESSAGE_MAP(CTraditionDialog, CDialogEx)
 ON_BN_CLICKED(IDC_BUTTON4, &CTraditionDialog::OnBnClickedButton4)
 ON_WM_HOTKEY()
 ON_BN_CLICKED(IDC_BUTTON_HASHKEY_STUDY, &CTraditionDialog::OnBnClickedButtonHashkeyStudy)
+ON_BN_CLICKED(IDC_BTN_AUTOINC, &CTraditionDialog::OnBnClickedBtnAutoinc)
 END_MESSAGE_MAP()
 
 
@@ -283,4 +284,16 @@ void CTraditionDialog::OnBnClickedButtonHashkeyStudy()
 	}
 	
 	
+}
+
+
+
+
+void CTraditionDialog::OnBnClickedBtnAutoinc()
+{
+	auto* pW = GetDlgItem(IDC_BTN_AUTOINC);
+	CString str;
+	str.Format(L"cur:%d", gCounter++);
+	pW->SetWindowTextW(str);
+	// TODO: Add your control notification handler code here
 }

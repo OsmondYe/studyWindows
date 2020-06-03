@@ -6,7 +6,7 @@
 class CTraditionDialog : public CDialogEx
 {
 	DECLARE_DYNAMIC(CTraditionDialog)
-
+	int gCounter{ 0 };
 public:
 	CTraditionDialog(CWnd* pParent = nullptr);   // standard constructor
 	virtual ~CTraditionDialog();
@@ -39,4 +39,5 @@ public:
 	afx_msg void OnBnClickedButton4();
 	afx_msg void OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2);
 	afx_msg void OnBnClickedButtonHashkeyStudy();
+	afx_msg void OnBnClickedBtnAutoinc();
 };
