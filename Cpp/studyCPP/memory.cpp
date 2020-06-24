@@ -208,12 +208,44 @@ TEST(Memory, SmartPtr_Array) {
 	// give init value
 	std::fill(spArray.get(), spArray.get() + 10, 0);
 
-
-
 	for (int i = 0; i < 10; ++i) {
 		spArray[i] = i;
 	}
 	
 
+}
+
+
+
+// 
+TEST(Memory, UniquePtr_Example1) {
+	// unique_prt has buildin
+
+	wstring p = LR"_(C:\Users\oye\Desktop\pseudoRandomGenerator.pdf)_";
+
+	std::unique_ptr<wchar_t[]> buf(new wchar_t[p.size() + 1]);
+	std::copy(p.begin(), p.end(), buf.get());
+	buf[p.size()] = '\0';
+	
+	::PathRemoveFileSpecW(buf.get());
+}
+
+
+namespace {
+class X { public: int i{0x12345678}; };
+
+std::weak_ptr<X> w_ptr;
+
+void func() {
+	std::shared_ptr<X> ptr = std::make_shared<X>();
+	w_ptr = ptr;
+}
+
+}
+
+TEST(Memory, WeakPtr) {
+	func();
+	std::shared_ptr<X> ptr = w_ptr.lock();
+	printf("w_ptr=%p\n", ptr.get());
 }
 

@@ -33,7 +33,7 @@ std::string win::str::from_digits(unsigned char * buf, size_t buf_len)
 bool win::file::is_file_exist(const char * file)
 {
 	DWORD dwAttrib = GetFileAttributesA(file);
-	return INVALID_FILE_ATTRIBUTES != dwAttrib && 0 == (dwAttrib & FILE_ATTRIBUTE_DIRECTORY);
+	return (INVALID_FILE_ATTRIBUTES != dwAttrib) && (0 == (dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
 }
 
 bool win::file::is_file_exist(const wchar_t * file)
@@ -107,7 +107,7 @@ HANDLE win::get_process(const wchar_t * process_name)
 namespace {
 	class ScopeGuard {
 	public:
-		explicit ScopeGuard(std::function<void()> onLeaveScope) {}
+		explicit ScopeGuard(std::function<void()> onLeaveScope):_onLeaveScope(onLeaveScope), _dismissd(false){}
 		~ScopeGuard() { if (!_dismissd) _onLeaveScope(); }
 		inline void dismiss() { _dismissd = true; }
 	private: // nocopyable

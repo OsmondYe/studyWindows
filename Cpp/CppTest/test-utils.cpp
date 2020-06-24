@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 #include "utils.h"
 #include "Monitor.h"
+#include "oye_handy_tools.hpp"
 #include <chrono>
 #include <ctime>
 #include <locale>
@@ -52,11 +53,6 @@ private:
 		const static wchar_t* DATE = L"$(DATE)";    //  "YYYY-MM-DD"
 		const static wchar_t* TIME = L"$(TIME)";	//  "HH:mm:ss"	  
 
-		// TBD
-		//_tokens[USER] = L"";
-		//_tokens[EMAIL] = L"";
-		//_tokens[HOST] = L"";
-		//_tokens[IP] = L"";
 		// Cur 
 		_tokens[BREAK] = L"\n";
 		_tokens[DATE] = _get_date();
@@ -226,30 +222,6 @@ TEST(Utils, DISABLED_FileMonitor) {
 
 	
 }
-
-
-class Module {
-public:
-	Module(HMODULE hm = NULL) :m_hm(hm) {
-		std::vector<char> buf(255, 0);
-		buf.resize(GetModuleFileNameA(m_hm, (char*)buf.data(), 255));
-		m_path.assign(buf.begin(), buf.end());
-
-		std::vector<wchar_t> wbuf(255, 0);
-		wbuf.resize(GetModuleFileNameW(m_hm, (wchar_t*)wbuf.data(), 255));
-		m_wpath.assign(wbuf.begin(), wbuf.end());
-	}
-
-	inline const std::string GetPathA() { return m_path; }
-	inline const std::wstring GetPathW() { return m_wpath; }
-	inline std::string GetNameA() { return m_path.substr(m_path.find_last_of("\\/")+1); }
-	inline std::wstring GetNameW() { return m_wpath.substr(m_wpath.find_last_of(L"\\/")+1); }
-
-private:
-	HMODULE m_hm;
-	std::string m_path;
-	std::wstring m_wpath;
-};
 
 
 

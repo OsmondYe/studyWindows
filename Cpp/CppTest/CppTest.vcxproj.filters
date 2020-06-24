@@ -19,6 +19,9 @@
     <Filter Include="misc">
       <UniqueIdentifier>{8b0c66ba-f64b-49aa-bef9-f2a0319f9483}</UniqueIdentifier>
     </Filter>
+    <Filter Include="oye_tools">
+      <UniqueIdentifier>{d44249ad-364f-4398-96e8-98b9880e24db}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -32,6 +35,9 @@
     </ClInclude>
     <ClInclude Include="Monitor.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="oye_handy_tools.hpp">
+      <Filter>oye_tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -60,6 +66,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="test-winuser-api.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test_winshell_api.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
