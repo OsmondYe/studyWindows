@@ -170,6 +170,7 @@
   <ItemGroup>
     <ClInclude Include="Monitor.h" />
     <ClInclude Include="oye_handy_tools.hpp" />
+    <ClInclude Include="oye_str.hpp" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="utils.h" />

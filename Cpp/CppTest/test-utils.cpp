@@ -1,15 +1,18 @@
 ﻿#include "stdafx.h"
 #include "utils.h"
 #include "Monitor.h"
-#include "oye_handy_tools.hpp"
 #include <chrono>
 #include <ctime>
 #include <locale>
 #include <regex>
+
+#include "oye_handy_tools.hpp"
+#include "oye_str.hpp"
+
+
+
 //use DISABLED_ prefix to filter out 
 using namespace std;
-
-
 
 
 class OverlayText {
@@ -223,8 +226,6 @@ TEST(Utils, DISABLED_FileMonitor) {
 	
 }
 
-
-
 TEST(Utils, Process) {
 	Module m;
 	cout << m.GetPathA()<<endl;
@@ -246,4 +247,27 @@ TEST(Utils, Process) {
 	auto i = (l.compare(r) == 0);
 	cout << i;
 
+}
+
+TEST(Utils, Str) {
+	// reserve
+	std::string str{ "12345Hello" };
+	EXPECT_STREQ(str.c_str(), oye_str::reserve(oye_str::reserve(str)).c_str());
+
+	{// iequal
+		string s1{ "hello" };
+		string s2{ "Hello" };
+		EXPECT_TRUE(oye_str::iequal(s1, s2));
+
+		string s3, s4;
+		EXPECT_TRUE(oye_str::iequal(s3, s4));
+	}
+
+	{// icontain
+		EXPECT_TRUE(oye_str::icontain(str, ""));
+		EXPECT_TRUE(oye_str::icontain(str, "5"));
+		EXPECT_TRUE(oye_str::icontain(str, "123"));
+		EXPECT_TRUE(oye_str::icontain(str, "hello"));
+		EXPECT_TRUE(!oye_str::icontain(str, "china"));
+	}
 }

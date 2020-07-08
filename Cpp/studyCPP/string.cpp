@@ -27,6 +27,20 @@ TEST(String, Basic) {
 	EXPECT_TRUE(w.size() == w.length());
 	EXPECT_TRUE(w.capacity() > 0);
 	w.reserve(100);
+
+	//
+	// for c
+	//
+	wstring forc{ L"123456789" };
+
+	wchar_t* xx = new wchar_t[forc.size() + 1];  //size :: elements. not mem_size
+
+	wcsncpy(xx, forc.c_str(), forc.size() + 1);
+
+	delete[] xx;
+
+	EXPECT_TRUE(xx != NULL);
+
 }
 
 TEST(String, DISABLED_EncodingPrefix) {
@@ -51,10 +65,6 @@ you can use any char you want and to insert escapiing char with out using any \
 	wcout << str5 << str7 << endl;
 	wcout << str8 <<endl;
 
-}
-
-TEST(String, Advanced) {
-	EXPECT_TRUE(sizeof(wstring) == sizeof(int*) * 5);
 }
 
 TEST(String, Access) {
@@ -128,7 +138,6 @@ TEST(String, AssignOperEqual) {
 	w = wstring(L"that is that");
 	w = L"NULL for NULL";
 }
-
 
 TEST(String, Operations) {
 	wstring w(str);
@@ -349,7 +358,6 @@ TEST(String, UniqueCharInStr) {
 	wcout << s << endl;
 
 }
-
 
 TEST(String, IEqual) {
 	std::vector<std::wstring> buf{

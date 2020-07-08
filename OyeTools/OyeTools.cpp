@@ -1,7 +1,12 @@
-// OyeTools.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+/*
+ Oye tools,
+	- contain Official stable handy helper functions
+	- direct command lint support
+*/
 #include "pch.h"
 #include "cmdline.h"
+
+
 
 const int version = 0x0001'0102;
 void print_version() {
@@ -9,6 +14,8 @@ void print_version() {
 	sprintf_s(buf, "Version %d.%02d.%04d Built on %s", 1, 0, 0102, "2020-04-01");
 	cout << buf << endl;
 }
+
+
 
 string hook_help_message();
 cmdline::parser gp;

@@ -22,7 +22,6 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "Idiom.MacroParam";
 	testing::FLAGS_gtest_filter = "Sort.Merge";
 	testing::FLAGS_gtest_filter = "Concurrency.Mutex";
-	testing::FLAGS_gtest_filter = "String.IEqual";
 	testing::FLAGS_gtest_filter = "Chrono.*";
 	testing::FLAGS_gtest_filter = "Set.*";
 	testing::FLAGS_gtest_filter = "OyeAlgo.Fibonacci";
@@ -42,7 +41,7 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "Idiom.MFCSafeCallClassFunction";
 	testing::FLAGS_gtest_filter = "Memory.UniquePtr_Example1";
 	testing::FLAGS_gtest_filter = "Memory.WeakPtr";
-	
+	testing::FLAGS_gtest_filter = "String.*";
 
 	return RUN_ALL_TESTS();
 

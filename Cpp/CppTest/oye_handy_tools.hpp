@@ -2,7 +2,7 @@
 
 //
 // process module
-//
+//	you give me a module, I return you path and name
 class Module {
 public:
 	Module(HMODULE hm = NULL) :m_hm(hm) {

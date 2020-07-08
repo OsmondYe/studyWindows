@@ -39,6 +39,9 @@
     <ClInclude Include="oye_handy_tools.hpp">
       <Filter>oye_tools</Filter>
     </ClInclude>
+    <ClInclude Include="oye_str.hpp">
+      <Filter>oye_tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test-windows-api.cpp">
