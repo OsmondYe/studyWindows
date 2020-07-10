@@ -249,10 +249,34 @@ TEST(Utils, Process) {
 
 }
 
+// f(x) :  how many ways in total when you in x layer(s)
+// f(x) = f(x-2) + f(x-1);
+// f(0) =0;
+// f(1) = 1;
+// f(2) = 2;
+ long long  func_x(int x) {
+	vector<long long> dp(x+1, 0);
+
+	dp[0] = 0;	dp[1] = 1;	dp[2] = 2;
+	if (x <= 2) {
+		return dp[x];
+	}
+	for (int i = 3; i <= x; i++) {
+		dp[i] = dp[i - 1] + dp[i - 2];
+		cout << "f(" << i << ")=\t" << dp[i] << endl;
+	}
+	return dp[x];
+}
+
 TEST(Utils, Str) {
+
+	int x = 100;
+	cout << "f(100)=\t" << func_x(x) << endl;
+
+
 	// reserve
-	std::string str{ "12345Hello" };
-	EXPECT_STREQ(str.c_str(), oye_str::reserve(oye_str::reserve(str)).c_str());
+	string str{ "12345Hello" };
+	//EXPECT_STREQ(str.c_str(), oye_str::reserve(oye_str::reserve(str)).c_str());
 
 	{// iequal
 		string s1{ "hello" };
@@ -269,5 +293,32 @@ TEST(Utils, Str) {
 		EXPECT_TRUE(oye_str::icontain(str, "123"));
 		EXPECT_TRUE(oye_str::icontain(str, "hello"));
 		EXPECT_TRUE(!oye_str::icontain(str, "china"));
+	}
+
+	{// trim kinds
+
+		string s = "    china    ";
+
+		cout << oye_str::trim_left_copy(s) << endl;
+		cout << oye_str::trim_right_copy(s) << endl;
+		cout << oye_str::trim_copy(s) << endl;
+
+
+		string s2 = "*&^china^&*";
+
+		auto lamda = [](char c) {
+			set<char> ss = { '&','*','^' };
+			return ss.count(c) != 0;
+		};
+
+		cout << oye_str::trim_left_copy_if(s2, lamda) << endl;
+		cout << oye_str::trim_right_copy_if(s2, lamda) << endl;
+		cout << oye_str::trim_copy_if(s2, lamda) << endl;
+
+		string path = R"_('"c:\abc\ddd\ccc\eee.txt"')_";
+
+		auto l = [](char c) {  return c == '\'' || c == '\"'; };
+		cout << oye_str::trim_copy_if(path, l) << endl;
+		
 	}
 }

@@ -240,6 +240,7 @@ TEST(Algorithm, Fill) {
 	fill_n(ostream_iterator<char>(cout), 10, '=');
 }
 
+
 TEST(Algorithm, Swap) {
 	auto v = getSorted(100);
 	// obj swap
@@ -308,6 +309,9 @@ TEST(Algorithm, PartialSum) {
 //
 
 TEST(Algorithm, Equal) {
+	//
+	//  // compare [b1, e1) to [b2, ...) using _Pred
+	//
 	auto v = getSorted(10);
 	auto v_ = v;
 	// [b1:e1) == [b2:e2)

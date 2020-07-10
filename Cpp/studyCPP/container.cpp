@@ -1,8 +1,6 @@
 ﻿#include "pch.h"
 #include "helper.hpp"
 
-
-
 /*
 STL { container, iterator, algorithm}
 
@@ -78,18 +76,6 @@ TEST(Container, Vector) {
 		//vi.erase(it);
 
 	}
-
-	wchar_t printer[] = L"Microsoft Print to PDF";
-
-	HANDLE hPrint = NULL;
-	::OpenPrinterW(printer, &hPrint, NULL);
-
-	DWORD count = 0;
-	PrintNamedProperty* pPNP = NULL;
-
-	// using API : EnumJobNamedProperties to Predicate;
-	auto rt = ::EnumJobNamedProperties(hPrint, 3, &count, &pPNP);
-
 
 	{
 		// vi会自动寻找新的内容以容纳新的数据,先前在内存上的iterator都会失效的	
