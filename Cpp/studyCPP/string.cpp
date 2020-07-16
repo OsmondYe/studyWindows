@@ -46,7 +46,7 @@ TEST(String, Basic) {
 TEST(String, DISABLED_EncodingPrefix) {
 	// u8,u,U,L,R
 	string str1 = "你好中国";
-	u8string str2 = u8"你好中国";  // u8-> utf8
+	//u8string str2 = u8"你好中国";  // u8-> utf8
 	u16string str3 = u"你好中国";  // u ->  char16_t
 	u32string str4 = U"你好中国";  // U -> char32_t
 	wstring str5 = L"你好中国";   //  L -> wide string literal
@@ -382,4 +382,15 @@ TEST(String, IEqual) {
 		});
 	
 	EXPECT_TRUE(rt);
+}
+
+
+
+TEST(String, TheNext) {
+	wstring m = LR"_(C:\Users\oye\AppData\Local\Microsoft\Office\OTele\winword.exe.db)_";
+	wstring s = L".db";
+
+	EXPECT_TRUE(std::equal(m.rbegin(), m.rbegin()+s.size(), s.rbegin(), s.rend(), [](wchar_t l, wchar_t r) {
+		return std::tolower(l) == std::tolower(r);
+		}));
 }

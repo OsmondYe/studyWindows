@@ -24,12 +24,30 @@
     <ClInclude Include="fsv.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ds.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tls.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="debug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="fsv.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="dllmain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tls.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="debug.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pf.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

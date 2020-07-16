@@ -1,2 +1,2 @@
-#define FSV_API __declspec(dllexport)
-#define FSV_API __declspec(dllimport)
+#define SV_API __declspec(dllexport)
+#define SV_API __declspec(dllimport)
