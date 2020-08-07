@@ -91,3 +91,22 @@ TEST(Windows, UnicodeString) {
 	::SHCreateDirectoryEx(NULL, Jail_Path.c_str(), NULL);
 }
 
+
+const wchar_t* replaced_file = LR"_(D:\Nextlabs_Jail\C\Users\oye\Desktop\sfsdfsdf.docx)_";
+const wchar_t* replacement_file = LR"_(D:\Nextlabs_Jail\C\Users\oye\Desktop\~WRD0000.tmp)_";
+const wchar_t* backup_file = LR"_(D:\Nextlabs_Jail\C\Users\oye\Desktop\~WRL0001.tmp)_";
+
+TEST(Windows, FReplaceFile) {
+
+	auto rt = ::ReplaceFileW(
+		replaced_file,
+		replacement_file,
+		backup_file,
+		2,
+		0,
+		0
+	);
+
+	EXPECT_EQ(rt , TRUE);
+
+}

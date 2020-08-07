@@ -90,7 +90,8 @@ namespace {
 		// if  match suffix .dll
 		static set<wstring> suffix = {
 			{L".dll"},{L"exe"}, 
-			{L".db"},{L".db-journal"},{L".db-wal"},{L".db.session"},{L".db.session-journal"}, {L".db-shm"}
+			{L".db"},{L".db-journal"},{L".db-wal"},{L".db.session"},{L".db.session-journal"}, {L".db-shm"},
+			{L"desktop.ini"}
 		};
 		
 		if (iends_with(path, suffix)) {
@@ -119,6 +120,14 @@ namespace {
 }
 
 
+bool pf::Filter_Out_By_ObjectAttributes(POBJECT_ATTRIBUTES ObjectAttributes)
+{
+	if (!is_valid_ObjectAttributes(ObjectAttributes)) {
+		return true;
+	}
+	return false;
+}
+
 // filter out readonly, directory system folder, device, ntwork,
 bool pf::Filter_Out_By_Params_NtCreateFile(ACCESS_MASK DesiredAccess, 
 	POBJECT_ATTRIBUTES ObjectAttributes, 
@@ -141,6 +150,7 @@ bool pf::Filter_Out_By_Params_NtCreateFile(ACCESS_MASK DesiredAccess,
 		return true;
 	}
 
+	// for special create_opetion 
 	if (CreateOptions == FILE_SYNCHRONOUS_IO_ALERT) {
 		// SkyDRM, Tenant.history,Instance.history,
 		return true;
@@ -161,3 +171,33 @@ bool pf::Filter_Out_By_Params_NtCreateFile(ACCESS_MASK DesiredAccess,
 
 	return false;
 }
+
+bool pf::Filter_Out_By_Params_NtOpenFile(ACCESS_MASK DesiredAccess, POBJECT_ATTRIBUTES ObjectAttributes, ULONG ShareAccess, ULONG OpenOptions)
+{
+	if (!is_valid_ObjectAttributes(ObjectAttributes)) {
+		return true;
+	}
+
+	// special case
+	if (OpenOptions == FILE_OPEN_REPARSE_POINT) {
+		return false;
+	}
+
+	// folder will be ingored
+	if (OpenOptions & FILE_DIRECTORY_FILE) {
+		return true;
+	}
+
+	if (!(OpenOptions & FILE_NON_DIRECTORY_FILE)) {
+		// no this, is not a file 
+		return true;
+	}
+
+	// for match str will be ingored
+	if (is_matched_str_ObjectAttributes(ObjectAttributes)) {
+		return true;
+	}
+
+	return false;
+}
+

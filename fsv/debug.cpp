@@ -25,20 +25,30 @@ namespace {
 	};
 
 	
+	bool bUsingOutputDebugString = true;
 
 	void WriteLog(const wstring& log) {
 		// write to file	
-		LogStream ls;
-		auto& s = ls.get();
+		//LogStream ls;
+		//auto& s = ls.get();
 
-		s << log;
+		//s << log;
 
-		if (log.back() != L'\n') {
-			s << endl;
+		//if (log.back() != L'\n') {
+		//	s << endl;
+		//}
+		//s << flush;
+
+
+		if (bUsingOutputDebugString) {
+			auto l = log;
+			if (l.back() != L'\n') {
+				l.push_back(L'\n');
+			}
+			::OutputDebugStringW(l.c_str());
 		}
-		s << flush;
 
-		//::OutputDebugStringW(log.c_str());
+		
 	}
 }
 
@@ -342,6 +352,10 @@ inline wstring parseCreateOptions(ULONG CreateOptions) {
 	return rt;
 }
 
+inline wstring parseOpenOptions(ULONG OpenOptions) {
+	return parseCreateOptions(OpenOptions);
+}
+
 void debug_param_ntcreatefile(ACCESS_MASK DesiredAccess, 
 	POBJECT_ATTRIBUTES ObjectAttributes, 
 	ULONG FileAttributes, 
@@ -384,6 +398,34 @@ void debug_param_ntcreatefile(ACCESS_MASK DesiredAccess,
 	WriteLog(msg);
 }
 
+void debug_param_ntopenfile(ACCESS_MASK DesiredAccess, POBJECT_ATTRIBUTES ObjectAttributes, ULONG ShareAccess, ULONG OpenOptions)
+{
+	wstring msg;
+
+	msg += L"---->>>>>for NtOpenFile:\n";
+
+	msg += L"\tObject: { ";
+	msg += parseObject(ObjectAttributes);
+	msg += L" }\n";
+
+	msg += L"\tDesiredAccess: { ";
+	msg += parseDesiredAccess(DesiredAccess);
+	msg += L" }\n";	
+
+	msg += L"\tShareAccess: { ";
+	msg += parseShareAccess(ShareAccess);
+	msg += L" }\n";
+
+	msg += L"\tOpenOptions: { ";
+	msg += parseOpenOptions(OpenOptions);
+	msg += L" }\n";
+
+	msg += L"---->>>end for NtOpenFile:\n";
+
+
+	WriteLog(msg);
+}
+
 void debug_string(const wchar_t* str)
 {
 	WriteLog(str);
@@ -397,6 +439,7 @@ void debug_string_with_NTSTATUS(const wchar_t* str, NTSTATUS status)
 	msg += L",status=0x";
 	wss << hex << status;
 	msg += wss.str();
+	msg += L"\n";
 
 	WriteLog(msg);
 }

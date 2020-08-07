@@ -11,6 +11,13 @@ void debug_param_ntcreatefile(
     ULONG CreateDisposition,
     ULONG CreateOptions);
 
+void debug_param_ntopenfile(
+    ACCESS_MASK DesiredAccess,
+    POBJECT_ATTRIBUTES ObjectAttributes,
+    ULONG ShareAccess,
+    ULONG OpenOptions
+);
+
 
 
 void debug_string(const wchar_t* str);
