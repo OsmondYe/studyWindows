@@ -40,4 +40,5 @@ public:
 	afx_msg void OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2);
 	afx_msg void OnBnClickedButtonHashkeyStudy();
 	afx_msg void OnBnClickedBtnAutoinc();
+	afx_msg void OnBnClickedPicOp();
 };

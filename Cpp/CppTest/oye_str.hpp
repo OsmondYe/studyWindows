@@ -18,15 +18,19 @@ namespace oye_str {
 	auto lamda_is_white_char_w = [](wchar_t c) { return c == L' ' || c == L'\t' || c == L'\n'; };
 
 	
-	// 07/09/2020 make it as comments since std had provided;
-	//// do not modify input param
-	//inline string reserve(string str) {
-	//	std::reverse(str.begin(), str.end());
-	//	return str;
-	//}
-
 	inline bool is_istarts_with() {
 		return false;
+	}
+
+	inline bool ibegin_with(const wstring& m, const wstring& s) {
+		auto m_b = m.cbegin();
+		auto s_b = s.cbegin();
+		for (; m_b != m.cend() && s_b != s.cend();m_b++,s_b++) {
+			if (tolower(*m_b++) != tolower(*s_b++)) {
+				return m_b == m.cbegin() ? false : true;
+			}
+		}
+		return true;
 	}
 
 	inline bool is_iends_with() {

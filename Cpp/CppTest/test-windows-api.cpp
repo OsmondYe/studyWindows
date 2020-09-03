@@ -96,6 +96,30 @@ const wchar_t* replaced_file = LR"_(D:\Nextlabs_Jail\C\Users\oye\Desktop\sfsdfsd
 const wchar_t* replacement_file = LR"_(D:\Nextlabs_Jail\C\Users\oye\Desktop\~WRD0000.tmp)_";
 const wchar_t* backup_file = LR"_(D:\Nextlabs_Jail\C\Users\oye\Desktop\~WRL0001.tmp)_";
 
+
+
+
+TEST(Windows, FCreateFile) {
+
+//#define GENERIC_READ                     (0x80000000L)
+//#define GENERIC_WRITE                    (0x40000000L)
+//#define GENERIC_EXECUTE                  (0x20000000L)
+//#define GENERIC_ALL                      (0x10000000L)
+
+//#define CREATE_NEW          1
+//#define CREATE_ALWAYS       2
+//#define OPEN_EXISTING       3
+//#define OPEN_ALWAYS         4
+//#define TRUNCATE_EXISTING   5
+
+//#define FILE_SHARE_READ                 0x00000001  
+//#define FILE_SHARE_WRITE                0x00000002  
+//#define FILE_SHARE_DELETE               0x00000004 
+
+	::CreateFileW(replaced_file, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+}
+
+
 TEST(Windows, FReplaceFile) {
 
 	auto rt = ::ReplaceFileW(
@@ -108,5 +132,23 @@ TEST(Windows, FReplaceFile) {
 	);
 
 	EXPECT_EQ(rt , TRUE);
+
+}
+
+
+TEST(Windows, FClearFolder) {
+	SHFILEOPSTRUCTW file_op = {
+	NULL,
+	FO_DELETE,
+	LR"_(C:\Users\oye\Nextlabs_Jail)_",
+	L"",
+	FOF_NOCONFIRMATION |
+	FOF_NOERRORUI |
+	FOF_SILENT,
+	false,
+	0,
+	L"" };
+
+	::SHFileOperationW(&file_op);
 
 }

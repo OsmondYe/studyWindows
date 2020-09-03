@@ -14,87 +14,6 @@
 //use DISABLED_ prefix to filter out 
 using namespace std;
 
-
-class OverlayText {
-
-public:
-	OverlayText() { _default(); }
-	OverlayText(const std::wstring& text) :_text(text) { _default(); }
-
-	inline void InsertReplacableToken(const std::wstring& key, const std::wstring& value) {
-		_tokens[key] = value;
-	}
-
-	std::wstring GetReplacedText() {
-		std::wstring rt = _text;
-		std::for_each(_tokens.cbegin(), _tokens.cend(), [&rt](const std::pair<std::wstring, std::wstring>& pair) {
-
-			if (pair.first.empty() || pair.second.empty()) {
-				return;
-			}
-			auto k = pair.first;
-			auto v = pair.second;
-
-			k.replace(k.find(L"$"),1, L"\\$");
-			k.replace(k.find(L"("),1, L"\\(");
-			k.replace(k.find(L")"),1, L"\\)");
-
-			std::wregex re(k,std::regex::icase);
-			rt=std::regex_replace(rt, re, v);
-		});
-		return rt;
-
-	}
-
-private:
-	void _default() {
-		const static wchar_t* USER = L"$(User)";
-		const static wchar_t* EMAIL = L"$(Email)";
-		const static wchar_t* HOST = L"$(Host)";
-		const static wchar_t* IP = L"$(IP)";
-		const static wchar_t* BREAK = L"$(Break)";  //  to \n
-		const static wchar_t* DATE = L"$(DATE)";    //  "YYYY-MM-DD"
-		const static wchar_t* TIME = L"$(TIME)";	//  "HH:mm:ss"	  
-
-		// Cur 
-		_tokens[BREAK] = L"\n";
-		_tokens[DATE] = _get_date();
-		_tokens[TIME] = _get_time();
-	}
-
-	inline std::wstring _get_date() {
-		std::wstringstream ss;
-		auto time = std::time(nullptr);		
-		ss<< std::put_time(std::localtime(&time), L"%Y-%m-%d");
-		return ss.str();
-	}
-
-	inline std::wstring _get_time() {
-		std::wstringstream ss;
-		auto time = std::time(nullptr);
-		ss << std::put_time(std::localtime(&time), L"%H:%M:%S");
-		return ss.str();
-	}
-	inline std::wstring _get_datetime() {
-		std::wstringstream ss;
-		auto time = std::time(nullptr);
-		ss << std::put_time(std::localtime(&time), L"%Y-%m-%d %H:%M:%S");
-		return ss.str();
-	}
-
-private:
-	std::wstring _text;
-	// i.e.  $(User) ->  Osmond.Ye
-	std::map<std::wstring, std::wstring> _tokens;
-};
-
-
-TEST(Utils, DISABLED_OverlayText) {
-	OverlayText tc(L"$(User)$(BREAk)$(Email)$(Host)$(IP)--$(break)--$(date)--$(time)");
-	wcout << tc.GetReplacedText();
-}
-
-
 TEST(Utils, DISABLED_sha1){
 	std::string str = "The Quick Brown Fox Jumps Over The Lazy Dog,the quick brown fox jumps over the lazy dog";
 	std::string exp_rt("fdf652d252642deafaebf1786c17d13d604180aa");
@@ -248,5 +167,13 @@ TEST(Utils, Str) {
 		auto l = [](char c) {  return c == '\'' || c == '\"'; };
 		cout << oye_str::trim_copy_if(path, l) << endl;
 		
+	}
+
+	//ibeginwith
+	{
+		wstring s1 = L"Chinafsdfsdfd";
+		wstring s2 = L"chinafdfsdds";
+
+		EXPECT_TRUE(oye_str::ibegin_with(s1, s2));
 	}
 }

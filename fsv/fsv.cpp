@@ -6,10 +6,10 @@
 
 	History:
 
-
 */
 
 #include "framework.h"
+#include "config.h"
 #include "fsv.h"
 #include "tls.h"
 #include "ds.h"
@@ -17,6 +17,8 @@
 #include <string>
 #include <map>
 #include <shlobj_core.h>
+
+#include "utils.hpp"
 
 
 #pragma comment(lib,"ntdll.lib")
@@ -189,35 +191,26 @@ BOOL WINAPI Hooked_SetFileSecurityW(LPCWSTR lpFileName,
 
 Sig_NtCreateFile Hooked_NtCreateFile_Next = NULL;
 Sig_NtOpenFile Hooked_NtOpenFile_Next = NULL;
-
 Sig_NtQueryAttributesFile Hooked_NtQueryAttributesFile_Next = NULL;
 Sig_NtQueryFullAttributesFile Hooked_NtQueryFullAttributesFile_Next = NULL;
-
-
 Sig_GetDriveTypeW Hooked_GetDriveTypeW_Next = NULL;
 Sig_QISearch Hooked_QISearch_Next = NULL;
 Sig_WriteFile Hooked_WriteFile_Next = NULL;
 Sig_WriteFileEx Hooked_WriteFileEx_Next = NULL;
 Sig_SetFileSecurityW Hooked_SetFileSecurityW_Next = NULL;
 
-namespace util {
-	inline bool FileExists(const wchar_t* path)
-	{
-		DWORD dwAttrib = GetFileAttributes(path);
-		return ((dwAttrib != INVALID_FILE_ATTRIBUTES) && !(dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
-	}
 
-	inline bool PathIsFolder(const wchar_t* path) {
-		DWORD dwAttrib = GetFileAttributes(path);
-		return ((dwAttrib != INVALID_FILE_ATTRIBUTES) && (dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
-	}
+namespace utils {
 
-	inline void MakeSureFolderExist(const wchar_t* path) {
-		// make sure path exist
-		::SHCreateDirectoryEx(NULL, path, NULL);
-	}
+	static const std::wstring JailPath{ FV_JAIL_PATH };
+
 	// build jail path from org path
 	inline void config_jail_path(std::wstring& jail, const std::wstring& org) {
+		// org path has been in Jail 
+		if (utils::iconatain(org, JailPath)) {
+			jail = org;
+			return;
+		}
 		// create full jail path
 		std::wstring  new_path = org;
 		if (new_path[5] == L':') {
@@ -227,6 +220,13 @@ namespace util {
 		new_path.insert(4, jail);
 		jail = new_path;
 
+	}
+
+	inline void copy_file_wrapper(const wchar_t* org, const wchar_t* dst) {
+		if (!::CopyFile(org, dst,false)) {
+			auto err = ::GetLastError();
+			debug_string_with_LastError(L"call CopyFile failed.",err);
+		}
 	}
 }
 
@@ -258,13 +258,10 @@ namespace mem {
 		UNICODE_STRING* new_path_unistr = (UNICODE_STRING*)mem_alloc(sizeof(UNICODE_STRING));
 		RtlInitUnicodeString(new_path_unistr, new_path.c_str());
 		new_one.ObjectName = new_path_unistr;
-
 	}
-
 }
 
 namespace tls {
-
 	THREAD_DATA* getTlsData() {
 		THREAD_DATA* data;
 		data = (THREAD_DATA*)tls_get_data();
@@ -280,9 +277,6 @@ namespace tls {
 		}
 		return data;
 	}
-
-
-
 }
 
 
@@ -293,69 +287,26 @@ namespace sys {
 	inline void record_map(const std::wstring& org, const std::wstring& jail) {
 		path_map[org] = jail;
 	}
+
 	// 'in map' means org file path has been detoured
 	inline bool is_in_map(const std::wstring& org) {
 		return path_map.count(org) != 0;
 	}
 
-	CRITICAL_SECTION gcs;
+	inline void remove_item_in_map(const std::wstring& org, const std::wstring& jail) {
+		if (is_in_map(org)) {
+			path_map.erase(org);
+		}
+	}
 
+	CRITICAL_SECTION gcs;
 	inline void init_cs() {
 		::InitializeCriticalSection(&gcs);
 	}
-
-
 }
 
 
-SV_API bool _stdcall init_file_virtualization() {
-	// hook ntcreatefile / ntopenfile
-	CollectHooks();
-	if (!HookAPI("ntdll", "NtCreateFile", Hooked_NtCreateFile, (void**)&Hooked_NtCreateFile_Next, 0)) {
-		return false;
-	}
-	if (!HookAPI("ntdll", "NtOpenFile", Hooked_NtOpenFile, (void**)&Hooked_NtOpenFile_Next, 0)) {
-		return false;
-	}
-
-	if (!HookAPI("ntdll", "NtQueryAttributesFile", Hooked_NtQueryAttributesFile, (void**)&Hooked_NtQueryAttributesFile_Next, 0)) {
-		return false;
-	}
-
-	if (!HookAPI("ntdll", "NtQueryFullAttributesFile", Hooked_NtQueryFullAttributesFile, (void**)&Hooked_NtQueryFullAttributesFile_Next, 0)) {
-		return false;
-	}
-
-
-	// for noisy filter helper:  to hook some highlevel api to set the lock and getthrough
-	{
-		if (!HookAPI("Kernelbase", "GetDriveTypeW", Hooked_GetDriveTypeW, (void**)&Hooked_GetDriveTypeW_Next, 0)) {
-			return false;
-		}
-
-		if (!HookAPI("Kernelbase", "QISearch", Hooked_QISearch, (void**)&Hooked_QISearch_Next, 0)) {
-			return false;
-		}
-		if (!HookAPI("Kernelbase", "WriteFile", Hooked_WriteFile, (void**)&Hooked_WriteFile_Next, 0)) {
-			return false;
-		}
-		if (!HookAPI("Kernelbase", "WriteFileEx", Hooked_WriteFileEx, (void**)&Hooked_WriteFileEx_Next, 0)) {
-			return false;
-		}
-	}
-
-	// ignored
-	{
-		if (!HookAPI("Kernelbase", "SetFileSecurityW", Hooked_SetFileSecurityW, (void**)&Hooked_SetFileSecurityW_Next, 0)) {
-			return false;
-		}
-	}
-
-
-	FlushHooks();
-
-	return true;
-}
+SV_API bool _stdcall init_file_virtualization();
 
 
 NTSTATUS NTAPI Hooked_NtOpenFile(
@@ -368,10 +319,9 @@ NTSTATUS NTAPI Hooked_NtOpenFile(
 ) {
 	NTSTATUS status;
 	THREAD_DATA* tls;
-	std::wstring jail_path = LR"_(D:\Nextlabs_Jail\)_";
+	std::wstring jail_path = utils::JailPath;
 	const std::wstring org_path = ObjectAttributes->ObjectName->Buffer;
 	OBJECT_ATTRIBUTES  new_obj{ 0 };
-
 
 
 	tls = tls::getTlsData();
@@ -389,6 +339,18 @@ NTSTATUS NTAPI Hooked_NtOpenFile(
 			msg += L"org_path:  "; msg += org_path;  msg += L"\n";
 			debug_string(msg.c_str());
 		}
+		// for open docx
+		
+		if (utils::iends_with(org_path, { {L".docx"}, {L".tmp"}})) {
+			debug_param_ntopenfile(DesiredAccess, ObjectAttributes, ShareAccess, OpenOptions);
+			::DebugBreak();
+		}
+
+		if (OpenOptions == FILE_OPEN_REPARSE_POINT) {
+			debug_param_ntopenfile(DesiredAccess, ObjectAttributes, ShareAccess, OpenOptions);
+			::DebugBreak(); // I donot know why open only have this option
+		}
+
 		// filter first
 		if (pf::Filter_Out_By_Params_NtOpenFile(DesiredAccess, ObjectAttributes, ShareAccess,OpenOptions)) 
 		{
@@ -397,8 +359,9 @@ NTSTATUS NTAPI Hooked_NtOpenFile(
 			break;
 		}
 
+
 		// create jail path
-		util::config_jail_path(jail_path, org_path);
+		utils::config_jail_path(jail_path, org_path);
 
 		{// debug	
 			std::wstring msg;
@@ -411,42 +374,60 @@ NTSTATUS NTAPI Hooked_NtOpenFile(
 
 		// org_path has not been recorded, we need to create the detour one
 		if (!sys::is_in_map(org_path)) {
+
+			std::wstring folder = jail_path.substr(0, jail_path.find_last_of(L'\\'));
+			utils::MakeSureFolderExist(folder.c_str());
+
 			// check if file exsit
-			if (util::FileExists(org_path.c_str())) {
+			if (utils::FileExists(org_path.c_str())) {
 				// copy to jail path
-				std::wstring folder = jail_path.substr(0, jail_path.find_last_of(L'\\'));
-				util::MakeSureFolderExist(folder.c_str());
-				::CopyFile(org_path.c_str(), jail_path.c_str(), false);
+				debug_string(L"copy org file to jail");
+				utils::copy_file_wrapper(org_path.c_str(), jail_path.c_str());
 			}
 			else {
-				// make sure path exist in jail
-				std::wstring folder = jail_path.substr(0, jail_path.find_last_of(L'\\'));
-				util::MakeSureFolderExist(folder.c_str());
+				debug_string(L"org path has not been detoured, and org path is not exsit in org intent");
 			}
-		}	
+		}
+		else {
+			debug_string(L"org path has been detoured");
+		}
 
 		// redirect the org path to the jail path
 		debug_string(L"call Hooked_NtOpenFile_Next\n");
+		debug_param_ntopenfile(DesiredAccess, &new_obj, ShareAccess, OpenOptions);
 
 		status = Hooked_NtOpenFile_Next(FileHandle,
 			DesiredAccess, &new_obj, IoStatusBlock,
 			ShareAccess, OpenOptions);
 
+
 		if (NT_SUCCESS(status)) {
-			// record map, org_path ->jail_path;
-			debug_string(L"call ok, record map, org_path ->jail_path\n");
-			sys::record_map(org_path, jail_path);
+
+			if ((DesiredAccess & DELETE) && (OpenOptions & FILE_NON_DIRECTORY_FILE)) {
+				// since the file have been deleted, remove it from map
+				debug_string(L"call ok, remove_item_in_map, org_path ->jail_path\n");
+				sys::remove_item_in_map(org_path, jail_path);
+			}
+			else {
+				// record map, org_path ->jail_path;
+				debug_string(L"call ok, record map, org_path ->jail_path\n");
+				sys::record_map(org_path, jail_path);
+			}
+
+			
+
+			// if open for delete,  delete the file in map
+			// DesiredAccess: { DELETE    OpenOptions: { FILE_NON_DIRECTORY_FILE
+
+
 		}
 		else {
-			debug_param_ntopenfile(DesiredAccess, &new_obj, ShareAccess, OpenOptions);
 			debug_string_with_NTSTATUS(L"!!!Notice!!!,Failed calling NtOpenFile", status);
 		}
 
-
-
 	} while (false);
 	
-	debug_string(L"\n\n=======end Hooked_NtOpenFile=======\n\n\n\n");
+	debug_string(L"=======end Hooked_NtOpenFile=======\n\n\n\n");
 	// finish
 	tls->file_NtOpenFile_lock = false;
 	tls->thread_lock = false;
@@ -466,7 +447,7 @@ NTSTATUS NTAPI Hooked_NtCreateFile(
 {
 	NTSTATUS status;
 	THREAD_DATA* tls;
-	std::wstring jail_path = LR"_(D:\Nextlabs_Jail\)_";
+	std::wstring jail_path = utils::JailPath;
 	const std::wstring org_path = ObjectAttributes->ObjectName->Buffer;
 	OBJECT_ATTRIBUTES  new_obj{ 0 };
 
@@ -492,6 +473,9 @@ NTSTATUS NTAPI Hooked_NtCreateFile(
 			debug_string(msg.c_str());
 		}
 
+		if (utils::iends_with(org_path, { {L".docx"}, {L".tmp"} })) {
+			::DebugBreak();
+		}
 		// filter first
 		if (pf::Filter_Out_By_Params_NtCreateFile(DesiredAccess, ObjectAttributes, FileAttributes,
 				ShareAccess, CreateDisposition, CreateOptions)
@@ -507,7 +491,7 @@ NTSTATUS NTAPI Hooked_NtCreateFile(
 
 
 		// create jail path
-		util::config_jail_path(jail_path, org_path);
+		utils::config_jail_path(jail_path, org_path);
 		{// debug
 			std::wstring msg;
 			msg += L"jail_path: "; msg += jail_path; msg += L"\n";
@@ -519,41 +503,34 @@ NTSTATUS NTAPI Hooked_NtCreateFile(
 
 		// org_path has not been recorded, we need to create the detour one
 		if (!sys::is_in_map(org_path)) {
-			// check if file exsit
-			if (util::FileExists(org_path.c_str())) {
-				// copy to jail path
-				std::wstring folder = jail_path.substr(0, jail_path.find_last_of(L'\\'));
-				util::MakeSureFolderExist(folder.c_str());
-				::CopyFile(org_path.c_str(), jail_path.c_str(), false);
+
+			// add new feature, client want to create a folder
+			if ((CreateDisposition == FILE_CREATE) && (CreateOptions & FILE_DIRECTORY_FILE)) {
+				debug_string(L"user want to create a folder, make it in jail");
 			}
 			else {
 				// make sure path exist in jail
 				std::wstring folder = jail_path.substr(0, jail_path.find_last_of(L'\\'));
-				util::MakeSureFolderExist(folder.c_str());
+				utils::MakeSureFolderExist(folder.c_str());
+				// check if file exsit
+				if (utils::FileExists(org_path.c_str())) {
+					// copy to jail path
+					debug_string(L"copy org file to jail");
+					utils::copy_file_wrapper(org_path.c_str(), jail_path.c_str());
+				}
+				else {
+					debug_string(L"org path has not been detoured, and org path is not exsit in org intent");
+				}
 			}
 		}
-
-		// param refined
-		CreateOptions &= ~FILE_OPEN_FOR_BACKUP_INTENT;
-		//CreateOptions &= FILE_DELETE_ON_CLOSE;
-
-		//
-		//if (!(ShareAccess & FILE_SHARE_READ)) {
-		//	ShareAccess = (FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE);
-		//}
-
-		// by osmond, test
-		//DesiredAccess &= ~DELETE;
-		//DesiredAccess &= ~WRITE_DAC;
-		//DesiredAccess &= ~WRITE_OWNER;
-		//DesiredAccess &= ~READ_CONTROL;
-		//DesiredAccess &= ~FILE_READ_ATTRIBUTES;
-		//DesiredAccess &= ~FILE_READ_EA;
-		//DesiredAccess &= ~FILE_WRITE_DATA;
+		else {
+			debug_string(L"org path has been detoured");
+		}
 
 
 		// redirect the org path to the jail path
 		debug_string(L"call Hooked_NtCreateFile_Next\n");
+		debug_param_ntcreatefile(DesiredAccess, &new_obj, FileAttributes, ShareAccess, CreateDisposition, CreateOptions);
 		
 		status = Hooked_NtCreateFile_Next(FileHandle,
 			DesiredAccess, &new_obj, IoStatusBlock,
@@ -566,7 +543,6 @@ NTSTATUS NTAPI Hooked_NtCreateFile(
 			sys::record_map(org_path, jail_path);
 		}
 		else {
-			debug_param_ntcreatefile(DesiredAccess, &new_obj, FileAttributes, ShareAccess, CreateDisposition, CreateOptions);
 			debug_string_with_NTSTATUS(L"!!!Notice!!!,Failed calling NtCreateFile", status);
 		}
 
@@ -574,7 +550,7 @@ NTSTATUS NTAPI Hooked_NtCreateFile(
 	} while (false);
 
 
-	debug_string(L"\n\n=======end Hooked_NtCreateFile=======\n\n\n\n");
+	debug_string(L"=======end Hooked_NtCreateFile=======\n\n\n\n");
 	// finish
 	tls->file_NtCreateFile_lock = false;
 	tls->thread_lock = false;
@@ -603,7 +579,7 @@ NTSTATUS NTAPI Hooked_NtQueryAttributesFile(
 	debug_string(L"=======begin Hooked_NtQueryAttributesFile=======\n");
 
 	// create jail path
-	std::wstring jail_path = LR"_(D:\Nextlabs_Jail\)_";
+	std::wstring jail_path = utils::JailPath;
 	const std::wstring org_path = ObjectAttributes->ObjectName->Buffer;
 
 	{// debug string
@@ -612,33 +588,21 @@ NTSTATUS NTAPI Hooked_NtQueryAttributesFile(
 		debug_string(msg.c_str());
 	}
 	do {
-		// filter first
-		if (util::PathIsFolder(org_path.c_str()) ||
-			pf::Filter_Out_By_ObjectAttributes(ObjectAttributes)
-			) {
-			debug_string(L"match fitler, direct call next\n");
-			status = Hooked_NtQueryAttributesFile_Next(ObjectAttributes, FileInformation);
-			break;
-		}
-
 		// org_path has been detoured
 		if (sys::is_in_map(org_path)) {
 			// detour it 
 			OBJECT_ATTRIBUTES  new_obj{ 0 };
 			// create full jail path
-			util::config_jail_path(jail_path, org_path);
+			utils::config_jail_path(jail_path, org_path);
 			mem::new_object_attribute(new_obj, ObjectAttributes, jail_path);
 			status = Hooked_NtQueryAttributesFile_Next(&new_obj, FileInformation);
 		}
 		else {
 			status = Hooked_NtQueryAttributesFile_Next(ObjectAttributes, FileInformation);
 		}
-
-
-
 	} while (0);
 
-	debug_string(L"\n\n=======end NtQueryAttributesFile=======\n\n\n\n");
+	debug_string(L"=======end NtQueryAttributesFile=======\n\n");
 	//
 	// exit
 	//
@@ -666,7 +630,7 @@ NTSTATUS NTAPI Hooked_NtQueryFullAttributesFile(
 	debug_string(L"=======begin Hooked_NtQueryFullAttributesFile=======\n");
 
 	// create jail path
-	std::wstring jail_path = LR"_(D:\Nextlabs_Jail\)_";
+	std::wstring jail_path = utils::JailPath;
 	const std::wstring org_path = ObjectAttributes->ObjectName->Buffer;
 
 	std::wstring msg = L"ObjectName: ";
@@ -674,20 +638,12 @@ NTSTATUS NTAPI Hooked_NtQueryFullAttributesFile(
 	debug_string(msg.c_str());
 
 	do {
-		// filter first
-		if (util::PathIsFolder(org_path.c_str()) || pf::Filter_Out_By_ObjectAttributes(ObjectAttributes)) {
-			debug_string(L"match fitler, direct call next\n");
-			status = Hooked_NtQueryFullAttributesFile_Next(ObjectAttributes, FileInformation);
-			break;
-		}
-
-
 		// org_path has been detoured
 		if (sys::is_in_map(org_path)) {
 			// detour it 
 			OBJECT_ATTRIBUTES  new_obj{ 0 };
 			// create full jail path
-			util::config_jail_path(jail_path, org_path);
+			utils::config_jail_path(jail_path, org_path);
 			mem::new_object_attribute(new_obj, ObjectAttributes, jail_path);
 			status = Hooked_NtQueryFullAttributesFile_Next(&new_obj, FileInformation);
 		}
@@ -697,7 +653,7 @@ NTSTATUS NTAPI Hooked_NtQueryFullAttributesFile(
 	} while (0);
 
 
-	debug_string(L"\n\n=======end NtQueryFullAttributesFile=======\n\n\n\n");
+	debug_string(L"=======end NtQueryFullAttributesFile=======\n\n\n\n");
 	//
 	// exit
 	//
@@ -768,4 +724,76 @@ BOOL __stdcall Hooked_WriteFileEx(HANDLE hFile, LPCVOID lpBuffer, DWORD nNumberO
 BOOL __stdcall Hooked_SetFileSecurityW(LPCWSTR lpFileName, SECURITY_INFORMATION SecurityInformation, PSECURITY_DESCRIPTOR pSecurityDescriptor)
 {
 	return TRUE;
+}
+
+
+
+
+
+bool _stdcall init_file_virtualization() {
+
+	// clear Nextlabs_jack 
+
+	SHFILEOPSTRUCTW file_op = {
+	NULL,
+	FO_DELETE,
+	LR"_(C:\Users\oye\Nextlabs_Jail)_",
+	L"",
+	FOF_NOCONFIRMATION |
+	FOF_NOERRORUI |
+	FOF_SILENT,
+	false,
+	0,
+	L"" };
+
+	::SHFileOperationW(&file_op);
+
+	// hook ntcreatefile / ntopenfile
+	CollectHooks();
+	if (!HookAPI("ntdll", "NtCreateFile", Hooked_NtCreateFile, (void**)&Hooked_NtCreateFile_Next, 0)) {
+		return false;
+	}
+	if (!HookAPI("ntdll", "NtOpenFile", Hooked_NtOpenFile, (void**)&Hooked_NtOpenFile_Next, 0)) {
+		return false;
+	}
+
+	if (!HookAPI("ntdll", "NtQueryAttributesFile", Hooked_NtQueryAttributesFile, (void**)&Hooked_NtQueryAttributesFile_Next, 0)) {
+		return false;
+	}
+
+	if (!HookAPI("ntdll", "NtQueryFullAttributesFile", Hooked_NtQueryFullAttributesFile, (void**)&Hooked_NtQueryFullAttributesFile_Next, 0)) {
+		return false;
+	}
+
+
+	// for noisy filter helper:  to hook some highlevel api to set the lock and getthrough
+	{
+		if (!HookAPI("Kernelbase", "GetDriveTypeW", Hooked_GetDriveTypeW, (void**)&Hooked_GetDriveTypeW_Next, 0)) {
+			return false;
+		}
+
+		if (!HookAPI("Kernelbase", "QISearch", Hooked_QISearch, (void**)&Hooked_QISearch_Next, 0)) {
+			return false;
+		}
+		if (!HookAPI("Kernelbase", "WriteFile", Hooked_WriteFile, (void**)&Hooked_WriteFile_Next, 0)) {
+			return false;
+		}
+		if (!HookAPI("Kernelbase", "WriteFileEx", Hooked_WriteFileEx, (void**)&Hooked_WriteFileEx_Next, 0)) {
+			return false;
+		}
+	}
+
+	// ignored
+	{
+		if (!HookAPI("Kernelbase", "SetFileSecurityW", Hooked_SetFileSecurityW, (void**)&Hooked_SetFileSecurityW_Next, 0)) {
+			return false;
+		}
+	}
+
+
+	FlushHooks();
+
+
+
+	return true;
 }

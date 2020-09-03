@@ -42,6 +42,15 @@ void config_parser(cmdline::parser& gp) {
 	gp.add("hostname", 'n', "lookup hostname");
 	gp.add<string>("ipbyname", 'p', "lookup hostname", false);
 
+	// for gdiplus 
+	// to perform picture operation
+	gp.add("pic_grary", 'g', "make as picture gray, --src [src] --dst [out]");
+	gp.add<string>("src", '\0', "set source path",false);
+	gp.add<string>("dst", '\0', "set output path", false);
+	gp.add<int>("pic_op", '\0', "pic operation, 0,1,2,3,4,5,6,7,8,9",false);
+	gp.add<int>("pic_op_p_a", '\0', "pic operation param A,int", false);
+	gp.add<float>("pic_op_p_b", '\0', "pic operation param B,int", false);
+
 	
 
 }
@@ -88,6 +97,28 @@ int main(int argc, char* argv[])
 	}
 	else if (gp.exist("shell_api_test")) {
 		shell_api_test();
+	}
+	else if (gp.exist("pic_grary")) {
+		string src = gp.get<string>("src");
+		string dst;
+		if (gp.exist("dst")) {
+			dst = gp.get<string>("dst");
+		}
+		int pic_op = 0;
+		if (gp.exist("pic_op")) {
+			pic_op = gp.get<int>("pic_op");
+		}
+
+		int pic_param_a = 0.0;
+		if (gp.exist("pic_op_p_a")) {
+			pic_param_a = gp.get<int>("pic_op_p_a");
+		}
+
+		float pic_param_b = 0.0;
+		if (gp.exist("pic_op_p_b")) {
+			pic_param_b = gp.get<float>("pic_op_p_b");
+		}
+		process_picture_gray(src, dst, pic_op, pic_param_a, pic_param_b);
 	}
 	else {
 		// by default, failed to parge,	

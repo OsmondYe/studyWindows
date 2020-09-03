@@ -94,6 +94,18 @@ namespace cmdline {
 			return "string";
 		}
 
+		template <>
+		inline std::string readable_typename<int>()
+		{
+			return "int";
+		}
+
+		template <>
+		inline std::string readable_typename<float>()
+		{
+			return "float";
+		}
+
 	} // detail
 
 	//-----

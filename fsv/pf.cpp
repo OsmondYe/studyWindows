@@ -72,7 +72,7 @@ namespace {
 			return false;
 		}
 
-		if (ObjectAttributes->ObjectName->Length <= 8) {
+		if (ObjectAttributes->ObjectName->Length <= 10*sizeof(WCHAR)) {
 			// invalid 
 			return false;
 		}
@@ -89,7 +89,8 @@ namespace {
 		
 		// if  match suffix .dll
 		static set<wstring> suffix = {
-			{L".dll"},{L"exe"}, 
+			{L".dll"},{L".exe"}, {L".link"},
+			{L"\\"},
 			{L".db"},{L".db-journal"},{L".db-wal"},{L".db.session"},{L".db.session-journal"}, {L".db-shm"},
 			{L"desktop.ini"}
 		};
@@ -125,6 +126,10 @@ bool pf::Filter_Out_By_ObjectAttributes(POBJECT_ATTRIBUTES ObjectAttributes)
 	if (!is_valid_ObjectAttributes(ObjectAttributes)) {
 		return true;
 	}
+	// for match str will be ingored
+	if (is_matched_str_ObjectAttributes(ObjectAttributes)) {
+		return true;
+	}
 	return false;
 }
 
@@ -141,27 +146,25 @@ bool pf::Filter_Out_By_Params_NtCreateFile(ACCESS_MASK DesiredAccess,
 	}
 
 	// folder will be ingored
-	if (CreateOptions & FILE_DIRECTORY_FILE) {
-		return true;
-	}
+	//if (CreateOptions & FILE_DIRECTORY_FILE) {
+	//	return true;
+	//}
 
-	if (!(CreateOptions & FILE_NON_DIRECTORY_FILE)) {
-		// no this, is not a file 
-		return true;
-	}
+	//if (!(CreateOptions & FILE_NON_DIRECTORY_FILE)) {
+	//	// no this, is not a file 
+	//	return true;
+	//}
 
-	// for special create_opetion 
-	if (CreateOptions == FILE_SYNCHRONOUS_IO_ALERT) {
-		// SkyDRM, Tenant.history,Instance.history,
-		return true;
-	}
+	//// for special create_opetion 
+	//if (CreateOptions == FILE_SYNCHRONOUS_IO_ALERT) {
+	//	// SkyDRM, Tenant.history,Instance.history,
+	//	return true;
+	//}
 
-	if (CreateOptions == (FILE_SYNCHRONOUS_IO_NONALERT | FILE_OPEN_FOR_BACKUP_INTENT)) {
-		//ObjectName: \??\D:\,
-		return true;
-	}
-
-
+	//if (CreateOptions == (FILE_SYNCHRONOUS_IO_NONALERT | FILE_OPEN_FOR_BACKUP_INTENT)) {
+	//	//ObjectName: \??\D:\,
+	//	return true;
+	//}
 
 
 	// for match str will be ingored
@@ -178,20 +181,21 @@ bool pf::Filter_Out_By_Params_NtOpenFile(ACCESS_MASK DesiredAccess, POBJECT_ATTR
 		return true;
 	}
 
-	// special case
-	if (OpenOptions == FILE_OPEN_REPARSE_POINT) {
-		return false;
-	}
+	// GetFileSecurityW will call here
+	//// special case
+	//if (OpenOptions == FILE_OPEN_REPARSE_POINT) {
+	//	return true;
+	//}
 
 	// folder will be ingored
-	if (OpenOptions & FILE_DIRECTORY_FILE) {
-		return true;
-	}
+	//if (OpenOptions & FILE_DIRECTORY_FILE) {
+	//	return true;
+	//}
 
-	if (!(OpenOptions & FILE_NON_DIRECTORY_FILE)) {
-		// no this, is not a file 
-		return true;
-	}
+	//if (!(OpenOptions & FILE_NON_DIRECTORY_FILE)) {
+	//	// no this, is not a file 
+	//	return true;
+	//}
 
 	// for match str will be ingored
 	if (is_matched_str_ObjectAttributes(ObjectAttributes)) {

@@ -46,3 +46,8 @@ void shell_api_test();
 // network api
 void query_address_by_name(const string& name);
 void query_host_name();
+
+
+// gdiplus
+void process_picture_gray(const std::string& in, const std::string& out);
+void process_picture_gray(const std::string& in, const std::string& out, int operation, int op_param_a, float op_param_b);

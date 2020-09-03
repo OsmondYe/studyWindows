@@ -6,6 +6,11 @@
 #include "CTraditionDialog.h"
 #include "afxdialogex.h"
 
+#include <gdiplus.h>
+#pragma comment(lib,"gdiplus.lib")
+
+
+
 
 // CTraditionDialog dialog
 
@@ -43,6 +48,7 @@ ON_BN_CLICKED(IDC_BUTTON4, &CTraditionDialog::OnBnClickedButton4)
 ON_WM_HOTKEY()
 ON_BN_CLICKED(IDC_BUTTON_HASHKEY_STUDY, &CTraditionDialog::OnBnClickedButtonHashkeyStudy)
 ON_BN_CLICKED(IDC_BTN_AUTOINC, &CTraditionDialog::OnBnClickedBtnAutoinc)
+ON_BN_CLICKED(IDC_PIC_OP, &CTraditionDialog::OnBnClickedPicOp)
 END_MESSAGE_MAP()
 
 
@@ -296,4 +302,86 @@ void CTraditionDialog::OnBnClickedBtnAutoinc()
 	str.Format(L"cur:%d", gCounter++);
 	pW->SetWindowTextW(str);
 	// TODO: Add your control notification handler code here
+}
+namespace{
+	using namespace Gdiplus;
+int GetEncoderClsid(const WCHAR * format, CLSID * pClsid) {
+	UINT  num = 0;          // number of image encoders
+	UINT  size = 0;         // size of the image encoder array in bytes
+
+	ImageCodecInfo* pImageCodecInfo = NULL;
+
+	GetImageEncodersSize(&num, &size);
+	if (size == 0)
+		return -1;  // Failure
+
+	pImageCodecInfo = (ImageCodecInfo*)(malloc(size));
+	if (pImageCodecInfo == NULL)
+		return -1;  // Failure
+
+	GetImageEncoders(num, size, pImageCodecInfo);
+
+	for (UINT j = 0; j < num; ++j)
+	{
+		if (wcscmp(pImageCodecInfo[j].MimeType, format) == 0)
+		{
+			*pClsid = pImageCodecInfo[j].Clsid;
+			free(pImageCodecInfo);
+			return j;  // Success
+		}
+	}
+
+	free(pImageCodecInfo);
+	return -1;  // Failure
+}
+
+}
+ULONG_PTR gGidplusToken;
+Gdiplus::GdiplusStartupInput gGdipulsInput;
+
+
+
+
+// using GDI+ to gray a picture
+void CTraditionDialog::OnBnClickedPicOp()
+{
+	CStringW pic_path = LR"_(C:\Users\oye\Desktop\pic_test\Capture.jpg)_";
+	CStringW pic_path_out = LR"_(C:\Users\oye\Desktop\pic_test\cap_out)_";
+	CTime t = CTime::GetCurrentTime();
+	
+	pic_path_out.AppendFormat(L"_%d_%d_%d.jpg", t.GetHour(), t.GetMinute(), t.GetSecond());
+
+	// init gdi++
+	Gdiplus::GdiplusStartup(&gGidplusToken, &gGdipulsInput, NULL);
+
+	Gdiplus::Bitmap bp(pic_path);
+
+	int w = bp.GetWidth();
+	int h = bp.GetHeight();
+
+	// using algo to transform
+	//for(int r=0;r<=255;r++)
+	//for(int g=0;g<=255;g++)
+	//for(int b=0;b<=255;b++)
+
+	for(int i=0;i<=w;i++)
+		for (int j = 0; j <= h; j++) {
+			Gdiplus::Color c;
+			bp.GetPixel(i, j, &c);
+
+			int r = c.GetR();
+			int g = c.GetG();
+			int b = c.GetB();
+			// transfrom
+			int x = (r + g + b)/3;
+
+			//Gdiplus::Color n(x,x,x);
+			Gdiplus::Color n(x,x,x);
+
+			bp.SetPixel(i, j, n);
+		}
+	// write to output file
+	CLSID bmpClsID;
+	GetEncoderClsid(L"image/jpeg", &bmpClsID);
+	bp.Save(pic_path_out, &bmpClsID);
 }

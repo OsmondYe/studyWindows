@@ -23,3 +23,5 @@ void debug_param_ntopenfile(
 void debug_string(const wchar_t* str);
 
 void debug_string_with_NTSTATUS(const wchar_t* str, NTSTATUS status);
+
+void debug_string_with_LastError(const wchar_t* str, DWORD lasterror);

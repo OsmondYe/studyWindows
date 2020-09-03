@@ -38,14 +38,24 @@ namespace {
 		//	s << endl;
 		//}
 		//s << flush;
+		wstring log_full;
 
+		// add some common attributes,before write log body
+		{
+			DWORD tid=::GetCurrentThreadId();
+			log_full += L"tid=";
+			log_full += std::to_wstring(tid);
+			log_full += L":\t";
+		}
+
+
+		log_full += log;
+		if (log_full.back() != L'\n') {
+			log_full.push_back(L'\n');
+		}
 
 		if (bUsingOutputDebugString) {
-			auto l = log;
-			if (l.back() != L'\n') {
-				l.push_back(L'\n');
-			}
-			::OutputDebugStringW(l.c_str());
+			::OutputDebugStringW(log_full.c_str());
 		}
 
 		
@@ -273,22 +283,22 @@ inline wstring parseShareAccess(ULONG ShareAccess) {
 
 inline wstring parseCreateDispositon(ULONG CreateDispositon) {
 	wstring rt;
-	if (CreateDispositon & FILE_SUPERSEDE) {
+	if (CreateDispositon == FILE_SUPERSEDE) {
 		rt += L"FILE_SUPERSEDE | ";
 	}
-	if (CreateDispositon & FILE_CREATE) {
+	else if (CreateDispositon == FILE_CREATE) {
 		rt += L"FILE_CREATE | ";
 	}
-	if (CreateDispositon & FILE_OPEN) {
+	else if (CreateDispositon == FILE_OPEN) {
 		rt += L"FILE_OPEN | ";
 	}
-	if (CreateDispositon & FILE_OPEN_IF) {
+	else if (CreateDispositon == FILE_OPEN_IF) {
 		rt += L"FILE_OPEN_IF | ";
 	}
-	if (CreateDispositon & FILE_OVERWRITE) {
+	else if (CreateDispositon == FILE_OVERWRITE) {
 		rt += L"FILE_OVERWRITE | ";
 	}
-	if (CreateDispositon & FILE_OVERWRITE_IF) {
+	else if (CreateDispositon == FILE_OVERWRITE_IF) {
 		rt += L"FILE_OVERWRITE_IF | ";
 	}
 	
@@ -438,6 +448,20 @@ void debug_string_with_NTSTATUS(const wchar_t* str, NTSTATUS status)
 	
 	msg += L",status=0x";
 	wss << hex << status;
+	msg += wss.str();
+	msg += L"\n";
+
+	WriteLog(msg);
+}
+
+void debug_string_with_LastError(const wchar_t* str, DWORD lasterror)
+{
+	wstring msg = str;
+	wstringstream wss;
+
+	msg += L", last_error=0x";
+	wss << hex << lasterror;
+
 	msg += wss.str();
 	msg += L"\n";
 
