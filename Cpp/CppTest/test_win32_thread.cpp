@@ -6,6 +6,43 @@
 //	Synchronization
 //
 
+DWORD ginterlockedInt = 3;
+
+TEST(Win32, InterlockedXXX) {
+
+	auto x=::GetDriveTypeW(L"c:\\windows\\");
+
+	// 为什么叫 Exchange  ->  新旧会交换,   新值= 旧+5,  返回旧值
+	auto old=::InterlockedExchangeAdd(&ginterlockedInt, 5);
+
+	/*
+	原子指令 lock,   xadd (先交换,再相加)
+		lock xadd   dword ptr [rcx],eax    ; 
+			rcx  :  address of ginterlockedInt
+			eax  :  5;
+		after:
+			eax = (old) ginterlockedInt
+			rcx = eax + 5;
+	此函数会返回ginterlockedInt 原先的老值
+	*/	
+	EXPECT_EQ(old, 3);
+
+	old = ::InterlockedExchangeAdd(&ginterlockedInt, 10);
+
+	EXPECT_EQ(old, 8);
+	EXPECT_EQ(ginterlockedInt, 18);
+
+	cout << ginterlockedInt;
+
+
+	InterlockedIncrement(&ginterlockedInt);
+	InterlockedDecrement(&ginterlockedInt);
+
+
+}
+
+
+
 TEST(Win32, Thread_CriticalSection) {
 	/*	用户级别线程同步工具
 		经我测试，同一个线程时可以冲入的

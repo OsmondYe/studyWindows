@@ -1,6 +1,6 @@
 #ifndef PCH_H
 #define PCH_H
-
+#define  _CRT_SECURE_NO_WARNINGS 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <shellapi.h>
@@ -51,3 +51,6 @@ void query_host_name();
 // gdiplus
 void process_picture_gray(const std::string& in, const std::string& out);
 void process_picture_gray(const std::string& in, const std::string& out, int operation, int op_param_a, float op_param_b);
+
+// ocr
+void process_ocr(const std::string& src_in, std::string& rt_out);

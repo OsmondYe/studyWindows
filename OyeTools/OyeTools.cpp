@@ -8,10 +8,11 @@
 
 
 
+
 const int version = 0x0001'0102;
 void print_version() {
 	char buf[255] = { 0 };
-	sprintf_s(buf, "Version %d.%02d.%04d Built on %s", 1, 0, 0102, "2020-04-01");
+	sprintf_s(buf, "Version %d.%02d.%04d Built on %s", 1, 0, 0102, "2020-09-04");
 	cout << buf << endl;
 }
 
@@ -50,6 +51,9 @@ void config_parser(cmdline::parser& gp) {
 	gp.add<int>("pic_op", '\0', "pic operation, 0,1,2,3,4,5,6,7,8,9",false);
 	gp.add<int>("pic_op_p_a", '\0', "pic operation param A,int", false);
 	gp.add<float>("pic_op_p_b", '\0', "pic operation param B,int", false);
+
+	// for ocr
+	gp.add("ocr", 'o', "optical char regocgnize -- src [src]");
 
 	
 
@@ -119,6 +123,12 @@ int main(int argc, char* argv[])
 			pic_param_b = gp.get<float>("pic_op_p_b");
 		}
 		process_picture_gray(src, dst, pic_op, pic_param_a, pic_param_b);
+	}
+	else if (gp.exist("ocr")) {
+		string src = gp.get<string>("src");
+		string out;
+		process_ocr(src, out);
+		cout << out;
 	}
 	else {
 		// by default, failed to parge,	

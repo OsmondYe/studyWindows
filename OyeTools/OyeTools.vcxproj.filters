@@ -45,12 +45,18 @@
     <ClCompile Include="gdiplus_api.cpp">
       <Filter>win32api</Filter>
     </ClCompile>
+    <ClCompile Include="ocr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="cmdline.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ocr_api.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
