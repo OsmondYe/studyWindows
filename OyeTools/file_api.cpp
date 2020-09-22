@@ -27,11 +27,11 @@ void create_file(wstring path) {
 						FILE_SHARE_DELETE;
 	SECURITY_ATTRIBUTES sa = { sizeof(SECURITY_ATTRIBUTES),NULL,TRUE };  //allow inheritance by child process
 	DWORD dwCreateDisposition = 
-		CREATE_NEW | 
-		CREATE_ALWAYS | 
+		CREATE_NEW |				// error if exsit
+		CREATE_ALWAYS |				// overwrite if exist
 		OPEN_EXISTING | 
 		OPEN_ALWAYS | 
-		TRUNCATE_EXISTING;
+		TRUNCATE_EXISTING;			// not exsit -> error,    exsit -> truncate 
 	DWORD dwFlagAndAttributes =
 		FILE_FLAG_NO_BUFFERING |			// 驱动不要做缓存
 		FILE_FLAG_SEQUENTIAL_SCAN |			// 给驱动缓存暗示，顺序读取，所以会多读一些

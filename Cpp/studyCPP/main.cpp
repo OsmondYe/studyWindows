@@ -28,7 +28,6 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "Sort.Quick";
 	testing::FLAGS_gtest_filter = "DSLinear.MAX_SUB_ARRAY";
 	testing::FLAGS_gtest_filter = "DSLinear.Vector_Remove_duplicate_Elem";
-	testing::FLAGS_gtest_filter = "Map.Hash";
 	testing::FLAGS_gtest_filter = "AlgoLinear.LeetCode*";
 	testing::FLAGS_gtest_filter = "AlgoHash.LeetCode";
 	testing::FLAGS_gtest_filter = "AlgoStr.LeetCode";
@@ -42,6 +41,7 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "Memory.UniquePtr_Example1";
 	testing::FLAGS_gtest_filter = "Memory.WeakPtr";
 	testing::FLAGS_gtest_filter = "String.*";
+	testing::FLAGS_gtest_filter = "Map.*";
 
 	return RUN_ALL_TESTS();
 
