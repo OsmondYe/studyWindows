@@ -112,9 +112,60 @@ TEST(Container, List) {
 	
 	ll3.splice(++ll3.begin(), ll2); // after call, ll2 is null
 
+	
 
 	output(ll3);
 }
+
+class LRUCache {
+	using key_type = int;
+	using value_type = int;
+	using node = pair<key_type, value_type>;
+private:
+	int _capacity;
+	list < node* > _storage;  // max is capacity; 
+	unordered_map<key_type, node*> _quick_ref;
+
+public:
+
+	LRUCache(int capacity) {
+		_capacity = capacity; // assumed validation
+		_quick_ref.reserve(_capacity);
+	}
+
+	int get(int key) {
+		auto it = _quick_ref.find(key);
+		if (it!=_quick_ref.end()) {
+			// todo: add ref;
+			return it->second->second;
+		}
+		else {
+			return -1;
+		}
+	}
+
+	void put(int key, int value) {
+		auto it = _quick_ref.find(key);
+		if (it != _quick_ref.end()) {			
+			it->second->second=value;
+			return;
+		}
+		// check capacity;
+		if (_storage.size() < _capacity) {
+			node* n = new node(key, value);
+			_storage.push_front(n);
+			// put into quick_ref
+			_quick_ref[key] = n; 
+			// todo: add ref;
+		}
+		else {
+			// evict
+		}
+	}
+};
+
+
+
 
 // depend on algorithm  make_heap, push_heap, pop_heap
 TEST(Container, PriorityQueue) {
