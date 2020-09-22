@@ -102,69 +102,110 @@ TEST(Container, Vector) {
 
 
 TEST(Container, List) {
-	list<int> ll({ 1,1,2,2,3,3,3,3,4,5,5,5,5,5,6 });
-	output(ll);
-	auto ll2 = ll;
-	ll2.unique();
-	output(ll);
+	// basic
+	{
+		list<int> ll({ 1,1,2,2,3,3,3,3,4,5,5,5,5,5,6 });
+		output(ll);
+		auto ll2 = ll;
+		ll2.unique();
+		output(ll);
 
-	auto ll3 = ll2;
-	
-	ll3.splice(++ll3.begin(), ll2); // after call, ll2 is null
+		auto ll3 = ll2;
 
-	
+		ll3.splice(++ll3.begin(), ll2); // after call, ll2 is null
+		output(ll3);
+	}
+	// unique
+	{
+		list<int> ll({ 1,1,2,2,3,3,3,3,4,5,5,5,5,5,6 });
+		cout << "after unique:" << endl;
+		ll.unique();
+		output(ll);
+	}
+	// splice
+	{
+		list<int> l({ 1,2,3 });
+		list<int> r({ 4,5,6 });
 
-	output(ll3);
+		l.splice(l.end(), r);  // elem in r will be moved to l at l.end(),
+		EXPECT_TRUE(0 == r.size());  // r is empty now
+
+		// move 4 to l.head;
+		auto it = std::find(l.begin(), l.end(),4);
+
+		l.splice(l.begin(),l,it);  // at l.begin()  insert it
+
+		output(l);
+	}
 }
 
 class LRUCache {
 	using key_type = int;
 	using value_type = int;
 	using node = pair<key_type, value_type>;
+	using node_iterator = list<node>::iterator;
 private:
 	int _capacity;
-	list < node* > _storage;  // max is capacity; 
-	unordered_map<key_type, node*> _quick_ref;
+	list < node > _storage;  // max is capacity; 
+	unordered_map<key_type, node_iterator> _cache_map;
 
 public:
-
 	LRUCache(int capacity) {
 		_capacity = capacity; // assumed validation
-		_quick_ref.reserve(_capacity);
+		_cache_map.reserve(_capacity);
 	}
 
 	int get(int key) {
-		auto it = _quick_ref.find(key);
-		if (it!=_quick_ref.end()) {
-			// todo: add ref;
-			return it->second->second;
-		}
-		else {
+		auto it = _cache_map.find(key);
+		if (it == _cache_map.end()) {
 			return -1;
 		}
+		auto rt = it->second->second;
+		// todo: add ref;
+		_storage.splice(_storage.begin(), _storage, it->second);
+		return rt;
+
 	}
 
 	void put(int key, int value) {
-		auto it = _quick_ref.find(key);
-		if (it != _quick_ref.end()) {			
-			it->second->second=value;
+		auto it = _cache_map.find(key);
+		if (it != _cache_map.end()) {
+			it->second->second = value;
+			_storage.splice(_storage.begin(), _storage, it->second);
 			return;
 		}
 		// check capacity;
 		if (_storage.size() < _capacity) {
-			node* n = new node(key, value);
-			_storage.push_front(n);
-			// put into quick_ref
-			_quick_ref[key] = n; 
-			// todo: add ref;
+			// put into storage
+			_storage.push_front({ key,value });
+			// put into cache
+			_cache_map[key] = _storage.begin();
 		}
 		else {
-			// evict
+			// evict, last
+			auto k_in_cahce = _storage.back().first;
+			_storage.pop_back();
+			_cache_map.erase(k_in_cahce);
+			///////////////////////
+			// put into storage
+			_storage.push_front({ key,value });
+			// put into cache
+			_cache_map[key] = _storage.begin();
 		}
 	}
 };
 
+TEST(Container, ListLRU) {
+	LRUCache c(2);
 
+	c.put(2,1);
+	c.put(1,1);
+	c.put(2,3);
+	c.put(4,1);
+	auto x = c.get(1);
+	auto y = c.get(2);
+
+}
 
 
 // depend on algorithm  make_heap, push_heap, pop_heap
