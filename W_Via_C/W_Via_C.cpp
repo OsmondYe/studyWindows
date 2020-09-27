@@ -87,9 +87,10 @@ void Dlg_OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify) {
 INT_PTR WINAPI Dlg_Proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
     switch (uMsg) {
+    // for system cmd
         chHANDLE_DLGMSG(hwnd, WM_INITDIALOG, Dlg_OnInitDialog);
         chHANDLE_DLGMSG(hwnd, WM_COMMAND, Dlg_OnCommand);
-
+    // for app self cmd
     case ESM_POKECODEANDLOOKUP:
         SetDlgItemInt(hwnd, IDC_ERRORCODE, (UINT)wParam, FALSE);
         FORWARD_WM_COMMAND(hwnd, IDOK, GetDlgItem(hwnd, IDOK), BN_CLICKED,
@@ -113,14 +114,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     HWND hwnd = FindWindow(TEXT("#32770"), TEXT("Error Show"));
     if (IsWindow(hwnd)) {
         // An instance is already running, activate it and send it the new #
-        SendMessage(hwnd, ESM_POKECODEANDLOOKUP, _ttoi(lpCmdLine), 0);
+        SendMessage(hwnd, ESM_POKECODEANDLOOKUP, _wtoi(lpCmdLine), 0);
     }
     else {
-        DialogBoxParam(hInstance, MAKEINTRESOURCE(IDD_ERRORSHOW),
-            NULL, Dlg_Proc, _wtoi(lpCmdLine));
+        DialogBoxParamW(
+            hInstance,                              // exe instance
+            MAKEINTRESOURCE(IDD_ERRORSHOW),         // template 
+            NULL,                                   // no parent 
+            Dlg_Proc,                               // dlg_prog
+            _wtoi(lpCmdLine)                        // init param
+        );
     }
     return(0);
-
 }
 
 
