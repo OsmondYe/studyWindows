@@ -36,7 +36,7 @@ TEST(Shell32, PathAppend) {
 
 }
 
-
+// make sure path exist
 TEST(Shell32, CreateFolderMultiPart) {
 
 	wstring path = LR"_(D:\allTestFile\AutoRecovery\a\b\c\e)_";

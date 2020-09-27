@@ -384,13 +384,3 @@ TEST(String, IEqual) {
 	EXPECT_TRUE(rt);
 }
 
-
-
-TEST(String, TheNext) {
-	wstring m = LR"_(C:\Users\oye\AppData\Local\Microsoft\Office\OTele\winword.exe.db)_";
-	wstring s = L".db";
-
-	EXPECT_TRUE(std::equal(m.rbegin(), m.rbegin()+s.size(), s.rbegin(), s.rend(), [](wchar_t l, wchar_t r) {
-		return std::tolower(l) == std::tolower(r);
-		}));
-}
