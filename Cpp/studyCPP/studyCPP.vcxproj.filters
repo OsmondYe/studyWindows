@@ -46,6 +46,9 @@
     <Filter Include="Source Files\stl\algorithm">
       <UniqueIdentifier>{9bc485ea-b461-4258-9eda-9ce5f300de51}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\design_pattern">
+      <UniqueIdentifier>{459dfc1c-94c3-428b-b203-275b6cef8929}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -184,6 +187,15 @@
     </ClCompile>
     <ClCompile Include="algorithm.cpp">
       <Filter>Source Files\stl\algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="dp23_struactral.cpp">
+      <Filter>Source Files\design_pattern</Filter>
+    </ClCompile>
+    <ClCompile Include="dp23_creational.cpp">
+      <Filter>Source Files\design_pattern</Filter>
+    </ClCompile>
+    <ClCompile Include="dp23_behavioral.cpp">
+      <Filter>Source Files\design_pattern</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

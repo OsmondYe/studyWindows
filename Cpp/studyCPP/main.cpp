@@ -39,10 +39,11 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "Idiom.MFCSafeCallClassFunction";
 	testing::FLAGS_gtest_filter = "Memory.UniquePtr_Example1";
 	testing::FLAGS_gtest_filter = "Memory.WeakPtr";
-	testing::FLAGS_gtest_filter = "String.*";
 	testing::FLAGS_gtest_filter = "Map.*";
 	testing::FLAGS_gtest_filter = "Container.Vector";
 	testing::FLAGS_gtest_filter = "Container.List*";
+	testing::FLAGS_gtest_filter = "String.*";
+	testing::FLAGS_gtest_filter = "dp23.*";
 
 	return RUN_ALL_TESTS();
 

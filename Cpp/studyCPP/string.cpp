@@ -384,3 +384,10 @@ TEST(String, IEqual) {
 	EXPECT_TRUE(rt);
 }
 
+TEST(String, Digit) {
+	char p[] = "0x12";
+	cerr <<"0x12"<<" "<< std::atoi("0x12") <<", since atoi can not support 0x"<< endl;
+
+
+}
+

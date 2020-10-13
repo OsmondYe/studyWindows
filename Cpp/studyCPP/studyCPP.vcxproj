@@ -185,6 +185,9 @@
     <ClCompile Include="chrono.cpp" />
     <ClCompile Include="concurrency.cpp" />
     <ClCompile Include="container.cpp" />
+    <ClCompile Include="dp23_behavioral.cpp" />
+    <ClCompile Include="dp23_creational.cpp" />
+    <ClCompile Include="dp23_struactral.cpp" />
     <ClCompile Include="dsbase.cpp" />
     <ClCompile Include="ds-hash.cpp" />
     <ClCompile Include="ds-linear.cpp" />
