@@ -59,14 +59,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SKYDRM_EXTERNAL)\gtest\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdLib\gtest\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <SupportJustMyCode>false</SupportJustMyCode>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SKYDRM_EXTERNAL)\gtest\lib\$(Platform)-$(Configuration)\mtd;$(SKYDRM_EXTERNAL)\gtest\lib\$(Platform)-$(Configuration);$(SKYDRM_EXTERNAL)\doom_core\build\build.msvc\$(Platform)_$(Configuration);$(SKYDRM_EXTERNAL)\doom_sdk\build\build.msvc\$(Platform)_$(Configuration);</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdLib\gtest\lib\$(Platform)-$(Configuration)\mtd;$(SolutionDir)3rdLib\gtest\lib\$(Platform)-$(Configuration)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Shlwapi.lib;Dbghelp.lib;gtestd.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
