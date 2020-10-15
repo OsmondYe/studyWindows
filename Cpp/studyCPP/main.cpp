@@ -44,6 +44,9 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "Container.List*";
 	testing::FLAGS_gtest_filter = "String.*";
 	testing::FLAGS_gtest_filter = "dp23.*";
+	testing::FLAGS_gtest_filter = "Stream.Cin";
+
+
 
 	return RUN_ALL_TESTS();
 

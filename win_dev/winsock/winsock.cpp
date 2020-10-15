@@ -172,10 +172,9 @@ unsigned _stdcall client(void*) {
     
     // get form console
     while (1) {
+        cin.clear();
         string buf;       
-        while (cin >> buf) {
-
-        }
+        std::getline(cin, buf);
         if (buf == "quit") {
             printf("client: quit\n");
             break;

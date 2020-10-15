@@ -427,3 +427,43 @@ TEST(Stream, C11above) {
 	tm* nowTM = localtime(&t);
 	cout << put_time(nowTM, "date: %x\ntime: %X\n") << endl;
 }
+
+
+
+
+TEST(Stream, Cin) {
+
+	while (1) {
+		cout << "press c to contine\n";
+		char c = cin.get();
+		if (c != 'c') {
+			continue;
+		}
+		else {
+			break;
+		}
+	}
+	cout << "good" << endl;
+
+	// cin >>   cin.get ,  cin.getline
+
+	int a;
+	float b;
+	string c;   // only receive the single word which is seperated by ' ', tab, 
+	// 12  34.56  hello world
+	//cin >> a >> b >> c;
+	// 12 34.56 hello   (world will be ingored,)
+	//cout << a <<" "<< b << " " << c;
+
+
+	// receive a line 
+
+	string line;	
+	std::getline(cin, line, '\0');
+
+	cout << line << endl;
+
+	
+
+
+}
