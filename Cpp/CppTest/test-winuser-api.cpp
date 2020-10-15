@@ -14,14 +14,14 @@ BOOL CALLBACK Callback_EnumTopWnd(HWND wnd, LPARAM obj) {
 }
 
 void extractIcon(const std::set<HWND>& hs) {
-	for (auto h : hs) {
-			HICON icon = (HICON)::GetClassLongW(h, GCLP_HICON);
-			Gdiplus::Bitmap bm(icon);
-			CLSID png;
-			GetEncoderClsid(L"image/png", &png);
-			wstring name = std::to_wstring((int)h) + L".png";
-			bm.Save(name.c_str(), &png);
-	}
+	//for (auto h : hs) {
+	//		HICON icon = (HICON)::GetClassLongW(h, GCLP_HICON);
+	//		Gdiplus::Bitmap bm(icon);
+	//		CLSID png;
+	//		GetEncoderClsid(L"image/png", &png);
+	//		wstring name = std::to_wstring((int)h) + L".png";
+	//		bm.Save(name.c_str(), &png);
+	//}
 }
 
 TEST(User32, DISABLE_RetriveWindowIcon) {

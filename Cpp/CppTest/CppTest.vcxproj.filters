@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\ATL">
-      <UniqueIdentifier>{bde26370-5c14-454f-8d3e-9880a4de5668}</UniqueIdentifier>
-    </Filter>
     <Filter Include="misc">
       <UniqueIdentifier>{8b0c66ba-f64b-49aa-bef9-f2a0319f9483}</UniqueIdentifier>
     </Filter>
@@ -28,9 +25,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Monitor.h">
@@ -49,9 +43,6 @@
     </ClCompile>
     <ClCompile Include="test-utils.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="test-atl-api.cpp">
-      <Filter>Source Files\ATL</Filter>
     </ClCompile>
     <ClCompile Include="test_win32_thread.cpp">
       <Filter>Source Files</Filter>
@@ -74,8 +65,8 @@
     <ClCompile Include="test_winshell_api.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="rms-login.py" />
+    <ClCompile Include="test_win32_network.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

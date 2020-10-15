@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 
 // chain of responsibility
 namespace chainofresponsibility {
@@ -10,27 +10,20 @@ namespace chainofresponsibility {
 	};
 
     class AbstractHandler : public Handler {
-        /**
-         * @var Handler
-         */
     private:
         Handler* next_handler_;
-
     public:
-        AbstractHandler() : next_handler_(nullptr) {
-        }
+        AbstractHandler() : next_handler_(nullptr) {}
+
         Handler* SetNext(Handler* handler) override {
             this->next_handler_ = handler;
-            // Returning a handler from here will let us link handlers in a convenient
-            // way like this:
-            // $monkey->setNext($squirrel)->setNext($dog);
             return handler;
         }
+        // 基类默认值接传给下一个
         std::string Handle(std::string request) override {
             if (this->next_handler_) {
                 return this->next_handler_->Handle(request);
             }
-
             return {};
         }
     };
@@ -113,18 +106,15 @@ TEST(dp23, chainofresponsibility) {
 namespace command {
     class Command {
     public:
-        virtual ~Command() {
-        }
+        virtual ~Command() {}
         virtual void Execute() const = 0;
     };
 
     class SimpleCommand : public Command {
     private:
         std::string pay_load_;
-
     public:
-        explicit SimpleCommand(std::string pay_load) : pay_load_(pay_load) {
-        }
+        explicit SimpleCommand(std::string pay_load) : pay_load_(pay_load) {}
         void Execute() const override {
             std::cout << "SimpleCommand: See, I can do simple things like printing (" << this->pay_load_ << ")\n";
         }
@@ -141,9 +131,6 @@ namespace command {
     };
 
     class ComplexCommand : public Command {
-        /**
-         * @var Receiver
-         */
     private:
         Receiver* receiver_;
         /**
@@ -169,18 +156,9 @@ namespace command {
     };
 
     class Invoker {
-        /**
-         * @var Command
-         */
     private:
         Command* on_start_;
-        /**
-         * @var Command
-         */
         Command* on_finish_;
-        /**
-         * Initialize commands.
-         */
     public:
         ~Invoker() {
             delete on_start_;
@@ -209,10 +187,6 @@ namespace command {
             }
         }
     };
-
-
-
-
 }
 
 TEST(dp23, command) {
