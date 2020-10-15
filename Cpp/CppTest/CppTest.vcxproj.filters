@@ -43,7 +43,7 @@
     <ClCompile Include="test_winshell_api.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="test_win32_network.cpp">
+    <ClCompile Include="test_win_process.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
