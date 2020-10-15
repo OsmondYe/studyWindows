@@ -81,13 +81,12 @@ void __stdcall  simple_echo_service(SOCKET s) {
     // 发送接受数据
     int bytesSent;
     int bytesRecv = SOCKET_ERROR;
-    char sendbuf[32] = "Server: Sending Data.";
     char recvbuf[32] = "";
 
     bytesRecv = recv(s, recvbuf, 32, 0);
     printf("Server Recv: %s\n", recvbuf);
 
-    bytesSent = send(s, sendbuf, strlen(sendbuf), 0);
+    bytesSent = send(s, recvbuf, strlen(recvbuf), 0);
     printf("Server Sent: %s\n", recvbuf);
 }
 
@@ -142,11 +141,10 @@ public:
         // 发送并接收数据.
         int bytesSent;
         int bytesRecv = SOCKET_ERROR;
-        char sendbuf[32] = "Client: Sending data.";
         char recvbuf[32] = "";
 
         bytesSent = send(client_, buf.c_str(), buf.length(), 0);
-        printf("Client Sent: %s\n", sendbuf);
+        printf("Client Sent: %s\n", buf.c_str());
 
         while (bytesRecv == SOCKET_ERROR) {
             bytesRecv = recv(client_, recvbuf, 32, 0);
