@@ -1,6 +1,4 @@
 #include "stdafx.h"
-#include "oye_handy_tools.hpp"
-
 #include <shlwapi.h>
 #include <shlobj_core.h>
 

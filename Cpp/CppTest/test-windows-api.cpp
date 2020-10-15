@@ -1,7 +1,6 @@
 ﻿#include "stdafx.h"
 #include <winternl.h>
 #include <shlobj_core.h>
-#include "oye_handy_tools.hpp"
 //use DISABLED_ prefix to filter out 
 
 #pragma comment(lib, "ntdll.lib")

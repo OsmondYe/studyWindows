@@ -1,13 +1,8 @@
 ﻿#include "stdafx.h"
-#include "Monitor.h"
 #include <chrono>
 #include <ctime>
 #include <locale>
 #include <regex>
-
-#include "oye_handy_tools.hpp"
-#include "oye_str.hpp"
-
 
 
 //use DISABLED_ prefix to filter out 
@@ -32,26 +27,3 @@ void DeleteAllFiles(std::wstring path)
 	}
 }
 
-
-TEST(Utils, Process) {
-	Module m;
-	cout << m.GetPathA()<<endl;
-	wcout << m.GetPathW() << endl;
-	cout << m.GetNameA() << endl;
-	wcout << m.GetNameW() << endl;
-	
-	Module n(::LoadLibrary(L"kernel32.dll"));
-	cout << n.GetPathA() << endl;
-	wcout << n.GetPathW() << endl;
-	cout << n.GetNameA() << endl;
-	wcout << n.GetNameW() << endl;
-
-
-	string l{ "hello" };
-
-	string r{ "hello" };
-
-	auto i = (l.compare(r) == 0);
-	cout << i;
-
-}

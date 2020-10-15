@@ -9,15 +9,8 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="misc">
       <UniqueIdentifier>{8b0c66ba-f64b-49aa-bef9-f2a0319f9483}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="oye_tools">
-      <UniqueIdentifier>{d44249ad-364f-4398-96e8-98b9880e24db}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -26,15 +19,6 @@
     </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Monitor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="oye_handy_tools.hpp">
-      <Filter>oye_tools</Filter>
-    </ClInclude>
-    <ClInclude Include="oye_str.hpp">
-      <Filter>oye_tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -48,12 +32,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
-      <Filter>misc</Filter>
-    </ClCompile>
-    <ClCompile Include="Monitor.cpp">
-      <Filter>misc</Filter>
-    </ClCompile>
-    <ClCompile Include="utils.cpp">
       <Filter>misc</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">

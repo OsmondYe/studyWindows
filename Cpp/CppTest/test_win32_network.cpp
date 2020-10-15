@@ -1,9 +1,5 @@
 ﻿#include "stdafx.h"
 
-
-
-
-
 #pragma comment(lib, "ws2_32.lib")
 
 
@@ -11,6 +7,8 @@
 //typedef unsigned (__stdcall* _beginthreadex_proc_type)(void*);
 
 unsigned _stdcall server(void*) {
+
+    printf("Waiting for a client to connect...\n");
     // 初始化
     WSADATA wsaData;
     int iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
@@ -128,7 +126,7 @@ unsigned _stdcall client(void*) {
 	return 0;
 }
 
-TEST(Ws232, Basic) {
+TEST(Winsock2, Basic) {
 
 	HANDLE h[2];
 
