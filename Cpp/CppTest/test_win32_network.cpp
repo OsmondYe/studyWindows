@@ -143,6 +143,10 @@ TEST(Winsock2, Basic) {
 		);
 		h[0] = th;
 	}
+
+    //
+    ::Sleep(5 * 1000);
+
 	// client
 	{
 		unsigned int tid = NULL;
