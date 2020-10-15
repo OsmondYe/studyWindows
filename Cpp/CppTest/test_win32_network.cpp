@@ -8,11 +8,11 @@
 
 unsigned _stdcall server(void*) {
 
-    printf("Waiting for a client to connect...\n");
     // 初始化
     WSADATA wsaData;
     int iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
     if (iResult != NO_ERROR)
+
         printf("Error at WSAStartup()\n");
 
     // 建立socket
