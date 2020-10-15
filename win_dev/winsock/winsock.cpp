@@ -57,7 +57,7 @@ public:
     }
 
     void serving(service_fun callback) {
-        printf("Waiting for a client to connect...\n");
+        printf("Server: Waiting for a client to connect...\n");
         
         
         SOCKET AcceptSocket;
@@ -105,54 +105,85 @@ unsigned _stdcall server(void*) {
     return 0;
 }
 
-unsigned _stdcall client(void*) {
 
+
+class Client {
+private:
+    string ip_;
+    int port_;
+    SOCKET client_;
+
+public:
+    Client(const char* ip, int port) : ip_(ip), port_(port), client_(NULL) {}
+
+    bool init() {
+        // create socket
+        client_ = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+
+        if (client_ == INVALID_SOCKET) {
+            printf("Error at socket(): %ld\n", WSAGetLastError());
+            return 0;
+        }
+
+        // 连接到服务器.
+        sockaddr_in clientService;
+
+        clientService.sin_family = AF_INET;
+        clientService.sin_addr.s_addr = inet_addr(ip_.c_str());
+        clientService.sin_port = htons(port_);
+
+        if (connect(client_, (SOCKADDR*)&clientService, sizeof(clientService)) == SOCKET_ERROR) {
+            printf("Failed to connect.\n");
+            return 0;
+        }
+    }
+
+    bool doing(string& buf) {
+        // 发送并接收数据.
+        int bytesSent;
+        int bytesRecv = SOCKET_ERROR;
+        char sendbuf[32] = "Client: Sending data.";
+        char recvbuf[32] = "";
+
+        bytesSent = send(client_, buf.c_str(), buf.length(), 0);
+        printf("Client Sent: %s\n", sendbuf);
+
+        while (bytesRecv == SOCKET_ERROR) {
+            bytesRecv = recv(client_, recvbuf, 32, 0);
+            if (bytesRecv == 0 || bytesRecv == WSAECONNRESET) {
+                printf("Connection Closed.\n");
+                break;
+            }
+            if (bytesRecv < 0)
+                return 0;
+            printf("Client Recv: %s\n", recvbuf);
+        }
+    }
+
+};
+
+
+unsigned _stdcall client(void*) {
     // wait for semaphore can be used
     ::WaitForSingleObject(Global.hServer_Semaphore, INFINITE);
 
-    // 建立socket socket.
-    SOCKET client;
-    client = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    Client c("127.0.0.1", 27015);
+    c.init();
+    
+    // get form console
+    while (1) {
+        string buf;       
+        while (cin >> buf) {
 
-    if (client == INVALID_SOCKET) {
-        printf("Error at socket(): %ld\n", WSAGetLastError());
-        WSACleanup();
-        return 0;
-    }
-
-    // 连接到服务器.
-    sockaddr_in clientService;
-
-    clientService.sin_family = AF_INET;
-    clientService.sin_addr.s_addr = inet_addr("127.0.0.1");
-    clientService.sin_port = htons(27015);
-
-    if (connect(client, (SOCKADDR*)&clientService, sizeof(clientService)) == SOCKET_ERROR) {
-        printf("Failed to connect.\n");
-        WSACleanup();
-        return 0;
-    }
-
-    // 发送并接收数据.
-    int bytesSent;
-    int bytesRecv = SOCKET_ERROR;
-    char sendbuf[32] = "Client: Sending data.";
-    char recvbuf[32] = "";
-
-    bytesSent = send(client, sendbuf, strlen(sendbuf), 0);
-    printf("Bytes Sent: %ld\n", bytesSent);
-
-    while (bytesRecv == SOCKET_ERROR) {
-        bytesRecv = recv(client, recvbuf, 32, 0);
-        if (bytesRecv == 0 || bytesRecv == WSAECONNRESET) {
-            printf("Connection Closed.\n");
+        }
+        if (buf == "quit") {
+            printf("client: quit\n");
             break;
         }
-        if (bytesRecv < 0)
-            return 0;
-        printf("Bytes Recv: %ld\n", bytesRecv);
+        else {
+            c.doing(buf);
+        }
     }
-
 
     return 0;
 }
