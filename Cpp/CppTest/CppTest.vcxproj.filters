@@ -28,9 +28,6 @@
     <ClCompile Include="test-utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="test_win32_thread.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>misc</Filter>
     </ClCompile>
@@ -43,10 +40,19 @@
     <ClCompile Include="test_winshell_api.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="test_win_process.cpp">
+    <ClCompile Include="test_gdi.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="test_gdi.cpp">
+    <ClCompile Include="test_process.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test_thread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test_system.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test_internet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

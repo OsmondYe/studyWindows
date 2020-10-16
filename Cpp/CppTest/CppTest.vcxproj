@@ -109,9 +109,11 @@
     </ClCompile>
     <ClCompile Include="test-winuser-api.cpp" />
     <ClCompile Include="test_gdi.cpp" />
-    <ClCompile Include="test_win32_thread.cpp" />
+    <ClCompile Include="test_internet.cpp" />
+    <ClCompile Include="test_system.cpp" />
+    <ClCompile Include="test_thread.cpp" />
     <ClCompile Include="test_winshell_api.cpp" />
-    <ClCompile Include="test_win_process.cpp" />
+    <ClCompile Include="test_process.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
