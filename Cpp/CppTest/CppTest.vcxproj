@@ -108,6 +108,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="test-winuser-api.cpp" />
+    <ClCompile Include="test_gdi.cpp" />
     <ClCompile Include="test_win32_thread.cpp" />
     <ClCompile Include="test_winshell_api.cpp" />
     <ClCompile Include="test_win_process.cpp" />
