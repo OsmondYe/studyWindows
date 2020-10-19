@@ -95,6 +95,12 @@ TEST(Process, Terminate) {
 	DWORD dwRargetProcessId = 0000;
 	hTargetProcessHandle = ::OpenProcess(dwDesiredAccess, NULL, dwRargetProcessId);
 
-	::TerminateProcess(hTargetProcessHandle, 0);
+	::TerminateProcess(hTargetProcessHandle, 8);
+
+}
+
+
+TEST(Process, Exit) {
+	::ExitProcess(12);
 
 }
