@@ -34,7 +34,6 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "AlgoTree.LeetCode";
 	testing::FLAGS_gtest_filter = "Iterator.*";
 	testing::FLAGS_gtest_filter = "Template.*";
-	testing::FLAGS_gtest_filter = "Syntax.*";
 	testing::FLAGS_gtest_filter = "Regex.*";
 	testing::FLAGS_gtest_filter = "Idiom.MFCSafeCallClassFunction";
 	testing::FLAGS_gtest_filter = "Memory.UniquePtr_Example1";
@@ -45,6 +44,7 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "String.*";
 	testing::FLAGS_gtest_filter = "dp23.*";
 	testing::FLAGS_gtest_filter = "Stream.Cin";
+	testing::FLAGS_gtest_filter = "Syntax.MultiDerived";
 
 
 
