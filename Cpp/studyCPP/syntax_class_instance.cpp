@@ -48,7 +48,7 @@ TEST(Syntax, ClsCopyConsturctor) {
     
 }
 
-namespace multiderived {
+namespace multiple_inheritance {
     class if1 {
     public:
         virtual void f1() { cout << "if1 f1()\n"; }
@@ -83,8 +83,8 @@ namespace multiderived {
     };
 }
 
-TEST(Syntax, MultiDerived) {
-    using namespace multiderived;
+TEST(Syntax, MultiInheritance) {
+    using namespace multiple_inheritance;
     // if1_vt,x,y,z; if2_vt,x,y,z; x,y,z;    11 * 4 == 44;
     cout << "sizeof(base):" << sizeof(base) << endl;
 
