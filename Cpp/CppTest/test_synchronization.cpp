@@ -113,7 +113,7 @@ TEST(Synchronization, SRWLock) {
 	cout << "No lock delete api\n";
 }
 
-// user land 
+// ConditionVariable user land 
 // 允许线程sleep等待,直到指定资源可用, 等待时会自动释放自己的占有的锁, 被唤醒后会再次占有自己先前释放的锁,全程原子操作
 // 搭配 CS 和 SRW 使用
 // 类似于monitor,管程,  得不到锁先释放自己的资源,然后sleep, 等别人唤醒
@@ -130,5 +130,6 @@ TEST(Synchronization, ConditionVariable) {
 	//::WakeAllConditionVariable();
 	using namespace demo_conditionvariable;
 
-
+	// copy demo code 
+	// https://docs.microsoft.com/en-us/windows/win32/sync/using-condition-variables
 }
