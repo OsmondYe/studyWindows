@@ -4,15 +4,16 @@
 //	Synchronization
 //
 
+// https://docs.microsoft.com/en-us/windows/win32/sync/about-synchronization
 
-
+// user land
 TEST(Synchronization, InterLock) {
 
-	DWORD ginterlockedInt = 3;
+	DWORD sInt = 3;
 
 	// 返回 旧值
 	// 为什么叫 Exchange  ->  新旧会交换,   新值= 旧+5,  
-	auto old_value = ::InterlockedExchangeAdd(&ginterlockedInt, 5);
+	auto old_value = ::InterlockedExchangeAdd(&sInt, 5);
 
 	/*
 	原子指令 lock,   xadd (先交换,再相加)
@@ -28,18 +29,18 @@ TEST(Synchronization, InterLock) {
 	*/
 	EXPECT_EQ(old_value, 3);
 
-	old_value = ::InterlockedExchangeAdd(&ginterlockedInt, 10);
+	old_value = ::InterlockedExchangeAdd(&sInt, 10);
 
 	EXPECT_EQ(old_value, 8);
-	EXPECT_EQ(ginterlockedInt, 18);
+	EXPECT_EQ(sInt, 18);
 
 
-	InterlockedIncrement(&ginterlockedInt);  // [safe] ++
-	InterlockedDecrement(&ginterlockedInt);  // [safe] --
+	InterlockedIncrement(&sInt);  // [safe] ++
+	InterlockedDecrement(&sInt);  // [safe] --
 
 }
 
-
+// user land
 TEST(Synchronization, CriticalSection) {
 	/*	用户级别线程同步工具
 		经我测试，同一个线程时可以冲入的
@@ -66,8 +67,13 @@ TEST(Synchronization, CriticalSection) {
 }
 
 
-
+// user land
 TEST(Synchronization, SRWLock) {
+	//::InitializeSRWLock(&lock);
+	//::Aquire/ReleaseSRWLockExclusive/Shared();
+	//::TryAcquireSRWLockExclusive/Shared();   // 尝试获取,成功拿到,失败为0,但不阻塞
+
+
 	/*  本进程级别的读写锁，slim应该是轻量级的意思， 读者-写着问题的用户层面实现
 		同一线程可以多次获取shared，
 		禁止（同线程）：
@@ -105,4 +111,24 @@ TEST(Synchronization, SRWLock) {
 	}
 
 	cout << "No lock delete api\n";
+}
+
+// user land 
+// 允许线程sleep等待,直到指定资源可用, 等待时会自动释放自己的占有的锁, 被唤醒后会再次占有自己先前释放的锁,全程原子操作
+// 搭配 CS 和 SRW 使用
+// 类似于monitor,管程,  得不到锁先释放自己的资源,然后sleep, 等别人唤醒
+
+namespace demo_conditionvariable {
+	// 类似于<操作系统哲学原理>中提到的 producer 和 consumer 各自等不同的锁,唤醒对方的锁
+}
+
+TEST(Synchronization, ConditionVariable) {
+	//::InitializeConditionVariable()
+	//::SleepConditionVariableCS();
+	//::SleepConditionVariableSRW();
+	//::WakeConditionVariable();
+	//::WakeAllConditionVariable();
+	using namespace demo_conditionvariable;
+
+
 }
