@@ -1,8 +1,19 @@
 ﻿#include "pch.h"
-#include <thread>
-#include <mutex>   // plain try timed recursive
-#include <condition_variable>
+// class thread,   namesapce this_thread
+#include <thread>	
+/*
+* class:
+	mutex, timed_mutex, recursive_mutex, recursive_timed_mutex
+	lock_guard, unique_lock, 
+	once_flag
+  function:
+    try_lock
+	lock
+	call_once
+*/
+#include <mutex>					
 #include <future>
+#include <condition_variable>
 
 /*
 直接wrapper win32 API, 施加了访问限制,这样更加安全,可以强制我们写出安全和框架思路良好的代码,而屏蔽底层差异
@@ -10,19 +21,37 @@ c11_thread 建模非常漂亮
 如何学习到里面的惊奇思路
 */
 
-
-
 using namespace std;
 
 TEST(Concurrency, Basic) {
-	cout << "hardware_concurrency" << thread::hardware_concurrency() << endl;
-	cout << "this id:"<<this_thread::get_id() << endl;
-	cout << "yield to let other thread to runing"<< endl;
-	this_thread::yield();
+	cout << "thread::hardware_concurrency():" << thread::hardware_concurrency() << endl;
+	
+	::SYSTEM_INFO si;
+	::GetSystemInfo(&si);
+	cout << "si.dwNumberOfProcessors:" << si.dwNumberOfProcessors << endl;
 
-	this_thread::sleep_for(chrono::seconds(3));
-	//this_thread::sleep_for(3s); // same with above
-	cout << "sellp 10 seconds";
+	{// tid
+		cout << "this_thread::get_id():" << this_thread::get_id() << endl;
+		cout << "::GetCurrentThreadId()::" << ::GetCurrentThreadId() << endl;
+	}
+	cout << "call this_thread::yield(), yield to let other thread to runing"<< endl;
+	this_thread::yield();
+	cout << "== call ::SwitchToThread()" << endl;
+	::SwitchToThread();
+
+	{// sleep [sec]s
+		int sec = 2;
+		chrono::system_clock::time_point system_start = chrono::system_clock::now();
+
+		printf("sleep %ds\n",sec);
+		this_thread::sleep_for(chrono::seconds(sec));
+		//this_thread::sleep_for(3s); // same with above
+
+		// post:
+		auto diff = chrono::system_clock::now() - system_start;		
+		chrono::milliseconds toMilli = chrono::duration_cast<chrono::milliseconds>(diff);
+		cout << "Duration is: "<<toMilli.count() << endl;
+	}
 }
 
 TEST(Concurrency, Threads) {

@@ -21,7 +21,7 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "String.ReplaceAll";
 	testing::FLAGS_gtest_filter = "Idiom.MacroParam";
 	testing::FLAGS_gtest_filter = "Sort.Merge";
-	testing::FLAGS_gtest_filter = "Concurrency.Mutex";
+
 	testing::FLAGS_gtest_filter = "Chrono.*";
 	testing::FLAGS_gtest_filter = "Set.*";
 	testing::FLAGS_gtest_filter = "OyeAlgo.Fibonacci";
@@ -45,6 +45,7 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "String.*";
 	testing::FLAGS_gtest_filter = "dp23.*";
 	testing::FLAGS_gtest_filter = "Stream.Cin";
+	testing::FLAGS_gtest_filter = "Concurrency.*";
 
 
 

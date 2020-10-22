@@ -168,7 +168,7 @@ TEST(Memory, SmartPtr_Unique) {
 	//for(int j=0;j<10000000;j++)
 	// !!mem leak
 	for (int i = 1; i <= 3; i++) {
-		auto  sp = build(i);  // sp a scope obje, will call ~unique_prt at end of current loop nth;
+		auto  sp = build(i);  // sp a scope obj, will call ~unique_prt at end of current loop nth;
 		cout << sp->name() << endl;
 		
 	}
