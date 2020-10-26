@@ -369,6 +369,17 @@ TEST(Synchronization, Event) {
 
 	//::CreateEvent();
 	//::PulseEvent();
+	//::ResetEvent();  // for manual-reset type
+	//::SetEvent();
+	//::OpenEvent();
+	//::CloseHandle();
 	
 	printf("Notifying a waiting thread of the occurrence of an event.");
+	printf("Manual rest, all threads that is waiting for this signal will be signaled\n");
+	printf("Auto reset, one of waiting threads will be signaled\n");
+
+	// 例子： 针对Manual reset而言
+	// 读取一个文件前，准备好Thread{wordcounts, spellcounts, gramarcheck}
+	// 这些线程初始都是死等Event， 文件打开ok后， 直接给发消息，同时激活3个线程各跑各的任务
+
 }
