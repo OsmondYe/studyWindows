@@ -157,14 +157,14 @@ namespace demo_conditionvariable {
 		}
 
 		int consume_item() {
-			int item = buf.buffer[buf.queue_start_offset];
-			buf.queue_size--;
-			buf.queue_start_offset++;
-			if (buf.queue_start_offset == BUFFER_SIZE) {
-				buf.queue_start_offset = 0;
+			int item = buffer[queue_start_offset];
+			queue_size--;
+			queue_start_offset++;
+			if (queue_start_offset == BUFFER_SIZE) {
+				queue_start_offset = 0;
 			}
 
-			buf.total_item_consumed++;
+			total_item_consumed++;
 			return item;
 		}
 
