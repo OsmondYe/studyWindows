@@ -290,3 +290,85 @@ TEST(Synchronization, ConditionVariable) {
 	demo_conditionvariable::bounded_circular_buffer();
 
 }
+
+namespace kernelobject {
+
+	//typedef unsigned (__stdcall* _beginthreadex_proc_type)(void*);
+	unsigned __stdcall thread_function(void* p) {
+		auto tid = ::GetCurrentThreadId();
+		cout << "current running thread id is: " << tid << endl;
+
+		while (1)
+		{
+			printf("press any key to kill thread\n");
+			getchar();
+			::TerminateThread(::GetCurrentThread(), 0);
+		}
+
+		return 0;
+	}
+
+	HANDLE create_demo_thread() {
+		return (HANDLE)::_beginthreadex(0, 0, thread_function, 0, 0, 0);
+	}
+
+	unsigned __stdcall thread_file_function(void* p) {
+				
+		HANDLE h = (HANDLE)p;
+
+		std::wstring buf = L"hello world\n";
+
+		for (int i = 0; i < 100; i++) {
+			if (!::WriteFile(h, buf.c_str(), buf.size() * 2, NULL, NULL)) {
+				printf("Error to write file\n");
+			}
+			
+		}
+
+
+		CloseHandle(h);
+		printf("in  thread of thread_file_function, waiting for exit\n");
+		getchar();
+
+		return 0;
+	}
+
+	void create_operation_file_thread_demo(HANDLE hf) {
+		::_beginthreadex(NULL, NULL, thread_file_function, hf, 0, 0);
+	}
+}
+
+TEST(Synchronization, KernelObject) {
+	using namespace kernelobject;
+	printf("kernel object: 2 state,  signaled and nonsignaled\n");
+	printf("nonsignled -> create KernelObject\n");
+	printf("signaled ->  closehandle, killtheObject\n");
+
+	// thread:
+	{
+		printf("for Thread, Terminate or exit will become signaled\n");
+		::WaitForSingleObject(create_demo_thread(), INFINITE);
+	}
+
+	// file
+	{
+		HANDLE hf = ::CreateFileW(L"xxx.txt", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_TEMPORARY, NULL);
+		create_operation_file_thread_demo(hf);
+
+		if (::WaitForSingleObject(hf, INFINITE) == WAIT_OBJECT_0) {
+			printf("Ok to wait for file object, some one call CloseHandle \n");
+		}
+		else {
+			printf("Failed to wait for file object \n");
+		}
+	}
+
+}
+
+TEST(Synchronization, Event) {
+
+	//::CreateEvent();
+	//::PulseEvent();
+	
+	printf("Notifying a waiting thread of the occurrence of an event.");
+}
