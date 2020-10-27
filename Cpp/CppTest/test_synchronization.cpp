@@ -363,6 +363,8 @@ TEST(Synchronization, KernelObject) {
 		}
 	}
 
+	printf("Common SynchronizationObjects: [Event, Mutex, Semaphore, WaitableTimer\n");
+
 }
 
 
@@ -460,5 +462,13 @@ TEST(Synchronization, Event) {
 }
 
 TEST(Synchronization, WaitableTimer) {
+	// 内核Timer, 同样适用Wait类型的API来等事件到达;
+	printf("WaitableTimer's state will be set to signaled when the specified due time arrives.");
+	printf("2 types: [ manual-reset, synchronization ]\n");
+
+	//::CreateWaitableTimer();
+	//::OpenWaitableTimer();
+	//::SetWaitableTimer()
+	//::CancelWaitableTimer();
 
 }
