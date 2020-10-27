@@ -365,6 +365,77 @@ TEST(Synchronization, KernelObject) {
 
 }
 
+
+namespace event_demo {
+
+	char shared_buf[255] = { 0 };
+	//typedef unsigned (__stdcall* _beginthreadex_proc_type)(void*);
+	HANDLE hWriter;
+
+	unsigned int reader_proc(void* p) {
+
+		DWORD tid = ::GetCurrentThreadId();
+		bool noError = true;
+
+		while (noError) {
+			printf("thread:%d is waiting to read\n",tid);
+			DWORD dwWaitResult = ::WaitForSingleObject(hWriter, INFINITE);
+			switch (dwWaitResult)
+			{
+			case WAIT_OBJECT_0:
+				printf("thread(%d) wait ok, to content\n", tid);
+				printf("\t%s\n",shared_buf);
+				break;
+			case WAIT_FAILED:
+				printf("thread(%d) is WAIT_FAILED",tid);
+				noError = false;
+				break;
+			case WAIT_ABANDONED:
+				printf("thread(%d) is WAIT_ABANDONED", tid);
+				noError = false;
+				break;
+			case WAIT_TIMEOUT:
+				printf("thread(%d) is WAIT_TIMEOUT", tid);
+				noError = false;
+				break;
+			default:
+				break;
+			}
+		}
+
+		return 0;
+	}
+
+	void demo() {
+		// prepare reader thread;
+		HANDLE hReader[3];
+		for (int i = 0; i < 3; i++) {
+			hReader[i] = (HANDLE)::_beginthreadex(0, 0, reader_proc, 0, 0, 0);
+		}
+
+		// prepare writer;
+		hWriter = ::CreateEvent(
+			NULL,  // null security attribute,
+			true,  // manual reset
+			false, // no signal at init,
+			L"RandomName"
+		);
+
+		
+		while (1)
+		{
+			scanf("%s\r\n",shared_buf);
+			if (strstr(shared_buf, "quit")) {
+				break;
+			}
+			else {
+				::SetEvent(hWriter);
+				::ResetEvent(hWriter);
+			}
+		}
+	}
+}
+
 TEST(Synchronization, Event) {
 
 	//::CreateEvent();
@@ -375,11 +446,19 @@ TEST(Synchronization, Event) {
 	//::CloseHandle();
 	
 	printf("Notifying a waiting thread of the occurrence of an event.");
-	printf("Manual rest, all threads that is waiting for this signal will be signaled\n");
+	printf("Manual reset, all threads that is waiting for this signal will be signaled\n");
 	printf("Auto reset, one of waiting threads will be signaled\n");
+	printf("Auto reset type, if one waitfunction return, the type will be set to nonsignaled\n");
 
 	// 例子： 针对Manual reset而言
 	// 读取一个文件前，准备好Thread{wordcounts, spellcounts, gramarcheck}
 	// 这些线程初始都是死等Event， 文件打开ok后， 直接给发消息，同时激活3个线程各跑各的任务
+
+	printf("Reader-Writer problem using Event\n");
+	event_demo::demo();
+
+}
+
+TEST(Synchronization, WaitableTimer) {
 
 }
