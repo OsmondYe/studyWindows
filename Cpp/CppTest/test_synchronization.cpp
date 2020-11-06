@@ -461,6 +461,36 @@ TEST(Synchronization, Event) {
 
 }
 
+
+namespace waitable_timer{
+
+	// windows time unit,  100 nanosecond,    1 nanosec = (1/10亿) (second)
+	//  1 second = 1000, 0000 (unis) 1秒写成1000万
+	const LONGLONG basic_1second_win = 1000 * 10000;
+
+	void demo_delay() {
+		auto handle = ::CreateWaitableTimer(
+			NULL, // null security attribute
+			true, // munual rest
+			NULL // anonymous 
+			);
+		
+		//waiting for 10 seconds
+		printf("waiting for 10 seconds\n");
+
+		LARGE_INTEGER liDueTime;
+		// -1 means relative time in ::SetWaitableTimer
+		liDueTime.QuadPart =  -1 * 10 * basic_1second_win;
+
+		auto rt= ::SetWaitableTimer(handle, &liDueTime, 0, 0, 0, 0);
+
+
+		auto rt2=::WaitForSingleObject(handle, INFINITE);
+		printf("time up\n");
+
+	}
+}
+
 TEST(Synchronization, WaitableTimer) {
 	// 内核Timer, 同样适用Wait类型的API来等事件到达;
 	printf("WaitableTimer's state will be set to signaled when the specified due time arrives.");
@@ -471,4 +501,41 @@ TEST(Synchronization, WaitableTimer) {
 	//::SetWaitableTimer()
 	//::CancelWaitableTimer();
 
+	waitable_timer::demo_delay();
+
+}
+
+namespace semaphore {
+	void demo_semaphore() {
+
+		auto handle = ::CreateSemaphoreW(
+			NULL,   // null secuirty attribute
+			0,		// 0 useable in initial
+			100,	// 100 is the max resource
+			NULL	// anonymous 
+			);
+
+
+	}
+}
+
+TEST(Synchronization, Semaphore) {
+	//::CreateSemaphore()
+	//::ReleaseSemaphore();
+}
+
+
+namespace mutex{
+	//	
+	void demo_mutex() {
+
+		auto handle = ::CreateMutexW(
+			NULL,		// null secuiry attributes
+			true,		// owner by initial
+			NULL		// anonymous
+		);
+
+	}
+}
+TEST(Synchronization, Mutex) {
 }
