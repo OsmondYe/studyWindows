@@ -1,8 +1,0 @@
-// Hint files help the Visual Studio IDE interpret Visual C++ identifiers
-// such as names of functions and macros.
-// For more information see https://go.microsoft.com/fwlink/?linkid=865984
-#define DECLARE_FRAME_WND_CLASS_EX(WndClassName, uCommonResourceID, style, bkgnd) static WTL::CFrameWndClassInfo& GetWndClassInfo() { static WTL::CFrameWndClassInfo wc = { { sizeof(WNDCLASSEX), style, StartWindowProc, 0, 0, NULL, NULL, NULL, (HBRUSH)(bkgnd + 1), NULL, WndClassName, NULL }, NULL, NULL, IDC_ARROW, TRUE, 0, _T(""), uCommonResourceID }; return wc; }
-// Hint files help the Visual Studio IDE interpret Visual C++ identifiers
-// such as names of functions and macros.
-// For more information see https://go.microsoft.com/fwlink/?linkid=865984
-#define BEGIN_UPDATE_UI_MAP(thisClass) static const CUpdateUIBase::_AtlUpdateUIMap* GetUpdateUIMap() { static const CUpdateUIBase::_AtlUpdateUIMap theMap[] = {
