@@ -1,0 +1,82 @@
+# 已知方法{
+	cache*c:\MySymbols;srv*https://msdl.microsoft.com/download/symbols
+	_NT_SYMBOL_PATH = symsrv*symsrv.dll*c:\symbols*http://msdl.microsoft.com/download/symbols
+}
+
+# reference{
+	https://wiki.hikvision.com.cn/pages/viewpage.action?pageId=104170294 
+	https://wiki.hikvision.com.cn/pages/viewpage.action?pageId=104170288 
+
+	# Unified software framework
+		https://wiki.hikvision.com.cn/pages/viewpage.action?pageId=43732465
+
+	# 开放
+	https://open.hikvision.com/
+
+	# download software
+	\\10.41.49.215\共享文件\工具集\项目开发常用工具\C++开发工具\vs2015 
+}
+
+
+# ISeeDN
+	域见， 
+	物联网设备接入，数据汇聚
+	data link    ( collecting )
+
+	??? 具体接口需要 sso 登录 hiklink
+
+# IFarDN
+	远见
+	大数据 与 AI   ( analyzing)
+
+	??? 具体接口需要 sso 登录 hiklink
+
+# 统一软件技术架构{
+	#三个集成环境{
+		开发  （模型， 封装，编译，持续，接口，环境）
+		管理  （信息共享服务，服用过程管理）
+		运行  （服务，应用，通知，权限，许可，运行）
+	}
+}
+
+
+# 驱动{
+	结束： 9章
+	遗留{
+		即插即用(12.21 16:10, 12.22)
+		电源管理
+	}
+	攻克难关{
+		端口
+		USB
+		其它总线设备
+	}
+}
+
+
+#公司的Linux网络呗限制了 {
+	我今天尝试了想办法去更新apt， 但是发现了各种问题
+	首先 deb的源的配置， 纯文本配置方法，  /etc/apt/
+	需要搜索在调用 apt update是 如何走网络代理  , 可参考文章【https://www.serverlab.ca/tutorials/linux/administration-linux/how-to-set-the-proxy-for-apt-for-ubuntu-18-04/】	
+	steps:{
+		- Create a new configuration file named proxy.conf
+			sudo touch /etc/apt/apt.conf.d/proxy.conf
+		-Open the proxy.conf file in a text editor
+			sudo vi /etc/apt/apt.conf.d/proxy.conf
+		-Add the following line to set your HTTP proxy.
+			Acquire::http::Proxy "http://user:password@proxy.server:port/";
+		-Add the following line to set your HTTPS proxy
+			Acquire::https::Proxy "http://user:password@proxy.server:port/";
+	}
+}
+
+
+# BackTracking {
+	using tree, to find all solutions by exploring all potential candidates,
+	if( no a good solution){
+		discard current, 
+		back to previsou step,
+		try the next
+	}
+	所谓回溯就是把这个树给生成了
+}
