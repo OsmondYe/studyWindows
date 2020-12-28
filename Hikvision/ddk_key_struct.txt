@@ -1,0 +1,467 @@
+typedef struct _DRIVER_OBJECT {
+    CSHORT Type;
+    CSHORT Size;
+
+    //
+    // The following links all of the devices created by a single driver
+    // together on a list, and the Flags word provides an extensible flag
+    // location for driver objects.
+    //
+
+    PDEVICE_OBJECT DeviceObject;
+    ULONG Flags;
+
+    //
+    // The following section describes where the driver is loaded.  The count
+    // field is used to count the number of times the driver has had its
+    // registered reinitialization routine invoked.
+    //
+
+    PVOID DriverStart;
+    ULONG DriverSize;
+    PVOID DriverSection;
+    PDRIVER_EXTENSION DriverExtension;
+
+    //
+    // The driver name field is used by the error log thread
+    // determine the name of the driver that an I/O request is/was bound.
+    //
+
+    UNICODE_STRING DriverName;
+
+    //
+    // The following section is for registry support.  Thise is a pointer
+    // to the path to the hardware information in the registry
+    //
+
+    PUNICODE_STRING HardwareDatabase;
+
+    //
+    // The following section contains the optional pointer to an array of
+    // alternate entry points to a driver for "fast I/O" support.  Fast I/O
+    // is performed by invoking the driver routine directly with separate
+    // parameters, rather than using the standard IRP call mechanism.  Note
+    // that these functions may only be used for synchronous I/O, and when
+    // the file is cached.
+    //
+
+    PFAST_IO_DISPATCH FastIoDispatch;
+
+    //
+    // The following section describes the entry points to this particular
+    // driver.  Note that the major function dispatch table must be the last
+    // field in the object so that it remains extensible.
+    //
+
+    PDRIVER_INITIALIZE DriverInit;
+    PDRIVER_STARTIO DriverStartIo;
+    PDRIVER_UNLOAD DriverUnload;
+    PDRIVER_DISPATCH MajorFunction[IRP_MJ_MAXIMUM_FUNCTION + 1];
+
+} DRIVER_OBJECT;
+
+
+typedef struct  _DEVICE_OBJECT {
+    CSHORT Type;                                // IO_TYPE_DEVICE
+    USHORT Size;                                // (sizeof( DEVICE_OBJECT ) + DeviceExtensionSize)
+    LONG ReferenceCount;
+    struct _DRIVER_OBJECT *DriverObject;        // deviceObject->DriverObject = DriverObject;  back_pointer
+    struct _DEVICE_OBJECT *NextDevice;
+    struct _DEVICE_OBJECT *AttachedDevice;      
+    struct _IRP *CurrentIrp;
+    PIO_TIMER Timer;
+    ULONG Flags;                                // DO_DEVICE_INITIALIZING(when call IoCreateDevice)  DO_EXCLUSIVE,DO_DEVICE_HAS_NAME
+    ULONG Characteristics;                      // when call IoCreateDevice
+    __volatile PVPB Vpb;
+    PVOID DeviceExtension;
+    DEVICE_TYPE DeviceType;                     // when call IoCreateDevice  
+    CCHAR StackSize;                            // SourceDevice->StackSize = (UCHAR) (deviceObject->StackSize + 1);
+                                                // 1 
+    union {
+        LIST_ENTRY ListEntry;                   //For FileSystem used
+        WAIT_CONTEXT_BLOCK Wcb;
+    } Queue;
+
+    ULONG AlignmentRequirement;                 // HalGetDmaAlignmentRequirement() - 1
+    KDEVICE_QUEUE DeviceQueue;                  // for not FileSystem  KeInitializeDeviceQueue( &deviceObject->DeviceQueue );
+                                                // for real device use it
+    KDPC Dpc;
+
+    //
+    //  The following field is for exclusive use by the filesystem to keep
+    //  track of the number of Fsp threads currently using the device
+    //
+
+    ULONG ActiveThreadCount;
+    PSECURITY_DESCRIPTOR SecurityDescriptor;
+    KEVENT DeviceLock;                                      //  KeInitializeEvent(DeviceLock,SynchronizationEvent,TRUE)
+
+    USHORT SectorSize;
+    USHORT Spare1;
+
+    struct _DEVOBJ_EXTENSION  *DeviceObjectExtension;      //  deviceObject + 1
+    PVOID  Reserved;
+
+} DEVICE_OBJECT;
+
+
+typedef struct  _IRP {
+
+    CSHORT Type;
+    USHORT Size;
+
+    PMDL MdlAddress; // only for direct i/o
+
+    ULONG Flags;
+
+    union {
+        struct _IRP *MasterIrp;
+        __volatile LONG IrpCount;
+        PVOID SystemBuffer;
+    } AssociatedIrp;
+
+
+    LIST_ENTRY ThreadListEntry;   
+
+    IO_STATUS_BLOCK IoStatus;       // 用户自己来设置  Irp->IoStatus.Status 
+
+    KPROCESSOR_MODE RequestorMode;
+
+    BOOLEAN PendingReturned;  
+
+    CHAR StackCount;
+    CHAR CurrentLocation;  
+
+    BOOLEAN Cancel;
+
+    KIRQL CancelIrql;
+
+    CCHAR ApcEnvironment;
+
+    UCHAR AllocationFlags;
+
+    PIO_STATUS_BLOCK UserIosb;    //*Irp->UserIosb = Irp->IoStatus;
+
+    PKEVENT UserEvent;     //
+
+    union {
+        struct {
+            union {
+                PIO_APC_ROUTINE UserApcRoutine;
+                PVOID IssuingProcess;
+            };
+            PVOID UserApcContext;
+        } AsynchronousParameters;
+        LARGE_INTEGER AllocationSize;
+    } Overlay;   
+
+    __volatile PDRIVER_CANCEL CancelRoutine;   
+
+    PVOID UserBuffer;
+   
+    union {
+        struct {
+            //1
+            union {
+                KDEVICE_QUEUE_ENTRY DeviceQueueEntry;
+                struct {
+                    PVOID DriverContext[4];
+                } ;
+            } ;
+            //2
+            PETHREAD Thread;   // 
+            //3
+            PCHAR AuxiliaryBuffer;
+            //4
+            struct {
+                LIST_ENTRY ListEntry;
+
+                union {
+                    // IoGetNextIrpStackLocation(Irp)   return ((Irp)->Tail.Overlay.CurrentStackLocation - 1 );
+                    struct _IO_STACK_LOCATION *CurrentStackLocation;
+                    ULONG PacketType;
+                };
+            };
+
+            PFILE_OBJECT OriginalFileObject;
+        } Overlay;
+    
+        KAPC Apc;   // associate with Overlay.Thread      
+        PVOID CompletionKey;
+    } Tail;
+
+} IRP;
+
+
+
+
+typedef struct _IO_STACK_LOCATION {
+
+    UCHAR MajorFunction;
+    UCHAR MinorFunction;
+    UCHAR Flags;
+    UCHAR Control;
+
+
+    union {
+
+        struct {
+            PIO_SECURITY_CONTEXT SecurityContext;
+            ULONG Options;
+            USHORT POINTER_ALIGNMENT FileAttributes;
+            USHORT ShareAccess;
+            ULONG POINTER_ALIGNMENT EaLength;
+        } Create;
+
+        struct {
+            ULONG Length;
+            ULONG POINTER_ALIGNMENT Key;
+            LARGE_INTEGER ByteOffset;
+        } Read;
+
+
+        struct {
+            ULONG Length;
+            ULONG POINTER_ALIGNMENT Key;
+            LARGE_INTEGER ByteOffset;
+        } Write;
+
+        struct {
+            ULONG Length;
+            PUNICODE_STRING FileName;
+            FILE_INFORMATION_CLASS FileInformationClass;
+            ULONG POINTER_ALIGNMENT FileIndex;
+        } QueryDirectory;
+
+        struct {
+            ULONG Length;
+            ULONG POINTER_ALIGNMENT CompletionFilter;
+        } NotifyDirectory;
+
+        struct {
+            ULONG Length;
+            FILE_INFORMATION_CLASS POINTER_ALIGNMENT FileInformationClass;
+        } QueryFile;
+
+        struct {
+            ULONG Length;
+            FILE_INFORMATION_CLASS POINTER_ALIGNMENT FileInformationClass;
+            PFILE_OBJECT FileObject;
+            union {
+                struct {
+                    BOOLEAN ReplaceIfExists;
+                    BOOLEAN AdvanceOnly;
+                };
+                ULONG ClusterCount;
+                HANDLE DeleteHandle;
+            };
+        } SetFile;
+
+        struct {
+            ULONG Length;
+            PVOID EaList;
+            ULONG EaListLength;
+            ULONG POINTER_ALIGNMENT EaIndex;
+        } QueryEa;
+
+        struct {
+            ULONG Length;
+        } SetEa;
+
+        struct {
+            ULONG Length;
+            FS_INFORMATION_CLASS POINTER_ALIGNMENT FsInformationClass;
+        } QueryVolume;
+
+        struct {
+            ULONG Length;
+            FS_INFORMATION_CLASS POINTER_ALIGNMENT FsInformationClass;
+        } SetVolume;
+
+        struct {
+            ULONG OutputBufferLength;
+            ULONG POINTER_ALIGNMENT InputBufferLength;
+            ULONG POINTER_ALIGNMENT FsControlCode;
+            PVOID Type3InputBuffer;
+        } FileSystemControl;
+
+        struct {
+            PLARGE_INTEGER Length;
+            ULONG POINTER_ALIGNMENT Key;
+            LARGE_INTEGER ByteOffset;
+        } LockControl;
+
+        struct {
+            ULONG OutputBufferLength;
+            ULONG POINTER_ALIGNMENT InputBufferLength;
+            ULONG POINTER_ALIGNMENT IoControlCode;
+            PVOID Type3InputBuffer;
+        } DeviceIoControl;
+
+        struct {
+            SECURITY_INFORMATION SecurityInformation;
+            ULONG POINTER_ALIGNMENT Length;
+        } QuerySecurity;
+
+        struct {
+            SECURITY_INFORMATION SecurityInformation;
+            PSECURITY_DESCRIPTOR SecurityDescriptor;
+        } SetSecurity;
+
+        struct {
+            PVPB Vpb;
+            PDEVICE_OBJECT DeviceObject;
+        } MountVolume;
+
+        struct {
+            PVPB Vpb;
+            PDEVICE_OBJECT DeviceObject;
+        } VerifyVolume;
+
+        struct {
+            struct _SCSI_REQUEST_BLOCK *Srb;
+        } Scsi;
+
+        struct {
+            ULONG Length;
+            PSID StartSid;
+            PFILE_GET_QUOTA_INFORMATION SidList;
+            ULONG SidListLength;
+        } QueryQuota;
+
+        struct {
+            ULONG Length;
+        } SetQuota;
+
+
+        struct {
+            DEVICE_RELATION_TYPE Type;
+        } QueryDeviceRelations;
+
+
+        struct {
+            CONST GUID *InterfaceType;
+            USHORT Size;
+            USHORT Version;
+            PINTERFACE Interface;
+            PVOID InterfaceSpecificData;
+        } QueryInterface;
+
+
+        struct {
+            PDEVICE_CAPABILITIES Capabilities;
+        } DeviceCapabilities;
+
+        struct {
+            PIO_RESOURCE_REQUIREMENTS_LIST IoResourceRequirementList;
+        } FilterResourceRequirements;
+
+
+        struct {
+            ULONG WhichSpace;
+            PVOID Buffer;
+            ULONG Offset;
+            ULONG POINTER_ALIGNMENT Length;
+        } ReadWriteConfig;
+
+
+        struct {
+            BOOLEAN Lock;
+        } SetLock;
+        struct {
+            BUS_QUERY_ID_TYPE IdType;
+        } QueryId;
+
+
+        struct {
+            DEVICE_TEXT_TYPE DeviceTextType;
+            LCID POINTER_ALIGNMENT LocaleId;
+        } QueryDeviceText;
+
+
+        struct {
+            BOOLEAN InPath;
+            BOOLEAN Reserved[3];
+            DEVICE_USAGE_NOTIFICATION_TYPE POINTER_ALIGNMENT Type;
+        } UsageNotification;
+
+        //
+        // Parameters for IRP_MN_WAIT_WAKE
+        //
+
+        struct {
+            SYSTEM_POWER_STATE PowerState;
+        } WaitWake;
+
+        //
+        // Parameter for IRP_MN_POWER_SEQUENCE
+        //
+
+        struct {
+            PPOWER_SEQUENCE PowerSequence;
+        } PowerSequence;
+
+        //
+        // Parameters for IRP_MN_SET_POWER and IRP_MN_QUERY_POWER
+        //
+
+        struct {
+            union {
+                ULONG SystemContext;
+                SYSTEM_POWER_STATE_CONTEXT SystemPowerStateContext;
+            };
+            POWER_STATE_TYPE POINTER_ALIGNMENT Type;
+            POWER_STATE POINTER_ALIGNMENT State;
+            POWER_ACTION POINTER_ALIGNMENT ShutdownType;
+        } Power;
+
+
+        //
+        // Parameters for StartDevice
+        //
+
+        struct {
+            PCM_RESOURCE_LIST AllocatedResources;
+            PCM_RESOURCE_LIST AllocatedResourcesTranslated;
+        } StartDevice;
+
+        //
+        // Parameters for Cleanup
+        //
+        // No extra parameters supplied
+        //
+
+        //
+        // WMI Irps
+        //
+
+        struct {
+            ULONG_PTR ProviderId;
+            PVOID DataPath;
+            ULONG BufferSize;
+            PVOID Buffer;
+        } WMI;
+
+        //
+        // Others - driver-specific
+        //
+
+        struct {
+            PVOID Argument1;
+            PVOID Argument2;
+            PVOID Argument3;
+            PVOID Argument4;
+        } Others;
+
+    } Parameters;
+
+    PDEVICE_OBJECT DeviceObject;
+
+    PFILE_OBJECT FileObject;
+
+    PIO_COMPLETION_ROUTINE CompletionRoutine;
+
+    PVOID Context;
+
+} IO_STACK_LOCATION, *PIO_STACK_LOCATION;
+
