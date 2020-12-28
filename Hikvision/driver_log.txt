@@ -1,0 +1,66 @@
+# 双机调试
+	- 主机需要去设置 物理COM口的传输率为 115200
+	- windbg中,使用   \\.\pipe\com_1
+
+# 问题{
+	- 同一个driver 可以有多个device?  一个网卡驱动程序,同时挂了2个物理网卡
+
+	- 扩展build, 在其结束之后, 把生成的文件拷贝到制定目录
+		需要学习如何扩展微软的nmake 
+		新增,编译成功后 自动copy的事宜, 不动手,许多东西都白做
+	- 通过nmake 把编译生成的文件自动送到共享folder里面
+}
+
+# ddk{
+		- build会调用nmake工具去解析makefile,进行编译
+		- 使用build 进行构建
+			E:\>set | findstr /i NTMAKEENV
+				NTMAKEENV=C:\WinDDK\7600.16385.1\bin
+
+}
+
+# Log{
+	# 第一个蓝屏, 2020/12/25{
+	  系统线程异常未处理
+	}
+}
+
+# API{
+	//
+	KdPrint, 
+	//
+	IoCreateDevice
+	IoDeleteDevice
+	IoCreateSymbolicLink		// sym-name <--> dev_name
+	IoDeleteSymbolicLink
+}
+
+# 标识符号链接字符串{
+	- kernel  	\??\
+	- user 		\\.\
+}
+
+# Entry info{
+	Local var @ 0xf78eac90 Type _DRIVER_OBJECT*
+0x855b1030 
+   +0x000 Type             : 0n4
+   +0x002 Size             : 0n168
+   +0x004 DeviceObject     : (null) 
+   +0x008 Flags            : 2
+   +0x00c DriverStart      : 0xf7b5c000 Void
+   +0x010 DriverSize       : 0xb80
+   +0x014 DriverSection    : 0x852aa488 Void
+   +0x018 DriverExtension  : 0x855b10d8 _DRIVER_EXTENSION
+   +0x01c DriverName       : _UNICODE_STRING "\Driver\OyeDDK"
+   +0x024 HardwareDatabase : 0x809d2260 _UNICODE_STRING "\REGISTRY\MACHINE\HARDWARE\DESCRIPTION\SYSTEM"
+   +0x028 FastIoDispatch   : (null) 
+   +0x02c DriverInit       : 0xf7b5c9be     long  OyeDDK!GsDriverEntry+0
+   +0x030 DriverStartIo    : (null) 
+   +0x034 DriverUnload     : (null) 
+   +0x038 MajorFunction    : [28] 0x808220d0     long  nt!IoCsqInsertIrp+0
+
+}
+
+# NTSTATUS {
+	STATUS_SUCCESS
+}

@@ -1,0 +1,9 @@
+QT on the way;
+
+# 工具集{
+	qmake
+	uic   -UI compiler,  qt的XML定于.ui文件作为用户界面,  uic把此xml 生成对应的 ****.h
+	moc   -meta-object compiler,  处理c++ Q_OBJECT 宏, 实现slot,之类
+	rcc   -resource compile,  编译.qrc,  最终嵌入进qt程序
+
+}

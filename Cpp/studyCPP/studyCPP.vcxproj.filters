@@ -197,6 +197,9 @@
     <ClCompile Include="dp23_behavioral.cpp">
       <Filter>Source Files\design_pattern</Filter>
     </ClCompile>
+    <ClCompile Include="algo-bt.cpp">
+      <Filter>Source Files\data_struct_and_algo</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="NoUse.hpp">

@@ -80,3 +80,39 @@
 	}
 	所谓回溯就是把这个树给生成了
 }
+
+# virtualbox{
+	right -> ctrl +f to shwo full mode and then get back , it will returned
+}
+
+# 翻墙{
+	privoxy 一个http 代理， 翻墙软件中都会碰到类似的， 原理是什么？
+		可以forward sock5 ,把流量再转给 sock5的server，  从而形成了proxy链条
+
+
+	Main(){
+		LoadCgf,
+		ListenLoop
+	}
+
+	什么样的代码是service代码{
+		有服务监听， 
+		可以对外提供服务， 
+		有控制端口，可以让外部改变其行为
+	}  
+	socks5只是一个通信协议{
+		dynamic port forwarding
+		protocol{
+			handshaking
+		}
+		openSSH 提供了socks5支持
+	}
+	
+}
+
+# nagle算法
+
+I we didn't have what it took at the beginning, we picked it up along the way.
+
+
+1972 年 7 月 3 日 , 有人问主席 : 中国的修正主义分子如果复辟 了资本主义 , 无产阶级就会吃二遍苦受二遍 罪了?主席说 : “ 你太高看他们了 , 他们懂得什么 是资本主义吗 ? 最多是倒退回半封建半殖民地社会去了。 资本主义是靠侵略和掠夺别的国家的财富而 积累资本资产的 , 而搞修正主义的走资派们 敢于侵略谁呀 , 不被侵略就阿弥陀佛了 , 他们只能是联合帝国主义国家 , 剥削和压迫本 民族广大的人民百姓 , 或者贱卖自己国家的 资源以满足自己那贪得无厌的私利。
