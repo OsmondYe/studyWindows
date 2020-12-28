@@ -1,0 +1,98 @@
+base{
+	对象和接口都有指针
+}
+
+::CoInitializeEx(){
+	COINIT_APARTMENTTHREADED
+	COINIT_MULTITHREADED
+}
+
+::CoCreateInstance();  ID_COM_Obj,  Registry to find obj{
+	
+	STDAPI CoCreateInstance(
+					REFCLSID clsid, //Class id (what DLL or EXE file)
+					LPUNKNOWN pUnknown, //Used for inheriting a COM object
+					DWORD dwContext, //DLL, EXE local or remote
+					REFIID iid, //Interface id (what class in DLL or EXE)
+					LPVOID *ppv //returned pointer to created object
+					);
+}
+
+
+GUID{
+	{long, short,short, byte[8]}  == sizeof(16 byte, 128bit)
+}
+
+Load DLL or init desired EXE using the RPC API
+
+
+SystemRegistry{
+	HKEY_LOCAL_MACHINE\SOFTWARE\Classes\
+
+}
+
+Proxy_Stub_DLL{
+	
+}
+
+IDL{
+	
+}
+
+ThreadSafety{
+	using COM make COM object thread-safe, rather than support it by your self
+	
+
+	不管哪个线程创建的COM obj,所有对obj的访问都被限制在一个独立线程中完成{
+		func call -> a message into a window -> a communal thread
+		正常情况下new obj 返回vtable,如果线程安全下,给你返回一个proxy
+	}
+
+
+	TID 2 new com obj  and TID 1 use this obj?{
+
+	}
+
+	client ENV {COINIT_APARTMENTTHREADED, COINIT_MULTITHREADED}
+	thread model{single, apartment, Free, both}
+
+
+}
+
+DLLHost{
+	obj is in DLL, but DLL is in another machine,
+	surrogate 代理人
+	dllhost.exe  dll的代理app
+}
+
+
+IClassFacotry{
+	
+}
+
+[out,retval]{
+	
+}
+
+serialization process Marshal, 
+
+
+Type Library{
+	library WzdTypeLib
+	{
+		importlib("stdole32.tlb");
+		importlib("stdole2.tlb");
+		[
+			uuid(DCBC68C9-4E2A-11D2-AB34-00C04FA3729B),
+		]
+		coclass WzdClass
+		{
+			[default] interface IWzd;
+		};
+	};
+}
+
+
+跨进程边界{
+	LPC 专利技术,  OS知道每一个进程的具体虚拟内存情况,因此可以直接调用另一个内存里面的函数,给你响应需要的参数
+}

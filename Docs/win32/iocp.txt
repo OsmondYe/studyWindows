@@ -1,0 +1,36 @@
+-I/O Completion Port
+	- 这是一个内核对象
+	- 前提，500个服务请求准备500个线程是不合理的
+	- 与线程池配合使用
+	- CreateIoComplectionPort 
+	- 这家伙没有sa，原本设计就是只在一个进程中使用的
+	- 
+
+
+Struct Overlapped 
+
+- Driver tell User code, the io completion, and user how receive?
+	- device(hFile,hSocket) kernel obj
+		- ReadFile/WriteFile  and then  WaitForSingleObject(hFile) or hSocket
+	- event kernel obj
+		- each operation, create a event, and set into Struct Overlapped
+		- do aysnc task
+		- after Kernel finish this job, it will tell event
+		- 
+	- alertable io obj
+		- APC queue, 线程发起IO操作，（ReadFileEx）, 告诉驱动往本线程的APC队列中添加一项
+		- Ex版本的ReadWrtie会要求传入一个CompletionRoutine，
+		- 驱动完成工作后会往线程APC中传入这个CompletionRoutine
+		- 只有当线程处于可提醒状态时，就是先抽光Apc队列
+		- 线程如何使自己处于可提醒状态？
+			- SleepEx, WaitForSingleObjectEx,
+			- SignalObjectAndWait
+			- GetQueuedCompletionStatusEx
+		- 这意味着线程在睡觉前回去查看自己的队列，如果有就不睡了，
+		- 如果已经等待，此时apc有任务了，也会立刻醒来
+		- QueueUserApc 可以给系统所有线程之一送一个通知，用这个也可以实现线程通信
+			- 这是一个非常好的思想，可以强制工作线程退出
+				- 主线程给工作线程
+
+	- i/o cp
+

@@ -1,0 +1,238 @@
+SQL 笔记:
+
+bn范式:
+	[temp|temprory] ;  可选, 二选一
+	{temp|temprory} ;  必选
+
+keyword:
+	
+	DB	;database
+	DDL	;db definiation language
+	DML	;db manger language 
+
+
+Main:
+	表, 视图, 索引
+	
+	事务, 检查约束, 外键, 关联子查询, 组合查询
+	
+	触发器, 自增长字段, LIMIT/OFFEST 
+	
+SQL Syntax:
+	
+	注释:
+		单行 --
+		多行 /*   */
+
+	cmd;   (合法语句+;)
+
+		
+	select id from food where name='Jury';
+	______ ____________ _________________
+	  |        |                |
+	 动词	  主语           谓语
+		
+----string 
+		用单引号 '
+----num
+		-1  3.144
+----bin_data: x'0000':
+		x'01'
+		x'0fff'
+		x'0f0eff'
+	
+----keyword:
+		select, update, insert, 
+		create, drop, begin,
+		
+----运算:
+	sring:
+		||  	;连接
+		like	;字符串匹配(case_insensitive)  
+				 [like |not like]
+			% ; [0,n]char
+			_ ; [1] char
+		blob	;字符名匹配, 使用unix系统定义的*,_
+				 case_sentive
+		=
+		!=
+		upper()
+		lower()
+		length()
+----聚合
+		sum(), avg(), min(), max() 
+	
+	
+	
+		
+SQL 语句:
+	creat:
+		-create table
+		
+		-create index test_idx on test_table(value);
+		
+		-create view schema as select * from sqlite_master;
+		
+		-创建临时表
+			create temp table f2 as select * from foods;
+			; 可以在运行时为某个账号单独创建一个表???
+		-主键定义:
+			id integer primary key autoincrement
+		-默认值:
+			name not null default current_date,
+			name not null default current_time,
+			name not null default current_timestamp,
+		
+	insert:	
+		insert into test_table(id,value) values(1,'fff');
+		
+	delete:
+		delete from  foods where id=443;
+		
+	select:  离散数学关系代数可以发挥到极致了
+		-基本:
+			- Restriction		限制
+			- Projection		投影
+			- Cartesian Product	笛卡尔积
+			- Union				联合
+			- Difference		差
+			- Rename			重命名
+		-附加操作:
+			- Intersection		交叉
+			- Natural Join		自然连接
+			- Assign			赋值
+		-扩展操作:
+			- Generalized Projection	广义投影
+			- Left Outer Join			左外连接
+		-例子:
+			select distinct  count(name) from foods;
+				;count(*),foods表name有几个
+			select count(*) from food where id in (1,2);
+				; id in (1,2) 套用in操作符
+			select count(*) from food where
+			id in (select id from food_types where ...)
+				; 也可以把一个字查询放入in () 中作为匹配目标
+			
+
+		
+从句:
+	inner join:
+	
+	
+
+数据完整性:(约束)
+	域完整性,			;字段取值
+	实体完整性,			;表中的行
+	引用完整性,			;表之间 外键关系
+	用户定义完整性
+	
+	not null, unique, primary key, foreign key, check, collate, default
+	
+	- collate nocase
+		定义排序规则,大小写不敏感
+	-check:  定义表达式来确定要插入或者更新的数据值
+		check ( length(phone)>=7 )
+	-unique: table内取值唯一
+		unique (name,phone) 
+-外键约束:
+	create table TABLE_NAME
+	( column_df references FOREIGN_TABLE (column_name)
+		on {delete | update } integrity_action
+		[not] deferrable [initally {deferred | immediate},]
+	);
+	-规则:
+		set null, set default,
+		cascade
+		restrict
+		no action
+
+视图:
+	虚拟表,
+	数据来自其他表的查询结果,
+	动态产生的
+
+索引:
+	加速查询的结构
+	需要额外创建:
+		create index INDEX_NAME on table_name(COLUMS)
+			create unique index foo_idx on foo(a,b)
+		drop index INDEX_NAME
+		
+触发器:
+	特定event发生,执行对应sql命令
+	create [temp|temprory] trigger name
+	[before | after ] [insert | delete | update | update of columns] on table
+	action;
+	
+	可更新视图:  View 配合 trigger
+	
+事务:
+	begin commit rollback
+
+------------------
+creat table:
+	create [temp|temprory] table table_name ( column definitions [, constraints]); 
+- column definitions:
+	[primary key | not null | default 'UNKNOWN' | collate nocase | unique(col,col2)]
+	name  text  not null collate nocase
+	phone text  not null  default 'UNKNOWN';
+	; 表一级的约束
+	unique(name,phone) ; 2个域必须是唯一的
+-------------------
+alter table: (修改表)
+	alter table table_name { rename to name | add column  column_def }
+- Exp.1 
+	alter table MyT add column email text not null default '' collate nocase
+		- 给MyT加一列email
+-----------------------
+select:
+	select [distinct] 	heading
+		select t_a.a as haha	; 别名
+	from 				tables
+	where				predicate
+	group by columns
+	having				predicate
+	order by columns
+	limit (n) , offset
+	----------------------
+	select a,b 		; 要选择的列,可以对a进行自定义表达式
+	from t_a,t_b	; 这会让a,b两表组合
+		t_a,t_b		
+			; 进行笛卡尔积
+		t_a cross join t_b
+			; 同上	
+		t_a inner join t_b on t_a.id=t_b.id;
+			; 进行用 inner join on 进行内连接
+			; 类似于集合中的 交集
+			; 内连接可以通过 where 隐含实现,但开销很大
+		t_a left outer join t_b on 
+			; 左外连接, t_a中无匹配的,仍会出现,t_b补空
+		; 给表别名 from t_a a, t_b b;
+			
+	where			; 行选择标准,限制和过滤器
+	group by		; 分组,意味着每组只有一行数据了,
+						常用与聚合函数
+		having      ; 与order by连用, 对聚和值进行操作
+	order by 		; asc , desc		
+	limit 10		; 最多显示10个 offset n		;
+----------------------------------------
+insert: 插入记录,一行或者多行
+	insert into Table(C_list) values (v_list)
+	
+	INSERT OR REPLACE
+		尝试插入一条记录,如果冲突了,就将其删除,然后更行成新的
+	坑:
+		先插入后更新,可能会有触发器被触发了
+		根据我用upsert和 先update 然后在insert的语句实测, 
+			upsert 要 80ms
+			update insert 只要 4ms
+		// 对于更新比较频繁的操作而言,后者好多了
+----------------------------------------
+update: 修改记录
+	update Table set Valuses where;
+----------------------------------------
+delete:
+	delete from Table where Predicate
+
+	
+

@@ -1,0 +1,7 @@
+apt:
+
+sudo apt install gcc   (GNU project for c and c++ compiler)
+sudo apt install g++   (GNU project for c and c++ compiler)
+
+git
+

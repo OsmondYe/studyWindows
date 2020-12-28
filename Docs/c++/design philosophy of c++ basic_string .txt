@@ -1,0 +1,36 @@
+# Design philosophy of c++ class string , top-down Modeling 
+
+``` c++
+template< class _Elem,
+		  class _Traits = char_traits<_Elem>,
+		  class _Alloc = allocator<_Elem> 
+		>class basic_string
+```
+-------------------
+*Requirements:*
+- One Class Hold for all known Char-sets,such as Ansi,Unicode,utf8,uft16,uft32 
+    - traits
+- Hide the memory implementation details
+   - allocator
+- Design as a Container to support Iterator, seamlessly compatible with Algorithms
+
+
+**Analize**
+- data struct and data modeling 
+
+<data,data_logic_model,data_physic_model> + fucntions_provided_by_whole_model
+>>> 
+>> <Elem,Traits_Elem,Allocator_Elem>  + class String
+
+**Traits** 
+- a distinguishing characteristic or quality, especially of one's personal nature
+
+**Allocator** 
+
+``` c++
+basic_string<char, char_traits<char>, allocator<char>>;
+basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t>>;
+basic_string<char16_t, char_traits<char16_t>, allocator<char16_t>>;
+basic_string<char32_t, char_traits<char32_t>, allocator<char32_t>>;
+```
+

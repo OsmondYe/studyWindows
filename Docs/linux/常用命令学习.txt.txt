@@ -1,0 +1,242 @@
+Linux 常用命令学习
+
+- ubuntu版本信息
+	lsb_release -a 
+
+- 查看内存	
+	free -h 
+	cat /proc/meminfo
+
+- 查看硬盘情况
+	df -h    (df: disk free)
+- 查看文件占空间情况
+	du -h    (du: disk usage)
+	du -hs   (-s summerize only)
+
+- 查看加载的模块(驱动)
+	lsmod 
+
+- 清空文件内容
+	echo "" > ~/myfile/a.txt
+
+- 远程copy  scp 
+	要把当前一个文件copy到远程另外一台主机上
+		scp /home/daisy/full.tar.gz root@172.19.2.75:/home/root
+	把文件从远程主机copy到当前系统，也很简单
+		scp root@172.19.2.75:/home/root /home/daisy/*.tar.gz
+
+
+--------------------------------------------------------------------------------
+grep MemTotal /proc/meminfo 
+# 查看内存总量
+
+rsync
+uname
+more/less 分页显示  bash要显示的内容太多了，一屏幕显示不下时使用
+hostname
+who
+ls
+ld -R
+ls -ld
+ls -F classify 区分文件与目录
+ls -a 也显示隐藏文件
+ls -R Recursive 显示tree 当前目录下所有目录中的文件
+ls -l 文件的详细信息
+ls -d */ 只显示目录信息ls -F | grep "/$"ls -l | grep "^d"
+od 按照指定格式dump数据
+	-A [doxn]地址栏格式   
+		decimal, octal, hex, none
+	-w 1 （ width X， 每行实际数据的个数)
+	dump 的数据每行有1个字节，一般用32把，16也行
+		-t  用来指定具体要求的格式
+		[doux]  [1234]
+	d1 , u2 分别为signed decimal, unsigned decimial
+	x1  hex with 1 byte
+	o4  octal with 4 btye
+	[doux] [CSIL]
+	xX  hex with sizeof(Char)   short, int long
+	c  解析为可打印字符
+	z  每行结尾给出字符串的comment
+	常见用法
+	od -Ax -w32 -tx1z
+	16进制地址表示，32字节宽，每单元显示一个0xXX, 行结尾有字符串
+
+clear
+history
+!! 重复上一个
+！23 重复第23号命令
+!w 重复前一个以w开头的命令
+!?XX  包含XX字符的命令   !?ear   ( match  clear)
+id  显示用户信息
+passwd 修改用户密码
+hdparm 硬盘参数
+
+jobs bg fg
+pwd，	 print working dir
+touch  创建一个新文件，或者更新已有文件的时间
+file  查看目标文件类型   dir exe ascii
+cd  change dir
+cp copy
+
+mv  move
+rm remove
+	-r 递归删除一个文件夹
+mkdir
+rmdir  只能删除空目录
+head/tail  显示文件头几行，尾几行
+stat 显示文件的完整信息
+cat   显示文件内容到bash   -n 显示行数   -b 文本文件显示行数
+cat 本质的意思是 把选中的文件s，一起连接到标准输出（屏幕）
+可以同时选中多个文件，一个接一个的去连接
+cat f1 f2 f3 > f4 
+ 顺次把f1 2 3 的内容 写入f4
+date hwclock  cal 时间和日历  
+date [+Fomrat]    date +%Y-%m:%d
+uptime 计算机已经启动的时间，当前负载
+--------------------------------------------------------------------------------
+//
+//ps  显示进程  snapshow of current processes
+//
+kill 杀死某进程或者作业
+先用ps看看进程号，用jobs看下作业号
+kill 4450  杀死4450号进程
+kill %2  杀死2号作业
+lsusb 查看usb硬件信息
+lspci  查看pci设备信息
+
+--------------------------------------------------------------------------------
+tr ： 转换和删除  tr setA  setB，  setA中对应的内容全部被setB中对应的替代
+echo abstract | tr abc ABC
+ABstrACt    ( a,b,c 分别替换为 A,B,C)
+cat file | tr a-z A-Z > new_file
+file中的小谢全部变大写，结果写入新文件
+cat file | tr -d abc
+删除文件中所有a，b，c字符
+tr -s "\n" < file
+file中多个连续的\n只显示一个，  -s = --squeeze-repeats
+echo $PATH | tr -s ":" "\n"
+:  全部替换为 换行
+tee:   把标准输入的内容写到指定文件s和标准输出
+tee f1
+ 键盘的敲击数据全部写入到了fi文件和屏幕
+tee -a f1
+-a: --append
+ls -al | tee ls.out | less
+把ls的结果写入ls.out同时输出给less
+who | tee who.out | grep osomd
+tee把who的输出拿过来，先写给 who.out，然后在送到标准输出
+
+
+
+--------------------------------------------------------------------------------
+查找：
+locate
+locate firefox  快速查找含有firefox关键字的文件名在整个系统中
+locate命令依赖一个数据索引，预先把整个文件系统的目录与文件都索引一遍，所以查找起来很快，但是需要每天去update这个数据库
+依赖命令 updatedb
+find 查找位置 查找参数
+查找参数可以有很多有效的条件
+-name  *abc*  基于文件名去查找
+find /bin -name t*   所有t开头的命令
+-perm  777  所有权限是777的
+-type d  查找所有目录
+-szie +100M
+all that great than 100m 
+-size -100m
+all that less than 100m
+牛逼操作 -exec comd {} \;  
+把所有找到的条目当做参数传给comd命令来执行
+{}用来代表找到的目录，
+\; 转译；分号，格式要求，必须这么写
+find . -type d -print -exec du {} \
+查找当前目录所有目录，并且打印出来，然后对每一个找到的执行du;   
+--------------------------------------------------------------------------------
+-关机 重启
+	shutdown  -h  halt   -r reboot
+	reboot 
+	poweroff
+--------------------------------------------------------------------------------
+#network 网络:
+- show ip
+	ip addr show   (show IP)
+
+- ping
+	ping www.baidu.com
+
+- 测速 iperf:
+	测试与client&server的 tcp速度到底如何?
+	服务器执行：./iperf -s -i 1 -w 1M '这裏是指定windows如果是 iperf -s则windwos默认大小为8kbyte/s 　
+	客户端执行：./iperf -c host -i 1 -w 1M 　　其中-w表示TCP window size，host需替换成服务器地址。 
+
+- download file
+	wget http://your_file_url
+
+- netstat -tulpn | grep LISTEN
+	端口 查看 打开的
+--------------------------------------------------------------------------------
+#归档压缩
+
+zip unzip gzip
+tar   （tool for  archive归档 打包的意思  （包一些文件打包成一个文件）
+-c -x  
+create or extract  要么新家压缩，要么解压缩
+-f 看了是必须的  后要跟文件名参数
+表示压缩一个文件，或者释放到哪里
+----创建一个归档在/etc/ 
+	tar -cvf  myect.tar /etc/	 
+----释放此归档
+	tar -xvf myetc.tar  
+创建归档然后在调用gzip进行压缩
+	tar -cvzf myect.tar.gz /etc/   
+--------------------------------------------------------------------------------
+磁盘与分区
+fdisk 基于MBR的分区工具
+mke2fs 创建文件系统
+mkfs 简易的文件系统创建
+dumpe2fs 查看已经创建好的文件系统
+e2label  给分区打标签
+fsck 检查并修复损坏的文件系统
+
+
+///
+//  shell short cut
+//
+命令的执行次数，[alt] + [1-9] 确定命令的执行次数
+atl 4  ctrl d , 连续删除4个单词
+--------------------------------------------------------------------------------
+
+[ctrl]+[alt]+[F1]~[F6] 文字界面登陆
+[ctrl]+[alt]+[F7] 图形界面桌面 
+[Tab]按两下 命令或者文件补全因为一个空格后面默认是文件，所以就可以显示当前目录的文件了
+[Shift]+ [PgUp] 屏幕向上翻页
+[ctrl]+[c] 中断目前的程序SIGINT
+[ctrl]+[\] 退出SIGQUIT
+[ctrl]+[z] 挂起SIGTSTP   (terminal STOP)
+[ctrl]+[d] 键盘输入结束 发送EOF信号在shell下按相当于离开终端--------------同时也可用来删除当前光标下的char
+[ctrl]+[h] 删除字节
+[ctrl] + [l] 清屏
+[ctrl] + [x] [v] 显示shell的version
+[ctrl] + [alt] + [e] expansionecho $HOME   会直接扩展 HOME的内容·date·  会直接扩展这个命令
+[Ctrl] + [f]    <-[ alt ] + [f]   word  forward [ctrl] + [b]   ->[ alt ] + [b]  word back char,, forward, backshel上输入命令是，让光标左右移动
+[ctrl] + [a]  Home[ctrl] + [e]  End 光标移动到 行首，行尾
+ 
+删除
+[ctrl] + [d] del char，当前光标
+[ctrl] + [k] 删到行尾，从当前光标
+[ctrl] + [w] 回删[alt] + [d]  前删 删除一个单词 
+[ctrl] + [y][alt] + [y] yank类似于粘贴alt:  循环前一个
+[ctrl]+[u] 删除一行
+search
+[ctrl] + [r]   启动search 下一个匹配项
+[ctrl]+ [g] gone ,取消搜索,回来
+[crtl] + [j] 带着搜索结果回来
+快速输入
+!$ 上一个命令的参数
+
+
+
+
+
+
+
+ 

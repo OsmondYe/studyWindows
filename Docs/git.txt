@@ -1,0 +1,33 @@
+# config
+	 git config --global user.email "osmond.ye@gmail.com"
+	 git config --global user.name "oye_github"
+
+# 让git记住密码
+
+# git 根据什么找到不同的repo， 比如我有多个工程，每个连到了不同的git
+	每个工程主目录下面有个.git的隐藏文件
+
+
+# 当前目录的情况
+	git status
+
+
+# 修改远程repo名字:
+	把 studyCSharp -> studyWindow 在本地 需要用命令 git remote set-url origin https://github.com/OsmondYe/studyWindows.git
+
+# 撤销本地所有修改:
+	git checkout .
+
+# 撤销file_a文件的本地修改
+	git checkout -- file_a
+
+# 已经提交本地的缓存放弃
+	git reset HEAD .
+
+# 撤销file_a文件的本地缓存
+	git reset --
+	
+# 撤销并删除所有本地的untracted files
+	git clean -fd
+	-f force -d dir
+

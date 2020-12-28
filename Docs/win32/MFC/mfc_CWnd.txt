@@ -1,0 +1,215 @@
+###########################################
+# 基本理念:
+	# CWnd 需要处理windows上面所有窗口所具有的一切功能
+		# legacy -> curosr, 
+		# 对话框, 模态,非模态
+		# Wnd's Menu
+		# D2D
+		# touch
+		# dragdrop
+		# ole control
+		# dynamic Layout
+		# win_help, html_help
+	# DefWindowProc
+	# CallWindowProc  // subclassing
+	# reflect
+	# superclass
+	# subclass
+		获取窗口的wndproc,替换一个自己的X,在X里面扩展功能,原先的消息转发wndrpoc
+	# notify
+###########################################
+# Create窗口的秘密
+	# 所有窗口由CWnd来创建, 其会整一个WindowsHook with WH_CBT{
+		// 其会把窗口过程设置为AfxGetAfxWndProc()的返回值, 以此来实现消息路由的根基
+		AfxHookWindowCreate(this);
+		HWND hWnd = CreateWindowEx()
+		AfxUnhookWindowCreate()
+	}
+# MFC用统一的WndProc(AfxWndProc)来链接系统的消息机制,
+	# 这样的好处是,可以把消息先给了CWnd的WindowProc
+	# CWnd::WindowProc,把消息转发给CWnd::OnWndMsg
+	# CFrameWnd::OnCommand 改写了CWnd基类的命令实现
+		# 但是看代码,似乎只是扩展了, ID_HELP, 这个好像没什么用
+###########################################
+# CWnd极其特殊, 他是所有窗口类的基类, 里面藏了不少秘密
+	# CWnd::FromHandlePermanent
+		第一看到 afxMapHWND
+	# CWnd::Create CreateEx
+	# OnWndMsg 里面做消息派发
+		# WM_COMMAND -> OnCommand
+		# WM_CREATE	 -> dynamicLayout.creat
+		# WM_NOTIFY  -> OnNotify
+		# 其他静态绑定好了的MessageMap
+	# OnWndMsg里面的 union MessageMapFunctions mmf;
+		# 整了一个大的union,包含了函数指针签名,所有和消息分发处理接口有关的消息接口
+	# OnWndMsg里面的一个msg_cache{
+		#define iHashMax 512
+		AFX_MSG_CACHE _afxMsgCache[iHashMax];  一个512个元素的数组
+		struct AFX_MSG_CACHE
+		{
+			UINT nMsg;  					    //代表当前收到的msg
+			const AFX_MSGMAP_ENTRY* lpEntry;    // 消息循环里面找到的,对应的类处理函数
+			const AFX_MSGMAP* pMessageMap; 		//代表发给本类的消息,
+		};
+
+		快速hash 
+			iHash = (LOWORD((DWORD_PTR)pMessageMap) ^ message) & (iHashMax-1);
+			pMsgCache = &_afxMsgCache[iHash];
+
+		// [MFC整了一些内部的自定义消息],至少从0xC000开始
+		if (message < 0xC000)
+			goto LDispatch;
+		else
+			goto LDispatchRegistered;
+
+	}
+
+# 消息相应调用栈
+	CWnd::OnWndMsg
+	CWnd::WindowProc
+	AfxCallWndProc				//send message to a CWnd, 此时已经寻找到了CWnd对象
+	AfxWndProc
+	AfxWndProcBase
+	::DispatchMessage
+
+	# AfxWndProcBase
+		::DispatchMessage时, MFC最先相应消息的Proc
+	# AfxCallWndProc
+		if ((nMsg == WM_DESTROY) && (pWnd->m_pCtrlCont != NULL)) 
+			pWnd->m_pCtrlCont->OnUIActivate(NULL);
+		if (nMsg == WM_INITDIALOG)							// 很明显,对话框很特殊,会额外发生消息
+			_AfxPreInitDialog(pWnd, &rectOld, &dwStyle);
+
+		lResult = pWnd->WindowProc(nMsg, wParam, lParam);   // 还是一个虚函数
+
+		if (nMsg == WM_INITDIALOG)
+			_AfxPostInitDialog(pWnd, rectOld, dwStyle);
+	# CWnd::WindowProc
+		//具体到了这里,才真的是从c世界导入到了c++世界
+		//virtual func 
+			CBasePane, CMFCRebar, CControlBar, CMFCRibbonBar 都重载了
+		if (!OnWndMsg(message, wParam, lParam, &lResult))
+			lResult = DefWindowProc(message, wParam, lParam);
+		// 很明显,具体需要干事的地方,交给了 OnWndMsg 和 DefWindowProc
+		// DefWindowProc 也是 成员函数, 用来支持超类化
+	# OnWndMsg
+		// CFrameWnd, CMDIFrameWnd 会继承此函数
+		union MessageMapFunctions mmf; 
+
+		// COMMAND有自己特定的处理机制
+		if (message == WM_COMMAND)
+		{
+			if (OnCommand(wParam, lParam))
+			{
+				lResult = 1;
+				goto LReturnTrue;
+			}
+			return FALSE;
+		}
+		#  special cases
+			if (message == WM_CREATE && m_pDynamicLayout != NULL)
+			{
+				if (!m_pDynamicLayout->Create(this))
+				{
+					delete m_pDynamicLayout;
+					m_pDynamicLayout = NULL;
+				}
+				else
+				{
+					InitDynamicLayout();
+				}
+			}
+
+			if (message == WM_NOTIFY)
+			{
+				NMHDR* pNMHDR = (NMHDR*)lParam;
+				if (pNMHDR->hwndFrom != NULL && OnNotify(wParam, lParam, &lResult))
+					goto LReturnTrue;
+				return FALSE;
+			}
+
+			if (message == WM_ACTIVATE)
+				_AfxHandleActivate(this, wParam, CWnd::FromHandle((HWND)lParam));
+
+			if (message == WM_SETCURSOR &&
+				_AfxHandleSetCursor(this, (short)LOWORD(lParam), HIWORD(lParam)))
+			{
+				lResult = 1;
+				goto LReturnTrue;
+			}
+		# 正式处理消息
+			const AFX_MSGMAP* pMessageMap = GetMessageMap();
+			// 从最底层派生类开始找,一直到基类,有没有注册了此消息的对应的消息相应函数
+			for (; pMessageMap->pfnGetBaseMap != NULL;
+					pMessageMap = (*pMessageMap->pfnGetBaseMap)())
+			{
+				if (message < 0xC000)
+				{
+					// constant window message
+					if ((lpEntry = AfxFindMessageEntry(pMessageMap->lpEntries,
+						message, 0, 0)) != NULL)
+					{
+						pMsgCache->lpEntry = lpEntry;
+						winMsgLock.Unlock();
+						goto LDispatch;
+					}
+				}
+				else
+				{
+					// registered windows message
+					lpEntry = pMessageMap->lpEntries;
+					while ((lpEntry = AfxFindMessageEntry(lpEntry, 0xC000, 0, 0)) != NULL)
+					{
+						UINT* pnID = (UINT*)(lpEntry->nSig);
+						ASSERT(*pnID >= 0xC000 || *pnID == 0);
+							// must be successfully registered
+						if (*pnID == message)
+						{
+							pMsgCache->lpEntry = lpEntry;
+							winMsgLock.Unlock();
+							goto LDispatchRegistered;
+						}
+						lpEntry++;      // keep looking past this one
+					}
+				}
+			}
+
+
+
+###################################
+# CWnd与模态对话框,
+	# MFC 自己模拟了DoModal
+WF: wnd_flag
+#define WF_STAYDISABLED     0x0004  // window should stay disabled
+#define WF_MODALLOOP        0x0008  // currently in modal loop
+#define WF_CONTINUEMODAL    0x0010  // modal loop should continue running
+
+// flags for CWnd::RunModalLoop
+#define MLF_NOIDLEMSG       0x0001  // don't send WM_ENTERIDLE messages
+#define MLF_NOKICKIDLE      0x0002  // don't send WM_KICKIDLE messages
+#define MLF_SHOWONIDLE      0x0004  // show window if not visible at idle time
+###################################
+# CWnd 里面的骚操作
+	# pAlternateOwner->GetSafeHwnd() {return this == NULL ? NULL : m_hWnd;}
+		# 允许pAlternateOwner 为空
+	# 判断是否独立窗口, 如果没有WS_CHILD 就是独立窗口, 那么可以有owner{
+		if (dwStyle & WS_CHILD)
+			hWndCenter = ::GetParent(m_hWnd);
+		else
+			hWndCenter = ::GetWindow(m_hWnd, GW_OWNER);
+	}
+###################################
+# MFC 自己定义了一些内部消息, 0xC000 开始
+###################################
+# 微软Wnd的常见功能
+	# SetCapture   ReleaseCapture
+		鼠标一直被此窗口捕获,鼠标消息持续发送给此窗口
+	# GetWindowRect GetClientRect
+		窗口尺寸, 从系统级别看整个窗口,和窗口内部整个客户区
+	# ScreenToClient ClientToScreen
+		坐标系转换
+	# SetWindowRgn  GetWindowRgn
+		Region, 有效可以让系统画图的区域, 区域外系统不会做任何画图
+		# 调用set会导致发送WM_WINDOWPOSCHANGING 和 WM_WINDOWPOSCHANGING
+		
+

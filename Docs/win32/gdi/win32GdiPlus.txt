@@ -1,0 +1,143 @@
+GDI+{
+	warpper win32 gdi
+
+	Win32 Service can not use it
+
+	Above WinXp and Win Server 2003
+
+	alpha blending
+
+	category{
+		2d vector graphics  {Line, Curves, figures},   {Rect Pen Graphics Brush}
+		imaging
+		typography  Rich{text, font, style}, antialiasing
+	}
+
+
+	绘图,文本输出,几何图形变换,坐标系统变换
+
+	transform{
+		// 多次调用具有叠加效果
+		RotateTransfrom  顺时针角度
+		ScaleTransfrom  缩放
+		TranlateTranform 平移
+	}
+
+
+}
+
+Graphics{
+	static FromHDC,  FromHND, FromIamge{
+		可以采用不同的绘制平面, hdc, hwnd,image
+	}
+	想办法把他和某个窗口或者图像给关联起来
+	RederingOrigin
+}
+
+Pen{
+	[line, color, width, style]
+	Pen blue(Color(255, 0, 0, 255));
+	Pen red(Color(255, 255, 0, 0));
+
+}
+
+Brush{
+	SolidBrush{
+
+	}
+	HatchBrush{
+		HatchStyle
+	}
+	TextureBrush{
+	  //使用图片进行平铺  p78  图案,大小,排列方式
+	  wrap mode -> how to arrange{
+	  	tile 平铺
+	  	TileFlipX 每隔一列水平翻转
+	  	TileFlipY 每隔一行垂直翻转
+	  	TileFlipXY
+	  	clamp 只有一个
+	  }
+	  image attribute
+
+	  TextureBrush tb2(&im,Rect(0,0,30,50));   如果rect大于了图像本身的尺寸会导致创建失败,此事需要利用
+		tb3.SetTransform(&Matrix(0.3f, 0, 0, 0.3, 0, 0));  进行缩放处理
+	}
+
+	LinearGradientBrush{
+		// color沿着指定的角度和方向前进,进行渐变
+	}
+
+	PathGradientBrush{
+
+	}
+
+}
+
+String&Font{
+	[location, bounding, rectangle, font, format]
+	
+	
+	FontSytle{
+		Regular
+	}
+	FontUnit{
+		World
+		Display 和输出设备同单位, 显示器就是 pixel
+		Pixel
+		Point 傍,
+		
+	}
+	Font的尺寸{
+	  Ascent + Descent =  effective height
+	  Line_spacing 
+	  EmHeight
+	}
+	StringFormat{
+		stringFormat.SetAlignment(StringAlignmentCenter);
+		stringFormat.SetLineAlignment(StringAlignmentCenter);
+		SetFormatFlags(StringFormatFlagsDirectionVertical);  	//vertical string
+	}
+	InstalledFontCollection{
+
+	}
+
+
+}
+
+
+
+Path{
+	把线条,矩形,string等基本构建单元放入一个unit中, 然后直接call graphic.DrawPath 来实现一次绘制
+	文字也是path的一个组成
+}
+
+Region{
+	display surface的一部分,  2个region可以组合
+
+	be used::  clipping,  hti testing
+	Clipping: 限制显示只能在固定的区域
+	Hit-testing: 光标是否在确定的区域
+
+	从path构建区域, combine-region
+
+}
+
+
+//
+// Good Code
+//
+Constr_Deconstr{
+	#include <gdiplus.h>
+	using namespace Gdiplus;
+	#pragma comment(lib,"gdiplus.lib")
+
+
+	ULONG_PTR gGidplusToken = 0;
+	Gdiplus::GdiplusStartupInput gGdipulsInput;
+
+	Gdiplus::GdiplusStartup(&gGidplusToken, &gGdipulsInput, NULL);
+
+	if (gGidplusToken != NULL) {
+			Gdiplus::GdiplusShutdown(gGidplusToken);
+	}	
+}

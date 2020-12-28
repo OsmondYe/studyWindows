@@ -1,0 +1,22 @@
+v2ray + ws +tls + web
+
+查看 nginx log:
+	cat /var/log/nginx/error.log 
+
+
+
+# let's encrypt 证书过期问题{
+	# 先关闭nginx, 在通过certbot来 renew 
+	sudo service nginx stop
+	sudo certbot renew
+	sudo service nginx restart	
+
+	# 还是很容易的{
+		# cerbot 公司的介绍
+		# https://certbot.eff.org/about/
+	}
+}
+
+
+
+

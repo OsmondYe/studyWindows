@@ -1,0 +1,99 @@
+# Office{
+	Home category
+		Clipboard Panel
+			Paste Button
+			Cut   Button
+		Font Panel
+}
+# class{
+		CMFCRibbonBaseElement 
+		CMFCRibbionApplicationButton
+		CMFCRibbonBar					public CPane : CPaneBase : CWnd   bar本身是一个窗口
+		CMFCRibbonbutton
+		CMFCRibbuttonGroup
+		CMFCRibbonCaptionButton
+		CMFCRibbonCategory
+}
+# CMFCRibbonBar::LoadFromResource
+# CMFCRibbonBar : public CPane
+###########################################
+# 基类常用方法 CMFCRibbonBaseElement
+	# GetTopLevelRibbonBar
+		CMFCRibbonBar* pRibbonBar = GetTopLevelRibbonBar();
+		Ribbon子元素用来获取Ribbonbar的,可以做一些事件通知
+# 基类常用方法 CMFCRibbonBar
+	# GetElementsByID
+		pRibbonBar->GetElementsByID(m_nID, arButtons);
+			多元素具有同一个ID
+
+###########################################
+# [一个主线]How ribbon will be created on top of the frame,   
+  RibbonBar本身是一个窗口
+  {
+	CMFCRibbonBar     m_wndRibbonBar;
+	m_wndRibbonBar.Create(this, WS_CHILD | WS_VISIBLE | CBRS_TOP);
+	m_wndRibbonBar.LoadFromResource(IDR_RIBBON);
+	m_wndRibbonBar.SetWindows7Look(FALSE);
+}
+# 理解RibbonBar,就先看此类的关键数据成员{
+	m_pMainButton				// Main Button的点击 show m_pMainCategory
+	m_pMainCategory				// Main Button的相应Pannel, 成为Catagory
+	m_pHighlighted
+	m_pActiveCategory
+	m_arCategories  			// 存放其他Category  Home Insert View Reivew Nextlabs
+	m_CaptionButtons
+	m_QAToolbar
+	m_Tabs 						// 
+}
+###########################################
+# [主线] Ribbon里面的设计模式
+# LoadFromResource 谁说里面没有设计模式了{
+	CMFCRibbonInfo info;
+	CMFCRibbonInfoLoader loader(info);
+	CMFCRibbonConstructor constr(info);     // RibbonBar的职业建筑工,专给RibbonBar创建具体内容
+	constr.ConstructRibbonBar(*this);
+
+	afxribboninfo.h .cpp 实现了 xml里面的定义
+	afxribboninfoloader .h .cpp 
+	# 基本资源加载{
+		::FindResource
+		::SizeOfResource
+		::LoadReshource
+		::LockResource
+	}
+}
+
+###########################################
+# [主线] Catagory切换时做了什么
+	[EachElem].OnAfterChangeRect
+	Panel.Reposition Panel.OnAfterChangeRect
+	Category.ReposPanels
+	Category.RecalcLayout
+	ribbonBar.RecalcLayout
+	ribbonBar.SetActiveCategory
+	ribbonBar.OnLButtonDown 
+###########################################
+# [主线] Ribbon里面的子控件都不是子窗口,他是如何响应消息的?
+	
+	
+###########################################
+# Application Button
+	按下显式一个menu
+
+###########################################
+# 为什么我的RibbonEdit 总是disable的
+	# 从这里可以贯穿到整个设计, 一定会有一个新的设计理念出来
+	# CMFCRibbonEdit : public CMFCRibbonButton
+	# Ribbon的基本元素都不是从CWnd来的,所以没有窗口基本功能
+		# 引出了一个新类 CMFCRibbonRichEditCtrl
+		# 关键虚函数: virtual CMFCRibbonRichEditCtrl* CreateEdit(CWnd* pWndParent, DWORD dwEditStyle);
+		# 关键成员: CMFCRibbonRichEditCtrl* m_pWndEdit;	CMFCRibbonSpinButtonCtrl* m_pWndSpin;
+		# 运行时,我们需要自己给他绑定一个RichEdiCtrl,这样就能显式edit框了
+	# 我看源代码,SetEditText(L"sdfsdfdssdfsdfsd"); 在没有任何子窗口的情况下,他依然可以重绘,谁给他做的?
+		# m_pWndEdit 这有时候有值,有时候没值,好奇怪
+			# RepositionRibbonEditCtrl 会创建给EditCtrl创建实例
+				# OnAfterChangeRect
+			# 系统会自动给其默认创建一个,
+	# 解决了: 给其ID响应 ID_ENGLISH_WORD, 把enable打开
+
+

@@ -1,0 +1,34 @@
+MFC 针对传统Common Ctrl进行了封装, 同时也有自己功能更强的扩展组件
+###########################################
+# status bar
+	
+###########################################
+# tool_tip
+	# 分类
+		# 传统 tool_tip , 静止显示文本
+		# tracking tooltip,   持续存在的tool tip
+		# Multiline tooltips
+		# Ballon Tooltips
+		# with Icon and title
+		# in-place tool tip
+	# 创建成功后,显示指定TopMost
+		SetWindowPos(hwndTip, HWND_TOPMOST,0, 0, 0, 0,SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+	# 失败,总显示不出来
+###########################################
+# grid_ctrl
+	# 属性表格
+	# 允许我们放置各种我们需要的表格
+	# 内涵子控件
+		# HeaderCtrl
+		# DescriptionArea
+		# TipCtrl
+		# ScroolBar
+###########################################
+# Tree ctrl
+	# item :  label(text) + optainal bitmapped image (icon)
+		# sublitems 
+		# action: click, expand, collapse 
+		# ON_NOTIFY_REFLECT   class_instance  自己处理
+		# On_NOTIFY   让父窗口去处理
+
+

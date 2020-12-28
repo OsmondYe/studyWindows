@@ -1,0 +1,167 @@
+
+# in class{
+	Q_OBJECT   {
+		IMPLED,  signale and slot
+	}
+
+	Q_PROPERTY	
+
+
+}
+
+# Q_OBJECT{
+	#define Q_OBJECT \
+public: \
+    QT_WARNING_PUSH \
+    Q_OBJECT_NO_OVERRIDE_WARNING \
+    static const QMetaObject staticMetaObject; \
+    virtual const QMetaObject *metaObject() const; \
+    virtual void *qt_metacast(const char *); \
+    virtual int qt_metacall(QMetaObject::Call, int, void **); \
+    QT_TR_FUNCTIONS \
+private: \
+    Q_OBJECT_NO_ATTRIBUTES_WARNING \
+    Q_DECL_HIDDEN_STATIC_METACALL static void qt_static_metacall(QObject *, QMetaObject::Call, int, void **); \
+    QT_WARNING_POP \
+    struct QPrivateSignal {}; \
+    QT_ANNOTATE_CLASS(qt_qobject, "")
+}
+
+# command{
+	[Sender, Signal, Receiver, Slot]
+
+	QObject::connect(testPushButton, SIGNAL(clicked()), MainWindow, SLOT(close()));
+	QMetaObject::connectSlotsByName(MainWindow);
+
+	发射这不需要知道如何找到slot,  qt系统内部做了
+	没有直接callback快
+	# type
+		AutoConnection   (同线程,direct,不同线程,queued)
+		DirectConnection  (同线程)
+		QueuedConnection   (不同线程)
+		BlockingQueueConneciton  (等直到目标线程已经执行了slot)
+
+	# 自定义Signal
+}
+
+# QAction {
+	不可见的UI页面元素
+	可以和菜单,状态栏,toolbar等关联到一起  快捷键,菜单,命令 之类
+	Trigger	
+	QAction* actCut, 作为一个独立的类对象,直接放在UI的class里面
+	有些组件有默认的槽函数, 那可以直接把signal送过去, 快速实现开发
+}
+
+# qt对c++的扩展{
+	# MOC meta-object compiler
+		对代码进行预处理,支持信号-slot, 对象属性, 运行时对象识别之类
+	# QObject
+		metaObject
+		newInstance
+		inherits
+		tr, rtUtf8
+		setProperty,  Property
+		qobject_cast
+	# Q_CLASSINFO	
+		属性系统的附加信息
+}
+
+# mainwindow.ui{
+	会被翻译为一个头文件
+	ui_mainwindows.h
+
+	# setupUi {
+		# 这里只会new 需要的UI对象, 并没有delete
+		# 会在哪里delete?
+	}
+
+	# retranslateUi{
+		# 设置组件文字之类的内容
+		# 专门以函数来设计, 好处是 国际化
+	}
+
+}
+
+# QtGlobal{
+	#qint 之类的type设置
+	#常用util函数
+	#宏定义
+		QT_VERSION, Q_BYTE_ORDER
+}
+
+
+# Qt常见功能类{
+	# QString, QTime,QDate
+	# QTimer
+	# 容器类{
+	QStringList, QList<QString>
+	#顺序
+		QList, QLinkedList, QVector, QStack QQueue
+	#关联
+		QMap, QMultiMap, QHash, QMultiHash,QSet
+	#Qt foreach
+	}
+}
+
+# Model/View 结构{
+	#
+}
+
+# 布局 
+
+
+# 绘图{
+	# QPainter
+	# QPaintDevice
+	# QPaintEngine
+
+	# QWidget
+	# QPixmap
+	# QImage
+
+	# QGraphicsScene
+	# QGraphicsView
+	# QGraphicsItem
+}
+
+# Qt Charts{
+	# 折线图,柱状图,饼图
+
+	# QChart, QCharView
+	# QLineSeries
+	# QVauleAxis
+
+	# QBarSeries, PercentBar, StackedBar  BoxPlot,  
+		QPieSeries, LineSeries, SplineSeries
+		QScatter  QArea 
+}
+
+# Qt Data Visualization{
+	# 数据三维显示模块
+}
+
+# Qt SQL{
+	# 
+}
+
+# 自定义插件与库{
+	
+}
+
+# QThread{
+	
+}
+# 网络Socket{
+	
+}
+
+# 多媒体{
+	音频,视频
+	audio, video, camera
+	QSoundEffect
+	QSound
+}
+
+# 辅助{
+	多语言,样式表,
+}

@@ -1,0 +1,444 @@
+Win32 GDI
+
+GDI	:  Graphics Device Interface
+subclass: 替换windproc,做修改,默认的直接交给以前的默认处理,只做我们感兴趣的
+superclass: 获取WNDCLASSEX, 根据此创建我们的新窗口,使用已有的模板,要复用旧的窗口过程
+
+Architecture{
+	GDI, DirectDraw
+	DirectX/OpenGL 硬件加速
+	与图形设备无关接口
+	win32k.sys 窗口管理功能,图形引擎(GRE,Graphics Render Engine) 内核支柱
+	Section{
+		位图
+		画刷
+		剪裁
+		颜色
+		坐标和变换
+		设备上下文
+		填充形状
+		字体和文本
+		直线和曲线
+		元文件
+		多显示监视器
+		画图和绘图
+		路径
+		画笔
+		打印和打印池
+		矩形
+		区域		
+	}
+	DirectDraw{
+		目标限制在显卡上,只处理位图,实现硬件加速
+	}
+
+}
+
+HANDLE {
+	struct HPEN_ {int unused;}
+	typedef struct HPEN_* HPEN;
+
+	HPEN 本质上就是一个指针, 指向HPEN_结构体, 我们只需要使用其的数字
+
+}
+
+Window{
+	SystemResource
+	clientArea,
+	Non-client area (windows borders, caption, menus)
+
+	::GetClientRect()
+	::GetWindowRect()	// screen coordinate
+	::GetUpdateRect() ::GetUpdateRgn()
+	
+	::MapWindowPoints()  // translate client rect into screen rect
+	::CombineRgn() // RGN_AND, RGN_COPY, RGN_DIFF, RGN_OR, RGN_XOR
+
+	updateRegion,  region need to be redrawn,
+	Modify updateRegion:
+		::InvalidateRect() ::ValidateRect()
+		::InvalidateRegion() ::ValidateRegion()
+
+	RedrawWindow()
+		RDW_ERASE/RDW_NOERASE(WM_ERASEBKGND), 		
+		RDW_FRAME/RDW_NOFRAME(WM_NCPAINT), 
+		RDW_INTERNALPAINT/RDW_NOINTERNALPAINT
+		RDW_INVALIDATE()/RDW_VALIDATE,
+		RDW_ERASENOW/RDW_UPDATENOW
+		RDW_ALLCHILDREN/RDW_NOCHILDREN
+
+	无效区域,更新区域{
+		无效矩形,无效区域
+
+		Windows 将绘图操作限制在剪取矩形内
+
+		指需要重画的区域，
+		无效的意思是：当前内容是旧的，过时的, 先前被其他窗口遮住了,现在又显示出来
+
+		一次WM_PAINT中如果包含多个无效区域, 那么会将其合并成一个大的无效区域
+
+		其他程序可以call InvalidateRect 可以让部分区域无效,
+
+		GetUpdateRect, 获取到底哪些区域无效了	
+
+		BeginPaint 可以把无效区域变为有效, ValidateRect 也可以实现类似功能
+
+	}
+
+	WM_PAINT/WM_NCPAINT : 只更新无效区域,更新完成后如果无效区域没有被设置有效,会持续发送此消息
+
+	WM_ERASEBKGND : BeginPaint返回时,这个消息已经处理了
+
+
+	LockWindowUpdate()
+
+}
+
+WindowStyle{
+
+	//clip是裁减，去除的意思,减少重画，减少闪动
+	WS_CLIPCHILDREN :  绘图时，将该窗口中的子窗口所占的区域排除在外
+	WS_CLIPSIBLINGS :  绘图时，将该子窗口和其同级其它子窗口（具有相同的父窗口）重叠的区域排除在外
+	
+
+	WS_VISIBLE		
+	WS_DISABLED		(EnableWindow )
+
+	WS_OVERLAPPED	//没有父窗口
+	WS_TILED		// same as WS_OVERLAPPED
+	WS_CHILD 			//出现在父窗口的客户区中，超出的部分不可见,典型用于把父窗口的客户区分割成一些子区域。
+						//父窗口可以是Overlapped、Pop-up、其他Child窗口
+	WS_CHILDWINDOW      
+	WS_POPUP
+	WS_POPUPWINDOW
+
+	// 外观特征
+	WS_SYSMENU
+	WS_BORDER
+	WS_CAPTION
+	WS_MINIMIZE
+	WS­­_MINIMIZEBOX		//has a maximize button
+	WS_MAXIMIZE
+	WS_MAXIMIZEBOX		//has a maximize button
+	WS_ICONIC			// nitially minimized
+	WS_DLGFRAME			// no title bar
+	WS_HSCROLL
+	WS_VSCROLL
+	WS_SIZEBOX			// same as WS_THICKFRAME
+	WS_THICKFRAME
+
+	//
+	WS_GROUP   组控件
+	WS_TABSTOP
+
+
+
+	Dialog :  WS_CAPTION | WS_POPUP | WS_VISIBLE | WS_CLIPSIBLINGS | WS_SYSMENU
+
+	Frame  :  WS_CAPTION | WS_OVERLAPPED | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_SYSMENU | 			  WS_MAXIMIZE | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX
+
+
+}
+
+
+WindowStyleEX{
+	// 外观
+	WS_EX_CLIENTEDGE : 客户区 有个明显下沉
+	WS_EX_WINDOWEDGE : a border with a raised edge
+
+	WS_EX_TOOLWINDOW	: 浮动工具条,类似输入法窗口, 类似于与POPUpWidnwo
+
+	WS_EX_TRANSPARENT	: 和其同级别的底仓窗口重绘了,他就重绘并且一模一样  // Don't hittest this window
+
+
+	WS_EX_STATICEDGE	: 外观3d,但无用户输入
+
+	WS_EX_OVERLAPPEDWINDOW		:  WS_EX_WINDOWEDGE  |  WS_EX_CLIENTEDGE
+	WS_EX_PALETTEWINDOW			:  WS_EX_WINDOWEDGE  |  WS_EX_TOOLWINDOW  |  WS_EX_TOPMOST
+	WS_EX_DLGMODALFRAME
+
+	// 常见功能
+	WS_EX_ACCEPTFILES	: drag-drop
+
+	WS_EX_APPWINDOW  : 强迫一个top-level窗口在可见时，出现在TaskBar上。
+					   但这并不意味着一个窗口出现在TaskBar上就一定需要该风格
+					   如果是主线程的第一个窗口（m_pMainWnd），即使没有该风格，也会出现在TaskBar上
+
+
+
+	WS_EX_LAYERED  ：  建立Layered窗口，即：具有复杂视觉特征的窗口，比如：透明窗口。该风格不能用于子窗口
+					   主要有 SetLayeredWindowAttributes 和UpdateLayeredWindow 两个方法，
+					   其中，后者更加灵活。前者通常用来实现透明窗口等简单任务
+
+	// 高级功能
+	WS_EX_TOPMOST		: 
+	WS_EX_NOINHERITLAYOUT
+	WS_EX_NOPARENTNOTIFY : 子窗口, 不发送 WM_PARENTNOTIFY,告知自己create or destory
+	WS_EX_NOREDIRECTIONBITMAP
+	WS_EX_NOACTIVATE
+	WS_EX_MDICHILD
+
+	WS_EX_CONTROLPARENT
+	WS_EX_CONTEXTHELP
+
+	WS_EX_COMPOSITED   :  deprecated
+
+
+	// 左右习惯
+	WS_EX_LAYOUTRTL
+	WS_EX_LEFT
+	WS_EX_LEFTSCROLLBAR
+	WS_EX_LTRREADING
+	WS_EX_RIGHT 			: 从右往左读,
+	WS_EX_RIGHTSCROLLBAR
+	WS_EX_RTLREADING
+
+}
+
+
+WndClass style{
+	CS_HREDRAW
+	CS_VREDRAW		窗口宽高改变需要重画
+	CS_DBLCLKS		接受鼠标双加消息
+	CS_NOCLOSE		Disables Close on the window menu.
+
+	CS_DROPSHADOW	top-level window使用的,不用画阴影
+
+	CS_BYTEALIGNCLIENT 
+	CS_BYTEALIGNWINDOW  可以加快绘制? 字节对齐
+
+	CS_CLASSDC
+	CS_GLOBALCLASS
+
+	CS_OWNDC
+	CS_PARENTDC
+	CS_SAVEBITS	   当这样的窗口显示时,把被其遮住的部分保存成位图,销毁时用位图了恢复
+}
+
+
+
+
+GDI资源{
+	Pen,
+	Brush,
+	Font,
+	metafile,
+	pallate 
+	bitmap
+
+	都可以使用DeleteObject 
+}
+
+
+DC{
+	图形属性,显卡工作细节
+	文字颜色, 背景, 使用的字体
+- 常见 API:
+	GetDeviceCaps ,  获取dc的一些基本信息
+		HORZRES,VERTRES  屏幕上的宽高
+	EnumDisplaySettings
+
+
+-Device Context
+	surface can be painted, brushes, pens, fonts, to render images on the display
+
+	Client DC  ->  associated with a particular window, client area of the target window. WM_PAINT 
+
+	Window DC  ->  associated with a particular window, draw on any part of the target window borders caption  
+		WM_NCPAINT
+
+	Memory DC  ->  exists only in memory, not associated with any window
+		only type of DC that can hold a user defined bitmap (HBITMAP)
+		caching images
+		se with backbuffers on complicated displays
+
+
+	General Device DC  -> printer, entire display monitor, 
+
+	GetDCEX, 
+		BeginPaint, GetDC, GetWindowDC 都是其的包装. all implemented in terms of GetDCEx
+-Memory DC
+
+	hdcMem = CreateCompatibleDC(hdc); 创建一个和hdc兼容的内存dc
+		//memDC也有显示表面,但是默认是1*1, 没什么实际用处
+
+	hBitmap= CreateCompatibleBitmap(hdc,cx,cy);	//创建和hdc兼容的位图,
+	可以通过把一个GDI对象选入内存设备,增大其显示表面,
+
+	SelectObject(hdcMEM,hBitmap);	// 让bitmap作为内存dc,以后可以直接在其上画图了
+
+	只有内存DC才能把一个bitmap选入, 这本质上意思就是把bitmap作为显示表面
+
+
+-::GetDCEx(){
+	::BeginPaint() ->::GetDCEx(hWnd, NULL, DCX_INTERSECTUPDATE | DCX_VALIDATE )
+	::GetDC() ->::GetDCEx(hWnd, NULL, NULL);
+	::GetWindowDC() ->::GetDCEx(hWnd, NULL, DCX_WIDNOW);
+
+	DCX_LOCKWINDOWUPDATE : 即便窗口被锁死了，也可以更新
+
+}
+
+
+}
+	
+
+
+Region{
+	CreateEllipticRgn(0, 0, 50, 50);
+}
+
+
+Brush{
+	CreatePatternBrush
+
+	(HBRUSH) GetStockObject (WHITE_BRUSH)
+}
+
+Font{
+	GetTextExtentPoint32,  传入一个string,计算宽高
+}
+
+DrawText{
+	使用 DT_CALCRECT可以计算, 实际输出字符所需要的宽和高
+}
+
+UpdateLayeredWindow {
+	
+	看来目标窗口多大,兼容位图就多大
+
+	我在屏幕上画了一个图(屏幕兼容DC),最终这个图由hWnd来负责呈现
+
+	这样可以确保 屏幕DC 尺寸肯定比 layeredWnd要大
+
+
+	hWnd   	the layered wnd
+	hdcDst  必须是一个屏幕dc? [直接给NULL 代表Screen] 好像这样比较舒服
+
+	pptDst,psize layeredWnd的屏幕的位置
+
+	hdcSrc  必须是一个兼容DC,
+
+	兼容dc中 hWnd的位置
+
+}
+
+GDI资源泄漏如何发现{
+	
+}
+
+
+图像存储方法{
+	Bitmap  
+		机械使用像素点的组合来表示图像
+	图元 metafile,  
+		利用类似函数的思想来描述图像,
+		建筑结构图 很适合图元来表示
+}
+
+BitMap_DDB{
+	像素为其基本采样单元
+	二维矩阵数组, 点阵图, 像素点  x,y,cx,cy, Color-Depth(bpp: bits per pixel)
+
+	DDB  GDI图像, 设备相关图像, 没有颜色表,
+	DIB  设备无关, 有自己的调色盘
+
+	GetDeviceCaps : BITSPIXEL  PLANES
+	GetSystemMetrics:  SM_CYSCREEN ,SM_CXVIRTUALSCREEN 多屏幕情况下,两值不同
+
+	图像之间的转移涉及到3个要素, hdcDst, hdcSrc, PATTERN(hdcDst_Brush)
+		光栅操作(ROP) 就是3个要素之间的布尔计算
+		ROP:
+			WHITENESS / BLACKNESS
+			SRCCOPY
+			PATCOPY
+			DSTINVERT
+			NOTSRCCOPY   src先取反再copy
+			MERGECOPY    
+		这个问题主要要考虑 不同RGB之间的bool操作到底啥意思?
+
+	Bitblt :  bit block transfer  两种DC之间传输bits
+		hdcSrc的一个起始位置传输图素信息,到hdcDest指定的地方
+
+	StretchBlt:  BitBlt升级版,可以在传输过程中实现拉伸, 改变坐标可以实现左右上下翻转
+	SetStretchMode
+
+	PatBlt:  hdc和hdc_brush之间的操作, 		
+		PatBlt(hdc,x,y,cx,cy,PATCOPY);->可以快速把brush定义的图像,操作的hdc的某处,
+
+	CreateCompatibleBitmap,  hdc兼容位图看了必须要匹配MemDC
+
+	MaskBlt
+
+	Sample{
+		hBitmap =::LoadBitmap(hInstance,Makerestourin(IMB_bitmap_xxx));
+		GetObject(hBitmap,sizeof(BITMAP),&bitmap);
+		cx= bitmap.bmWidth;
+		cy= bitmap.bmHeight;
+	}
+
+	Sample{
+		hmdc=::CreateCompatibleDC(NULL); //Screen dc;
+		SelectObject(hmdc,habitmap);
+		//usting hmdc to draing at haBitmap;
+	}
+
+
+	HBITMAP{
+		指向一个ddb的handle,
+
+		每行偶数个字节
+
+		每个像素都应该有偶数个字节
+		
+		createbitmap (DDB)用来建立一个基本的平面,但是系统同时规定,这个平面又必须和某个具体的设备兼容
+
+		还不如直接使用 CreateCompatibleBitmap来的容易
+
+		GetObjet 可以获取一个hBitmap的 BITMAP结构, 这里面放了基本的信息
+
+		DeleteObjet 来销毁使用的位图
+	}
+	 
+}
+
+
+
+DIB{
+	具有自己的颜色表,设备无关	
+	GIF和JPEG都是压缩格式,最终展示时还是要convert成bitmap的
+	文件格式 .bmp
+
+	内存中创建DIB,并可以序列化到disk中
+
+	DIB Bitmap{
+		文件头
+		信息头
+		RGB颜色表   (1,4,8位宽的图像才有)
+		像素位
+	}
+
+	BitmapFileHeader(14byte){
+	word   type "BM"  0x420x4d
+	dword  fSize
+	word   reserved1
+	word   reserved2
+	dword  offsettoBits
+ 	}
+	BitmapCoreheader(){
+	dword   bcSize    12
+	word    bcWidth       
+	word    bcHeight
+	word    bcPlanes    =1
+	wrod    bcBitcoutns  =  (1,4,8, or 24)
+	}
+
+	SetDIBites   GetDIBits
+
+	SetDIBitesToDevice,  StretchDIBites
+
+	CreateDIBitmap
+
+	CreateDIBSection
+
+}

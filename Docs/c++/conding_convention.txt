@@ -1,0 +1,9 @@
+{
+	如果有些通用组件被依赖，可以在新的头文件里check，必须在其他地方包含此通用文件
+	#ifndef __ATLAPP_H__
+		#error atlwinx.h requires atlapp.h to be included first
+	#endif
+}
+
+
+

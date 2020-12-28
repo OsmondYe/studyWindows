@@ -1,0 +1,20 @@
+$$ this script is used by Windbg for bearkpoint the https in xhr. for  web 
+bp MSHTML!CXMLHttpRequest::send "
+	.echo ===showFunctionFrame ESP===; 
+	dd esp; 
+	.if (poi(esp+10)>0) 
+		{
+			.echo ===XMLHttpRequestPost====; 
+			du /c100 poi(esp+10)
+		}; 
+	;
+"
+
+bp MSHTML!CXMLHttpRequest::get_responseText " 
+	r @$t1= poi(esp+8);
+	g"
+
+bp MSHTML!CXMLHttpRequest::get_responseText+0xdf "
+	.echo ===XmlHttpRequestResponse:; 
+	du /c100 poi(@$t1) L100;
+	g "

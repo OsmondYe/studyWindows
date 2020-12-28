@@ -1,0 +1,66 @@
+# 速记
+	c3 		ret
+	cc 		int 3
+	e8 		call
+	0f05    syscall
+	ffd6    call esi
+
+# 常见寄存器{
+	a, b, c, d | x 
+	si,di
+	ip, sp, bp
+	cs, ss, ds, es, fs, gs, 
+	fl: flag   // https://en.wikipedia.org/wiki/FLAGS_register		
+		nv up ei pl nz na pe nc
+		{
+			carry    ( cy, nc)
+			parity   ( pe, po)  even & odd   奇偶位
+			adjust   ( ac, na)  auxiliary carry 辅助进位
+			zero     ( zr, nz)  zero, not zero
+			sign     ( ng, pl)  negative, positive
+			interrupt enable  (ei, di)  enable disable interrrupt
+			direction  ( dn up)  down, up
+			overflow   (ov, nv)   overflow, not overflow
+		}
+}
+
+# test & cmp
+	
+	 test a,b    // a & b  影响 efl,    会有 zr, nz 配合je 之类的
+	 cmp  a,b,   // a - b   影响 efl,   会有 zr, nz
+
+	 test eax,eax 逻辑操作, eax !=0 时, 
+	 cmp  eax,eax 算数操作,
+	# test eax, eax
+	  # je XXXXX
+	  	if(0 == fun())  
+	  # js XXXXX
+	# cmp eax, -1
+	  jne  xxxx
+	  	if(INVALID_HANDLE != CreateFileW(...))
+
+
+# JE, JZ
+	ZF =1   //zero flag  
+
+# xor eax,eax
+	return 0
+
+# movzx  ; zero extentd
+	move eax, word ptr b;
+	把16位的b送给32位的寄存器, 高位补0;
+
+# push offest 00b18c04
+	68 04 8c b1 00
+    68 : push offset  
+    效果:  直接把00b18c04当做地址,方esp处
+
+
+ # retn retf
+  	c3   retn  ; return near   only popup ip  
+  	     retf  ; return far    popup ip and cs
+
+
+ # e8 7e 96 03 00
+ 	call  [ip + 0003'967e ]
+ 	; e8 就是当前指令的下一条指令地址+ 偏移 去掉过去

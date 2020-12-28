@@ -1,0 +1,65 @@
+Clipboard:
+- data can be easily transferred between applications or within an application
+- all applications have access to the clipboard,
+- clipboard format: A memory object on the clipboard can be in any data format
+- clipboard viewer window: A window adds itself to the clipboard viewer chain by calling the SetClipboardViewer()
+
+
+format{
+	Standard{
+		CF_BITMAP CF_DIB CF_DIBV5 CF_HDROP 
+		CF_TEXT CF_UNICODETEXT  CF_TIFF 
+		CF_WAVE
+	}
+	Registered{
+		app create it's new clipboard format
+		::RegisterClipboardFormat() ::GetClipboardFormatName()
+	}
+	Private{
+		app identify a private clipboard format by defining a value in the range CF_PRIVATEFIRST through CF_PRIVATELAST
+		
+		use a private clipboard format for an application-defined data format that does not need to be 
+		registered with the system.
+		
+		WM_DESTROYCLIPBOARD to free res
+
+		place data handles on the clipboard by defining a private format in the range CF_GDIOBJFIRST through CF_GDIOBJLAST
+
+		GlobalAlloc()/GlobalFree		
+	}
+	Multiple{
+		place more than one clipboard object on the clipboard, each representing the same information in a different clipboard format
+
+	}
+	Synthesized{
+		system implicitly converts data between certain clipboard formats	
+
+		CF_BITMAP <-> CF_DIB <-> CF_DIBV5
+		CF_TEXT <-> CF_UNICODETEXT <-> CF_OEMTEXT
+
+	}
+}
+
+DelayedRendering{
+	SetClipboardData set NULL as data,
+	Sys sent , WM_RENDERFORMAT & WM_RENDERALLFORMATS , in response SetClipboardData.
+
+	WM_DESTROYCLIPBOARD
+}
+
+
+API{
+	OpenClipboard
+	EmptyClipboard			-> System will call GlobalFree(text) or DeleteObject(bitmpa)
+	SetClipboardData		-> user call GlobalAlloc to get memory
+	GetClipboardData  		-> return a global membory,  do not free the hGLobal
+	CloseClipboard
+	IsClipboardFormatAvailable /EnumClipboardFormats 
+
+	GetOpenClipboardWindow  // which wnd opened the clipboard
+
+	GlobalAlloc/ 
+
+	(GlobalFree 这个应该不需要调用, 剪贴板自己会管理内存)
+
+}

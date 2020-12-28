@@ -1,0 +1,45 @@
+# MFC 特有的文档框架结构
+
+# Document-template
+	# [资源,文档,框架,视] 经典四元组
+	# 总算看到了 CCreateContext
+		# 里面放了 框架,文档,视, 运行时动态创建
+
+# CWinAPP
+	# 代表整个进程
+	# ProcessShellCommand  处理命令行参数
+		# OnFileNew
+		# OnFileOpen
+	# new CSingleDocTemplate   and AddDocTemplate(pDocTemplate);
+		# 告诉App, 一个四元组来啦 , 必须在InitInstance中实现		
+	# m_pDocManager
+		# OnFileNew
+			# 会拿到APP初始化的 DocTemplate 4元组
+			# 1 new CDocument
+			# 2 new CFrame
+
+# Resource IDR_MAINFRAME
+	# 快捷键
+	# 菜单
+	# ToolBar
+	# ICon
+
+	# 这四种资源给同一个名字,有文档模板来一起加载
+
+
+
+# CView
+	# 作为文档的表示类,用来展示文档所对应的UI
+	# 持有 m_pDocument
+	# 特有的Print功能支持,
+		确实,文档的打印问题(UI显式模型)应该交给View来处理
+	# SplitWnd
+	# DragDrop
+	# CFormView, 从这里派生,可以简单的把一个对话框当做View来展现数据
+# CFrame
+
+
+
+# CSplitterWnd 
+	# 可以给然和窗口附加此成员, 就可以实现分隔窗口
+

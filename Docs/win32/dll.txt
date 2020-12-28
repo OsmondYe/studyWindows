@@ -1,0 +1,54 @@
+link  /dll
+
+- exe module + dll module___s{
+	不同模块可能有自己的c runtime library
+	exe new mem , dll call delete 
+}
+- extern "C" __declspec(dllexport)
+- extern "C" __declspec(dllimport){
+	有一个函数,我自己没有提供实现,在链接阶段去找找看,肯定有在某个dll里面
+	compile 看到 dllimport修饰时,会在.obj中加入一些暗示,然后在link阶段,在去找dll
+}
+
+- #pragma comment(linker, "/export:MyPureCFunc=_MyCPureFunc@8") {
+	即便你纯c了, vc可能还是会把函数名进行一些改编mangle, 比如 _stdcall  
+	要解决这个问题 那就是给link提供 def文件,自己进行修正
+	或者用上面的指示,
+
+	高级应用,函数转发器
+	#pragma comment(linker,"/exprot:MyFucntions=MyOtherDLL.MyOtherFunctions")
+}
+
+
+
+- implicit load-time linking{
+	- exe 自己的PE头里面记录了有些api自己没有实现,而是依赖dll,PE_IMPORT_TABLE,
+	- OS LOADER 会在exe构建过程中,装配这些依赖
+}
+- explicit run-time linking{
+	- LoadLibrary,  GetProcAddress	FreeLibrary
+	- FreeLibraryAndExitThread{
+		// 提高题
+		dll里面整了一个线程,线程函数就在dll里面,此事如何free???
+	}
+
+}
+
+- 写实复制,确保不同进程的相同dll彼此隔离
+
+- dll有export的函数, 那么在link阶段,会生成一个很小的lib. 供exe直接隐式链上来{
+	-lib很小,只包含被导出的函数以及符号名字
+	-exe在链接时会生成导入段,里面会记录我需要的dll,已经dll里面我依赖的函数
+	-OS的Loader程序会解析导入段,并且装配需要的dll,完成重定向和正确的勾连工作
+}
+
+- GetModuleHandle
+
+- DLLMain{
+	- DisableThreadLibraryCalls
+	- 不要在dllmain中创建线程,使用waitforsingleboject之类的	
+}
+
+- 模块基地址重定位{
+	基址重定位和模块绑定很高级,但是我还没有看
+}

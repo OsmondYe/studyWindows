@@ -1,0 +1,27 @@
+Good ref
+ https://toutyrater.github.io/prep/install.html
+
+**常用命令**
+
+- 一键安装
+    - wget https://install.direct/go.sh
+    - sudo bash go.sh
+- 更新升级
+    -  sudo bash go.sh
+
+- sudo systemctl start v2ray 
+
+- sudo systemctl stop v2ray 
+
+- sudo systemctl restart v2ray 
+- 
+
+-------
+*V2Ray config*
+- for client 
+
+port| 99
+protocol | socks
+
+
+其默认实现了 shadowsocks 流量协议

@@ -1,0 +1,70 @@
+
+#
+# std::make_shared
+#
+// FUNCTION TEMPLATE make_shared
+template <class _Ty, class... _Types>
+shared_ptr<_Ty> make_shared(_Types&&... _Args) { // make a shared_ptr
+	// 创建一个 引用计数对象, _Rx,  用new来, 在堆上,确保大家都可以共享
+	// _Rx 这是具有了引用计数的对象, 默认use weak_use 都为1
+    const auto _Rx = new _Ref_count_obj2<_Ty>(_STD forward<_Types>(_Args)...);
+    // 空创建,必然是什么都没有
+    shared_ptr<_Ty> _Ret;
+    // 把引用计数对象,赋值给shared_ptr
+    _Ret._Set_ptr_rep_and_enable_shared(_STD addressof(_Rx->_Storage._Value), _Rx);
+
+
+    // 扩展了 ,shared_ptr(shared_ptr&& _Right) noexcept  移动构造 会使得 _Ret变空
+    // _Ret 析构也不影响引用计数
+    但 返回值[Rax]和_Ret内容一模一样
+    return _Ret;
+}
+
+// shared_ptr的私有函数, 暗中赋值, 拿到Px的所有权, 对象和引用计数都要有
+// take ownership of _Px
+template <class _Ux>
+void _Set_ptr_rep_and_enable_shared(_Ux* const _Px, _Ref_count_base* const _Rx) noexcept { 
+    this->_Ptr = _Px;
+    this->_Rep = _Rx;  
+}
+
+	
+#
+#  很奇怪的题
+#
+class X { public: int i{0x12345678}; };
+std::weak_ptr<X> w_ptr;
+
+void func() {
+	std::shared_ptr<X> ptr = std::make_shared<X>();
+	w_ptr = ptr;
+}
+// # 这里 ptr会析构,
+~shared_ptr(){this->_Decref();}
+void  _Ptr_base::_Decref() noexcept {  // 降低使用计数的引用, 基类的
+		if (_Rep) {
+			_Rep->_Decref();
+		}
+	}
+void _Ref_count_base::_Decref(){  // 具体实现
+	if (_MT_DECR(_Uses) == 0) {
+		_Destroy();
+        _Decwref();  // 明显可以看出,只有虚引用为空时,才会释放具体对象
+	}
+}
+
+void _Decwref() noexcept { // decrement weak reference count
+        if (_MT_DECR(_Weaks) == 0) {
+            _Delete_this();
+        }
+    }
+
+
+void main(){
+	func();
+	std::shared_ptr<X> ptr = w_ptr.lock();
+	printf("w_ptr=%p\n", ptr.get());
+}
+
+
+

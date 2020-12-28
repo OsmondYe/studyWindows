@@ -1,0 +1,52 @@
+# 高质量打印标准
+
+# Winspool.drv {
+	导出了打印池函数,
+}
+
+# Printer_info_1{
+	Windows NT Local Print Providor
+	LanMan Print Services
+	Windows NT Internet Provider
+}
+
+# GDI 提供了一个简单的方法, 给一个通用对话框来枚举所有支持的打印机, 同时负责加载需要的dll
+
+# 打印体系结构 -> 一套统一的GDI + 打印驱动程序
+	# 激光,喷墨,绘图仪,传真机
+	# 打印池, 多任务共享打印机,
+	# 各品牌打印机有自己的语言 HP-> PCL  Epson-> ESC/p  
+# 打印池 winspool.drv
+	# 把打印池api暴露给exe, OpenPrinter, WritePrinter, ClosePrinter
+	# 正常情况, GDI生成EMF, 将其送给winspool
+# 打印池的系统服务(spoolsv.exe)
+	# 本质上打印池是一个系统服务, winspool.drv只是连接此系统服务的一个客户端代理
+	# net start spoller  /   net stop spooler
+	# 服务导出了RPC,  供客户端连上来
+# 打印池路由器 (spoolss.dll)
+	# 打印系统服务使用
+	# 把具体打印任务送给服务提供者
+# 打印开始时
+	# 把GDI的信息转化为EMF格式, 写入 /${SYSTEMROOT}/spool/printers
+
+# gdi32_api 设备无关, 可以给任何图形设备驱动程序输出直线,曲线,位图,文本
+
+# win32k.sys 图形引擎
+
+# EMF 增强型元文件
+	# 系统会将其每一页内容回放给GDI, GDI将其解析为 DDI(Device Driver Interface)定义的绘图图元
+
+# spools.exe -> 打印池服务系统进程
+	# localspl.dll 本地打印机提供者
+	# win32spl.dll 网络打印机
+
+# 打印机控制语言
+	# 基于文本
+	# 基于光栅
+	# 页面描述语言
+
+# 直接打印到端口
+	# hPort =CreateFile("lpt1:");
+	# WritePrint(hPort, file_buffer): ??  // a new hint, how to get path from handle
+		# file_buffer represent which hFile? 
+

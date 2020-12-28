@@ -1,0 +1,15 @@
+#ip: 		skycode.online 141.164.61.71
+#user: 		osmond
+#passwd:  	vultr123!!
+
+#shadowsocks
+	# modify config at  /etc/shadowsocks.json
+	# how to restart?
+		sudo service shadowscks restart
+			- 必须有sudo
+	# 引申 /ect/init.d/ 里面的关键字 都可以套用service命令
+
+#v2ray
+编辑 /etc/v2ray/config.json 文件来配置你需要的代理方式；
+运行 service v2ray start 来启动 V2Ray 进程；
+之后可以使用 service v2ray start|stop|status|reload|restart|force-reload 控制 V2Ray 的运行。

@@ -1,0 +1,174 @@
+WTL and ATL for win32
+
+
+- tricky thing , compile time vitural function calls
+
+
+HeaderFiles{
+	atlwinx.h 	->CWindowEx, msg_maros
+	atluser.h	->CMenu,CAccelerator CIcon, CCusror
+	atlgdi.h	->Pen Brush, Font,Bitmap,Rgn,DC
+	atltheme.h	->CTheme, CBufferedPaint
+	atlsplit.h	->CSplitterImpl,CSplitterWindowImpl,CSplitterWindowT
+	atlscrl.h	->CScrollImpl,...
+	atlRibbon	->MS bibbon UI
+	atlres.h	->wtl defined some resouces
+	atlprint.h	->used by printer
+	atlmisc,h	->some miscs
+	atlframe.h	->CFrameWindowImpl,CUpdateUI,CDynamicUpdateUI,CDoubleBufferImpl
+	atlfind.h	->CEditFindReplaceImplBase,CEditFindReplaceImpl
+	atldwm.h	->desktop window manager
+	atldlgs.h	->wrapper system defined dialogs
+	atlddx.h	->CWinDataExchange
+	atlctrlx.h	->CBitmapButton,CCheckListViewCtrl,CHyperLink,CMultiPaneStatusBarCtrl,CPaneContainer,CTabView
+	atlctrlw.h	->CCommandBarCtrl,CMDICommandBarCtrl
+	atlctrls.h	->CStatic,CButton,CListBox...
+	atlcrack.h	->msssage wrapper
+	atlapp.h	->CMessageFilter,CIdleHandler,CMessageLoop,CAppModule,CServerAppModule
+}
+
+
+Global{
+	CAppModule _Module;  // request all module can refer to it, be inited in Main()
+
+	DWORD m_dwMainThreadID;
+	ATL::CSimpleMap<DWORD, CMessageLoop*>* m_pMsgLoopMap;
+
+	每一个线程有自己的CMessageLoop, 
+
+	需要在窗口类的Create中 添加自己的 Pretranslate 和 idle
+}|
+
+Common Class{
+	Global
+		CAppModule CServerAppModule
+		CMessageLoop  CMessageFilter CIdleHandler 
+
+
+	Frame window implementation
+		CFrameWindowImpl, CMDIFrameWindowImpl
+	Control wrappers
+		CButton, CListViewCtrl
+	GDI wrappers
+		CDC, CMenu
+	Special UI features
+		CSplitterWindow, CUpdateUI, CDialogResize, CCustomDraw
+	Utility classes and macros
+		CString, CRect, BEGIN_MSG_MAP_EX
+
+	Global functions:
+	    AtlInitCommonControls()
+	    AtlGetDefaultGuiFont()
+	    AtlCreateControlFont()
+	    AtlCreateBoldFont()
+	    AtlGetStringPtr()
+
+	Frame window implementation - CFrameWindowImpl, CMDIFrameWindowImpl
+	Control wrappers - CButton, CListViewCtrl
+	GDI wrappers - CDC, CMenu
+	Special UI features - CSplitterWindow, CUpdateUI, CDialogResize, CCustomDraw
+	Utility classes and macros - CString, CRect, BEGIN_MSG_MAP_EX  
+}
+
+Msg_Map{
+
+	BEGIN_MSG_MAP(CMyWindow)
+		MESSAGE_HANDLER(WM_CLOSE, OnClose)
+
+		COMMAND_HANDLER(IDC_ABOUT, OnAbout)
+		CHAIN_MSG_MAP(CPaintBkgndBase)
+	END_MSG_MAP()
+}
+
+
+Must_In_WinMain(){
+
+	::CoInitializeEx(NULL, COINIT_MULTITHREADED);
+	// this resolves ATL window thunking problem when Microsoft Layer for Unicode (MSLU) is used
+	::DefWindowProc(NULL, 0, 0, 0L);
+
+	AtlInitCommonControls(ICC_COOL_CLASSES | ICC_BAR_CLASSES);	// add flags to support other controls
+
+	_Module.Init(NULL, hInstance);
+	CMessageLoop theLoop;
+	_Module.AddMessageLoop(&theLoop);
+
+	// you main window here
+	_Module.RemoveMessageLoop();
+	_Module.Term();
+	::CoUninitialize();
+
+}
+
+
+
+CFrameWnd{
+	toolbar,
+	rebar,
+	statusbar,
+	tooltips for toolbar buttons
+	flyby help for menu items
+	// membered
+	m_hWndToolBar
+	m_hWndStatusBar
+
+
+
+
+}
+
+
+
+CUpdateUI {
+	Macro{
+		BEGIN_UPDATE_UI_MAP(OyeFrameWnd)
+			UPDATE_ELEMENT(IDC_START, UPDUI_MENUPOPUP)
+		END_UPDATE_UI_MAP()
+	}
+
+}
+
+
+Accelerator{
+	窗口继承CMessageFilter,重载PreTranslateMessage;
+
+	快捷键需要自己来加载:m_hAccel = WTL::AtlLoadAccelerators(IDR_FRAME);
+	-原理:
+		快捷键的翻译是在 消息dispatch之前由TranslateAccelerator 完成的,
+		framework已经实现了,我们需要给自己的窗口类继承上CMessageFilter 并实现:PreTranslateMessage, 然后call base的
+
+
+}
+
+
+CImage{
+	// atl 直接提供的封装 需要#include <atlimage.h>
+
+}
+
+ATL_Helper{
+	CComCriticalSection 	//atlcore.h
+}
+
+
+CommonContro_ImageList{
+	WTL 具有类似的封装 CImageList
+	//
+	// must call  InitCommonControls or InitCommonControlsEx 
+	collection of images with same size, use index to refer,
+	good container for icons and bitmaps,
+
+	all images reside in a single bitmap with screen device format
+
+	通过LoadImage 加载32bit有透明度通道的bitmap,需要指明LR_CREATEDIBSECTION
+
+}
+
+
+Ribbon{
+	HMODULE hRibbonDLL = ::LoadLibrary(_T("propsys.dll"));
+	const GUID CLSID_UIRibbonFramework = { 0x926749fa, 0x2615, 0x4987, { 0x88, 0x45, 0xc3, 0x3e, 0x65, 0xf2, 0xb9, 0x57 } };
+	ATL::CComPtr<IUnknown> pIUIFramework;
+					iRibbonUI = SUCCEEDED(pIUIFramework.CoCreateInstance(CLSID_UIRibbonFramework)) ? 1 : 0;
+
+}

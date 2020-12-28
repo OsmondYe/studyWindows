@@ -1,0 +1,16 @@
+using ATL DLL project
+
+IDL : interface defination language
+
+
+define this dll to office registry as the office plguin
+
+DllCanUnloadNow
+DllGetClassObject
+DllRegisterServer
+DllUnregisterServer
+DllInstall
+
+
+
+E0020	identifier "_IDTExtensibility2" is undefined	OfficePlugin	

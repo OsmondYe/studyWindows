@@ -1,0 +1,110 @@
+00aff178 694f0be3 ole32!CPrivDragDrop::QueryInterface [com\ole32\com\rot\getif.cxx @ 205] 
+非常感觉和 剪贴板 有关系啊
+
+# link的解决：
+	通过Hook OleUIInsertObject 搞定 OleDlg.dll ， 参考了 MFC里面针对OLE的封装
+
+
+ole32!OleGetClipboard: 
+// 为什么会是这样， clipboard里面放了一些和拖放有关的数据
+// ole32!GetClipDataObjectFromTLS:
+
+
+// 一个新的思路，从这里判断是否有nxl文件出来了
+// insert的拦截是否也可以这样
+ole32!OleCreateFromFile:   // 看来只要拦截住这里问题就搞定了
+
+// HRESULT GetClassFile(
+  LPCOLESTR szFilename,
+  CLSID     *pclsid
+);
+// 也可以获取文件名
+ole32!GetClassFile:
+
+
+// 干掉 insert as link
+ole32!OleCreateLinkToFile
+
+
+// office 怎么处理图片拖拽
+ole32!PrivDragDrop
+	offcie 没走 ole？ 是不是直接掉进去了
+// faxian SHELL32!DragQueryPoint
+
+这个问题非常搞笑啊， 只hook RegisterDragDrop  解决不了问题
+	在其的callback中 LPDROPTARGET pDropTarget ，如果要取消必须到DropFinish
+
+
+// 需要给一个空的源欺骗一下对象
+
+
+// 拖拽时具体加载文件的地方： office 主要加载文件的地方
+bp mso!Ordinal1964 "du /c100 poi(esp+8)"
+   ed esp+8 = 0  可以直接搞定
+	内部有 bp mso20win32client!Ordinal913 "du poi(esp+4)"
+
+// insert 的常规方式：
+bp mso20win32client!Ordinal1107 "du /c100 poi(esp+4)"
+	esp+4 为path
+
+
+// handle picture for dragdrop and insert 
+bp mso!Ordinal1964 "du /c100 poi(esp+8)"
+bp mso20win32client!Ordinal1107 "du /c100 poi(esp+4)"
+
+	word  OK
+	excel   insert ok  drop not
+	ppt    inset ok
+
+
+
+// 处理 文件以link的形式
+# test path
+C:\Users\oye\AppData\Local\NextLabs\SkyDRM\Intermediate\01BE1C4CA381C1E6F058B862161D823320200221090201\fsdsdfsdsdf.docx
+# windbg
+	bm ole32!olecreate*link*
+# must handle ole32!olecreateLink
+	# IMoniker to be handled
+
+# 思路2 hook createFIleMoniker
+# 思路3mso!Ordinal2993   创建link？
+	esp+8 就是 path 可以直接hold住
+	excel 不行，但是word 和ppt都可以
+
+OLE drag-and-drop
+
+bp MSFTEDIT!CDropTarget::Drop
+
+coml2api.h header  有些可疑函数，用来做drop的
+
+- 必须从 MSFTEDIT!CDropTarget::Drop  开始查看drop时到底做了什么
+
+	-	 call  ole32!OleCreateFromData
+
+	- wordpad!CRichEdit2View::DoPaste  在这里就完成了复制   call by wordpad!CRichEdit2View::QueryAcceptData+0x229
+
+- 能否从MFC的COleData里面 找到他处理data的地方
+
+- HRESULT OleCreateFromData(
+  IN LPDATAOBJECT    pSrcDataObj,
+  IN REFIID          riid,
+  IN DWORD           renderopt,
+  IN LPFORMATETC     pFormatEtc,
+  IN LPOLECLIENTSITE pClientSite,
+  IN LPSTORAGE       pStg,
+  OUT LPVOID         *ppvObj
+);
+ 把这里的pSrcDataObj 里面分析出 hdrop也行
+
+- Hook coml2!CreateILockBytesOnHGlobal 可以吗？？？
+
+- 最终创建的地方：
+	wordpad!CRichEdit2View::InsertItem+0x72:   sendmessage  434h  完成了数据的插入
+
+
+
+- 他既然是mfc写的，能否直接去hook mfc的导出接口？
+	COleInsertDialog::DoModal 比如像这个，直接搞定了算了
+
+	MFC42u!COleInsertDialog::CreateItem
+

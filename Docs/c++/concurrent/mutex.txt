@@ -1,0 +1,35 @@
+_Mutex_base{
+	所有的mutex都会有一个公约数类似的对外接口，
+	即便类型不同，但是使用方法大同小异
+	type{
+		死等，
+		超时，
+		可重入
+		可重入_超时
+	}
+
+	构造就被初始化，根据flag
+	析构自动被释放
+
+	基本动词{
+		lock
+		unlog
+		try_lock		
+	}
+	基本属性{
+		_Mymtx();	//获取OS实际支持的方式
+	}
+
+	_Mtx_internal_imp_t{
+		type
+		cs{
+			vista: 	CriticalSection
+			Win7:  	SRWLock
+			c库自身  
+		}
+		thread_id
+		count
+	}
+
+
+}

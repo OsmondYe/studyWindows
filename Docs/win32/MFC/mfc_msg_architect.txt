@@ -1,0 +1,199 @@
+# 基本理念:
+	# SendMessage 直接把消息发给对应的消息过程, 不是把消息放线程的消息队列
+	# PostMessage msg给线程消息队列,立即返回
+	# TranslateMessge  把 KeyDown 和 KeyUp 组合成 WM_CHAR,post 给线程, WM_CHAR是合成消息
+	# TranslateAccelerator   WM_KEYDOWN 转换为 WM_COMMAND
+	# IsDialogMessage   为了给非模态对话框传一些键盘消息
+	# UI对象用来产生消息,或自己处理,或让别人处理
+	# UI status Update, MFC 让消息泵在空闲时处理UI元素更新问题
+# 常见消息
+	# WM_COMMAND  菜单,toobar_btn, 快捷键,都会被统一转换为此消息
+	# Dialog
+		# WM_PARENTNOTIFY   子控件告诉box,自己的一些状态
+
+# 回答问题
+	为什么 MSG_MAP 比 虚函数有效?
+
+###########################################
+# 容易忽视的细节
+	# handle Idle messge   OnIdle
+		OnIdle是一个大头, UI更新之类的全在这里
+###########################################
+# 用宏以c语言的特色完成此工作
+	// 类定义中, 让这个类参与消息响应
+	DECLARE_MESSAGE_MAP()
+	//
+	BEGIN_MESSAGE_MAP(theClass, baseClass)
+	{
+		// 很明显继续实现静态数据表
+		const AFX_MSGMAP* theClass::GetMessageMap() const 
+		{ return GetThisMessageMap(); } 
+		const AFX_MSGMAP* PASCAL theClass::GetThisMessageMap() 
+		{ 
+			typedef theClass ThisClass;						   
+			typedef baseClass TheBaseClass;					   
+			static const AFX_MSGMAP_ENTRY _messageEntries[] =  
+			{
+	}
+
+	END_MESSAGE_MAP()
+	{
+				{0, 0, 0, 0, AfxSig_end, (AFX_PMSG)0 } 
+			}; 
+			static const AFX_MSGMAP messageMap = 
+				{ &TheBaseClass::GetThisMessageMap, &_messageEntries[0] }; 
+				return &messageMap; 
+		}		
+	}
+	// 很明显, Begin和End共同实现了派生类的消息路由
+
+#举个例子:
+	class COyeApp : public CWinAppEx{
+		//DECLARE_MESSAGE_MAP()
+		protected: 
+		static const AFX_MSGMAP* PASCAL GetThisMessageMap(); 
+		virtual const AFX_MSGMAP* GetMessageMap() const; 
+	}
+	# COyeApp 拥有消息映射
+	# 类的实现
+		BEGIN_MESSAGE_MAP(COyeApp, CWinAppEx)
+			ON_COMMAND(ID_APP_ABOUT, &COyeApp::OnAppAbout)
+			ON_COMMAND(ID_FILE_NEW, &COyeApp::OnFileNew)
+			ON_COMMAND(ID_APP_EXIT, &COyeApp::OnAppExit)
+		END_MESSAGE_MAP()
+	  --> 扩展为:
+	  	const AFX_MSGMAP* COyeApp::GetMessageMap() const   //对象虚函数,但获取Class本身在编码时就已经定义好的static msg_map
+			{ return GetThisMessageMap(); } 
+
+		// MFC认为,一个Class在编码时就要确定他要实现的msg_map
+		const AFX_MSGMAP* PASCAL COyeApp::GetThisMessageMap() 
+		{ 
+			static const AFX_MSGMAP_ENTRY _messageEntries[] =  
+			{
+				{ WM_COMMAND, CN_COMMAND, (WORD)ID_APP_ABOUT, (WORD)ID_APP_ABOUT, AfxSigCmd_v, static_cast<AFX_PMSG>(&COyeApp::OnAppAbout) },
+				{ WM_COMMAND, CN_COMMAND, (WORD)ID_FILE_NEW, (WORD)ID_FILE_NEW, AfxSigCmd_v, static_cast<AFX_PMSG>(&COyeApp::OnFileNew) },	
+				{ WM_COMMAND, CN_COMMAND, (WORD)ID_APP_EXIT, (WORD)ID_APP_EXIT, AfxSigCmd_v, static_cast<AFX_PMSG>(&COyeApp::OnAppExit) },	
+				{0, 0, 0, 0, AfxSig_end, (AFX_PMSG)0 } 
+			}; 
+			static const AFX_MSGMAP messageMap = { &CWinAppEx::GetThisMessageMap, &_messageEntries[0] }; 
+			return &messageMap; 
+		}	
+
+	# 分析MSG类的实现:
+		struct AFX_MSGMAP_ENTRY
+		{
+			UINT nMessage;   	// windows message
+			UINT nCode;      	// control code or WM_NOTIFY code
+			UINT nID;        	// control ID (or 0 for windows messages)
+			UINT nLastID;    	// used for entries specifying a range of control id's
+			UINT_PTR nSig;      // signature type (action) or pointer to message #
+			AFX_PMSG pfn;    	// routine to call (or special value)
+		};
+
+		// 每一个类都由直接基类确定好的msg_map,和本类自己的msg_map 组成
+		struct AFX_MSGMAP
+		{
+			const AFX_MSGMAP* (PASCAL* pfnGetBaseMap)();     // 基类静态方法,拿到类的Msg_map表
+			const AFX_MSGMAP_ENTRY* lpEntries;
+		};	
+###########################################
+# Msg Handling & Mapping
+# 系统消息路由思路: ID_FILE_NEW 命令的 调用分析
+	
+	CWinThread::PumpMessage
+	CWinThread::Run
+	CWinApp::Run  				// 委托Thread::Run
+	AfxWinMain					// 初始化CWinApp&CWinThread 其实是同一个对象,然后掉了Run,Run是虚函数,所有走了派生类CWinApp
+
+	#  WinMain拿到当前app,做UI线程的消息循环,包含dispatch, WinApp本身继承子WinThread所有run委托给Thread来处理
+	{//CWinThread::Run
+		for (;;)
+		{
+			// phase1: check to see if we can do idle work
+			while (bIdle &&	!::PeekMessage(&(pState->m_msgCur), NULL, NULL, NULL, PM_NOREMOVE))
+			{
+				// call OnIdle while in bIdle state
+				if (!OnIdle(lIdleCount++)) 	bIdle = FALSE; // assume "no idle" state
+			}
+			// phase2: pump messages while available
+			do
+			{
+				if (!PumpMessage())  		// pump message, but quit on WM_QUIT
+					return ExitInstance();
+				// reset "no idle" state after pumping "normal" message
+				if (IsIdleMessage(&(pState->m_msgCur)))
+				{
+					bIdle = TRUE;
+					lIdleCount = 0;
+				}
+
+			} while (::PeekMessage(&(pState->m_msgCur), NULL, NULL, NULL, PM_NOREMOVE));
+		}
+	}
+	#  PumpMessge里面具体, 抽取msg, DispatchMessage 给指定的窗口
+	{
+		if (!::GetMessage(&(m_msgCur), NULL, NULL, NULL))    // 消费此Msg
+		{
+			return FALSE;
+		}
+		// process this message
+		if (pState->m_msgCur.message != WM_KICKIDLE && 
+			!AfxPreTranslateMessage(&(m_msgCur))) // 如果预处理了,就不再分派, MFC在这里扩展了预处理
+		{
+			::TranslateMessage(&(pm_msgCur));
+			::DispatchMessage(&(pm_msgCur));
+		}
+		return TRUE;
+	}
+
+	# AfxPreTranslateMessage
+	{MFC 大型消息路由比如是从 预处理消息开始
+		return AfxGetThread()->PreTranslateMessage( pMsg );
+		// 如果我们的app重载了PreTranslateMessage,会给我们一个机会,去预处理此消息,
+			做过滤的好地方
+			过滤之后就不做分派了
+			我们处理完后,需要return 框架的默认处理
+		CWinThread::PreTranslateMessage{
+			- 1. pMsg->hwnd == NUL,  那么这是线程消息,调用DispatchThreadMessageEx
+			- 2. CWnd* pMainWnd = AfxGetMainWnd(); 
+				 CWnd::WalkPreTranslateTree(pMainWnd->GetSafeHwnd(), pMsg){
+				 	// 04/30/2020, 再一次过来
+				 	// 从最子的窗口开始,依次给机会
+				 	for (HWND hWnd = pMsg->hwnd; hWnd != NULL; hWnd = ::GetParent(hWnd))
+				 		从Msg里面指明的子窗口开始 依次让处理,
+				 		//***** 如果到框架了,就break
+				 }
+
+				 	
+			- 3. CWnd* pWnd = CWnd::FromHandle(pMsg->hwnd);     // 给非模态对话框一个机会,来处理
+		 	     if (pWnd->GetTopLevelParent() != pMainWnd)
+			     return pMainWnd->PreTranslateMessage(pMsg);
+
+		}
+	}
+###########################################
+# 消息路由常见套路:
+	# CWinApp的RUN代表线程,获取和分发消息
+	# 线程消息循环:
+		# 处理空闲
+		# PreTranslated
+			# MFC扩展了这里,优先给FrameWnd来预处理(框架一般是main_WND);
+		# Dispatch, 给多个子窗口里面的具体哪个窗口来处理消息
+
+	# 素材
+		PreTranslateMessge
+		PreTranslateInput
+		OnCmdMsg
+
+
+##############################################
+# 对话框上基本控件,button 消息路由
+	# button 自己给 parent wnd
+		WM_COMMAND 
+			wNotifyCode:  BN_CLicked
+			wID:    	  button_id
+# DLG上给子控件关联一个类变量
+	# 在OnInitDlg中会调用一次DoDataExchange
+	# DDX_Control(pDX, IDC_BUTTON1, m_test_button)
+		把ID为IDC_BUTTON1的控件关联为m_test_button.
+		后续通过m_test_button 处理此子控件的行为

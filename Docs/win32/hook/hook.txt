@@ -1,0 +1,73 @@
+keyword{
+	hooked&patched
+	unstable	
+	same_signature	
+	strictly_forbidden
+	stability&security		
+	injecting
+	redirect
+	system_wide
+	hide_and_seek
+	purely_in_memory_hook
+	endless_loop
+	precious_time (宝贵的时间, hook 框架的构建需要时间)
+}|
+
+-hook callback, dont alter Get/SetLastError
+-32bit proc不能给64bit proc创建remote_thread, 64bit可以给32bit的proc创建remote_thread
+-64bit OS下,内核没有32bit的code
+
+-system fodler{
+	32bit: C:\Windows\SysWOW64
+	64bit: C:\Windows\System32
+	32bit进程引用C:\Windows\System32时会被自动重定向到C:\Windows\SysWOW64里
+}
+-inject{
+	注入已经running的		(user_mode)
+	注入新创建的				(kernel_mode)
+}
+
+-driver如何拒绝不授信的dll{
+	计算dll的hash,进行匹配
+}
+-hook_method{
+	-patch PE_IMPORT_TABLE{
+		只对静态链接的有效
+	}
+	-hook loadlibrary and getprocaddress{
+		修改一些api,你感兴趣的
+	}
+	-patch PE_EXPORT_TABLE{
+		对已经静态链接的无效
+	}
+	-api code_overwritting{
+		重写api的头5个字节,换成 jmp XXXXX指令,进行强制跳转{
+			-不能在callback中在call原始api,这样会造成死循环
+			-头5个字节正好的独立的指令,api整体至少5字节长度
+			-有人提到,api中间如果有相对跳转,我们不能改变原始的段基址
+		}
+	}
+}
+-hook_难点{
+	-针对同一个api多次hook,需要构建二进制的hook queue
+	-防止出现环状,从而搞成死循环
+	-有些api变态,函数只有几个字节,无法构建hook框架怎么办?
+	-hook_callback所在的dll已经释放了,代码页无效了,如何识别出来?
+	-就做内存patch是最好的, 但是要想办法识别出来,确保生命周期内都可行{
+			你dll都释放了,但是没有unhook, 要确保针对每个api的hook框架和dll生命周期没关系
+		}
+}
+
+-PE导入和导出表的扩展进行hook,这个到底是什么意思?{
+	
+}
+
+
+
+- Open Save File Dialog{
+	# 针对对话框的拦截：
+	CoCreateInstance(&CLSID_FileOpenDialog, 0i64, 1u, &GUID_42f85136_db7e_439c_85f1_e4075d135fc8, &ppv)
+	# 我打算使用一个新技术，
+	IFileDialog里面的IFileDialogEvents 来直接处理 选择nxl文件的问题
+	如果全部处理了， 有个问题， 如何正常打开文件？
+}

@@ -1,0 +1,186 @@
+###########################################
+# 遗留问题:
+	# CArchive  把数据直接写到一个内存块中保存, 进而可以直接序列化到文件中
+	# allow tooltip messages to be filtered
+	# WM_CANCELMODE
+	# CWnd::WalkPreTranslateTree
+	# WM_DWMSENDICONICTHUMBNAIL
+		provide a static bitmap to use as a thumbnail representation
+	# BeginBufferedPaint
+	# CHandleMap
+# MFC 可以静态发布,
+	# 但是要去掉AFX_DLL的编译宏
+	# 在代码层面和资源层面都要去掉AFX_DLL编译宏
+	# 同时 只能以MT的形式发布
+# 编程套路
+	# 架构细节熟悉后,
+		# 控件的使用,
+		# 整体如何布局, 用ribbon,还是toolbar
+###########################################
+# Ribbon MFC里面的Ribbon没有继承自CWnd和CCmdtarget, 从CObject直接来,
+	# 相当于另起炉灶了
+	# Ribbon里面的控件没有子窗口, 他是如何画出来的?
+###########################################
+# 万物开始的地方
+	# CWinApp 必须实现InitInstance
+		# 在其内,创建Wnd(继承自CFrameWnd),或者对话框
+		# 缺省情况下从CFrameWnd,构建MainWindow
+			# FrameWnd会自动帮我们加载菜单,toobar,statusbar 这样的资源
+			# [mfc_frame_wnd.txt]FrameWnd是整个APPUI的灵魂
+	# 没有Main函数,只有一个CWinApp的实例, 系统是怎么找到这个实例的?
+		进程级别的PE加载历程 initterm 里面完成了全局变量初始化
+###########################################
+# 神奇的宏
+	#IMPLEMENT_DYNCREATE
+	{
+		// 相当于CObject类中的一个方法实现
+		IMPLEMENT_DYNCREATE(CMFCCaptionBar, CPane){
+			CObject* PASCAL CMFCCaptionBar::CreateObject()  	{ return new CMFCCaptionBar; } 
+			IMPLEMENT_RUNTIMECLASS(CMFCCaptionBar, CPane, 0xFFFF, CMFCCaptionBar::CreateObject, NULL)
+		}
+
+		CWinAppEx* pApp = DYNAMIC_DOWNCAST(CWinAppEx, AfxGetApp());
+	# 用宏实现的运行时类型识别
+	# 到底有什么用处?
+	struct CRuntimeClass{   // 8个成员
+		LPCSTR m_lpszClassName;
+		int m_nObjectSize;
+		UINT m_wSchema; 					 ???????
+		CObject* m_pfnCreateObject();       //  创建此对象,并返回基类指针
+		CRuntimeClass* m_pBaseClass;    	//  基类的基本信息;
+		CRuntimeClass* m_pNextClass;		//  
+		const AFX_CLASSINIT* m_pClassInit;  //   
+	}
+
+	MFC class都拥有 static const CRuntimeClass classCObject;
+	用这个静态对象,来表明这个类的的信息
+
+	# 为什么要动态生成呢?
+		ASSERT_KINDOF(class_name, object). 确保继承体系正确,anti别人强转
+		// 类定义中
+
+	# DECLARE_DYNCREATE(CMFCCaptionBar){
+		DECLARE_DYNAMIC(CMFCCaptionBar) 
+		static CObject* PASCAL CreateObject();
+
+		//-----------------
+		public: 
+			static const CRuntimeClass classCMFCCaptionBar; 
+			virtual CRuntimeClass* GetRuntimeClass() const; 
+			static CObject* PASCAL CreateObject();
+
+		// 在类的定义中声明了 GetRuntimeClass()  CreateObject() 这2个方法
+
+	}
+	# 我的理解, 动态创建,也就是创建在堆上
+		# 有系统或框架级别的类如 FrameWnd,Doc,View,需要创建在堆上
+	}
+# Message map
+	[ see mfc_msg_architect.txt ]
+
+# RUNTIME_CLASS
+	RUNTIME_CLASS(CFrameWndEx)
+
+###########################################
+
+###########################################
+# Global Helper
+	AfxGetApp();
+	AfxGetMainWnd();
+	AfxGetResourceHandle()
+	CWinAppEx* pApp = DYNAMIC_DOWNCAST(CWinAppEx, AfxGetApp());
+
+# 秘密大收集
+	UI线程会被安装一个SetWindowsHookEx with WH_MSGFILTER type
+		DDE,对话框,菜单,滚动条有输入事件时   input event occurred in
+		MSGF_DDEMGR  |  MSGF_DIALOGBOX | MSGF_MENU | MSGF_SCROLLBAR 
+
+# 快捷键原理	
+	TranslateAcceleratorW
+		WM_KEYDOWN 翻译成 WM_COMMAND
+		一旦翻译成功,他会直接让目标窗口去处理WM_COMMAND
+###########################################
+# 体现message-driven的 CCmdTarget
+	# CCmdTarget    base for message-map architecture.
+		-> CWinThread CWinApp
+		-> CDocument
+		-> CWnd
+			-> ControlBars
+					CBasePane
+					CControlBar
+					CReBarCtrl
+					CScrollBar
+					CSliderCtrl
+			-> Views  CView
+			-> Frame window CFrame
+			-> Dialog   [mfc_dialog.txt]
+					CDialog				
+			-> Controls 
+					CButton
+					CProgressCtrl
+			-> CControls
+###########################################
+# MFC 里面常用的 Collection
+	# CList
+	# CArray
+	# CHandleMap{
+		c++ object 和 handle 系统资源之间的映射,
+		问题: 有些handle是用object创建的,有些不是
+		解决: 引入概念 permanent(自己创建的) 和 teporary(临时发现的,非自己创建)
+		reasonably uniform mapping,  逻辑上给个统一处理, 给2个数据成员
+			CMapPtrToPtr m_permanentMap;  用c++创建的
+			CMapPtrToPtr m_temporaryMap;  非框架创建,但我么可以兼容
+	}
+
+###########################################
+# MFCV 常见的消息处理:
+	WM_KICKIDLE   // 要求框架进行 消息空闲处理
+###########################################
+# Gdiplus 有同样的问题, 绘图太慢
+	# 要提前绘制好,我们需要的
+	# GDI 缓冲技术
+
+###########################################
+源码里面的有意思写法
+# 本地资源和类对象的强行转换
+	# pMsgWnd = CWnd::FromHandle(hwnd);   // 有一个窗口句柄,我要用mfc的wnd类来快捷处理时;
+# 安全编程, ensure不对,就throw exception
+	# ENSURE( AfxIsExtendedFrameClass(pParentWnd) || pParentWnd->IsKindOf(RUNTIME_CLASS(CDialog)) );
+	# ENSURE(m_hThread == NULL);  // already created?
+# #pragma init_seg(lib)
+# avoid reentering this code
+	# 可以简单的用一个bool标记来实现
+# CWinAppEx* pApp = DYNAMIC_DOWNCAST(CWinAppEx, AfxGetApp());
+###########################################
+# MFC 的各种state [mfc_afx_state.txt]
+
+###########################################
+官方 Sample 学习
+# Property sheet and page
+	sheet 是一个 pop-up wnd, 	page 是一个dialog
+	# 空 sheet 啥都没有
+	PropertySheet -> Win32 API,Comctl32.dll
+
+	#DDE DDV由wizard来生成,快速实现UI和类成员数据的交换,借助CWnd::UpdateData
+	# 我顺便在里面学习了对话框常用技巧
+
+# CTaskDialog
+	Vista 后面推出的替换 Messagebox组件
+# CtrlBars
+	CToolBar
+# MFC Desktop alter wnd
+	# api : RegisterWindowMessage  
+		communicating between two cooperating applications.
+		跨进程的多个程序通过消息机制通信
+	# CMFCDesktopAlertWndButton  其内部需要的程序
+		把其对象添加到 CMFCDesktopAlertDialog 
+		支持换肤, 因为重载了CMFCButton的 OnFillBackground, OnDrawBorder, OnDraw
+	# 第一次见到互为friend  wnd 和 dialog
+	# 窗口通过 timer 模拟的动画
+	# 新碰到消息 WM_CANCELMODE
+	# 窗口父子关系, 父子窗口可以是toolbar风格, 父子关系有个好处是,父窗口思维,通知自窗口自己死掉
+# Hello
+	# 必须有一个最简单的CWinApp,重载InitInstance
+		# 其内创建窗口
+# SimpleImage
+	# 给Demo了如何使用CImage类,其内部结合了Gdiplus

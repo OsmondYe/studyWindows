@@ -1,0 +1,63 @@
+APT in Linux
+
+sudo apt-get update  
+	# 根性软件库,根据配置文件,只更新本地的配置库而已
+	# 常用于,新增了deb配置文件
+
+sudo apt-get isntall [soft-name]
+	# install
+
+sudo apt-get remove [soft-name]
+	# uninstall, 但是保留配置文件
+
+sudo apt-get -purge remove [soft-name]
+	# uninstall, 同是删除配置文件
+
+- 删除软件
+	sudo apt-get autoremove --purge 软件名称 
+
+- list upgradable
+	sudo apt list --upgradable
+
+sudo apt-get [upgrade]
+	# 更新所有已经安装的软件包
+
+sudo apt-get dist-upgrade
+	# 将系统升级到最新版本
+
+sudo apt-get autoclean
+	# ?????
+
+升级： 
+sudo apt list --upgradable
+	# 查看可升级的软件信息
+sudo apt list --upgradable -a
+	# 查看可升级的软件的全部版本信息
+
+自动删除所有与mysql有关的
+	sudo apt-get remove mysql-server
+	sudo apt-get autoremove
+		# ???
+	sudo apt-get remove -y mysql-*
+	sudo apt-get purge -y mysql-*
+
+
+pruge：
+sudo apt purge mysql-server mysql-server-5.7
+
+reinstall：
+sudo apt-get install --reinstall mysql-server-5.7
+
+
+理论:
+deb  apt-get -h
+apt-get命令是Debian Linux发行版中的APT软件包管理工具。
+所有基于Debian的发行都使用这个包管理系统
+
+配置软件库,apt-get 根据 
+	/etc/apt/sources.list   /etc/apt/preferences
+寻找指定的,安装了资源的库库
+
+
+- 判断是否安装某个软件
+	dpkg -s python

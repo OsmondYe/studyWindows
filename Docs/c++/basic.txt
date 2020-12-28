@@ -1,0 +1,59 @@
+# 数据抽象优先于面向对象
+# 编程问题可以分解2part， 抽象模型， 对模型的实现 (abs+impl)
+# 1v1 1vn nv1 nvn
+# is a, has a, use a
+# 初始化和赋值 意义不同
+# 不成熟的优化是程序设计中的万恶之源
+# 量变一定会引起质变,量小时的算法在质变后一定会失效,新的算法难度是数量级的变迁
+
+
+#编程规范<book>
+	# 不拘泥于小节,只规定需要规定的事情,不强制施加个人嗜好和过时的东西
+	# 打开最高警告
+	# 工程可以一件构建,完全自动化的构建系统,包括测试, 不把时间和精力浪费在机器可以干的更好的事情上
+	# 使用版本控制系统
+	# 代码审查必须做
+	# 一个实体只有一个紧凑的职责
+	# 正确,简单和清晰永远是第一 KISS(Keep It Simple and Stupid)
+	# 同步考虑伸缩性的 When + How
+	# 快马无需加鞭,不要进行不成熟的优化和确实无意义的优化, 让快速的程序正确远比让正确的程序快速重要的多
+	# 减少定义性依赖,避免循环依赖,前项声明能实现的,不要#include
+
+# C11
+	# 语法层面{
+		# lamda
+		# 右值引用,移动语义
+		# for each迭代  for(auto& i: container)
+		# class function:  override,  f() = delete;  f() nothrow;
+		# auto关键字, 自动类型推到
+		# 字符串字面值  LR"_(d\b\c\n)_"
+		# 枚举作用域
+		# 变长参数模板
+		# {} 初始化
+		# using vs typedef
+
+	}
+	# Libraries{
+		# chrono 				// 扩展时间,计时,日历之类
+		# initializer_list 		{}花括号初始化
+		# tuple 				针对 pair做扩展
+		# cstdint, 				统一int的bytes
+		# system_error, 		对exception提供了更多的信息
+		# cuchar  				multiple char to  utf[8|16|32]
+		# memory,   		    unique_prt, shared_ptr, weak_ptr
+		Container:
+			# array
+			# forward_list
+			# unordered_set  unordered_map
+		Digital
+			# random 			扩展c ::rand() 提供统计语义里面的不同分布
+		# regex, 				//初次提供了正则表达式
+		Thread:
+			# thread
+			# atomic
+			# mutex
+			# future
+			# condition_variable
+	}
+
+

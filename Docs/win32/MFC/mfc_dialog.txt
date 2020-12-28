@@ -1,0 +1,8 @@
+# CDialog : public CWnd
+# Command:
+	IDOK, IDCANCEL
+
+
+# MFC使用了新潮的DOModal玩法:
+	# 让CWnd实现了一个RunModalLoop
+		

@@ -1,0 +1,68 @@
+#常用操作
+		
+# hook 对话框创建
+	- bm user32!*dialogbox*
+	- COMDLG32!CFileOpenSave::Show    能比user32高级一点
+
+	user32!CreateDialogIndirectParamW  	从已有模板创建
+
+# 强制加载符号	
+	.reload /f @"nxrmaddin.dll"    
+		使用@ 表示后面是字符串
+
+# Symbols:
+
+_NT_SYMBOL_PATH =  srv*C:\Symbols*https://msdl.microsoft.com/download/symbols
+.sympath C:\symbols;srv*C:\symbols*https://msdl.microsoft.com/download/symbols
+
+!sym noisy  //如果 发现符号加载有问题的话 ,可以看这些用来确定 到底哪里有问题
+
+# 修改last error{
+	- !gle (getlasterror,  only can check)
+	- !teb,  get the address of the teb block, and modify the memory items in TEB block
+
+	ba w4 @@c++(&(@$thread->LastErrorValue)) "!gle;gc"
+}
+
+# pct
+	Step to Next Call or Return
+# pt
+	Step to Next Return
+
+
+Debug and ASM
+
+- common windbg
+	- lm m nxrm*
+		!lmi
+		!dh
+	- l+t 源码模式
+	- l-t 汇编模式
+
+
+- common ASM
+	[ c3 ]  			RET 
+	[ cc ]  			int3h  // trap to debugger
+		软件断点,CPU执行到这里就去通知调试器了
+
+	[ FF75 ]			push [ebp]
+	[ FF75 ] [01]		push [ebp+1]
+	[ FF75 ] [08]		push [ebp+8]
+
+	// FF15
+	[ FF15 ] [xx xx xx xx]  6个字节组成指令
+		:  取[xx xx xx xx]里的内容,再跳过去
+
+
+@$scopeip    当前IP的psedu寄存器
+
+
+# 脚本收集{
+	# 1{
+		//        bp nt!ObRegisterCallbacks+0xf5 ".if(1){ r @eax=1; gc; }.else{gc;}"
+		//        bp nt!ObRegisterCallbacks+0x109 ".if(1){ r @eax=1; gc; }.else{gc;}"
+	}
+}
+
+
+

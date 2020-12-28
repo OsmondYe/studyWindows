@@ -1,0 +1,44 @@
+#SHCreateItemFromParsingName  
+	IShellItem
+
+
+# IFileOpenDialog  , 初步见识到了IFileOperation的力量,  不能总看逆向,有大局观,看看整体怎么实现最快
+	show:
+	{
+	HRESULT hr;
+	CComPtr<IFileOpenDialog> pDlg;
+	COMDLG_FILTERSPEC aFileTypes[] = {
+	    { L"Text files", L"*.txt" },
+	    { L"Executable files", L"*.exe;*.dll" }, 
+	    { L"All files", L"*.*" }
+	  };
+	 // Create the file-open dialog COM object.
+ 	 hr = pDlg.CoCreateInstance ( __uuidof(FileOpenDialog) );
+ 
+  	if ( FAILED(hr) )
+    	return;	 
+	// Set the dialog's caption text and the available file types.
+ 	// NOTE: Error handling omitted here for clarity.
+  	pDlg->SetFileTypes ( _countof(aFileTypes), aFileTypes );
+  	pDlg->SetTitle ( L"A Single-Selection Dialog" );
+  	// Show the dialog.
+	hr = pDlg->Show ( m_hWnd );
+	}
+	get_path{
+		CComPtr<IShellItem> pItem;
+	 
+	    hr = pDlg->GetResult ( &pItem );
+	 
+	    if ( SUCCEEDED(hr) )
+	      {
+	      LPOLESTR pwsz = NULL;
+	 
+	      hr = pItem->GetDisplayName ( SIGDN_FILESYSPATH, &pwsz );
+	 
+	      if ( SUCCEEDED(hr) )
+	        {
+	        MessageBox ( pwsz );
+	        CoTaskMemFree ( pwsz );
+	        }
+	      }
+	}

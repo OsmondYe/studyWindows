@@ -1,0 +1,39 @@
+# member
+	# m_pViewActive   	// 活动View
+		# 进而可以维护 DocActive
+	# m_strTitle
+	# m_hMenu
+	# m_pNotifyHook
+# func
+	# OnIdleUpdateCmdUI   在线程空闲时更新ui小组件的状态
+		# 线程收到消息后,会通知CWinThread, 后者的OnIdle会找到MainWnd,来通知
+			AfxCallWndProc(pMainWnd, pMainWnd->m_hWnd,WM_IDLEUPDATECMDUI, (WPARAM)TRUE, 0);
+			pMainWnd->SendMessageToDescendants(WM_IDLEUPDATECMDUI,(WPARAM)TRUE, 0, TRUE, TRUE);
+	# AddFrameWnd
+		# pState->m_frameList.AddHead(this);
+		# 获取当前线程的局部存储, 里面有一个链表,记录了所有framdwnd
+		# 看来一个线程可以有多个框架窗口同时存在
+	# LoadAccelTable, GetDefaultAccelerator
+		# 默认加载一个h,
+		# 如果文档类自己也有一个,那就使用文档的(hAccel = pDoc->GetDefaultAccelerator()
+	# PostNcDestroy
+		# delete this;
+	# OnCreate
+		# call OnCreateHelper , OnCreateClient, CreateView (动态创建视图)
+	# OnClose
+		# GetActiveDocument, pDocument->CanCloseFrame(this)
+		# 启动自动ShutDownRestartManager
+	# OnDestory
+		# DestroyDockBars
+	# OnCmdMsg
+		# 先给View, 自己处理,让app处理
+	# OnH/VScroll
+		# 让View去处理
+	# OnDropFiles
+		# 找到app,pApp->OpenDocumentFile(szFileName);
+	# ShowControlBar
+
+# 新时代的Frame
+	# DockBars
+	# CtrlBars
+	

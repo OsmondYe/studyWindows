@@ -1,0 +1,61 @@
+我的主页: http://www.skycode.online
+
+常用命令:
+	- sudo systemctl restart apache2
+	- sudo systemctl reload apache2  
+		# 修改了配置
+	- sudo systemctl restart mysql   重启mysql
+	- scp root@skycode.online:/var/log/mysql/error.log ./error.log 
+
+mySql in linux:
+apache in linux
+
+PHP in linux:
+-install:
+	apt-get install php
+	apt-get install php-pear php-fpm php-dev php-zip php-curl php-xmlrpc php-gd php-mysql php-mbstring php-xml libapache2-mod-php
+
+-基本配置:
+	-# /ect/apache2/*
+			apache2.conf
+			ports.conf
+		替换掉:/var/www/html/index.html
+
+	-apache 安装完成后,我们需要配置一下,至少把我自己的www 给映射上去
+-install wordpress
+	- create db in mysql
+		CREATE DATABASE wordpress DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+		GRANT ALL ON wordpress.* TO 'wordpressuser'@'localhost' IDENTIFIED BY 'skycode.online!wordpress!osmond';
+		FLUSH PRIVILEGES;
+	- install php exetension 
+		sudo apt update
+		sudo apt install php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip	
+		sudo systemctl restart apache2
+	- 其他配置参考文章
+		# https://www.digitalocean.com/community/tutorials/how-to-install-wordpress-with-lamp-on-ubuntu-18-04
+	- curl -s https://api.wordpress.org/secret-key/1.1/salt/ 
+		define('AUTH_KEY',         '4|> tHdM|HrN4khX7]gzmL~e2/ZLUt>_;Tf@MDEcf({UBF~oo[JiY1)Ky@my2-eI');
+		define('SECURE_AUTH_KEY',  '|*|X4o31SqHxE{)p=P#9Gdt,KD<(Pz`8!&AtCdO_8NvY>]#pSf#|BgVlQC+wj6_G');
+		define('LOGGED_IN_KEY',    ')C_C7v+0KF[*FU&7>ge`?+=*6r.%&pM<qvt=1z@#*{6Yu,]j/goHd|m/5oO~>S*v');
+		define('NONCE_KEY',        'D!,Y5d-;_o9FG%@:f|?TH9Q!z_nMe44 ]/T$n(-|+xjnV@VG^,eTT }@2up|OhGt');
+		define('AUTH_SALT',        '}9heWs|2Ki|h(.| 9%^d,3e%GcfC}|m6q>L<+]*j>.$4e7(JI7OXH&t7|^=+g-c}');
+		define('SECURE_AUTH_SALT', '=w]A`y<^E4-1>ykr{hf| ^+CGz+boOA=Glmyy]YU+JU(A{B#KB+r>-xZ]lvX2QEF');
+		define('LOGGED_IN_SALT',   '@zRVMa!kAjxLa.BC<mii [||+=5;Gyy9l8U0s&`AOiuRh?42/`;EiHiA-+[xqF+T');
+		define('NONCE_SALT',       'QL&>?D+-N9Qcn)md;$e~lF+;vzLNRSN7@(a-i=OW:vYMfqKknxSX!<=C3XH@9uF.');
+
+
+
+
+
+
+
+PHP 知识点:
+-	 
+	<?php
+	 	codeing
+	 ?>
+	自动全局化变量 $_SERVER
+-
+
+
+  

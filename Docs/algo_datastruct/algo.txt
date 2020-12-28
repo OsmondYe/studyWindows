@@ -1,0 +1,206 @@
+Experience：
+	- 固定思维形成不了，相似的浪费时间的事情还是会反复出现
+	- 即便是再简单的问题也要形成思维定式  -》 这个只有通过不断反复思考才能固定下来
+	- 算法问题在脑子里形成同比的几何模型问题，图形比数字直观，但这个需要固定套路
+Keyword:
+	approach 方法 （比method 高级多了）
+	work backwards (逆向思维)
+	do it in one-pass (一趟搞定)
+	induce(数学归纳法), deduce(演绎),reduce(问题转换为某个模型)
+	trailing pointer:遍历指针
+	constraints of the problem
+	walk through,	traversal
+	GCD(Greatest Common Divisor)
+	iteratively（循环） & recursively（递归） -> (recursion vs iteration)
+	exhaust the search space
+	quadratic time 二次方时间
+
+
+reduce{
+	we can reduce this problem to cycle detection， 把这类问题转换为循环检测问题
+}
+
+
+递归函数源于数学概念{
+	induce vs. deduce     0--> n vs. n-->0;  数学归纳法 VS 演绎
+	递归定义{
+	  sum(n)
+	  	- n + sum(n-1)
+	  	- 0  , n==0、
+		知道一个简单结论，可以使用相同的模式进行deduction，指导得出简单结论
+
+
+	}
+	归纳证明{
+		induction [base | hypothesis | step]
+
+		sum(n) [(1+n)*n]/2
+			sum(n+1) = n+1 + sum(n) =   [(1+n+1)*(n+1)]/2
+	}
+
+	递归是否一定可以整成生成树?
+
+	单链表逆序的递归{
+		a -> b -> c -> d -> NIL
+		d -> c -> b -> a -> NIL
+
+			// 错误思维
+			c->next->next = rev(a,b,c);
+			List* d = c->next;
+			d->next = rev(a, b ,c);
+			// base on a
+			a -> b <--> c <- d
+			//presume  b ,c d had been reversed, and d is the new head.
+			// only need to fixup a b, b.next;
+
+
+	}
+}
+
+
+SUM2{
+	 - i,j  前后夹逼大法
+	 - 固定i，， 剩下的j进行二分查找
+}
+
+Boyer-Moore Voting Algorithm{
+	随机派一个队伍出战。
+	如果这个队伍人数>0 碰到敌军就手里抓一个敌军（抵消) 但是每个士兵只能抓一个人，抓完之后就靠边休息了。
+	如果碰到自己人就会增加队伍数量。
+	当他只有0个人的时候碰到了下一个队伍，这个队伍就被打败了，人数变成-1了。这时候抓他的队伍就是主场了。人数为1（替换candidate 数字)
+}
+
+Range{
+	区间遍历
+	max_min{
+		假设第一个是最大的最小的,然后依次和后续的比较,遍历结束,找到了
+	}
+}
+
+
+树{
+	针对二叉树，我们需要一个模板类，可以hold住不同的二叉树需求，比如，搜索树有parent，红黑树有颜色
+	binary-search-tree{
+		search minimum maximum predecessor successer insert delete
+		inorder preorder postorder
+	}
+
+	red-black-tree{
+		5B property{
+			-1 r or b
+			-2 root b
+			-3 leaf b
+			-4 node red 2b
+			-5 node hold same b
+			r-r-leaf-no-no
+		}
+	}	
+
+	路径和 PathSum{
+		递归求解, 典型分制思想
+		枚举所有解{
+			这就是典型的树的遍历的问题
+			vector<TreeNode*> 记录已经走的路径
+			如果树的非递归遍历算法我学的很扎实的话，这里就没有问题
+			思维太散，是否可以顺着一个路子往下走呢
+		}
+	}
+	求高{
+		如何非递归求解
+	}
+
+}
+
+
+
+priority_queue{
+	左高树:{
+		2个优先级队列需要合并? 
+		高度有限左高树 HBLT (height-biased leftist tree)
+		HBLT同时是大根树, max HBLT
+		重量优先左高树, WBLT (weight-biased leftist tree)
+
+	} 
+
+}
+
+
+===============================================
+算法思维：
+===============================================
+{
+	滑动窗口 -- sliding window 
+	分治   	-- divide and conquer   ->
+	动态规划 -- dynamic prgramming	-> dp 做表格
+	贪心  -- greedy method
+	回溯		-- backtracking
+	分支定界		-- branch and bound
+	advanced:
+		线性规划
+		整数规划
+		中心网络
+		遗传算法
+		模拟退火
+
+	动态规划{
+		最长子串无重复字符
+			table[i], 必须包含str[i]字符的 最优解
+			table[i]  VS table[i-1]?		
+	}
+
+}
+
+最优化问题{
+	Optimization Problem
+	限制条件 constraint
+	优化函数 optimization function
+	可行解   feasible solution
+	最优解   optimal solution
+}
+
+
+贪心{
+	作出的每一个选择都不撤回
+	
+}
+
+分治{
+	问题分成小规模，有限处理更小的规模
+	所有小规模从底向上构成树根的解
+}
+
+
+
+回溯{
+	解空间整成树结构再进行搜索
+	要深度优先
+}
+
+分支定界{
+	解空间整成树结构再进行搜索
+	广度优先
+}
+
+
+
+===============================================
+Sorting
+===============================================
+- 插入排序, 类似于打扑克,每摸到一张牌时,我们肯定是再已经排序的序列中,找到新牌的位置,然后插入
+	- 插入点后面的所有元素是不是需要依次后移,
+	- 腾出可插入的位置
+	- 书上说对于少量元素,这样来很快
+- 归并排序Merge:(Merge, 分治算法的应用)
+	- 序列分为左,右,左右分别有序后，merge为原始序列
+	-把原问题分解为规模小的和原问题类似的子问题,递归的解决子问题,再合并子问题
+	-两个已经排序的序列合并为问题的解
+	-cpp下标从0开始,这个很讨厌啊
+
+- Quick sort  [begin,end)  (Divide and Conquer)
+	- selet q,     [(i<=k),q,(q<=j))
+	- quick_sort(begin,q)
+	- quick_sort(q+1,end)
+	- 选择q，左边的都比他下，右边你的有比他大，（先大概派个组，组内再细分）
+	- 因为我们可以不断的递归调用，到树的低端，必然是已经排好序的值，自然的合并必然是有序的
+
+- Heap sort

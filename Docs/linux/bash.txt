@@ -1,0 +1,16 @@
+# for bash script
+
+# 类似于echo on, 每一行命令都打印出来
+set -x  
+
+
+# 使用重定向,快速的命令链接
+	printenv > sort > log.txt   #打印env_var 并排序,然后输出
+
+# env varaiables
+printenv
+set
+
+# --
+the end of command line options, and after which only positional parameters are accepted
+

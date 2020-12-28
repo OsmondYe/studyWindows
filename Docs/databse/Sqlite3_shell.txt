@@ -1,0 +1,211 @@
+cmd_shell:
+	.headers on ;改善显示格式
+	.mode colum  ;显示
+	
+	select last_insert_rowid();   ;sql,最后的自增长字段的取值
+	
+	.open db_file
+	
+	.tables   ; shwo all tabls
+	
+	.indices [talbe_name]
+
+	.schema [table_name]
+	
+	.show ;  current sqlite3 setting
+	
+	.dump  
+	
+	.read FILENAME	;execute sql cmd;
+	
+	.output ; dump时使用的file ,可以是stdout
+		.output file.sql
+		.dump
+		.output stdout
+	
+	.echo on
+	
+	.nullvalue NULL
+	
+	
+	sqlite3 foods.db < foods.sql ; 根据sql文件建立数据库
+	
+
+
+--------------
+SHELL:
+.cd DIRECTORY          Change the working directory to DIRECTORY
+.databases             List names and files of attached databases
+.echo on|off           Turn command echo on or off
+.exit                  Exit this program
+.quit                  Exit this program
+.headers on|off        Turn display of headers on or off
+.show                  Show the current values for various settings
+
+.archive ...           Manage SQL archives: ".archive --help" for details
+.auth ON|OFF           Show authorizer callbacks
+.backup ?DB? FILE      Backup DB (default "main") to FILE
+                         Add "--append" to open using appendvfs.
+.bail on|off           Stop after hitting an error.  Default OFF
+.binary on|off         Turn binary output on or off.  Default OFF
+.changes on|off        Show number of rows changed by SQL
+.check GLOB            Fail if output since .testcase does not match
+.clone NEWDB           Clone data into NEWDB from the existing database
+.dbconfig ?op? ?val?   List or change sqlite3_db_config() options
+.dbinfo ?DB?           Show status information about the database
+.dump ?TABLE? ...      Dump the database in an SQL text format
+                         If TABLE specified, only dump tables matching
+                         LIKE pattern TABLE.
+.eqp on|off|full       Enable or disable automatic EXPLAIN QUERY PLAN
+.excel                 Display the output of next command in a spreadsheet
+.expert                EXPERIMENTAL. Suggest indexes for specified queries
+.fullschema ?--indent? Show schema and the content of sqlite_stat tables
+.help                  Show this message
+.import FILE TABLE     Import data from FILE into TABLE
+.imposter INDEX TABLE  Create imposter table TABLE on index INDEX
+.indexes ?TABLE?       Show names of all indexes
+                         If TABLE specified, only show indexes for tables
+                         matching LIKE pattern TABLE.
+.limit ?LIMIT? ?VAL?   Display or change the value of an SQLITE_LIMIT
+.lint OPTIONS          Report potential schema issues. Options:
+                         fkey-indexes     Find missing foreign key indexes
+.load FILE ?ENTRY?     Load an extension library
+.log FILE|off          Turn logging on or off.  FILE can be stderr/stdout
+.mode MODE ?TABLE?     Set output mode where MODE is one of:
+                         ascii    Columns/rows delimited by 0x1F and 0x1E
+                         csv      Comma-separated values
+                         column   Left-aligned columns.  (See .width)
+                         html     HTML <table> code
+                         insert   SQL insert statements for TABLE
+                         line     One value per line
+                         list     Values delimited by "|"
+                         quote    Escape answers as for SQL
+                         tabs     Tab-separated values
+                         tcl      TCL list elements
+.nullvalue STRING      Use STRING in place of NULL values
+.once (-e|-x|FILE)     Output for the next SQL command only to FILE
+                         or invoke system text editor (-e) or spreadsheet (-x)
+                         on the output.
+.open ?OPTIONS? ?FILE? Close existing database and reopen FILE
+                         The --new option starts with an empty file
+                         Other options: --readonly --append --zip
+.output ?FILE?         Send output to FILE or stdout
+.print STRING...       Print literal STRING
+.prompt MAIN CONTINUE  Replace the standard prompts
+.read FILENAME         Execute SQL in FILENAME
+.restore ?DB? FILE     Restore content of DB (default "main") from FILE
+.save FILE             Write in-memory database into FILE
+.scanstats on|off      Turn sqlite3_stmt_scanstatus() metrics on or off
+.schema ?PATTERN?      Show the CREATE statements matching PATTERN
+                          Add --indent for pretty-printing
+.selftest ?--init?     Run tests defined in the SELFTEST table
+.separator COL ?ROW?   Change the column separator and optionally the row
+                         separator for both the output mode and .import
+.sha3sum ?OPTIONS...?  Compute a SHA3 hash of database content
+.shell CMD ARGS...     Run CMD ARGS... in a system shell
+.stats ?on|off?        Show stats or turn stats on or off
+.system CMD ARGS...    Run CMD ARGS... in a system shell
+.tables ?TABLE?        List names of tables
+                         If TABLE specified, only list tables matching
+                         LIKE pattern TABLE.
+.testcase NAME         Begin redirecting output to 'testcase-out.txt'
+.timeout MS            Try opening locked tables for MS milliseconds
+.timer on|off          Turn SQL timer on or off
+.trace FILE|off        Output each SQL statement as it is run
+.vfsinfo ?AUX?         Information about the top-level VFS
+.vfslist               List all available VFSes
+.vfsname ?AUX?         Print the name of the VFS stack
+.width NUM1 NUM2 ...   Set column widths for "column" mode
+                         Negative values right-justify
+
+
+
+INSERT 可选的 Constraint ( conflict resolution algo) 
+	REPLACE as an alias for INSERT OR REPLACE
+	
+	INSERT ... ON CONFLICT DO NOTHING  works the same as INSERT OR IGNORE
+	
+冲突目标必须满足建表时的实体约束
+	
+可以给配上 on conflict:
+	INSERT INTO phonebook(name,phonenumber) VALUES('Alice','704-555-1212')
+	ON CONFLICT(name) 
+		DO UPDATE SET phonenumber=excluded.phonenumber;
+		;; excluded. 固定前缀
+		;; excluded.phonenumber 用来表示现在要插入的值,也就是导致冲突的值
+		
+
+我再处理SkyDRM Local时也出现了类似的需求
+	                INSERT
+                INTO Server(url, router_url,is_onpremise)
+                    Values(
+                            @url,
+                            @router_url,
+                            @is_onpremise)
+                ON CONFLICT(url,router_url)
+                    DO UPDATE SET 
+                        access_count=access_count+1000,
+                        last_access=current_timestamp,
+                        last_logout=current_timestamp; 
+
+
+--------------
+
+----LOG----------
+drop table if exists Server;
+
+ CREATE TABLE IF NOT EXISTS Server(
+                id                  integer NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE , 
+                router_url          varchar(255) NOT NULL default '', 
+                url                 varchar(255) NOT NULL default '', 
+                tenand_id           varchar(255) default '', 
+                last_access         DateTime   default current_timestamp,
+                last_logout         DateTime   default current_timestamp ,
+                access_count        integer    default 1
+                is_onpremise        integer    default 1
+                );
+                
+insert into Server(url) values('http://fdsfds')
+
+
+
+CREATE TABLE IF NOT EXISTS User(
+  id                       integer NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, 
+  name                     varchar(255)  NOT NULL default '', 
+  email                    varchar(255)  NOT NULL default '', 
+  pass_code                varchar(255)  NOT NULL default '', 
+  server_id                integer, 
+  login_counts             integer,
+  last_access              DateTime      default current_timestamp, 
+  last_logout              DateTime      default current_timestamp, 
+  avartar                  text, 
+  rms_user_id              integer,
+  rms_user_type            integer, 
+  rms_session_expiration           DateTime, 
+  rms_nxl_watermark_setting            varchar(255), 
+  rms_nxl_expiration_setting  varchar(255), 
+  rms_user_json            text,  
+  rms_quota_setting_json          text,
+  user_preference_setting_json    text,
+
+  foreign key(server_id) references Server(id) on delete cascade);
+	
+
+	
+
+CREATE TABLE IF NOT EXISTS MyVaultFile (
+       id                  integer NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE , 
+       user_id             integer, 
+       local_path          varchar(255),
+       rms_path            varchar(255),
+       is_created_local    integer,   
+       status              integer, 
+       modified_time       DateTime, 
+       is_offline          integer, 
+       offline_time        DateTime, 
+      
+       foreign key(user_id) references User(id) on delete cascade);
+	   
+
+
+       

@@ -1,0 +1,15 @@
+WNDCLASSES wcx;  // defien a WndCallBackProc();  // msng handler
+
+::RegisterClassEx(&wcx);
+
+auto hwnd = ::CreateWindow(...);
+
+::ShowWindow(hwnd,..);
+::UpdateWindow(hwnd);
+
+while(GetMessage(&msg,NULL,0,0)){
+	::TranslateMessage(&msg);
+	::DispatchMessage(&msg);
+}
+
+return msg.wParam;

@@ -1,0 +1,66 @@
+自动化{
+	based on IDispatch
+
+	如何在运行时了解组件能够对外提供的服务API?
+	搞定通用的不同数据的传递方法
+
+	IDispatch{
+	Func{
+		Invoke :  			call by ID
+		GetIDsOfNames  		get name of the ID 
+		GetTypeInfo 		 
+		GetTypeInfoCount	
+	}
+}
+
+	Dispatch_Interface 派发接口
+
+	获取派发表里面能提供的方法ID,用ID来代表调用此方法
+
+	data type{
+	BSTR,
+	short, long, float,double
+	Byte,
+	BOOL,
+	CURRENCY,
+	DATE,
+	IUnknown*,
+	IDispatch*,
+	SafeArray,
+	VARIANT
+	}
+
+	VARIANT{
+		既有数据类型,也有数据本身
+	}
+
+	LateBinding{
+	
+	}
+}
+
+
+COM线程管理{
+	必须对每一个使用COM组件的线程调用 CoInitialied之类的函数
+	STA{
+		single threaded apartment
+		进程外服务器 一个com对象一个线程
+		一个obj一个房间,一个房间就是一个线程,彼此访问需要进行调度
+	} 
+	MTA{
+		支持不同线程的COM对象彼此间的访问
+	} 
+	单元,房间{
+		Apartment
+		以房间为逻辑考虑组件和client
+
+	}
+}
+
+
+
+
+good code{
+	CLSIDFromProgID("MyCom.Math",&clsid);
+
+}

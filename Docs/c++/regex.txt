@@ -1,0 +1,21 @@
+Regex
+
+- kw{
+	DFA  : deterministic finite automata
+	NFA  : non-deterministic finite automata  非确定有限状态自动机
+	expression
+	capture-group
+	parser
+	ERE
+	BRE
+
+
+}
+
+- direction:
+	DFA 	deterministric final automata 确定有穷自动机
+	NFA 	Non-deterministric finit automation 不确定有穷自动机  
+
+
+-回溯法 backtracking
+	set BP(base point)，搜索从BP所能达到的所有“状态”，当一条路走到“尽头”的时候，再后退一步或若干步，从另一种可能“状态”出发，继续搜索，直到所有的“路径”（状态）都试探过。这种不断“前进”、不断“回溯”寻找解的方法，就称作“回溯法”

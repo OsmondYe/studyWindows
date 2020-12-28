@@ -1,0 +1,290 @@
+#keyword
+	library
+	header
+	compiler
+	link
+	debug  gdb (gun debugger)
+
+#library
+	glibc  -> man glibc    -> /usr/src/linux
+
+	libc.so.2.0.0  
+		so. shared_object
+		major.minor.patch
+	-lglibc
+	libfor_g.a
+		debug symbol included
+	libcrypt.so
+	libdb.so
+	libglib.so
+	libpng.so
+	libptyhread.so 		
+	libz.so 			zlib.h
+#常见头文件地址
+	/usr/lib/gcc/
+	/usr/lib/gcc/x86_64-linux-gnu/
+	/usr/lib/gcc/x86_64-linux-gnu/7/
+	/usr/lib/gcc/x86_64-linux-gnu/7/include
+	"/usr/include/stdio.h"
+	"/usr/include/features.h"
+	"/usr/include/x86_64-linux-gnu/sys/cdefs.h"
+	"/usr/lib/gcc/x86_64-linux-gnu/7/include/stdarg.h"
+	"/usr/include/x86_64-linux-gnu/bits/libio.h"
+	"/usr/include/x86_64-linux-gnu/bits/sys_errlist.h"
+#常见库文件地址
+	[看来基本上就在lib 和 usr/lib里面了]
+	/lib/
+	/lib/../lib/
+	/usr/lib/
+	/usr/lib/../lib/
+	/lib/x86_64-linux-gnu/
+	/usr/lib/gcc/x86_64-linux-gnu/7/
+	/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/
+	/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib/
+	/usr/lib/x86_64-linux-gnu/
+	/usr/lib/gcc/x86_64-linux-gnu/7/../../../
+
+
+#glibc libc
+	standard c libraries on linux
+	glibc -> gun libc
+
+
+#gcc
+	gun cc: GNU project C and C++ compiler	
+	gcc  hello.c -o hell0.o  		// specify the name of the output file
+	gcc -E hello.c -0 hello.cpp     // -E 预处理后停止编译
+	gcc -x cpp-output -c hello.cpp -o hello.o  // -x 从指定的步骤开始编译	
+		cpp-output  	编译器处理后的c源代码
+		c++-cpp-output	编译器处理后的c++源代码
+	// 常见 option
+	-c 			只编译不链接  输出的是 ELF文件格式, 
+	-o 			指定输入名
+	-DFoo=Bar	预定于宏 Foo, 值为 Bar
+
+	// 库与头文件的搜索
+	-IPath		把Path包含到头文件的搜索目录中
+	-LPath		把Path包含到库文件的搜索目录中
+	-lFoo 		链接名为Foo的函数库
+	-static  	连接成静态库		
+	// debug
+	-g 			ELF中包含调试信息
+	-ggdb 		ELF中包含gdb可以识别的大量调试信息
+	
+	-O 			优化代码
+	// 出错检查
+	-Wall 		发出所有警告
+	-Werror 	所有警告转换为错误
+
+	-v  		编译过程中每一步用到的命令  [学习的最佳路径]
+
+#gcc 后缀约定
+	.c  		c language
+	.cc .C 		c++ languate
+	.i 			预处理后的c源代码
+	.ii 		预处理后的c++源代码
+	.s, .S      汇编语言源代码
+	.o          生成的目标文件
+	.a,.so  	编译后的库代码
+
+#gcc 自己整出来的扩展
+	函数没有返回值
+		__attribute__ ((nureturn)) 
+	栈上变量边界对齐
+    	int char __attribute__ ((aligned16)) =0 ;
+    case 1 ... 3:   
+    	case 1:
+    	case 2:
+    	case 3:
+    __FUNCTION__
+    	当前函数的函数名
+
+#make
+	使用make就是智商的开始
+	make的级联就可以做工程管理啦
+	第一个是默认目标
+
+	最好把最终目标写在最开始的任务
+		自动解析他的依赖
+	2种变量:
+		- C_File=hello.c mylib.c   // 递归展开
+		- cc := gcc  // 只展开一次
+				只展开一次的好处是如果要修改cc的内容,不会出现死循环
+				CC=gcc   CC=$(CC) -o2 ,  这里就是死循环
+	make程序启动时会枚举环境变量,并创建同名make变量
+	隐式规则
+		%.o: %.c
+			$(cc) -c $< -o $@
+			所有例如hello.o的文件都从hello.c而来
+			$< 规则目标的名字
+			$@ 规则中第一个文件名 
+
+#gdb
+	gdb上花的功夫越多,将来从调试回话里面得到的收益就越大
+	shell:  ulimit -c unlimited 程序如果崩溃,就生成巨量转储
+
+
+#系统和 系统调用
+	要求内核服务的函数
+	klogd&syslogd
+		系统log  k kerneal  sys user-mode
+		/var/log
+		#include<syslog.h>
+			syslog()
+	# strip  gnu提供的一个去除二进制里面调试信息的bash cmd
+		去除程序里面的调试信息
+	# nm  
+		列出二进制文件的所有符号
+	# ldd 
+		累出程序正常运行需要的library
+
+
+#c convention
+	abort() 进程终止
+	exit()  会完成一些清理工作
+
+
+
+#案例: 创建静态库和共享库 
+	# static
+		gcc -c a.p -o liberr.o    // 编译生成二进制,没有经过链接的过程
+		ar rcs liberr.a liberr.o // 创建静态库
+		// 静态库需要参与 工程的link过程
+
+
+#syscall
+	man syscalls 会列出所有的系统调用
+
+#vscode	config
+	as ide
+	
+
+
+
+- 字节流序列 lseek
+- 文件描述符 0 1 2, 小非负整数
+- 过滤器程序  cat grep tr sort wc sed awk
+- 内核记账 bookkeeping
+- exit() wait() 
+- init进程
+- 守护进程
+- 内存映射 mmap() 文件映射,
+- 静态库ar 共享库so
+- 进程同步, signal, 管道, socket, 文件锁定, 消息队列, semaphore, 共享内存
+- singal 软件中断, 收到信号,意味着一个事件或者异常出现
+- /proc 文件系统, 提供指向内核数据结构的接口  -> 查看和改变系统属性
+- 系统调用, 受控内核入口
+
+
+- 查看glibc version   
+	ldd --version
+	getconf GNU_LIBC_VERSION
+- fcntl get set fd flag
+- dup dup2 dup3
+- pread pwrite
+- readv writev  vector batch-data see IOV_MAX
+- preadv prwitev
+- truncate ftruncate
+- O_NONBLOCK
+- mkstemp tmpfile
+- program break 就是程序的堆  
+	brk, sbrk 
+	SIGSEGV: segmentation fault 分段错误
+	malloc, free
+- mtrace, muntrace 堆追踪
+- mcheck, mprobe
+- mallopt, mallinfo
+- calloc realloc
+- alloca
+
+- UID, GID
+- NIS 网络信息系统, LDAP 轻量级目录访问协议
+- /ect/passwd
+- /etc/shadow
+- /etc/group
+- getpwnam(), getpwuid()
+- getgrnam(), getgrgid()
+- setpwent(), getpwent(), endpwent()
+- getspnam(), getspent(), setspent(), endspent()
+- crypt() 
+
+- 进程凭证, 
+	实际用户ID 组ID 		-进程所属的用户和组		
+	有效用户ID 组ID 		-
+	saved set-user-id
+	文件系统用户ID,组ID
+- set-user-ID 
+- getuid(), getgid()  / setuid(), setgid()
+- geteuid(), getegid() / seteuid(), setegid()
+- setreuid(), setregid()
+
+- calendar time, elapsed or wall clock time
+- Unix Epoch, 1970-1-1:00:00
+- gettimeofday(), time(), ctime(), 
+- gmtime(), localtime(), mktime() 
+- asctime(), strftime(), currTime()
+- strptime()
+- /usr/share/zoneinfo
+- /etc/localtime
+- /usr/share/local  /user/lib/local
+- setlocale()
+- settimeofday(), adjtime()
+- 进程时间 times(), clock()
+
+- sysconf(), pathconf(), fpathconf()
+- #include<limits.h>
+
+- /proc 虚拟文件系统 
+- /proc/PID
+- uname
+
+- read write VS  kernel buffer cache
+- fprintf, fscanf, fgets,fputs,fputc,fgetc
+- setvbuf fflush
+- fsync, fdatasync
+- posix_fadvise
+- fileno, fdopen
+
+- /dev
+- mknod()  make file-system i-node
+- /sys
+- fdisk -l
+- /proc/partitions
+- mkswap
+- mkfs
+- /proc/filesystems
+- VFS -> open read write lseek close trancate stat mount unmount mmap mkdir link unlink symlink rename
+- mount, unmount
+- 驻留于内存中的虚拟文件系统
+- statvfs, fstatvfs
+
+- file attr, 
+- #include<sys/stat.h> -> stat(), lstat(), fstat()
+
+
+- setfacl, getfacl
+
+- link unlink
+- rename
+- symlink readlink
+- mkdir rmdir
+- remove
+- opendir readdir
+- nftw()
+- getcwd chdir
+- chroot
+- realpath
+
+
+- inotify
+
+- settimer() alarm()
+-  
+
+Daemon{
+	ps -axj 
+	PPID =0， 内核进程
+	kthreadd， pid=2， 用来创建其他内核进程
+	kswapd, 内存换页进程
+}
+

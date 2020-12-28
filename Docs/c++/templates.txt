@@ -1,0 +1,70 @@
+# keyword{
+	Instantiation    -> 实例化
+	declaration		 -> 只表示有个叫这个名字的东西
+	defination
+	deduction 		 -> 传个实参，到底啥类型 const T&  int(12),  T 是 int
+	specialization
+		explicit			
+		partial  		局部特化
+	primary template -> 基础模板
+	POI				 -> point of instantiation
+	ODR              -> one definition rule
+	SFINAE			-> sustitute failure is not an error, 替换失败并非错误
+	上下文相关文法	-> c++ 普通语言和模板一样，必须考虑具体使用的context，脱离context谈语义是没意义的
+	受限名称         -> this->count, conunt是受限名称， 
+	依赖名称			-> std::vector<T>::iterator,  iterator具体的类型依赖T
+	ADL				-> argument-dependent lookup, 
+}
+
+# remainded:
+	enable_if_t
+
+# 模板把类型当做变量抽取出来,是代码复用范围进一步提高
+  不同数据类型套用相同算法
+  编译阶段,根据具体调用模板函数的地方,编译器就地展开,根据模板函数创造出具体的函数	
+
+# 调用处类型推导
+	和普通函数类似,调用模板函数时需要指明实例化模板的具体类型值
+	模板参数自动推导
+
+# 模板参数
+	类型参数
+	const int 参数
+	模板的模板参数 template <typename T, template <typename ELEM> class CONT = std::deque >
+# 除了类型不同，算法都一样
+# 不允许自动类型转化
+
+# 实例化{
+	# 根据模板定义生成具体类/函数
+	# On-Demand, 在具体需要看到模板定义的地方
+		C<int>* p =NULL,  不需要
+		具体代码调用了哪个函数,这个函数才需要实例化
+	# 延迟实例化,
+}
+# 模板实参演绎{
+	# 调用出自动推倒需要的实参type
+	# T&, 有了引用的形参,实参就不会发生decay
+
+}
+
+
+# example 1
+	template <typename T>
+	inline const T& my_max(const T& a, const T& b) {
+		return a > b ? a : b;
+	}
+	# a,b 必须同类型，
+	# "str", "strdsdf"   都是const char*, 无法比较
+	# 传入什么类型，就实例化什么类型  -> Instantiation
+	# 具体实例化之前要先检查模板本身是否语法正确
+	# T1 a, T2 b, 的问题是，函数返回值由谁来决定？ 需要更高明的做法
+# 实参演绎
+
+# 特化
+	# 让模板类针对某个特性类型给个特殊版本，优化存储，可否某种不足
+
+# 多用this->
+	如果想用基类的fun，但是模板会优先用global的fun
+
+
+

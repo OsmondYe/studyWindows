@@ -1,0 +1,36 @@
+#为什么_beginthreadex 而不是CreateThread
+	c库如何配给线程?
+		errno,
+		c++ try catch如何构建?
+		locae information
+		c_runtime 会给线程创建一个tid_data mem-block,来包含上述信息
+
+#_endthreadex
+	帮助释放_tid_data
+
+# DWM{
+	desktop window manager -> desktop composition feature,
+	过去窗口直接画在显存里,
+	dwm功能启动后, 绘图被重定向到off-screen surface in Video Memory, 随后整个Desktop 一起画
+
+	# 用户先画,然后系统提供增强功能,毛玻璃效果,3d效果之类
+
+	# https://docs.microsoft.com/en-us/windows/win32/dwm/dwm-overview
+} 
+
+- Critical Section
+	- 本线程内可以重入的
+
+-Slim Reader/Write Lock (SRW Lock)
+	- 本进程内的好锁
+	- 比CS能进一步划分读者写着
+	- 同进程内快速进行线程资源共享的
+	- 有独占和共享模式 （读者，写着问题）
+	- SRW无法实现递归，或者成为锁升级
+
+
+# security_cookie{
+	# 防止stack overrun
+	# exception handling
+	# On entry to an overrun-protected function, the cookie is put on the stack, and on exit, the value on the stack is compared with the global cookie. Any difference between them indicates that a buffer overrun has occurred and causes immediate termination of the program
+}

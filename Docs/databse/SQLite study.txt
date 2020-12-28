@@ -1,0 +1,139 @@
+# keyword{
+	# wal
+	# paging
+	# (batch) atomic write
+	# column metadata
+	# Tcl calling
+	# Opcodes
+	# vfs     virtual file system  ,
+	# xShmLock   ?? share mode ?
+	# vtab  虚拟表？
+	# view  视图
+
+}
+
+# 架构:
+	接口     SQLite C API
+	
+	前端:	 编译器:	分词器 -> 解析器 -> 代码生成器 -> 
+	
+	虚拟机   前后承接(虚拟机): VDBE (Virtual Database Engine) 虚拟数据引擎
+	
+	后端	     BTree -> Pager -> OS接口 -> Database
+		
+#VDBE (Virtual Database Engine) 虚拟数据引擎:
+	编译原理那一套，自己定义了汇编语言，驱动后端进行操作	
+
+# SQL 的冲突解决: 懒惰更新 要插入记录,可以先不查询是否存在, 如果有主键相同的,就直接update而不是insert
+
+# 视图不支持更新
+	
+--haha--
+	数据类型: 只有5种
+		integer,
+		real,
+		text,
+		blob,
+		null
+
+# Lock:
+	Unlocked,
+		连接成功建立
+	Shared,
+		读数据,必须持有 (写操作必须等到所有shared的锁都释放了)
+	Reserved,
+		写数据,必须持有 
+		整个db只允许存在一个
+	Pending,
+		写请求升级, 一旦持有(新连接禁止申请Shared,关门)
+	Exclusive
+		写请求再次升级,(所有shared都释放后)
+
+
+# API:
+	# config
+		sqlite3_config();     //可能先于init
+	# init:
+		sqlite3_initialize()   //internal call sqlite3_os_init();
+		sqlite3_shutdown()	   //internal call sqlite3_os_end();
+	# sqlite3   -> handle	
+		sqlite3_open();   // ctor
+		sqlite3_close();  // dtor
+		sqlite3_db_config() // modify config
+			# foreign key, trigger, enable_view
+		sqlite3_last_insert_rowid  /  sqlite3_set_last_insert_rowid
+		sqlite3_changes
+		sqlite3_total_changes
+		sqlite3_interrupt     // cancel a long query
+		sqlite3_complete
+		sqlite3_busy_handler    // handle busy error
+		sqlite3_busy_timeout    // set timeout
+		sqlite3_set_authorizer
+		sqlite3_errcode
+		sqlite3_errmsg
+		sqlite3_limit
+		sqlite3_prepare   // compile sql statement
+
+
+	# sqlite3_stmt  // 已经编译好的语句，Prepared Statement Object
+		sqlite3_sql       // retrive sql from compiled code
+		sqlite3_stmt_readonly
+		sqlite3_stmt_isexplain
+		sqlite3_stmt_busy
+		sqlite3_bind_blob   // 语句里面的bind系列
+		sqlite3_bind_parameter_count
+		sqlite3_bind_parameter_name
+		sqlite3_bind_parameter_index
+		sqlite3_clear_bindings
+		sqlite3_column_count
+		sqlite3_column_name
+	# sqlite3_value
+		like Vairent
+	# sqlite3_context    //SQL Function Context Object
+
+
+	# sqlite3_exec		//One-Step Query Execution Interface
+		{
+		sqlite3_prepare_v2
+		sqlite3_step;
+		sqlite3_finalize
+		}
+		步骤{
+			sqlite3SafetyCheckOk  		//handle是否有效
+		}
+
+	# sqlite3_malloc  / sqlite3_free
+
+	# sqlite3_file
+		IO级别的操作
+		sqlite3_io_methods 结构体里面的函数对其进行操作
+	# sqlite3_io_methods
+	# sqlite3_mutex
+	# sqlite3_api_routines
+		# 数据库的扩展，
+	# sqlite3_vfs
+		# virtual file system
+	# sqlite3_mem_methods
+
+
+
+优秀库的架构经验
+{
+	# sqlite3azCompileOpt  
+		- 编译时就可以确定，我都选择了那些功能
+		- 类似于 #define，如果选择了，就可以输出来， 对于需要跨平台的库而言，好办法
+		- 检测是否某个feature被编译进去了
+	# defined(_WIN32) && !defined(_WIN64)	
+		是win32但不是win64
+	# 用c语言的函数指针集合结构体来模拟虚函数调用，
+		# 在哪里初始化这些功能级呢， 运行时，在初始化时进行
+
+	# 提供一个现有sys_init的 sys_config
+		# 用了确定哪些feature要使用，有些feature可能是多态，
+			# 比如锁的使用
+			# malloc的使用
+	# trace & profile
+
+	# 文档写法
+		All other calls are harmless no-ops
+}

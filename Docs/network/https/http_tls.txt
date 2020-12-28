@@ -1,0 +1,28 @@
+
+	{
+		http 206  partial download
+		xhr
+		http 504 Gateway Time-out
+	}
+
+
+cmd
+	openssl s_client -state -status -msg -debug -connect rmtest.nextlabs.solutions:443
+keyword
+	encrypt decrypt
+	shared-secret 
+	identity authenticate
+	message-authentication-code
+	symmetric cryptography
+	privacy 
+	secure reliable  (no eavesdropper, message tamper, message forgery)
+	forward-secrecy
+	key-exchange		cipher security data		data integrity
+
+RFC 
+	2246		TLS1.0
+	4346		TLS1.1
+	5246  		TLS1.2
+	6101		ssl 3.0  (historic record)
+	6176		prohibit ssl2.0
+	7568		prohibit ssl3.0

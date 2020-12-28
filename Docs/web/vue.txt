@@ -1,0 +1,18 @@
+<div id="app">
+  {{ message }}
+</div>
+
+var app = new Vue({
+  el: '#app',             // el:
+  data: {
+    message: 'Hello Vue!'
+  }
+})
+
+
+
+v-if
+v-for
+v-on
+v-model
+v-once

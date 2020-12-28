@@ -1,0 +1,51 @@
+Apache config:
+
+# keyword
+	seamless integartion 
+	server-side scripting
+	virtual hosting  			: One machine runs multiply web-sites
+	configuration directives 
+
+
+
+# common cmds;
+	# apache2 -v
+	# a2ensite a2dissite
+
+# apache modules
+	# used to extend the web server by using indenpendent,separate pieces of software
+
+# config directives
+	# ServerRoot		- where to store config, error log
+	# Listen			- 80 443
+	# User Group		- which user/group to run apache
+	# ServerAdmin 		- admin's email
+	# ServerName		- host:port   skycode.online:80
+	# DocumentRoot		- web site root 					/var/www/mysite/
+	# Errorlog			- 
+	# LogLevel			- debug, info, notice, warn, error, crit, alert, emerg 
+	# Directory 		- assign a gourp of cmd to dir
+	# Files 			- like dir
+	# IfModule			- set cmds to module
+	# Include 			-
+	# IncldueOptional   -  can be ignored if no matches
+	///
+
+# config files
+	# /etc/apache2/apache.conf  	-main file
+		IncludeOptional  			-like include  
+
+	# virtual host
+		<virtualhost *:80>
+			DocumentRoot
+			ServerName
+			ServeAlais
+			ErrorLog
+			LogLevel
+			CustomLog
+		</virtualhost>
+		# with cmd:  a2ensite
+	        
+
+    
+

@@ -1,0 +1,116 @@
+Watermark as a child window
+
+- 目标:
+	长期存在,以目标窗口为根据,稳定输出overlay信息,
+	不能影响目标窗口已有的content,
+	目标窗口移动,缩放,需要overlay保持稳定
+
+-频域手段添加数字盲水印, 高级玩法
+	- 频域手段添加数字盲水印
+	- 涂抹，剪切，放缩，旋转，压缩，加噪，滤波等
+
+
+-如何确保和目标窗口size一致?
+	我们需要每次重绘时,要获取父窗口的客户区的新size,必要时我们要更新自己的size
+
+-使用GDI+ 处理多媒体文字的绘图
+	可以很方便的处理字符旋转
+
+
+- 同时Hook GetDC 和 ReleaseDC
+	如果GetDC,  overlay隐藏
+	ReleaseDc,  overlay显示
+
+	不行,不行,这样会使得持续BeginPaint
+
+- must has whindow style
+	WS_CHILD | WS_DISABLED 
+	WS_EX_TRANSPARENT
+
+- 如果使用WS_EX_LAYERED 
+	SetLayeredWindowAttributes
+	UpdateLayeredWindow
+		change position,size look and transparency 
+		neglected the WM_PAINT message
+	我们需要自己写死针对哪个窗口做Overlay?
+
+	是不是需要我们只针对屏幕作图?	对头
+
+
+- 使用MemoryDC作图
+	-??? 如何获取当前DC已经有的内容?
+
+- 使用 LayeredWND 可以有2中解决思路
+	- 始终在屏幕上画图
+	- 想办法始终在目标窗口上画图
+
+
+- 最终思路:
+	基于UpdateLayeredWindow
+	获取最大的显示模式, 创建 memdc
+	定义memdc的brush为overlay
+	当目标窗口移动到某处的时候,就截取,只需要目标窗口的尺寸
+
+
+
+Style{
+	WS_EX_TOPMOST， 我们并不是一定需要这个， 如果可以确保overlay置于z序列的窗口之上，那确实不需要
+	z序列控制不好实现，还是用tool_window 方便一些
+}
+
+
+keng{
+	powerpoint 的窗口很特殊， 关闭时会发送
+		wm_syscommand  sc_close
+		wm_size   size_restored
+}
+
+
+watermark 有那么难吗?
+{
+	单进程多窗口,
+	config{
+		font,,color,transparent,rotation,
+		size [10-72]
+		style{ regular, bold, italic, bold italic}
+		margin[left,upper,right,bottom]
+		single, 
+		multilines
+		basepoint,
+	}
+	{
+	FontStyleRegular    = 0,
+    FontStyleBold       = 1,
+    FontStyleItalic     = 2,
+    FontStyleBoldItalic = 3,
+    FontStyleUnderline  = 4,
+    FontStyleStrikeout  = 8
+	}
+	{
+		{
+			如何枚举支持的字体
+		}
+		{
+			如何抽取和确定边距
+		}
+		如何优美旋转,确定旋转后的矩形尺寸   
+		{		
+			为什么旋转后出不来?  -1,  70 
+			旋转后是没有问题的,应该是clone时出问题了{
+				 问题在于out of memeory,
+				 转体后,已有画布空间不够,画布不够大?  画布半径为对角线长度
+				 问题搞定
+			}
+
+		}
+	}
+}
+
+
+
+{
+问题：
+	在Creo中发现了一个问题，watermark在运行时会受到 WM_WindowPosChanging的干扰，{
+		hwndinsertafter 被放倒z序列 目标窗口的后面，这个需要处理
+	}
+}

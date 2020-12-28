@@ -1,0 +1,117 @@
+//
+//  HTML
+//
+html{
+	DOM : document object model, node, element
+
+	common label{
+		<html>, <head> <title> <body>
+		<script>
+		<h1> ... <h6>
+		<a>		hyper link
+
+	}
+
+	div span{
+		<div>  		block-level
+		<span>		inline
+
+	}
+
+	class & id{
+		class{
+			.  (as class)
+			for multiple objs use
+			}
+		id{
+			#  (# like a num, a num is unique)
+			for single item use,  a id values in html must only one
+			}
+	}
+
+}
+
+
+//
+//  css
+//
+
+css{
+	我在代码里面链接一个css时:
+<link href="styles.css" rel="stylesheet" type="text/css"/>
+		
+css:
+所有tag p的color为red
+p {
+  color: red;
+} 
+
+#my-id
+
+.my-class
+
+img[src]
+
+a:hover 
+
+}
+
+
+//
+//  javascript
+//
+js{
+	basic{
+		var		define a variable		num str bool array obj  (nosab_five)
+		arrar:
+			var aArray= ['a','bbb','ccc'];
+			aArrary[0]= 'a';
+		object:
+			var ojb={name:'ye',age:17'};   //定义对象的快速方法, js和python都支持类似的做法
+		typeof : keyword 返回一个字符串,表示一个var的类型  typeof myInt  'Number'
+			如果类型没有定义 就会返回 'undefined'
+			
+			if (typeof myFloat !='undefined') {console.log('you have defined myFloat');} else{console.log('Not defined myFloat');}
+			
+			函数名时返回 fucntion
+			
+			如果是一个array时 返回 object
+		string:
+			surround the value with quotes  // 用引号括起来字符串
+			escaping quotes in strings  在引号中可以附加转义字符  \  backslash
+			var str='haha';  str=hehe   // 必然出错,从编译角度,把hehe的内容付给str
+			' vs " : 可以混用, 但是surround必须一致, ''中可以出现"-> 被认为是普通字符,没特殊意义
+			
+			var myInt = Number(myStrig);
+			var myString= myInt.toString();
+
+	}
+
+	dom{
+		document.getElementById{
+			innerText
+			innerHtml
+			setAttribute("href","https://www.google.com")
+		}
+
+	}
+}
+Basic:
+
+		
+	
+
+	
+		
+		
+
+DOM:
+	document.querySelector();	  这货仅仅只找到对应的tag的第一个匹配
+	document 有不少很好用的方法:  createElement, appendChild  用来在运行时给DOM添加元素
+	abutton= document.createElement('button');
+	abutton.textContent= 'test a new game';			// change button name
+	document.body.appendChild(abutton);
+
+
+
+	

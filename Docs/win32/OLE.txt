@@ -1,0 +1,17 @@
+# ole is the genesis of the transformation API to Object-oriented
+
+# structred storage
+	persistent storage
+	复合文档技术
+	存储对象
+	流对象
+	IStream   	read write seek 
+	IStorage:  	create_steam, open_stream, create_storage
+	IPersist:	
+	IPersistStream
+	IPersisFile
+	IPsersistStoryage
+# Moniker
+	 坑逼, 自己调用::createbindcntx
+	 IBindCtx * pbc; 
+	 hr = CreateBindCtx(NULL, &pbc); 

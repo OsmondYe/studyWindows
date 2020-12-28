@@ -1,0 +1,84 @@
+安装系统时，
+	WIFI模块无法直接识别，参考文章：http://www.dell.com/support/Article/us/en/19/SLN297551/EN
+
+安装各种软件：
+    我把软件放于： baidu pan software 中
+    
+install android studio
+	其中 mksdcard SDK tool 依赖一个文件，需要安装
+	sudo apt-get install lib32stdc++6
+install java
+	sudo add-apt-repository ppa:webupd8team/java
+	sudo apt-get update
+	sudo apt-get -y install oracle-java8-installer
+	sudo update-alternatives --config java
+        On /etc/environment, add JAVA_HOME on the last line :
+		1 JAVA_HOME="/usr/lib/jvm/java-8-oracle/"
+		
+config nexus 10
+android official doc depicts this problem: http://developer.android.com/tools/device.html
+     use lsusb the test the nexus 10's id :Bus 001 Device 005: ID 18d1:4ee7 Google Inc. 
+     use this  write file into /etc/udev/rules.d/51-android.rules 
+=====================
+# MyDeviceName
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="18d1", ATTRS{idProduct}=="4ee7", MODE="0666" GROUP="androiddev", SYMLINK+="android%n"
+======================
+     finally , reload the udev  ;   sudo service udev reload
+
+解压7z的问题
+sudo apt-get install p7zip-full
+
+--------------------------------------------------------------------------------
+尝试吧android stuido 移动到其他位置 /opt
+解决编译 viewer 工程时 nkd的问题，我并没有确定全局的ndkdir，所以可以采用在console中打开 viewer 的方式
+ndkdir="/opt/Android/Sdk/ndk-bundle"
+export ndkdir
+/opt/android-studio/bin/studio.sh
+
+
+
+--------------------------------------------------------------------------------
+自学的命令：
+acpi -V
+我利用proxychains 来尝试对命令行程序进行socks5 代理 其在 /etc/proxychains.conf中有配置文件，需要配置sock5代理
+惊人的突破，使用 proxychains运行andorid的sh文件，就可以实现透明翻墙了
+又来了2个新命令：whereis  apropos    
+查看文件夹sizie：  du
+
+
+--------------------------------------------------------------------------------
+linux 下实现翻墙:
+git clone -b manyuser https://github.com/shadowsocksrr/shadowsocksr.git
+edit config:
+{
+"server":"12.34.56.78",
+"server_ipv6":"::",
+"server_port":8388,
+"local_address":"127.0.0.1",
+"local_port":1080,
+"password":"happy2017",
+"timeout":300,
+"udp_timeout":60,
+"method":"aes-128-ctr",
+"protocol":"auth_aes128_md5",
+"protocol_param":"",
+"obfs":"tls1.2_ticket_auth",
+"obfs_param":"",
+"fast_open":false,
+"workers":1
+}
+
+启动ss local 的命令
+sudo python local.py -c user-config.json --log-file ./locallog.log -v -d start
+sudo python local.py -c user-config.json --log-file ./locallog.log -v -d stop
+--------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+

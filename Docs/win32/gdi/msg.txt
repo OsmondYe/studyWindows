@@ -1,0 +1,276 @@
+Window Message 
+###########################################
+#
+#  父子窗口
+#
+	父窗口会收到消息{
+		WM_COMMAND，
+		WM_NOTIFY
+		WM_CTLCOLORXXX
+		子窗口感受到 鼠标键盘之类的 然后通知父窗口
+	}
+
+	// 父窗口接受子窗口的消息
+	WM_PARENTNOTIFY  : childWnd,  create/destory, L/M/RbtnDown  消亡和常见鼠标消息会传给父窗口
+
+###########################################
+Message{
+	WM_CREATE
+	WM_INITDIALOG
+	WM_COPYDATA
+	WM_DESTROY
+	WM_MOVE
+	WM_SIZE    					//Sent to a window after its size has changed
+	WM_ACTIVATE
+	WM_ACTIVATEAPP
+	WM_SETFOCUS  /WM_KILLFOCUS
+	WM_ENABLE
+	WM_CLOSE
+	WM_QUERYENDSESSION
+	WM_QUERYOPEN
+	WM_SYSCOLORCHANGE
+	WM_ENDSESSION
+	WM_SHOWWINDOW
+	WM_CTLCOLOREDIT
+	WM_CTLCOLORLISTBOX
+	WM_CTLCOLORBTN
+	WM_CTLCOLORDLG
+	WM_CTLCOLORSCROLLBAR
+	WM_CTLCOLORSTATIC
+	WM_SETTINGCHANGE
+	WM_DEVMODECHANGE
+	WM_FONTCHANGE
+	WM_TIMECHANGE
+	WM_CANCELMODE
+	WM_SETCURSOR
+	WM_CHILDACTIVATE
+	WM_GETMINMAXINFO
+	WM_ICONERASEBKGND
+	WM_SPOOLERSTATUS
+	WM_DRAWITEM
+	WM_MEASUREITEM
+	WM_DELETEITEM
+	WM_CHARTOITEM
+	WM_VKEYTOITEM
+	WM_QUERYDRAGICON
+	WM_COMPAREITEM
+	WM_COMPACTING
+	
+	WM_GETDLGCODE
+	WM_TCARD
+	WM_TIMER
+	WM_HSCROLL WM_VSCROLL
+	WM_INITMENU
+	WM_INITMENUPOPUP
+	WM_MENUSELECT
+	WM_MENUCHAR
+	WM_NOTIFY
+	WM_ENTERIDLE
+	WM_PARENTNOTIFY
+	WM_MDIACTIVATE
+	WM_RENDERFORMAT
+	WM_RENDERALLFORMATS
+	WM_DESTROYCLIPBOARD
+	WM_DRAWCLIPBOARD
+	WM_PAINTCLIPBOARD
+	WM_VSCROLLCLIPBOARD
+	WM_CONTEXTMENU
+	WM_SIZECLIPBOARD
+	WM_ASKCBFORMATNAME
+	WM_CHANGECBCHAIN
+	WM_HSCROLLCLIPBOARD
+	WM_QUERYNEWPALETTE
+	WM_PALETTECHANGED
+	WM_PALETTEISCHANGING
+	WM_DROPFILES
+	WM_WINDOWPOSCHANGING WM_WINDOWPOSCHANGED
+	WM_EXITMENULOOP WM_ENTERMENULOOP
+	WM_STYLECHANGED WM_STYLECHANGING
+	WM_SIZING WM_MOVING 
+	WM_CAPTURECHANGED
+	WM_DEVICECHANGE
+	WM_COMMAND
+	WM_DISPLAYCHANGE
+	WM_ENTERSIZEMOVE
+	WM_EXITSIZEMOVE
+	WM_GETFONT
+	WM_GETHOTKEY
+	WM_GETICON
+	WM_GETTEXT WM_GETTEXTLENGTH
+	WM_HELP WM_HOTKEY
+	WM_INPUTLANGCHANGE WM_INPUTLANGCHANGEREQUEST
+	WM_NEXTDLGCTL 
+	WM_NEXTMENU
+	WM_NOTIFYFORMAT
+	WM_POWERBROADCAST
+	WM_PRINT WM_PRINTCLIENT 
+	WM_RASDIALEVENT
+	WM_SETFONT
+	WM_SETHOTKEY
+	WM_SETICON
+	WM_SETREDRAW
+	WM_SETTEXT
+	WM_USERCHANGED
+	WM_MENURBUTTONUP
+	WM_MENUDRAG
+	WM_MENUGETOBJECT
+	WM_UNINITMENUPOPUP
+	WM_MENUCOMMAND
+	WM_APPCOMMAND
+	WM_CHANGEUISTATE
+	WM_UPDATEUISTATE
+	WM_QUERYUISTATE
+	WM_INPUT
+	WM_UNICHAR
+	WM_WTSSESSION_CHANGE
+	WM_THEMECHANGED
+	WM_GESTURE
+	WM_GESTURENOTIFY
+	WM_DPICHANGED
+	//
+	WM_PAINT:	
+		必须配对 BeginPaint,EndPaint
+		UpdateWindow() directly send WM_PAINT, 
+		有无效区域产生时就会触发WM_Paint
+		不要调用GetDC() 在Paint中
+		窗口创建,被移动,有缩放(CS_HREDRAW,CS_VREDRAW)
+		ScrollWindow,ScrollDC
+		InvalidateRect,InvalidateRgn
+		系统会尝试cache,并测试是否可以成功恢复,如果可以,就不会发送WM_PAINT
+		BeginPaint和EndPaint用到的设备描述符只会在当前的无效区域内绘画,，在有效区域内的绘画会自动被过滤
+		BegainPaint  
+			validates the invalid region. 
+			将窗口需要重绘的区域设置为空
+			当窗口的Update Region被标志为需要擦除背景时，BeginPaint会发送WM_ERASEBKGND消息来重画背景，同时在其返回信息里有一个标志表明窗口背景 是否被重画过
+			call HideCursor 
+		EndPaint
+			call ShowCursor
+
+	WM_ERASEBKGND   : 用window自己的背景画刷,先刷一遍,背景重绘
+
+	WM_SETCURSOR	: 子窗口会把这个消息传给父窗口,让父窗口来处理
+	WM_NCHITTEST    : 确定窗口哪部分在鼠标处理中,DefWindowProc会帮我们来判定
+					  父窗口没有被子窗口遮住的部分也会接受这个消息,
+					  DefWindowProc returned		
+					  		HTCLIENT  client child windwo
+					  		HTCAPTION
+					  		HTTOP
+					  		HTZOOM		in a Maximize button.
+###########################################
+#
+# 窗口常见行为
+#
+
+# 标题栏最小化
+	WM_SYSCOMMAND  SC_MINIMIZE
+	WM_SIZE 		SIZE_MINIMIZE 		
+# 标题栏关闭窗口
+	WM_SYSCOMMAND  SC_CLOSE
+	WM_CLOSE
+	WM_DESTROY
+	WM_NCDESTORY
+
+###########################################
+//
+// Mouse
+//
+WM_NCHITTEST  :{
+	# 非客户区,整个窗口哪个部分被命中测试 
+		# 系统给一个屏幕坐标,我们告诉系统,鼠标当前在窗口的那些部分
+
+	// 由此的结果,产生其他鼠标消息, 
+
+	// 系统给出的返回结果 
+		边框:  HTBORDER HTBOTTOM HTBOTTOMLEFT HTBOTTOMRIGHT 
+			   HTLEFT HTRIGHT 
+			不同边框,上下左右, 可以显示不同的鼠标样子
+		HTCAPTION 
+			// 窗口头部, 可以拖动窗口
+		HTSYSMENU 
+		    #  系统菜单上, 左上角的ICON,点击后是系统菜单
+		    #  要禁止系统菜单,就可以欺骗
+		HTCLIENT
+
+	// 功能 : 禁止某区域的鼠标消息, return HTNOWHERE ;
+
+	// 功能 : 在客户区也能用鼠标拖动窗口
+}
+WM_MOUSEACTIVATE
+WM_MOUSEMOVE
+WM_MOUSEWHEEL
+WM_MOUSEHWHEEL
+WM_LBUTTONDOWN WM_LBUTTONUP WM_LBUTTONDBLCLK
+WM_RBUTTONDOWN WM_RBUTTONUP WM_RBUTTONDBLCLK
+WM_MBUTTONDOWN WM_MBUTTONUP WM_MBUTTONDBLCLK
+
+WM_NCMOUSEMOVE
+WM_NCLBUTTONDOWN WM_NCLBUTTONUP WM_NCLBUTTONDBLCLK 
+WM_NCRBUTTONDOWN WM_NCRBUTTONUP WM_NCRBUTTONDBLCLK 
+WM_NCMBUTTONDOWN WM_NCMBUTTONUP WM_NCMBUTTONDBLCLK
+
+WM_MOUSEHOVER
+
+WM_MOUSELEAVE
+
+WM_NCXBUTTONDOWN WM_NCXBUTTONUP WM_NCXBUTTONDBLCLK
+WM_XBUTTONDOWN WM_XBUTTONUP WM_XBUTTONDBLCLK
+
+###########################################
+//
+// Keyboard
+//
+	WM_KEYDOWN WM_KEYUP  WM_CHAR	WM_DEADCHAR
+	WM_SYSKEYDOWN WM_SYSKEYUP WM_SYSCHAR WM_SYSDEADCHAR
+	WM_SYSCOMMAND
+
+
+	WM_SetFocus   这个窗口开始接受键盘消息
+	//
+	WM_ENABLE     是否允许这个窗口接受鼠标和键盘消息?
+
+
+	- WM_KEYDOWN VS WM_CHAR:
+	Keyboard{
+	非系统键, 没有alt组合的按键
+	KEY_DOWN 
+		非系统按键按下(有alt的不会在此消息里面)
+		是比较原始的消息, 经过TranslateMessage 会将其转化为 WM_CHAR
+
+		如果是组合键,可以辅助GetKeyState,  最高位为1表示按下
+			bool bControl = 0x8000 & GetKeyState(VK_CONTROL);
+	}
+
+
+###########################################
+// Edit contrl
+	WM_CLEAR
+	WM_COPY
+	WM_CUT
+	WM_PASTE
+	WM_UNDO
+
+###########################################
+
+Notification{
+	//
+	WM_NCCREATE
+	WM_NCDESTROY   {
+		通知窗口非客户区正在被清理,
+		DestroyWindow() 会发送此消息
+		所有子窗口都destroy完后,会发送此消息.
+		符合常理:{
+			1 主窗口收到WM_DESTROY
+			2 删除所有子窗口
+			3 清理主窗口的非客户区域
+		}
+		这是一个window存在的最后的消息,此wnd对应的c++对象还在, 可以其相应函数里面 delete this;
+	}
+	WM_NCCALCSIZE
+	WM_NCPAINT
+	WM_NCACTIVATE
+}
+
+
+
+
+

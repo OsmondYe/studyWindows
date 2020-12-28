@@ -1,0 +1,9 @@
+# problem domain
+# problem context
+
+# 找出一组最少的操作,客户代码通过这set来组合新feture
+
+# 文件系统 node 基类,  folder,file子类
+	# Composite 模式
+	# 如何管理新增和删除 目录或者文件?  adopt(收养)  orphan(脱离树状结构)
+	# 问题,如何处理 symbolic link的问题

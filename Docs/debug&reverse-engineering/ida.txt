@@ -1,0 +1,10 @@
+# 7.0 如果需要符号文件支持，
+	需要安装vs2008 的发布库，否则无法定位符号
+
+# 我通过查看wordpad的源码，看出来了，他最终会调用 来尝试加载图片
+	拦截图片加载： GdipLoadImageFromFile
+		GpStatus WINGDIPAPI GdipLoadImageFromFile(GDIPCONST WCHAR* filename, GpImage **image)
+
+
+# rebase, 逆向分析时,windbg里面的基址和ida里面不一致时,需要处理下,有利分析
+	UI -> Edit -> Segment -> Rebase Programme..

@@ -1,0 +1,138 @@
+//
+// VIM
+//
+三个模式  用esc 退出模式
+编辑模式： 
+i insert
+I  行首插入（有效字符）
+a append
+A  行尾插入
+cw (change word)
+单词首部，可以帮我们先dw，然后在i，是一个合成命令把
+r replace a char
+R replace chars
+命令模式   默认模式
+编程时：
+K  编程时用来查询关键字，很好用的
+可以查询 头文件	
+可以查询函数
+ctrl + p  关键字不全，单词补全  连续按
+ctrl + n  同上，方向相仿而已  连续按
+删除
+dd  整行  
+dw  一个单词
+d5w连续删除5个单词 
+daw 只有光标在单词上就删除她
+d^  d$ 从光标位置删除到行头或者行尾
+D  = d$
+c数字w  先删除n个单词，在插入你想新写的
+J 两行并一行
+同行内查找
+f/F
+后跟字母，光标定位到当前行的字母除
+查找成功后用 ； 可实现重复查找
+按字移动光标
+w e    b froward back
+H (home)  M（Middle） L (Lower)
+^ 0    $  头和尾
+{（   }） 段落，句子的	
+% 括号快速匹配
+数字G 跳到指定行  比如 12G， 直接到12行
+数字% 跳到百分比位置，如；10%  到10%处
+gg 快速 同 Home  GG END
+滚屏 ctrl +  Ｄ　Ｕ　Ｆ　Ｂ　Ｅ　Ｙ　
+反悔和取消反悔
+u 插销（undo）
+ctrl +r   (redo) 
+复制粘贴
+yy 复制，当前行放入缓冲区
+Nyy 复制多行
+ye yw   yank a word
+y$   yank to line end
+y0  yank to line beg
+y5G  yank five lines
+p 粘贴， 将缓冲区内容放入
+
+r 替换当前字符  
+R 开始无目的替换
+查找
+/ ? 启动，方向不同， n N来切换
+* # ， 光标在一个单词上，则可以前后快速跳到相同的单词
+高级查找
+^ $  行首，行位
+^th  以th开头的行
+th$  : 以th结尾的行
+. 匹配任意一个字符
+查找并替换
+:[Range]sustitute/from/to[flags]
+range  
+%(all)     
+1,5(第一行到第五行） 54（第五十行）
+,.$ 从当前行到文章结束
+flage:   g(global)  c(confirm)
+实例：
+:%s/four/4/g 全文four替换为4
+但是有风险，有些单利里面含有four怎么办
+%s/\<four\>/4/g
+
+~ 修改大小写
+G 
+数字+G 行移动
+CTRL + v
+成为可视块模式
+I 前， A 后， 整个选中块 统一输入相同字符
+c ， change， 先删除，在换成我们想的
+C ， 选中块全部删除到行尾，在写入信的
+标签：
+mx  ,x为任意数字  设置标签
+'x ,  跳回x设置的标签
+分割窗口
+:splite  默认分割为上下对等窗口
+vsplit 水平分割 新建窗口	
+ctrl +w ，不同窗口之间移动
+close 
+only 只保留这一个窗口
+new  新建窗口
+vnew vertical new
+resize 3
+当前窗口设置为只有3
+窗口创建标签
+tab new
+tav edit
+gt    (go tab)   gT (go pre tab）
+tabonly
+记录与回放命令
+q， 外加一个寄存器a到z都可以，比如qa
+开始命令的录制
+q，结束录制
+@a，调用刚才录制的命令
+@@ 执行刚刚录制，或刚刚运行的宏命令
+牛逼的Global
+[range]global/{pattern}/{command}   到匹配处执行一条命令
+g/^/move 0 
+文件倒叙，匹配所有行，从第一行开始，每一行移到头顶
+ex模式  保存 修改 退出 ： 进入
+shift + zz  保存并退出
+w 保存 write
+q 退出
+q！ 强制退出，不保存
+x 保存并退出
+set number 显示行
+sh 回到shell 
+想再回来时 ctrl+d
+!cmd	 执行shell 命令
+r !cmd    把cmd的output写入当前光标处
+r !date    // insert date
+startLine,endLine !cmd   起始行和中止行间的内容传给shell cmd处理下
+12,14 ！sort
+. !cmd  同上，光标所在行可以用点表示
+. !tr [a-z][A-Z]
+w !cmd   内容交给cmd处理，但是结果显示在新窗口中，不用写会文本
+
+
+--------------------------------------------------------------------------------
+我需要一个vim的c插件
+
+VIM 写程序时的经验：
+查看头文件内容
+要查找一个头文件，使用locate  fName  相当快，可以找到目录，到对应里面去看
