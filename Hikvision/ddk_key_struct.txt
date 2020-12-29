@@ -105,27 +105,23 @@ typedef struct  _DEVICE_OBJECT {
 } DEVICE_OBJECT;
 
 
-typedef struct  _IRP {
-
-    CSHORT Type;
-    USHORT Size;
-
+# IRP {     // 顺序已经打乱
+    Type;
+    Size;       // sizeof(IRP)
     PMDL MdlAddress; // only for direct i/o
-
     ULONG Flags;
-
+    //  主副结构
     union {
         struct _IRP *MasterIrp;
         __volatile LONG IrpCount;
         PVOID SystemBuffer;
     } AssociatedIrp;
 
-
     LIST_ENTRY ThreadListEntry;   
 
     IO_STATUS_BLOCK IoStatus;       // 用户自己来设置  Irp->IoStatus.Status 
 
-    KPROCESSOR_MODE RequestorMode;
+    KPROCESSOR_MODE RequestorMode;  // KernelMode | UserMode
 
     BOOLEAN PendingReturned;  
 
@@ -133,17 +129,16 @@ typedef struct  _IRP {
     CHAR CurrentLocation;  
 
     BOOLEAN Cancel;
-
     KIRQL CancelIrql;
+    PDRIVER_CANCEL CancelRoutine;   
 
     CCHAR ApcEnvironment;
-
     UCHAR AllocationFlags;
 
     PIO_STATUS_BLOCK UserIosb;    //*Irp->UserIosb = Irp->IoStatus;
 
     PKEVENT UserEvent;     //
-
+    PVOID UserBuffer;
     union {
         struct {
             union {
@@ -155,10 +150,7 @@ typedef struct  _IRP {
         LARGE_INTEGER AllocationSize;
     } Overlay;   
 
-    __volatile PDRIVER_CANCEL CancelRoutine;   
-
-    PVOID UserBuffer;
-   
+     
     union {
         struct {
             //1
@@ -182,26 +174,24 @@ typedef struct  _IRP {
                     ULONG PacketType;
                 };
             };
-
+            //5
             PFILE_OBJECT OriginalFileObject;
         } Overlay;
     
         KAPC Apc;   // associate with Overlay.Thread      
         PVOID CompletionKey;
     } Tail;
-
-} IRP;
-
+}
 
 
 
-typedef struct _IO_STACK_LOCATION {
+
+# IO_STACK_LOCATION {
 
     UCHAR MajorFunction;
     UCHAR MinorFunction;
     UCHAR Flags;
     UCHAR Control;
-
 
     union {
 
@@ -455,7 +445,7 @@ typedef struct _IO_STACK_LOCATION {
 
     } Parameters;
 
-    PDEVICE_OBJECT DeviceObject;
+    PDEVICE_OBJECT DeviceObject;            // 本层操作的设备对象
 
     PFILE_OBJECT FileObject;
 
@@ -463,5 +453,5 @@ typedef struct _IO_STACK_LOCATION {
 
     PVOID Context;
 
-} IO_STACK_LOCATION, *PIO_STACK_LOCATION;
+} 
 

@@ -77,8 +77,15 @@
 }
 
 # IRP {
+	
+	# based on Packet-driven{
+		header (fixed part)  			: IRP
+		body (in each driver layer)		: IO_STACK_LOCATION
+	}
+
 	# PIO_STACK_LOCATION {
 		和其关系紧密相连
+		os或者驱动创建IRP的同时，就会创建与之相关联的IO_STACK_LOCATON
 	}
 	# {
 		CurrentLocation
@@ -114,10 +121,11 @@
 	
 }
 
-Scsi
+# 异步IO{
+	# 责任委托
+	# 注册完成历程，
+}
 
-
-
-# 关键结构 {
-	
+# 通信 {
+	CreateFile + DeviceIoControl
 }
