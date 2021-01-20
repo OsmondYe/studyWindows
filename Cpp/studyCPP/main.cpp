@@ -1,6 +1,8 @@
 ﻿#include "pch.h"
 
 
+
+
 int main(int argc, wchar_t** argv)
 {
 	srand(time(NULL));	// give a randome seed

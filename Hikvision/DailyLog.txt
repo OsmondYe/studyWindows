@@ -18,18 +18,20 @@
 }
 
 
-# ISeeDN
+# ISeeDN{
 	域见， 
 	物联网设备接入，数据汇聚
 	data link    ( collecting )
 
 	??? 具体接口需要 sso 登录 hiklink
+}
 
-# IFarDN
+# IFarDN{
 	远见
 	大数据 与 AI   ( analyzing)
 
 	??? 具体接口需要 sso 登录 hiklink
+}
 
 # 统一软件技术架构{
 	#三个集成环境{
@@ -40,21 +42,8 @@
 }
 
 
-# 驱动{
-	结束： 9章
-	遗留{
-		即插即用(12.21 16:10, 12.22)
-		电源管理
-	}
-	攻克难关{
-		端口
-		USB
-		其它总线设备
-	}
-}
 
-
-#公司的Linux网络呗限制了 {
+#公司的Linux网络被限制了 {
 	我今天尝试了想办法去更新apt， 但是发现了各种问题
 	首先 deb的源的配置， 纯文本配置方法，  /etc/apt/
 	需要搜索在调用 apt update是 如何走网络代理  , 可参考文章【https://www.serverlab.ca/tutorials/linux/administration-linux/how-to-set-the-proxy-for-apt-for-ubuntu-18-04/】	
@@ -87,13 +76,7 @@
 
 # 翻墙{
 	privoxy 一个http 代理， 翻墙软件中都会碰到类似的， 原理是什么？
-		可以forward sock5 ,把流量再转给 sock5的server，  从而形成了proxy链条
-
-
-	Main(){
-		LoadCgf,
-		ListenLoop
-	}
+		可以forward sock5 ,把流量再转给 sock5的server， 从而形成了proxy链条
 
 	什么样的代码是service代码{
 		有服务监听， 
@@ -110,7 +93,206 @@
 	
 }
 
-# nagle算法
 
-I we didn't have what it took at the beginning, we picked it up along the way.
+# 专功 Sample{
+	# 在Sample中找不会的地方，通过书籍查漏补缺
+	# 直接看Sample, 可以直接找到常见的coding方法, 这个才是公司需要的
 
+	Toaster： {
+		# 这里才是最需要补充的地方
+		
+	}
+
+	# IOCTL{
+		// 01/13/2021,  
+	}
+
+	# Event{
+
+	}
+}
+
+
+#c++  {
+	std::adjacent_difference()
+	std::stoi
+	queue:  front, back ,push, pop
+	stack   top, push, pop
+	string{
+		遍历与抽取操作
+		index based
+		find_first_of; 
+	}
+	algo{
+		set_intersection :  2个区间, 求交集 {
+			[f1, e1)
+			[f2, e2)
+
+			while( f1<e1 && f2<e2){
+
+			}
+
+		}
+	}
+}
+
+#安可产品 安可产业联盟{
+	# 安全可控  safe and controllable steerable
+	# 安全可靠  security and reliability
+	# 安全可靠技术和产业联盟   ->  security and reliability technology industrty alliance
+	# 安全可控 -> 产业链  (chip,server,database,os)国产化代替,
+	# 国产化自主可控
+	# 基础软硬件,安全软件, 应用软件
+	# 整机(PC, 服务器, 打印机)
+	# 系统集成, 行业应用
+
+	# 从无到有, 从不好用到可以用
+	# 关键领域的全面安全可靠, 实现软硬件全部替换, [局部环境,单一领域] -> [整体环境,多种领域]
+	# 自主平台上的业务拓展
+	# 2022年, 关键领域整体替换
+
+
+	# 安可产业联盟{
+		# 安可市场 ->  安可产业联盟{
+			# IT infrastruactal {
+				cpu, server, storage, router/switch, cloud
+			}
+			# basic software{
+				OS, Database, mid-ware
+			}
+			# app {
+				OA, ERP, office, 
+			}
+			# security {
+				边界安全产品, 中断安全产品
+			}		
+		}
+		# 市场主体 {
+			系统集成厂商
+			整机厂商
+			芯片厂商
+			操作系统厂商
+			应用软件厂商
+			安全厂商
+			互联网企业
+			第三方机构
+		}
+	}
+
+	# 产品设计{
+		# 安全可靠 -> 所有运算达到国家和相应行业的安全标准和可信需求
+		# 兼容     -> 标准统一,避免行业碎片化
+		# 优化     -> Focused on User-Experiences 
+	}
+
+}
+
+
+#Hik_Qt{
+	# AlarmCenter {
+		# 告警中心主界面 AlarmCenter
+		-------------
+		# 分析预警
+		# 违禁品
+		# 温度异常
+		# 客流预警
+		# 人员离岗
+		# 安检门金属侦测
+
+
+		AlarmDetailsBase
+		DetailLabelWidget
+
+		# Conditional query{
+			时间
+			所属位置
+			温度阈值
+			确认结果
+			告警类型
+			告警等级
+		}
+
+		# 如何确保config路径可用?
+	}
+
+	# qt知识点{
+		# QWidget{
+			不确定窗口组件是独立还是要迁入其它模块时
+		}
+		# Signal&Slots
+		{
+			Q_OBJECT  所有从 QOjbect派生的都推荐上这个
+			Q_SIGNALS
+			emit SignalClearAlarmQueryInfo();
+			QObject::connect(sender, SIGNAL(signal()), receiver, SLOT(slot()));
+			SIGNAL 
+			public Q_SLOTS:
+
+			# Signal{
+				like public:
+				{	
+					Q_SIGNALS:
+					    void finished(int result);
+					    void accepted();
+					    void rejected();
+
+				}
+				只用声明,不用实现
+				# 可以把信号直接connect给另外一个信号
+
+				# 常见signal{
+					changed, hovered,toggled, triggered
+				}
+			}
+			# Slots {
+				可以是虚函数
+				public slots:
+    				void setValue(int value){
+					    if (value != m_value) {
+					        m_value = value;
+					        emit valueChanged(value);
+					}
+}
+			}
+			
+		}
+
+		QStringList  
+		QVector
+		QSet
+		QMap
+
+		QPixmap
+
+
+		QVBoxLayout  QHBoxLayout
+		QSpacerItem
+		QListWidget   // 专门放置列表用的
+
+		QMutex  QMutexLocker
+		QReadWriteLock
+		QThreadPool
+		QThread
+		QRunnable
+		QFuture
+		QtConcurrent::run
+		QSemaphore
+
+		QAction,  命令模式下的标准封装
+		QEvent,
+
+		QJsonDocument   QJsonParseError
+
+		# QStackedWidget {
+			可以放一组widget, 一次只能显示一个
+		}
+		QMetaObject::invokeMethod
+	}
+
+	# HIk 自己的{
+		# 尝试 HUIControl::CCrumb *c
+		# 使用 Hikvision自己版本的控件
+	}
+
+	# qt可以实现多个进程共用同一个窗口框架
+}
