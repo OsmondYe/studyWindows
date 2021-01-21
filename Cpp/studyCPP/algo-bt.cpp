@@ -338,9 +338,8 @@ vector<int> createTargetArray(const vector<int>& N, const vector<int>& index) {
 }
 
 TEST(AlgoBT, Permutation2) {
-
-    aux::output(createTargetArray({ 0,1,2,3,4 }, { 0,1,2,2,1 }));
-
+    vector<int> x;
+    std::sort(x.begin(),x.end())
     getchar();
 
 }

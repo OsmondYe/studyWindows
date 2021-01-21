@@ -184,6 +184,7 @@
     <ClCompile Include="algo-linear.cpp" />
     <ClCompile Include="algo-tree.cpp" />
     <ClCompile Include="algorithm.cpp" />
+    <ClCompile Include="algo_bsearch.cpp" />
     <ClCompile Include="chrono.cpp" />
     <ClCompile Include="concurrency.cpp" />
     <ClCompile Include="container.cpp" />

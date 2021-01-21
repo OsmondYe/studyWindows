@@ -200,6 +200,9 @@
     <ClCompile Include="algo-bt.cpp">
       <Filter>Source Files\data_struct_and_algo</Filter>
     </ClCompile>
+    <ClCompile Include="algo_bsearch.cpp">
+      <Filter>Source Files\stl\algorithm</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="NoUse.hpp">

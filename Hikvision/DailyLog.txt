@@ -17,6 +17,9 @@
 	\\10.41.49.215\共享文件\工具集\项目开发常用工具\C++开发工具\vs2015 
 }
 
+CryptVerifySignatureW API校验签名
+
+
 
 # ISeeDN{
 	域见， 
@@ -217,10 +220,17 @@
 
 	# qt知识点{
 		# QWidget{
-			不确定窗口组件是独立还是要迁入其它模块时
+			所有UI对象的基类, qt把UI统称为widget
+			# attr{
+				minimunWidth				
+			}
+			# common{
+				sizePolicy (自由resize,只能水平扩展,只能垂直扩展)
+				sineHint
+				# strech factors 拉伸系数
+			}
 		}
-		# Signal&Slots
-		{
+		# Signal&Slots{
 			Q_OBJECT  所有从 QOjbect派生的都推荐上这个
 			Q_SIGNALS
 			emit SignalClearAlarmQueryInfo();
@@ -252,9 +262,25 @@
 					        m_value = value;
 					        emit valueChanged(value);
 					}
-}
 			}
-			
+		}
+		# Layout{
+			# 自动排列其内的widget
+			# QWidget::setLayout()
+			# attr{
+				margin
+				spaceing
+				geometry   设置坐标位置
+			}
+
+			QVBoxLayout  QHBoxLayout
+
+			QLayoutItem   提供了抽象item供布局类来操控
+			QSpacerItem   提供blank space在一个布局中,用来占据空间
+			QWidgetItem   layout的item用来代表一个widget
+
+			# 宽和高相互依赖  布局内有item
+
 		}
 
 		QStringList  
@@ -265,8 +291,7 @@
 		QPixmap
 
 
-		QVBoxLayout  QHBoxLayout
-		QSpacerItem
+		
 		QListWidget   // 专门放置列表用的
 
 		QMutex  QMutexLocker
@@ -279,7 +304,7 @@
 		QSemaphore
 
 		QAction,  命令模式下的标准封装
-		QEvent,
+		QEvent, 	所有事件的基类
 
 		QJsonDocument   QJsonParseError
 
