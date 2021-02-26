@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 
-
+extern void scratch();
 
 
 int main(int argc, wchar_t** argv)
@@ -31,7 +31,6 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "Sort.Quick";
 	testing::FLAGS_gtest_filter = "DSLinear.MAX_SUB_ARRAY";
 	testing::FLAGS_gtest_filter = "DSLinear.Vector_Remove_duplicate_Elem";
-	testing::FLAGS_gtest_filter = "AlgoLinear.LeetCode*";
 	testing::FLAGS_gtest_filter = "AlgoHash.LeetCode";
 	testing::FLAGS_gtest_filter = "AlgoStr.LeetCode";
 	testing::FLAGS_gtest_filter = "AlgoTree.LeetCode";
@@ -49,9 +48,11 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "dp23.*";
 	testing::FLAGS_gtest_filter = "Stream.Cin";
 	testing::FLAGS_gtest_filter = "Concurrency.*";
-	testing::FLAGS_gtest_filter = "AlgoBT.*";
+	testing::FLAGS_gtest_filter = "Algorithm.*";
+	testing::FLAGS_gtest_filter = "AlgoLinear.LeetCode*";
 
 
+	scratch();
 
 	return RUN_ALL_TESTS();
 

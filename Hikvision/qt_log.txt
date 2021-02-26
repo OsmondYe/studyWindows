@@ -5,5 +5,372 @@ QT on the way;
 	uic   -UI compiler,  qt的XML定于.ui文件作为用户界面,  uic把此xml 生成对应的 ****.h
 	moc   -meta-object compiler,  处理c++ Q_OBJECT 宏, 实现slot,之类
 	rcc   -resource compile,  编译.qrc,  最终嵌入进qt程序
-
 }
+# 常见继承 {
+	# QWidget :  QObject
+	# QLayout :  QObject
+	# 
+	# QLayoutItem  独立做基类, 类似组合模式,布局项一般为widget或者layout{
+		# QSpacerItem   提供blank space在一个布局中,用来占据空间
+		# QWidgetItem   layout的item用来代表一个widget
+	}
+	# QAbstractButton : QWidget{
+		QPushButton
+		QCheckBox
+		QRadioButton
+		QToolButton
+	}
+}
+
+# 资源相关{
+	qrc:  qt_resource{
+	  	#xml format{
+	  		 <RCC>
+	  		 	<qresource prefixe="/xxx">
+	  		 		<file>xxx</file> 
+	  		 	</qresource>
+	  		 </RCC>
+	 	}
+	}
+	qss  qt_stylesheet{
+		# qrc 里面可以使用的一种资源
+	}
+	rcc {
+		#使用rcc 命令将resource.qrc生成.rcc二进制文件。
+		#rcc --binary resource.qrc -o skin.rcc（Windows）
+			--binary 很重要
+	}
+	# 程序启动时加载{
+		QResource::registerResource(qApp->applicationDirPath() + "/skin/skin.rcc");  
+	    QFile file(":/qss/stylesheet");  
+	    if(file.open(QFile::ReadOnly))  
+		    {  
+		      QString strStyleSheet = file.readAll();  
+		      file.close();  
+		      qApp->setStyleSheet(strStyleSheet);  
+		    }
+	}
+}
+
+# QObject{
+	#2线并行{
+		#QObject
+		#QObjectPrivate : QObjectData
+
+		#使用了pimp_模式, 隔离掉外层与内层,在内层存储具体数据
+
+		#所有继承体系中, 都会间接用到QObjectData, RTTI, 数据类型判断,树形结构找父亲和孩子
+	}
+}
+
+# UI常见属性{
+	# {
+		LayoutItem
+			spacerItem
+			widgetItem
+			QLayout     -> 容纳所有其他类型的item
+	}
+	# layout  -> 一个widget只能有一个top level layout
+	# sizeHint : 首先的尺寸,  preferred size
+	# spacing  -> 间距,子控件之间的
+	# Margins  -> 控件自身的4个边框
+	# HeightForWidth -> qt中引入的属性, 高依赖宽
+}
+
+# layout{
+	# QVBoxLayout  QHBoxLayout
+	# addWidget: ownership,  help to delete the widget
+	# geometry manager
+	# parent, 一个widget
+	# SizePolicy{
+		# 尺寸发生变化时, 应该如何响应
+		# x横向怎么变, y纵向怎么变
+		# 设置最小,最大尺寸
+		# 有一个基础值, bV, baseValue
+		# grow  -> bV++
+		# shrink -> bV--
+		# fixed  -> bV
+		# expand -> bv++/--
+	}
+
+	# 具体布局时需要考虑的item的属性{
+		# preferred height  (heightForWidth)  hfw
+	}
+
+	# 布局引擎算法{
+		# 根据源码 所有的布局item 都要转换成 QLayoutStruct
+		# 由引擎函数 qGeomCalc 完成QLayoutStruct数组的 最终布局问题
+	}
+
+	# spacing:  子widget之间的间距
+
+	# heightForWidth {
+		# 给定一个w值, 看看h应该是多少
+		# hasHeightForWidth -> bool,  此item是否具有这个属性, 具体布局时,根据其作为参数来判断空间
+	}
+
+	# setGeometry{
+		# 所谓布局,就是依次调用每一个item的setGeometry
+		# 需要预先确定其的位置
+	}
+	# invalidate, update : 要求重绘{
+		// 从widge的任意layot出发,找到top_level的layout,
+		// 然后在找到其widget, 重绘此widget
+		QWidget *mw = static_cast<QWidget*>(layout->parent());
+
+		// 以post_msg的形式实现
+		QApplication::postEvent(mw, new QEvent(QEvent::LayoutRequest));
+	}
+	# SetSizeConstraint{
+
+	}
+
+	# 自我实现{
+		addItem(), sizeHint(), setGeometry(), itemAt() and takeAt()
+	}
+
+	# code {
+		auto* spacer = new QWidget(this);
+		spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+		hb->addWidget(spacer);
+	}
+}
+
+# QWidget{
+	# common{
+		#所有UI对象的基类, qt把UI统称为widget
+		#attr,[palette,font,cusor,stylesheet]
+		# code-style{
+			sizePolicy (自由resize,只能水平扩展,只能垂直扩展)
+			sineHint  (w自己最适合的尺寸)
+			strech factors 拉伸系数
+			focusPolicy
+			ForegroundRole
+			BackgroundRole
+		}
+		# 老朋友{
+			QApplication::sendEvent(q, &pc);
+			QApplication::postEvent(q, new QUpdateLaterEvent(clipped));
+
+			# 消息处理{
+				bool QWidget::event(QEvent *event);  [oye event是QObject定义的虚函数]
+			}
+		}
+		
+
+	}
+	# Tech{
+		# propagatePaletteChange{
+			# 通知当前Widget下所有孩子, 调色盘内容有改变
+			# 看样子是以事件形式发送{
+				在WidgetPrivate里面,q代表了this_widget
+					QEvent pc(QEvent::PaletteChange); 
+					QApplication::sendEvent(q, &pc);
+				其中Event由virtual void changeEvent(QEvent *); 来负责resolve
+					默认	QEvent::PaletteChange直接update
+			}
+		}
+	}
+	# 有意思的点{
+		# Palette{
+			调色盘{
+				Widget想象成画布,
+				palette定义了画布上所有基本元素的颜色{
+					group :  active, inactive, disable 
+					role  :  window, shadow, window-text, Light, MidListh, Mid,Dark HighLisht,
+					// 组代表了状态,每种状态下不同的role都会有默认值 
+
+					比如 button, active和disable应该给绘制出不同的颜色
+				}	
+			} 
+		}
+	}
+}
+
+# Signal&Slots{
+	Q_OBJECT  所有从 QOjbect派生的都推荐上这个
+	Q_SIGNALS
+	emit SignalClearAlarmQueryInfo();
+	QObject::connect(sender, SIGNAL(signal()), receiver, SLOT(slot()));
+	SIGNAL 
+	public Q_SLOTS:
+
+	# Signal{
+		like public:
+		{	
+			Q_SIGNALS:
+			    void finished(int result);
+			    void accepted();
+			    void rejected();
+
+		}
+		只用声明,不用实现
+		# 可以把信号直接connect给另外一个信号
+
+		# 常见signal{
+			changed, hovered,toggled, triggered
+		}
+	}
+	# Slots {
+		可以是虚函数
+		public slots:
+			void setValue(int value){
+			    if (value != m_value) {
+			        m_value = value;
+			        emit valueChanged(value);
+			}
+	}
+		}
+}
+
+# QT's Model View{
+	# 一次搞定,终身受益, data_set, ui_present_data, ui_delegat_ext_ui
+	# 如果model学的好, 问题可以一次性搞定
+	# 先根据例子, 读取文本文件, 然后树形展示的列子
+	# model delegate view   [signals, slots]
+	# model -> sig -> view  , change data ui
+	# view -> sig ,  user interact
+	# delegate ->sig, [view/model] , state of the editor
+
+	# Model {
+		# QAbstractItemModel, interface to data
+			# 必须继承的函数{
+				index
+				parent
+				rowCount
+				columnCount
+				data
+
+				一个树形结构,直接挂住Item
+			}
+		# QStandardItemModel{
+			# QStandardItem
+			# 放置层次数据结构,树状
+		}
+		# QStandardItem{
+			item->setFlags( Qt::ItemIsEnabled);{
+				// 用户可以与item做ui交互
+				// 比如列表, 默认,选中一项后, list会关闭
+			}  
+		}
+		# 给View和Delegate来获取数据
+		# index 数据的表示与存储分离,, 通过下表获取数据{
+			# how data can be retrived from Model
+			# row
+			# col
+		}
+		# item roles{
+			# Qt::DisplayRole
+			# Qt::ItemDataRole
+		}
+		# QModelIndex
+		# Proxy Model{
+			Model 级联, 额外提供sort和filter
+		}
+		# signals{
+			# dataChanged  现存的数据集发生改变, 发送此数据
+		}
+		# edit{
+			# 通过flag,返回允许编辑,来提供cell的编辑功能
+			# 通过重载 setData 和 flags 2 函数来实现
+		}
+
+	}
+
+	# View {
+		# QAbstractItemView {
+			# 一个可以被用来显示UI的Item,应该具有哪些UI特性{
+				#[水平,垂直]滚动
+				#拖拽,编辑,[Tab,鼠标,键盘]事件
+				#被选择
+
+			}
+			# 抽象视图与抽象数据模型, 通过ModelIndex来互动
+			# table, list, tree UI不同,但是可以让其表示的数据是同一个数据
+			# QListView  QTableView  QTreeView
+			# 使用Delegate来提供增强型UI
+		}
+		# 导航,区域选择(handling selections),上下文菜单, 拖拽
+		# separation [content  | presentation]
+		# QHeaderView{
+			# sort_indicator
+			# column_size
+			# alignment
+			# orientation
+
+		}
+		# 常规操作{
+			1 Model,  n_row? n_col  (rowCount(), columnCount())
+			2 fetch each , how to present(render)? (data) 
+
+		}
+		# Role{
+
+		}
+
+	}
+
+	# Delegate{
+		# QAbstractDelegate, QStyledItemDelegate,
+		# 客户定制化的editor
+		# 提供数据呈现于编辑的组件, 星级排名
+	}
+	# sorting{
+
+	}
+	# conveninece class{
+		# Q[List|Tree|Table]Widget,
+		# 凡是widget,那就是view 和data被绑定在一起啦
+	}
+	# mapper{
+		# QDataWidgetMapper		
+			# 把widget映射到表格的制定列, 这样修改起来方便
+		# QCompleter
+			# 自动补全
+	}
+	# QHeaderView
+}
+
+
+# style_sheet{
+	# 具有继承性?  app, widget都具有类似的继承性
+	# cascading ,  不同level都定义了样式表, 那就级联继承
+	# selector  , which widget will be 
+	# declartion, which style rules will be
+
+	# Box model{
+		# 一个矩形绘图区域, 本质上有4个同心矩形{
+			# 内到外:  content, padding, border, margin
+			# mbpc 
+		}
+	}
+
+	# font {
+		# in code {
+		 "font-family: PingFangSC-Regular;  font-size: 18px; color: #000000; text-align: center;letter-spacing: 0;"
+
+		 wid ->setStylesheet{};
+		}
+	}
+
+	# QPushButton { color: red } {
+		# selector : QPushButton
+		# declartion: { color: red }
+		# 所有继承自QPushButton的类对象都应该具有red属性
+	}
+	# QPushButton, QLineEdit, QComboBox { color: red }  同时写
+	# Sub-controls{
+		#QComboBox 里面有一个drop-down控件, 给其一个背景图片
+			QComboBox::drop-down { image: url(dropdown.png) }
+
+	}
+	#status{
+		hover, pressed, disable, normal
+	}
+}
+
+
+# Qt Cocurrent{
+	
+}
+

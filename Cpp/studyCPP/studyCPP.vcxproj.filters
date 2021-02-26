@@ -203,6 +203,9 @@
     <ClCompile Include="algo_bsearch.cpp">
       <Filter>Source Files\stl\algorithm</Filter>
     </ClCompile>
+    <ClCompile Include="scratch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="NoUse.hpp">

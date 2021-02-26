@@ -17,8 +17,51 @@
 	\\10.41.49.215\共享文件\工具集\项目开发常用工具\C++开发工具\vs2015 
 }
 
-CryptVerifySignatureW API校验签名
+# vm {
+	红网登陆 rdvdest10.hikvision.com   rd-win7    10.2.193.246
+	///
+	coding  10.3.129.126 
+}
 
+
+#问题遗留{
+	# 我看到了QT的ModelView设计, 
+		这是数据驱动UI的最佳实践
+		公司的表格任务,应该可以直接通过其来实现
+
+	# QT 信号槽绑定是什么原理?
+	# priority_queue{
+		auto cmp = [](ListNode* l, ListNode* r) {
+        return l->val > r->val;
+    	};
+    	priority_queue<ListNode*, vector<ListNode* >,decltype(cmp)> q(cmp);
+	}
+	#快速排序
+	#monotonic stack/queue
+		https://leetcode.com/problems/final-prices-with-a-special-discount-in-a-shop/discuss/685578/Python-31-pass-O(n)-code-using-stack-w-brief-explanation-and-analysis.
+	{
+		栈内元素有序
+		对高的循环进行分析
+		高度为h的柱状图,最大面积是多少
+	}
+	#LeetCode Binary Search
+	#map和set的实现原理, 尤其是muiltset multimap
+	# adjacent_difference 从 +1处开始输出, 为什么
+	# c++ set去遍历时 ,就是排好序的?{
+		set s1,s2    how ( s1 == s2
+		# multiple set 需要熟悉下啦
+	}
+	# small( insertion), heap, quicksort
+	# BackTracking {
+		using tree, to find all solutions by exploring all potential candidates,
+		if( no a good solution){
+			discard current, 
+			back to previsou step,
+			try the next
+		}
+		所谓回溯就是把这个树给生成了
+	}	
+|}
 
 
 # ISeeDN{
@@ -63,16 +106,6 @@ CryptVerifySignatureW API校验签名
 }
 
 
-# BackTracking {
-	using tree, to find all solutions by exploring all potential candidates,
-	if( no a good solution){
-		discard current, 
-		back to previsou step,
-		try the next
-	}
-	所谓回溯就是把这个树给生成了
-}
-
 # virtualbox{
 	right -> ctrl +f to shwo full mode and then get back , it will returned
 }
@@ -96,27 +129,7 @@ CryptVerifySignatureW API校验签名
 	
 }
 
-
-# 专功 Sample{
-	# 在Sample中找不会的地方，通过书籍查漏补缺
-	# 直接看Sample, 可以直接找到常见的coding方法, 这个才是公司需要的
-
-	Toaster： {
-		# 这里才是最需要补充的地方
-		
-	}
-
-	# IOCTL{
-		// 01/13/2021,  
-	}
-
-	# Event{
-
-	}
-}
-
-
-#c++  {
+# c++  {
 	std::adjacent_difference()
 	std::stoi
 	queue:  front, back ,push, pop
@@ -139,7 +152,7 @@ CryptVerifySignatureW API校验签名
 	}
 }
 
-#安可产品 安可产业联盟{
+# 安可产品 安可产业联盟{
 	# 安全可控  safe and controllable steerable
 	# 安全可靠  security and reliability
 	# 安全可靠技术和产业联盟   ->  security and reliability technology industrty alliance
@@ -150,7 +163,7 @@ CryptVerifySignatureW API校验签名
 	# 系统集成, 行业应用
 
 	# 从无到有, 从不好用到可以用
-	# 关键领域的全面安全可靠, 实现软硬件全部替换, [局部环境,单一领域] -> [整体环境,多种领域]
+	# 关键领域的全面安全可靠, 实现软硬件全部替换, [局部环境,单一领域} -> [整体环境,多种领域}
 	# 自主平台上的业务拓展
 	# 2022年, 关键领域整体替换
 
@@ -188,130 +201,15 @@ CryptVerifySignatureW API校验签名
 		# 优化     -> Focused on User-Experiences 
 	}
 
+	# 信创企业{
+		指在信息技术应用创新的背景下，基于云计算技术，自主研发，适配国产CPU技术架构和国产操作系统等自主可靠技术及设备，发挥云计算高可靠
+	}
 }
 
 
-#Hik_Qt{
+# Hik_Qt{
 	# AlarmCenter {
-		# 告警中心主界面 AlarmCenter
-		-------------
-		# 分析预警
-		# 违禁品
-		# 温度异常
-		# 客流预警
-		# 人员离岗
-		# 安检门金属侦测
-
-
-		AlarmDetailsBase
-		DetailLabelWidget
-
-		# Conditional query{
-			时间
-			所属位置
-			温度阈值
-			确认结果
-			告警类型
-			告警等级
-		}
-
-		# 如何确保config路径可用?
-	}
-
-	# qt知识点{
-		# QWidget{
-			所有UI对象的基类, qt把UI统称为widget
-			# attr{
-				minimunWidth				
-			}
-			# common{
-				sizePolicy (自由resize,只能水平扩展,只能垂直扩展)
-				sineHint
-				# strech factors 拉伸系数
-			}
-		}
-		# Signal&Slots{
-			Q_OBJECT  所有从 QOjbect派生的都推荐上这个
-			Q_SIGNALS
-			emit SignalClearAlarmQueryInfo();
-			QObject::connect(sender, SIGNAL(signal()), receiver, SLOT(slot()));
-			SIGNAL 
-			public Q_SLOTS:
-
-			# Signal{
-				like public:
-				{	
-					Q_SIGNALS:
-					    void finished(int result);
-					    void accepted();
-					    void rejected();
-
-				}
-				只用声明,不用实现
-				# 可以把信号直接connect给另外一个信号
-
-				# 常见signal{
-					changed, hovered,toggled, triggered
-				}
-			}
-			# Slots {
-				可以是虚函数
-				public slots:
-    				void setValue(int value){
-					    if (value != m_value) {
-					        m_value = value;
-					        emit valueChanged(value);
-					}
-			}
-		}
-		# Layout{
-			# 自动排列其内的widget
-			# QWidget::setLayout()
-			# attr{
-				margin
-				spaceing
-				geometry   设置坐标位置
-			}
-
-			QVBoxLayout  QHBoxLayout
-
-			QLayoutItem   提供了抽象item供布局类来操控
-			QSpacerItem   提供blank space在一个布局中,用来占据空间
-			QWidgetItem   layout的item用来代表一个widget
-
-			# 宽和高相互依赖  布局内有item
-
-		}
-
-		QStringList  
-		QVector
-		QSet
-		QMap
-
-		QPixmap
-
-
 		
-		QListWidget   // 专门放置列表用的
-
-		QMutex  QMutexLocker
-		QReadWriteLock
-		QThreadPool
-		QThread
-		QRunnable
-		QFuture
-		QtConcurrent::run
-		QSemaphore
-
-		QAction,  命令模式下的标准封装
-		QEvent, 	所有事件的基类
-
-		QJsonDocument   QJsonParseError
-
-		# QStackedWidget {
-			可以放一组widget, 一次只能显示一个
-		}
-		QMetaObject::invokeMethod
 	}
 
 	# HIk 自己的{
@@ -320,4 +218,14 @@ CryptVerifySignatureW API校验签名
 	}
 
 	# qt可以实现多个进程共用同一个窗口框架
+}
+
+
+
+
+https://192.0.0.122/ISD-IPDPrj/2020/PJ17PD20201120178_智慧安检管理平台V1.2.100/04研发/01系统工程/03UCD设计/V1.2.100交互稿1.11
+
+
+# 我在QWidget基类里面call setStyleSheet("border: 1px solid #cdcdcd;");{
+	我发现此主窗口下的所有子窗口, 都被加上了边框, 但主窗口自己没有边框
 }

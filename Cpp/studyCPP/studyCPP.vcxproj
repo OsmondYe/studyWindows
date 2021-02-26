@@ -118,7 +118,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)3rdLib\gtest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <SupportJustMyCode>true</SupportJustMyCode>
+      <SupportJustMyCode>false</SupportJustMyCode>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -210,6 +210,7 @@
     </ClCompile>
     <ClCompile Include="random.cpp" />
     <ClCompile Include="regex.cpp" />
+    <ClCompile Include="scratch.cpp" />
     <ClCompile Include="set.cpp" />
     <ClCompile Include="ds-sort.cpp" />
     <ClCompile Include="stream.cpp" />

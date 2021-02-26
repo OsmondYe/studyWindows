@@ -75,11 +75,6 @@ ListNode* deleteDuplicates(ListNode* head) {
     return rt;
 }
 
-// 92 ,Reverse Linked List II   1<=m<=n<=list.length
-//ListNode* reverseBetween(ListNode* head, int m, int n) {
-//
-//}
-
 //141. Linked List has cycle
 bool hasCycle(ListNode* head) {
     // uisng tortoise and hare (hare is 2 step each time)
@@ -133,8 +128,6 @@ ListNode* detectCycle(ListNode* head) {
     return tortoise;
 }
 
-
-
 // 160. Intersection of Two Linked Lists
 // two stack -> time limit
 // each a in headA will be tested in headB
@@ -186,7 +179,6 @@ ListNode* removeElements(ListNode* head, int val) {
     delete dummyHead;
     return head;
 }
-
 
 //206 Reverse Linked List
 ListNode* reverseList(ListNode* head) {
@@ -255,6 +247,71 @@ ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
     return rt_cur;
 }
 
+
+ListNode* merge(ListNode* l1, ListNode* l2) {
+    if (!l1 && !l2) return NULL;
+    if (!l1 && l2)  return l2;
+    if (l1 && !l2) return l1;
+    // for l1 && l2
+    ListNode rt(0); // a fake head;
+    ListNode* p = &rt;
+    while (l1 || l2) {
+        if (l1 && !l2) {
+            p->next = l1;
+            p = p->next;
+            l1 = l1->next;
+            continue;
+        }
+        if (!l1 && l2) {
+            p->next = l2;
+            p = p->next;
+            l2 = l2->next;
+            continue;
+        }
+        if (l1->val <= l2->val) {
+            p->next = l1;
+            p = p->next;
+            l1 = l1->next;
+            continue;
+        }
+        else {
+            p->next = l2;
+            p = p->next;
+            l2 = l2->next;
+            continue;
+        }
+    }
+    return rt.next;
+}
+
+ListNode* mergeKLists(vector<ListNode*>& lists) {
+    auto cmp = [](ListNode* l, ListNode* r) {
+        return l->val < r->val;
+    };
+    priority_queue<ListNode*, vector<ListNode* >,decltype(cmp)> q(cmp);
+    for (auto l : lists) {
+        while (l) {
+            q.push(l);
+            l = l->next;
+        }
+    }
+
+
+    ListNode rt(0);
+    ListNode* p = &rt;
+
+    while (!q.empty()) {
+        p->next = q.top();
+        p = p->next;
+        q.pop();
+    }
+
+    if (p) p->next = NULL;
+
+    return rt.next;
+}
+
+
 TEST(AlgoLinear, LeetCodeList) {
     EXPECT_FALSE(hasCycle(new ListNode(12)));
     // remove dup
@@ -273,6 +330,15 @@ TEST(AlgoLinear, LeetCodeList) {
     
     //  remove value =7;
     helper_print_list(removeElements(helper_build_list({ 4,4,1,2,3,4,5,6,4,7,8,5,4,4,4,4,9,4 }), 4));
+
+    vector<ListNode*> vec = {
+        helper_build_list({ 1, 4, 5 }),
+        helper_build_list({1, 3, 4 }),
+        helper_build_list({ 2, 6 })
+    };
+
+    helper_print_list(mergeKLists(vec));
+
     
 }
 
@@ -431,10 +497,6 @@ int removeCoveredIntervals(vector<vector<int>> intervals) {
     return answer;
 }
 
-TEST(AlgoLinear, LeetCodeLineSweep) {
-    println("line sweep ->  remove covered range");
 
-    vector<vector<int>> data{ {1,4},{3,6},{2,8} };
-    EXPECT_EQ(2, removeCoveredIntervals(data));
 
-}
+
