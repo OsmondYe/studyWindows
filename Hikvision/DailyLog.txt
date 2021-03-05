@@ -10,8 +10,6 @@
 	# Unified software framework
 		https://wiki.hikvision.com.cn/pages/viewpage.action?pageId=43732465
 
-	# 开放
-	https://open.hikvision.com/
 
 	# download software
 	\\10.41.49.215\共享文件\工具集\项目开发常用工具\C++开发工具\vs2015 
@@ -23,11 +21,13 @@
 	coding  10.3.129.126 
 }
 
+#工作栈{
+	准备开干 postEvent
+	开干 QMainWindow ,我看到了MainWindowLayout, 这个布局我猜想很高级, 因为现在主流的都这样, 如果把他搞定, 那就可以直接开
+
+}
 
 #问题遗留{
-	# 我看到了QT的ModelView设计, 
-		这是数据驱动UI的最佳实践
-		公司的表格任务,应该可以直接通过其来实现
 
 	# QT 信号槽绑定是什么原理?
 	# priority_queue{
@@ -62,32 +62,6 @@
 		所谓回溯就是把这个树给生成了
 	}	
 |}
-
-
-# ISeeDN{
-	域见， 
-	物联网设备接入，数据汇聚
-	data link    ( collecting )
-
-	??? 具体接口需要 sso 登录 hiklink
-}
-
-# IFarDN{
-	远见
-	大数据 与 AI   ( analyzing)
-
-	??? 具体接口需要 sso 登录 hiklink
-}
-
-# 统一软件技术架构{
-	#三个集成环境{
-		开发  （模型， 封装，编译，持续，接口，环境）
-		管理  （信息共享服务，服用过程管理）
-		运行  （服务，应用，通知，权限，许可，运行）
-	}
-}
-
-
 
 #公司的Linux网络被限制了 {
 	我今天尝试了想办法去更新apt， 但是发现了各种问题
@@ -207,25 +181,116 @@
 }
 
 
-# Hik_Qt{
-	# AlarmCenter {
-		
-	}
-
-	# HIk 自己的{
-		# 尝试 HUIControl::CCrumb *c
-		# 使用 Hikvision自己版本的控件
-	}
-
-	# qt可以实现多个进程共用同一个窗口框架
-}
-
-
-
-
 https://192.0.0.122/ISD-IPDPrj/2020/PJ17PD20201120178_智慧安检管理平台V1.2.100/04研发/01系统工程/03UCD设计/V1.2.100交互稿1.11
 
 
 # 我在QWidget基类里面call setStyleSheet("border: 1px solid #cdcdcd;");{
 	我发现此主窗口下的所有子窗口, 都被加上了边框, 但主窗口自己没有边框
 }
+
+# QtAtomic{
+	ref
+	load
+	testAndSetRelease
+	fetchAndStoreRelease
+
+}
+
+# 英语翻译{
+	# 协调一致 {
+		# 以协调的和一致的方式
+	 	# in a coordinated and concerted way
+	}
+	# 应对  respond{
+		# 应对威胁, 恐怖势力的,      以协调一致的方法
+			 被恐怖势力放置的,
+		# respond to thread posed by 
+	}
+	# 协商中实现合理诉求{
+		# 遇见合理的关注点通过协商
+		# meet the legitimate concerns through consultation
+	}
+	#  以互信 互利, 平等, 协作 为核心的 新安全观{
+		# 新安全观 a new security concept
+		# 特征为 featuring
+		# 互信 互利, 平等, 协作 mutual-trust, inter-benifit, equalty and coordination
+	}
+	# 团结,稳定,发展,友善 {
+		unity,stability,dev, amity
+	}
+	# 整合资源,优势互补{
+		# 更大的背景下整合资源,实现互补的力量
+		# integrate the resouce in a larger context, to achieve the complementarity of strength
+	}	
+	# 夯实合作的物质基础{
+		# 夯实基础 lay a fundation for
+		# lay a solid material foundation for 
+	}
+	# 威胁地区乃至全球的安全与稳定{
+		# 威胁安全与稳定 ,之全球和地区的
+		# 整了一个威胁给安全与稳定  之 全球地区的 
+		# pose a thread to security and stability of regions and the world as a whole
+	}
+	# 合理把控政策的调控力度{
+		# 把控 合理的 政策强度 之 调控的  policy intensity of marcro-control
+		# 确定 适当的   set a proper
+		# 
+	}
+	# 互利合作的空间更加广阔{
+		# 一个 更 宽的 空间 之 互利合作的
+		# a more expanded space for the mutually beneficial cooperation 
+		# broaden vista for 
+	}
+	# 互通有无{
+		# 相互交换,  需要的 商品
+		# mutual exchange of needed products
+	}
+	# 基础设施建设设应该先行{
+		# 应该先行 给  基础设施建设 [ infrastructural development ]
+		# 让其优先 give priority to 
+	}
+	# 优势互补的产业网络和经济体系 {
+		# 优势 [相互补充的]   产业网络[industrial network], 经济体系[economic system]
+		# the mutual-complementarity of 
+		# that draw on our respecitve comparative strength
+	}
+	# 由沿海到内地的梯度发展{
+		#  dev that is across from coastline to inner-land
+		# a phased way  一个分不同时期[staged, 阶段]的方法
+		# 沿海 ->  沿海地区 coastal areas,
+		# interiro
+		# 把发展当名词看,要给他配个动词,又不要太改变意思,发展还是重点,,继续发展
+		# extend the development [in a phased way] [from hte coastal areas to the interiors]
+	}
+	# 在开放中融合,在融合中发展{
+		# pursue a state  [state 和后面的2名词 一回事, 直接省去] 
+		# integration through openning-up
+		# development through integration
+	}
+	# 增进团结互信, 真诚平等相待{
+		# enhance
+		# solidarity,  mutual-trust
+		# treat each other in a sincere and equal way
+		# 再精简: 状语 介+名  :  with sincerity and as equals
+	}
+	# 占领未来发展制高点, 抓住创新发展机遇{
+		# 制高点,  leading|advantagous position,  
+		# 占领,抢占,抓住:  occupy, capture, seize, obtain , 这三兄弟一回事
+		# 未来发展 :  future development
+		# occupy the leading postion [of|in] the future develoment
+		# 定语,所属格 vs 状语
+		# 占据领先位置,在未来发展中   vs  占据领先位置,未来发展的
+		# seize the opportunity of innovation dev~~~
+		# 创新发展  ->美化->  driven->  innovation-driven dev~~~
+	}
+	# 中长期合作规划{
+		# 规划 : plan,  多个名词见尽可能的组合, 比如 合作规划  cooperation plan
+		# 中长期, 需要记忆的写法 mid- and long-term
+		# a mid- and long-term cooperation plan
+	}
+
+
+}
+
+
+

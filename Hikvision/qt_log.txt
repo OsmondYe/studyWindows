@@ -1,4 +1,9 @@
-QT on the way;
+# 问题{
+	# focus_proxy ,widget里面的hasFocus 看到了此字眼, 什么意思呢
+	# receiver can be moved to the other thread
+	# objectData->postedEvents
+	# QStyle 重点关注{pixelMetric,sizeFromContents}
+}
 
 # 工具集{
 	qmake
@@ -6,21 +11,16 @@ QT on the way;
 	moc   -meta-object compiler,  处理c++ Q_OBJECT 宏, 实现slot,之类
 	rcc   -resource compile,  编译.qrc,  最终嵌入进qt程序
 }
-# 常见继承 {
-	# QWidget :  QObject
-	# QLayout :  QObject
-	# 
-	# QLayoutItem  独立做基类, 类似组合模式,布局项一般为widget或者layout{
-		# QSpacerItem   提供blank space在一个布局中,用来占据空间
-		# QWidgetItem   layout的item用来代表一个widget
-	}
-	# QAbstractButton : QWidget{
-		QPushButton
-		QCheckBox
-		QRadioButton
-		QToolButton
-	}
+
+# Macro&Abbrev{
+	d_ptr  : data_ptr
+	q_prt  : qt_object_ptr
+	Q_D(QApplication)  :  Class##Private * const d = d_func()
+	Q_Q(Class)         :  Class * const q = q_func()
+	Q_DECLARE_PRIVATE(QMenu)  :  inline Class##Private* d_func() { return reinterpret_cast<Class##Private *>(qGetPtrHelper(d_ptr)); }
+	Q_DECLARE_PUBLIC(QLayout) :  inline Class* q_func() { return static_cast<Class *>(q_ptr); } 
 }
+
 
 # 资源相关{
 	qrc:  qt_resource{
@@ -60,6 +60,175 @@ QT on the way;
 		#使用了pimp_模式, 隔离掉外层与内层,在内层存储具体数据
 
 		#所有继承体系中, 都会间接用到QObjectData, RTTI, 数据类型判断,树形结构找父亲和孩子
+	}
+	# common{
+		# SetProperty   {
+			attach key-value pair
+			property(), metaObject(), dynamicPropertyNames()
+		}
+		# SetObjectName
+		# thread   // qobj must be lived in a thread
+	}
+	# Connect的原理{
+		# signal slot
+		# 
+	}
+}
+
+# Application{
+	# [QCoreApplication, QCoreApplicationPrivate, QCoreApplicationData]
+	# Private{
+		# is_app_running  & is_app_closing
+	}
+	# SendEvent, PostEvent{
+		# sendEvent(QObject *receiver, QEvent *event) 
+			# 经App对一些有意思的消息额外处理后,最终直达receiver
+			# 等receiver处理后再返回
+		# postEvent{
+			# 构造 QPostEvent 作为外wrapper, QPostEvent(receiver, event, priority)
+			# 把放入thread_data->postEventList里面
+			# dispatcher->wakeup{
+				# win32::PostMessage(WM_QT_SENDPOSTEDMESSAGE){
+					#  Post相比Send的优势在这里就显现出来啦
+					# 会立刻返回, 正常流程继续走
+				}   
+				# q_internal_wnd_proc:  handle WM_QT_SENDPOSTEDMESSAGE{
+					QCoreApplicationPrivate::sendPostedEvents(0, 0, threadData);
+				}
+				# native platform绕一圈,在回来
+			}
+			# QCoreApplicationPrivate::sendPostedEvents里以while(data->postEventList)的形式重新处理{
+				# QPostEvent-> convert -> [receiver, event, priority]
+				# QCoreApplication::sendEvent(r, e); 
+				# 可以看出Post最终还是又SendEvent来处理
+			}
+
+		}
+	}
+}
+
+# 消息和事件处理{
+	# 事件的产生{
+		# 我以QAbstractButton为列子去看看{
+			# Polish{
+				-1QEvent e(QEvent::Polish);
+				-2QCoreApplication::sendEvent(const_cast<QWidget *>(this), &e);		
+					# 直接用Application里面的方法来sendEvent, 2参数, receiver和QEvent
+					# 最终形式一定是receiver[this]作为QObject, 找到作为QObject::event(e);
+					# CoreApp 处理 非Window,非Widget类型的事件
+				QGUIApplication::notify(QObject *object, QEvent *event)override
+					# 重载了基类的notify
+					# 专门处理object->isWindowType()的情形
+					# 职责再次转发: QGuiApplicationPrivate::sendQWindowEventToQPlatformWindow(static_cast<QWindow *>(object), event);
+						# 必须object是 Window type
+				QAppilcaiton::Notify
+					# widget类型的由此Notify来负责响应
+			}         
+		}
+		# layout的update{
+			-1 从this layout,一路向上找到top level layout, top level layout的layout必然是widget, 给其post事件
+			-2 QApplication::postEvent(mw, new QEvent(QEvent::LayoutRequest));
+		}
+	}
+	# Application类组支持{
+		# [QApplication, QGUIApplication, QCoreApplication ]
+		# QCoreApplication::exec() 循环泵
+		# QCoreApplication::SendEvent qt自己的事件
+		# QCoreApplication::PostEvent qt自己的事件
+		# 从win32 线程消息queue中,拿到 MSG, 并且翻译成QEvent
+	}
+	# 消息是线程级别的QThreadData 类似tls, 每一个线程都具有的"局部变量"{
+		# QEvent{
+			# QEvent::Type用enum做type的区分, 每个给一个id编号
+			# 不同Event通过继承QEvent实现自己的派生类, 来做区分, 必然会涉及一个强转的问题{
+
+			}
+			# spontaneous 事件是系统事件转化来的,还是qt自己的事件
+			
+			
+		}
+		# QPostEvent {QObject_receiver, QEvent_event, int_priority};{
+				#继承自QObject的体系才能接受Event,QObject::event()
+		}
+
+		# QEventLoop{
+				# exec, 消息处理泵 while(not_exit) processEvents; -> eventDispatcher::processEvents
+				# ThreadData里面有个成员eventDispatcher, 最终来处理分配
+					#ObjectPrivate->threadData
+				# exit -> 给exec一个信号,可以停止了
+				# wakeup
+				# event() 会处理 QEvent::Quit, 还是调用exit(0);
+		}
+		
+		
+		# qt中 设计了3元祖{
+			[   QStack<QEventLoop *> eventLoops,
+				QPostEventList postEventList;
+				QAtomicPointer<QAbstractEventDispatcher> eventDispatcher;
+			]
+		}
+	}
+	
+	# QObject::event() {
+		# 事件处理的基类虚函数,  派生类都通过override此fun来实现扩展, 比如QWidget
+	}
+	# Dispatcher QEventDispatcherWin32and {
+		# 自定义消息来处理 event(waitForxxx) msg(), timer(),socket()
+		# MsgFunc 和MsgHook
+		# qt_internal_proc, qt自定义了一个不可见的消息窗口, 专门用来分发消息的{
+			// 看到了老朋友 DefWindowProc
+			# WM_QT_SENDPOSTEDEVENTS
+				#dispatcher->sendPostedEvents();
+				#QCoreApplicationPrivate::sendPostedEvents(0, 0, d->threadData);
+		}
+		# qt_GetMessageHook, qt在MsgQueue中安装的Hook{
+			// 监听队列里 input 和 timer的消息被移除了
+			# 如果即将取出的msg, 不是inpu/timer类型, 那视情况,PostMessage(d->internalHwnd, WM_QT_SENDPOSTEDEVENTS, 0, 0);
+				# 确保QT的消息循环可以正常持续
+				# Qt正常的交互通过什么来呢???
+		}
+		# processEvents{
+			# 核心双重循环{ 这里的代码看的人实在头大, 逻辑交织在一起
+				do{
+					while( not_interruped){
+						#task1 !queuedUserInputEvents.empty(), 取出第一个, 
+							直接filterNativeEvent->TranslateMsg->DispatchMessage;
+							发送给那个窗口的Input消息,依旧使用Windows自己的窗口处理机制
+						#task2 PeekMessage 
+							#_1{
+								看看如果QEventLoop::ExcludeUserInputEvents && inpu消息, 
+								queuedUserInputEvents入队此消息
+								开始新循环, 让task1来处理下
+								}
+							#_2{其它Window消息,走老路filterNativeEvent->TranslateMsg->DispatchMessage}
+						#task3 死等MsgWaitForMultipleObjectsEx						
+							#_1{continue 内部循环}
+							#_2{事件激发, activateEventNotifier} 
+
+					}
+					emit aboutToBlock();
+					::MsgWaitForMultipleObjectsEx
+					emit awake();
+					#task whether it's waked by EventHandle signaled
+				}while(canWait);				
+			}
+			# 退出循环的方式 调用interrupt,
+		}
+		# WM_QT_SENDPOSTEDEVENTS{
+			# send the postedEvents  这个是qt自己定义的Event处理消息点
+				# 当qt的不可见消息派发窗口收到次消息是,就需要 dispatcher->sendPostedEvents();
+			# 针对其的响应最终还是 QCoreApplicationPrivate::sendPostedEvents(0, 0, d->threadData);
+			# 场景{
+				wakeUp() -> ::PostMessage(WM_QT_SENDPOSTEDEVENTS, 0, 0); 让MsgQueue有东西
+			}
+		}
+		# WM_Notify{
+			# QCoreApplication::sendEvent(receiver, &event);{
+
+			}
+		}
+		# 为何需要Timer? 需要把Timer看懂, 有些地方才能彻底明了
+		# 
 	}
 }
 
@@ -148,6 +317,7 @@ QT on the way;
 			ForegroundRole
 			BackgroundRole
 		}
+		# QPixmap可以隐士转换为QIcon
 		# 老朋友{
 			QApplication::sendEvent(q, &pc);
 			QApplication::postEvent(q, new QUpdateLaterEvent(clipped));
@@ -185,6 +355,26 @@ QT on the way;
 			} 
 		}
 	}
+	# Style{
+		# UI上面的通用属性[enable,focus,]
+		# QStyle{
+			# drawControl, 用来绘制控件
+		}
+		# QStyleOptionstyle option{
+			# 大基类,包含QStyle里面的fun需要的参数, 这些参数用来画一个UI元素
+
+		}
+	}
+}
+
+# QMainWindow{
+	#QMainWindowLayout{
+		#QDockWidgetGroupLayout
+	}
+	# 我看到了样式级联  qstylesheetstyle <- qwindowsvistastyle{
+		# 如果设置了qss, 那么默认样式就是qstylesheetstyle,同时base是qwindowsvistastyle
+	}
+
 }
 
 # Signal&Slots{
@@ -331,8 +521,17 @@ QT on the way;
 	# QHeaderView
 }
 
-
-# style_sheet{
+# QStyle{
+	# QStylePainter{
+		# 我在pushbutton里paintEvent中看到, 用其的drawContrl 来绘制button{
+		    QStylePainter p(this);
+		    QStyleOptionButton option;
+		    initStyleOption(&option);
+		    p.drawControl(QStyle::CE_PushButton, option);
+		}
+	}
+}
+# style sheet{
 	# 具有继承性?  app, widget都具有类似的继承性
 	# cascading ,  不同level都定义了样式表, 那就级联继承
 	# selector  , which widget will be 
@@ -367,10 +566,5 @@ QT on the way;
 	#status{
 		hover, pressed, disable, normal
 	}
-}
-
-
-# Qt Cocurrent{
-	
 }
 
