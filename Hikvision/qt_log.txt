@@ -70,8 +70,10 @@
 		# thread   // qobj must be lived in a thread
 	}
 	# Connect的原理{
-		# signal slot
-		# 
+		# signal slot connect
+		# QMetaObject, 要读懂connect的代码, 需要理解QMetaObject这一支的系统设计和思想{
+			
+		}
 	}
 }
 
