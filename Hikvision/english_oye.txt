@@ -123,9 +123,100 @@
 	}
 }
 
+# 政府官话{
+	#抗击疫情
+		contain the COVID-19 pandemic	
+	#为彻底战胜疫情而不懈努力
+		in unremitting efforts to completely defeat the COVID-19 pandemic.
+	#紧急人道主义行动
+		emergency humanitarian action
+	#世界和平与稳定的中流砥柱
+		remain a pillar of world peace and stability
+	#这既是历史经验也是时代要求
+		this is both the experience gained from history and an imperative under the current circumstances
+	#推进高质量"一带一路"建设
+		push ahead high-quality construction of the Belt and Road Initiative
+	#党的领导是XXX最大的政治优势,和XXX不断走向胜利的根本保证
+		the leadship of the CPC is  -1 the biggist political advantage of XXX 
+								    -2 and the fundamental safegurad for continued victory in XXX
+	#复苏经济是中方合作的重中之重
+		Bring Africa Countries' economies back on track is the top priority of the China-Africa cooperaitons
+	#完全合宪合法,正当合理
+		this is constitutional, legitimate, just and reasonable.
+}
+
 # 政府工作报告{
+	# 过去一年,在新中国历史上极不平凡。面对突如其来的新冠肺炎疫情、世界经济深度衰退等多重严重冲击,在以习近平同志为核心的党中央坚强领导下,全国各族人民顽强拼搏,疫情防控取得重大战略成果,在全球主要经济体中唯一实现经济正增长,脱贫攻坚战取得全面胜利,决胜全面建成小康社会取得决定性成就,交出一份人民满意、世界瞩目、可以载入史册的答卷。全年发展主要目标任务较好完成,我国改革开放和社会主义现代化建设又取得新的重大进展
+
+
 	# 极不平凡  extraordinary
-	# 世界经济极度衰退 deep global economic recession
+	# 面对突如其来的新冠肺炎疫情、世界经济深度衰退等多重严重冲击{
+		# 突如其来的新冠疫情 的 sudden coronavirus epidemic[疫情就是流行病]  + 
+		# 面对多重严重冲击, 之   {
+			facing  多重{multip, combined}  combine a and b ,,  adverse and servere 
+			# 冲击  impact
+			# facing the combined adverse and servere impact of 
+		}
+		# 世界经济极度衰退   的 deep global economic recession,  一个recession 给整了3个不同维度的形容词,
+	}	
+	# 全国各族人民顽强拼搏{
+		# we Chinese people of all ethnic groups
+		# 顽强拼搏, {
+			# 需要上下相称, impact的 响应是什么?  responded with 
+			# 拼搏 -> 令人吃惊的韧性   tremendous,  tenacity
+		}
+	}   
+	# 在以习近平为核心的党中央坚强领导下{
+		# 在强力领导下, 之党中央的, 以~习~核心
+		# under the strong leadship of 
+		# 党中央 ->  中央委员会 之 共产党 之 中国  -> Central Committee of Communist Party of China 
+		# 以习近平同志为核心的 with the Comrade Xi Jinping at its core    (做伴随状语, 某件事伴随着习近平同志), with 必伴随
+	}
+	# 疫情防控取得重大战略成果{	
+		# 重大战略成果  major strategic achievement|success ,, 可以把achieve提出来做verb, 就有取得的意思啦
+		# 疫情防控 in respond to Covid-19
+		# we achieved the major strategic success in respond to Covid-19
+	}
+	# 在全球主要经济体中唯一实现经济正增长{
+		# 在全球主要经济体中   体: unit?  这样的小品字, 用 economy 来拟化   among the world's major economies
+			# 中国是世界的唯一的经济体, 在增长方面
+				# C is the World's only major econ~ to achievc ~
+		# 实现经济正增长     achieve growth,  正增长是个废话, 中国特色
+		# China is the only one that achieved growth among the world's major economies
+	}
+
+	# 脱贫攻坚战取得全面胜利{
+		# 脱贫攻坚战   离开贫困,  消除贫困
+			# [alleviation, elimination, eradication] of poverty  
+			# 攻坚战,  对抗...的战争  fight against 
+			# fight against poverty
+		# 全面胜利 complete victory
+		# 取得  get, attain(经过努力拿到的), obtain(正式) acqure(别人也给), score (射门得分)
+		# we attained a complete victory in fight again poverty
+	}
+	# 决胜全面建成小康社会取得决定性成就{
+		# 决定性成就 decisive achivenment|  we scored a decisive achivenment
+		# 全面建成小康社会{
+			# 小康社会 -> 比较繁荣(有钱)的社会,在各个方面都  a moderately prosperous society in all respects
+		}
+		# 决胜 确保胜利  ensure victory ->  ensure a full victory
+	}
+	# 交出一份人民满意、世界瞩目、可以载入史册的答卷{
+		# 人民满意  people consent|satisfaction,    win the approval of people
+		# 世界瞩目  focus,  draw/attact W  attension/focus  catch the world's eyes
+		#可以载入史册的 can be recored/remembered in history
+		# 交出答卷
+	}
+	# 全年发展主要目标任务较好完成{
+		# mission complished
+		# 发展主要目标任务  Our development goals and tasks
+		# were accomplished		
+	}
+	#我国改革开放和社会主义现代化建设又取得新的重大进展{
+		# 改革开放  reform and opening up
+		# 社会主义现代化建设  Modernization Construction of Socialist  官方: socialist modernization 
+	}
+	
 }
 
 

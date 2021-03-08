@@ -1,3 +1,6 @@
+# pw{
+	algo123!!
+}
 # 已知方法{
 	cache*c:\MySymbols;srv*https://msdl.microsoft.com/download/symbols
 	_NT_SYMBOL_PATH = symsrv*symsrv.dll*c:\symbols*http://msdl.microsoft.com/download/symbols

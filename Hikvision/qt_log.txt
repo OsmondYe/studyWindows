@@ -71,8 +71,26 @@
 	}
 	# Connect的原理{
 		# signal slot connect
+		# 通过2宏完成{
+			# 拿到sender,receiver的 matadata ->  sm && rm;
+			# QMetaObject::Connection handle= {
+				QMetaObject::Connection(
+					// 构造函数, 接受
+					QMetaObjectPrivate::connect(
+							sender,   signal_index,          smeta, 
+							receiver, method_index_relative, rmeta ,
+							type, types)
+					);
+
+				#QMetaObject::Connection 是一个内嵌类对象,代表了构建的链接
+			} 
+        
+		}
 		# QMetaObject, 要读懂connect的代码, 需要理解QMetaObject这一支的系统设计和思想{
-			
+
+		}
+		# emit 是没有意义的, 其作用的是经过moc后的函数里面{
+			# QMetaObject::activate;
 		}
 	}
 }
@@ -169,8 +187,7 @@
 				QAtomicPointer<QAbstractEventDispatcher> eventDispatcher;
 			]
 		}
-	}
-	
+	}	
 	# QObject::event() {
 		# 事件处理的基类虚函数,  派生类都通过override此fun来实现扩展, 比如QWidget
 	}
