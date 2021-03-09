@@ -1,0 +1,77 @@
+# 从下面的调用栈中看看Qt的PaintEvent事件发生机制
+
+//
+//
+//
+00bcb5cc 54e6d587 Qt5Widgetsd!QPushButton::paintEvent+0x15 [c:\users\qt\work\qt\qtbase\src\widgets\widgets\qpushbutton.cpp @ 450]
+00bcb774 54faa111 Qt5Widgetsd!QWidget::event+0x6e7 [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qwidget.cpp @ 9056]
+00bcb790 5507b76b Qt5Widgetsd!QAbstractButton::event+0xf1 [c:\users\qt\work\qt\qtbase\src\widgets\widgets\qabstractbutton.cpp @ 969]
+00bcb7a8 54e2a27b Qt5Widgetsd!QPushButton::event+0x9b [c:\users\qt\work\qt\qtbase\src\widgets\widgets\qpushbutton.cpp @ 686]
+
+00bcb7c8 54e2837e Qt5Widgetsd!QApplicationPrivate::notify_helper+0x12b [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qapplication.cpp @ 3722]
+00bcbe68 56645adc Qt5Widgetsd!QApplication::notify+0x21ee [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qapplication.cpp @ 3685]
+
+00bcbea8 56768e28 Qt5Cored!QCoreApplication::notifyInternal2+0xec [c:\users\qt\work\qt\qtbase\src\corelib\kernel\qcoreapplication.cpp @ 1024]
+00bcbeb8 54e74c1f Qt5Cored!QCoreApplication::sendSpontaneousEvent+0x28 [c:\users\qt\work\qt\qtbase\src\corelib\kernel\qcoreapplication.h @ 236]
+00bcbef4 54e748c7 Qt5Widgetsd!QWidgetPrivate::sendPaintEvent+0x2f [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qwidget.cpp @ 5715]
+00bcc094 54e74faa Qt5Widgetsd!QWidgetPrivate::drawWidget+0x777 [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qwidget.cpp @ 5659]
+00bcc144 54e74ed5 Qt5Widgetsd!QWidgetPrivate::paintSiblingsRecursive+0x35a [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qwidget.cpp @ 5851]
+00bcc1fc 54e74ed5 Qt5Widgetsd!QWidgetPrivate::paintSiblingsRecursive+0x285 [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qwidget.cpp @ 5838]
+00bcc2b4 54e74ed5 Qt5Widgetsd!QWidgetPrivate::paintSiblingsRecursive+0x285 [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qwidget.cpp @ 5838]
+00bcc36c 54e74ed5 Qt5Widgetsd!QWidgetPrivate::paintSiblingsRecursive+0x285 [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qwidget.cpp @ 5838]
+00bcc424 54e74bd0 Qt5Widgetsd!QWidgetPrivate::paintSiblingsRecursive+0x285 [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qwidget.cpp @ 5838]
+00bcc5e0 54e74faa Qt5Widgetsd!QWidgetPrivate::drawWidget+0xa80 [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qwidget.cpp @ 5709]
+00bcc690 54e74bd0 Qt5Widgetsd!QWidgetPrivate::paintSiblingsRecursive+0x35a [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qwidget.cpp @ 5851]
+00bcc84c 54e3d4ac Qt5Widgetsd!QWidgetPrivate::drawWidget+0xa80 [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qwidget.cpp @ 5709]
+00bccb2c 54e3b113 Qt5Widgetsd!QWidgetBackingStore::doSync+0xd0c [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qwidgetbackingstore.cpp @ 1384]
+00bccb74 54e7695c Qt5Widgetsd!QWidgetBackingStore::sync+0x1e3 [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qwidgetbackingstore.cpp @ 1137]
+00bccb8c 54ea5e2d Qt5Widgetsd!QWidgetPrivate::syncBackingStore+0x4c [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qwidget.cpp @ 1984]
+00bccbbc 54ea422a Qt5Widgetsd!QWidgetWindow::handleExposeEvent+0x14d [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qwidgetwindow.cpp @ 934]
+00bccc00 54e2a27b Qt5Widgetsd!QWidgetWindow::event+0x24a [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qwidgetwindow.cpp @ 296]
+00bccc20 54e2652d Qt5Widgetsd!QApplicationPrivate::notify_helper+0x12b [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qapplication.cpp @ 3722]
+00bcd2c0 56645adc Qt5Widgetsd!QApplication::notify+0x39d [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qapplication.cpp @ 3094]
+00bcd300 56768e28 Qt5Cored!QCoreApplication::notifyInternal2+0xec [c:\users\qt\work\qt\qtbase\src\corelib\kernel\qcoreapplication.cpp @ 1024]
+//
+//  Qt的机制, 在native platform上晃了一圈后,又回到了QCoreApplication::sendSpontaneousEvent
+//
+00bcd310 5598807e Qt5Cored!QCoreApplication::sendSpontaneousEvent+0x28 [c:\users\qt\work\qt\qtbase\src\corelib\kernel\qcoreapplication.h @ 236]
+WARNING: Stack unwind information not available. Following frames may be wrong.
+00bcd378 55987896 Qt5Guid!QOpenGLFunctions_4_0_Core::glDrawElementsInstancedBaseVertex+0x93b1b
+00bcd3b0 559537e9 Qt5Guid!QOpenGLFunctions_4_0_Core::glDrawElementsInstancedBaseVertex+0x93333
+00bcd3dc 5595398c Qt5Guid!QOpenGLFunctions_4_0_Core::glDrawElementsInstancedBaseVertex+0x5f286
+00bcd41c 54a718c1 Qt5Guid!QOpenGLFunctions_4_0_Core::glDrawElementsInstancedBaseVertex+0x5f429
+00bcd4a4 54a881ab qwindowsd!qt_plugin_instance+0xf4c6
+00bcd5ec 54a81ad2 qwindowsd!qt_plugin_instance+0x25db0
+00bcd6a8 75975cab qwindowsd!qt_plugin_instance+0x1f6d7
+00bcd6d4 759667bc USER32!_InternalCallWinProc+0x2b
+00bcd7b8 7596635a USER32!UserCallWinProcCheckWow+0x3ac
+00bcd81c 7597312f USER32!DispatchClientMessage+0xea
+00bcd858 77633b9d USER32!__fnDWORD+0x3f
+00bcd890 75965a08 ntdll!KiUserCallbackDispatcher+0x4d
+00bcd8ec 759656d0 USER32!DispatchMessageWorker+0x328
+00bcd8f8 566dffd6 USER32!DispatchMessageW+0x10
+//
+//  Qt自己搞得Dispatcher
+//
+00bcf708 54af2ad8 Qt5Cored!QEventDispatcherWin32::processEvents+0x646 [c:\users\qt\work\qt\qtbase\src\corelib\kernel\qeventdispatcher_win.cpp @ 628]
+00bcf720 56640dac qwindowsd!qt_plugin_instance+0x906dd
+//
+//	处理和配置 Qt消息泵, 并且不断处理消息
+//
+00bcf738 56640fb7 Qt5Cored!QEventLoop::processEvents+0x4c [c:\users\qt\work\qt\qtbase\src\corelib\kernel\qeventloop.cpp @ 135]
+00bcf79c 56643ce2 Qt5Cored!QEventLoop::exec+0x157 [c:\users\qt\work\qt\qtbase\src\corelib\kernel\qeventloop.cpp @ 212]
+00bcf7f8 55983508 Qt5Cored!QCoreApplication::exec+0x132 [c:\users\qt\work\qt\qtbase\src\corelib\kernel\qcoreapplication.cpp @ 1297]
+00bcf800 54e26189 Qt5Guid!QOpenGLFunctions_4_0_Core::glDrawElementsInstancedBaseVertex+0x8efa5
+00bcf808 008e2c8e Qt5Widgetsd!QApplication::exec+0x9 [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qapplication.cpp @ 2911]
+00bcf848 008ebf9d gui_test!main+0x6e [c:\oye\qt_oye_test\gui_test\main.cpp @ 27]
+//
+//  win32 传统套路
+//
+00bcf87c 008eaabe gui_test!WinMain+0xad [c:\users\qt\work\qt\qtbase\src\winmain\qtmain_win.cpp @ 104]
+00bcf894 008ea940 gui_test!invoke_main+0x1e [f:\dd\vctools\crt\vcstartup\src\startup\exe_common.inl @ 99]
+00bcf8ec 008ea7dd gui_test!__scrt_common_main_seh+0x150 [f:\dd\vctools\crt\vcstartup\src\startup\exe_common.inl @ 253]
+00bcf8f4 008eaad8 gui_test!__scrt_common_main+0xd [f:\dd\vctools\crt\vcstartup\src\startup\exe_common.inl @ 296]
+00bcf8fc 75d60419 gui_test!WinMainCRTStartup+0x8 [f:\dd\vctools\crt\vcstartup\src\startup\exe_winmain.cpp @ 17]
+00bcf90c 776274ed KERNEL32!BaseThreadInitThunk+0x19
+00bcf968 776274bd ntdll!__RtlUserThreadStart+0x2f
+00bcf978 00000000 ntdll!_RtlUserThreadStart+0x1b

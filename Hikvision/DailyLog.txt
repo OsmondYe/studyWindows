@@ -1,5 +1,8 @@
 # pw{
 	algo123!!
+	
+	翻译证书
+	20201100933000000656
 }
 # 已知方法{
 	cache*c:\MySymbols;srv*https://msdl.microsoft.com/download/symbols

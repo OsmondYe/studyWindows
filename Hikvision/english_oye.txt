@@ -1,3 +1,77 @@
+# 口语{
+	# 元音20{
+		#后元音{			
+			# 自然减弱, 发音后靠
+			# /ɑ:/ 嘴巴张的死大,舌头压下去
+				# charles borrowed his father's car to drive to the party
+			# /ɔ:/ 奥秘, 嘴巴不动, 向打哈欠一样				
+				# Shawn bought a door from a store
+			# /ɒ/  凹陷
+				# of on lot not hot dog
+				# I do not like hot dogs
+		}	
+		#央元音 {
+			# /ə/  额, 嘴巴完全动, xy的嘴巴都在远点, 舌头也在原点
+				# of mother forward support famous teacher
+				# my mother is a famous teacher	
+			# /ʌ/  比上面的额嘴巴稍微大一点点
+				# bus love come cup mother
+				# I love mother, father and my cup
+		}
+		# 前元音{
+			# /i:/  自然减弱 一 一 一
+				# fee bee key free breeze agree
+				# 
+			# /ɪ/  比上面的嘴巴稍微长大一点点				
+				# if it is right	
+			# /e/  照相时 ->>耶!, 一直送气		
+				# yes ever F effort never ex
+				# I'll never ever say yes!
+			# /u:/  玉和乌之间, 玉的口型发乌的音
+				# do to blue movie lose food
+
+		}
+		# 双元音{
+			# /aɪ/ 爱, 嗨
+				# hi my bye wide like light
+				# I like to say hi and bye
+			# /aʊ/ 打老虎, 嗷呜嗷呜
+				# how bow now house south cloud
+			# /əʊ/ e-wu
+				# go no so hello smoke rose
+			# 	
+		}
+		#  /ɜ:/  /ʊ/  /æ/ /eɪ/  /ɔɪ/ /ɪə/ /eə/ /ʊə/ 		
+		#  /ɒ/ /ə/ /ɪ/ /ʊ/  /æ/
+		# /eɪ/ /aɪ/ /ɔɪ/ /əʊ/ /aʊ/ /ɪə/ /eə/ /ʊə/
+	}
+	
+	# 复印{
+		# [p]、[b] 、[t]、[d]、[k]、[g]、[f]、[v]、[s]、[z]、[θ]、[ð]、[ʃ]、[ʒ]、[tʃ]、[dʒ]
+		[tr]、[dr]、[ts]、[dz]、[m]、[n]、[ŋ]、[h]、[l]、[r]、[j]、[w]
+		# /p/ /t/ /k/ /f/ /θ/ /s/ /ʃ/ /h/ /tʃ/ /ts/ /tr/
+		# /b/ /d/ /g/ /v/ /ð/ /z/ /ʒ/ /r/ /dʒ/ /dz/ /dr/ /j/ /w/ /m/ /n/ /ŋ/ /l/
+		#  /p/ /b/、/t/ /d/、/k/ /g/
+		# /f/ /v/、/s/ /z/、/ʃ/ /ʒ/ 、/θ/ /ð/
+		#  /tʃ/ /dʒ/、/tr/ /dr/、/ts/ /dz/
+		清辅音
+			11个
+			/p/ /t/ /k/ /f/ /θ/ /s/ /ʃ/ /h/ /tʃ/ /ts/ /tr/
+			浊辅音
+			17个
+			/b/ /d/ /g/ /v/ /ð/ /z/ /ʒ/ /r/ /dʒ/ /dz/ /dr/ /j/ /w/ /m/ /n/ /ŋ/ /l/
+			10对对立辅音
+			爆破音 /p/ /b/、/t/ /d/、/k/ /g/
+			摩擦音/f/ /v/、/s/ /z/、/ʃ/ /ʒ/ 、/θ/ /ð/
+			破擦音 /tʃ/ /dʒ/、/tr/ /dr/、/ts/ /dz/
+			8个独立辅音：
+			声门擦音 /h/
+			近音 /r/
+			鼻音 /m/ /n/ /ŋ/
+			舌侧音 /l/
+			半元音/w/ /j/
+	}
+}
 # 翻译{
 	# 2中语法的自由切换{
 		# 协调一致 ->  以一种协调的和一致的方法来干  (英当状语)
@@ -7,6 +81,13 @@
 		# 
 	}
 }
+
+# 英语必须攻克的语法{
+	# 烂熟于心,脱口而出的固定套路
+	# 
+}
+
+
 # 英语翻译{	
 	# 协调一致 {
 		# 以协调的和一致的方式
@@ -127,7 +208,7 @@
 	#抗击疫情
 		contain the COVID-19 pandemic	
 	#为彻底战胜疫情而不懈努力
-		in unremitting efforts to completely defeat the COVID-19 pandemic.
+		unremitting efforts to completely defeat the COVID-19 pandemic.
 	#紧急人道主义行动
 		emergency humanitarian action
 	#世界和平与稳定的中流砥柱
@@ -139,10 +220,10 @@
 	#党的领导是XXX最大的政治优势,和XXX不断走向胜利的根本保证
 		the leadship of the CPC is  -1 the biggist political advantage of XXX 
 								    -2 and the fundamental safegurad for continued victory in XXX
-	#复苏经济是中方合作的重中之重
+	#复苏经济是中非合作的重中之重
 		Bring Africa Countries' economies back on track is the top priority of the China-Africa cooperaitons
 	#完全合宪合法,正当合理
-		this is constitutional, legitimate, just and reasonable.
+		this is constitutional, legitimate, just and reasonable
 }
 
 # 政府工作报告{
@@ -219,4 +300,56 @@
 	
 }
 
+#
+# 练习的最终成果,需要merge到其它节中
+# 练习{
+	# 我们敦促各方拿出诚意,本着相互尊重,平等协商,互谅互让的精神,再努力一把,尽早达成公正,平衡,共赢的全面协议{
+		# urge all parites, to show sincerity. and to make further effort.
+		# 敦促有2个承接  -1 拿出诚意, -2 在努力一把
+		# 本着....的精神  在...的精神下
+			# mutual respection, equal negotiation,and inter understanding
+			# 一个新词 accommodation, 让可以容纳, 互谅互让就是相互容纳
+		# 目的状语, so as to reach an comprehensive, justifiable/fair, balanced and win-win
+	}
+	# 中国呼吁各方秉持客观公正立场,坚定致力于实现半岛无核化目标,坚定致力于半岛和平与稳定,鉴定致力于通过对话协商解决问题{
+		# 呼吁  [别多想了,直接] call on , 能接触到你的call
+		# 秉持 + 立场  ->  在行动中  1)一直在...的context下 2) 以...的way, style,approach
+		#  to act in an objective and impartial attitude
+		# 致力于,
+		# China calls on APs
+
+		# 致力于, 致力于,致力于
+			# remain committed to the goal of   [be commited to ]
+			# firmly uphold
+			# endeavor to resolve
+
+	}
+
+	# 中东局势正经深刻而复杂的变化{
+		#经历变化? 
+		# the situal in Middle East is undergoing profound and complex changes
+	}
+
+	# 我们必须认真把握热点问题的联动影响,倡导综合治理,致力于政治解决,寻求各方利益的最大公约数{
+		#把握 联动影响
+		#hot issues, 
+		# we must consider[bear in mind] the intertwined effects(ripple effects) among hot issues
+		# 寻求各方利益的最大公约数 seek 最宽的 the widest common interests of all parties
+	}
+	# 中方高度关注局势发展,始终心系该国人民的安危福祉{
+		# 高度关注 deeply concerned over,  pay high attention to 
+		# 安危福祉 (安全和过得好)  security and well-being 
+		# 始终 心系      (真心的关心)sincerely care about
+			# 始终 -> 在很长的时间,情况里一直是这样,全都是这样 -> all along
+	}
+	# 当今世界正经历深刻而复杂的变化,保持国际形势总体稳定的有利条件在增多,但世界仍然很不安宁{
+		# The world is currelty experienceing profound and compelx changes. 
+		# 有利条件
+		# the active conditions which is to maintain the overall stability of global situations  is increasing , but the
+		# 但世界仍然很不安宁  -> 离安宁还很远  far to being tranqual / far from being tranquil
+			世界保持着 距离远  达到安宁
+			世界保持着 距离远  从到达安宁看
+	}
+
+}
 
