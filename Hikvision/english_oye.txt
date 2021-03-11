@@ -1,76 +1,107 @@
 # 口语{
-	# 元音20{
-		#后元音{			
-			# 自然减弱, 发音后靠
-			# /ɑ:/ 嘴巴张的死大,舌头压下去
-				# charles borrowed his father's car to drive to the party
-			# /ɔ:/ 奥秘, 嘴巴不动, 向打哈欠一样				
-				# Shawn bought a door from a store
-			# /ɒ/  凹陷
-				# of on lot not hot dog
-				# I do not like hot dogs
-		}	
-		#央元音 {
-			# /ə/  额, 嘴巴完全动, xy的嘴巴都在远点, 舌头也在原点
-				# of mother forward support famous teacher
-				# my mother is a famous teacher	
-			# /ʌ/  比上面的额嘴巴稍微大一点点
-				# bus love come cup mother
-				# I love mother, father and my cup
-		}
-		# 前元音{
-			# /i:/  自然减弱 一 一 一
-				# fee bee key free breeze agree
-				# 
-			# /ɪ/  比上面的嘴巴稍微长大一点点				
-				# if it is right	
-			# /e/  照相时 ->>耶!, 一直送气		
-				# yes ever F effort never ex
-				# I'll never ever say yes!
-			# /u:/  玉和乌之间, 玉的口型发乌的音
-				# do to blue movie lose food
+# 元音20{
+#后元音{			
+	# 自然减弱, 发音后靠
+	# /ɑ:/ 嘴巴张的死大,舌头压下去
+		# charles borrowed his father's car to drive to the party
+	# /ɔ:/ 奥秘, 嘴巴不动, 向打哈欠一样				
+		# Shawn bought a door from a store
+	# /ɒ/  凹陷, 比上面闭一点
+		# of on lot not hot dog
+		# I do not like hot dogs
+}	
+#央元音 {
+	# /ə/  额, 嘴巴完全不动, xy的嘴巴都在远点, 舌头也在原点
+		# of mother forward support famous teacher
+		# my mother is a famous teacher	
+	# /ʌ/  比上面的额嘴巴稍微大一点点
+		# bus love come cup mother
+		# I love mother, father and my cup
+}
+# 前元音{
+	# /i:/  自然减弱 一 一 一
+		# fee bee key free breeze agree
+		# 
+	# /ɪ/  比上面的嘴巴稍微长大一点点				
+		# if it is right	
+	# /e/  照相时 ->>耶!, 一直送气		
+		# yes ever F effort never ex
+		# I'll never ever say yes!
+	# /u:/  玉和乌之间, 玉的口型发乌的音
+		# do to blue movie lose food
 
-		}
-		# 双元音{
-			# /aɪ/ 爱, 嗨
-				# hi my bye wide like light
-				# I like to say hi and bye
-			# /aʊ/ 打老虎, 嗷呜嗷呜
-				# how bow now house south cloud
-			# /əʊ/ e-wu
-				# go no so hello smoke rose
-			# 	
-		}
-		#  /ɜ:/  /ʊ/  /æ/ /eɪ/  /ɔɪ/ /ɪə/ /eə/ /ʊə/ 		
-		#  /ɒ/ /ə/ /ɪ/ /ʊ/  /æ/
-		# /eɪ/ /aɪ/ /ɔɪ/ /əʊ/ /aʊ/ /ɪə/ /eə/ /ʊə/
+}
+# 双元音{
+	# /aɪ/ 爱, 嗨
+		# hi my bye wide like light
+		# I like to say hi and bye
+	# /aʊ/ 打老虎, 嗷呜嗷呜
+		# how bow now house south cloud
+	# /əʊ/ e-wu
+		# go no so hello smoke rose
+	# 	
+}
+}	
+# 辅音{
+# cats cars{
+	# cat +s -> 延续t清辅音,声带不震动, s也不震动{
+		kiss
+		niece
 	}
-	
-	# 复印{
-		# [p]、[b] 、[t]、[d]、[k]、[g]、[f]、[v]、[s]、[z]、[θ]、[ð]、[ʃ]、[ʒ]、[tʃ]、[dʒ]
-		[tr]、[dr]、[ts]、[dz]、[m]、[n]、[ŋ]、[h]、[l]、[r]、[j]、[w]
-		# /p/ /t/ /k/ /f/ /θ/ /s/ /ʃ/ /h/ /tʃ/ /ts/ /tr/
-		# /b/ /d/ /g/ /v/ /ð/ /z/ /ʒ/ /r/ /dʒ/ /dz/ /dr/ /j/ /w/ /m/ /n/ /ŋ/ /l/
-		#  /p/ /b/、/t/ /d/、/k/ /g/
-		# /f/ /v/、/s/ /z/、/ʃ/ /ʒ/ 、/θ/ /ð/
-		#  /tʃ/ /dʒ/、/tr/ /dr/、/ts/ /dz/
-		清辅音
-			11个
-			/p/ /t/ /k/ /f/ /θ/ /s/ /ʃ/ /h/ /tʃ/ /ts/ /tr/
-			浊辅音
-			17个
-			/b/ /d/ /g/ /v/ /ð/ /z/ /ʒ/ /r/ /dʒ/ /dz/ /dr/ /j/ /w/ /m/ /n/ /ŋ/ /l/
-			10对对立辅音
-			爆破音 /p/ /b/、/t/ /d/、/k/ /g/
-			摩擦音/f/ /v/、/s/ /z/、/ʃ/ /ʒ/ 、/θ/ /ð/
-			破擦音 /tʃ/ /dʒ/、/tr/ /dr/、/ts/ /dz/
-			8个独立辅音：
-			声门擦音 /h/
-			近音 /r/
-			鼻音 /m/ /n/ /ŋ/
-			舌侧音 /l/
-			半元音/w/ /j/
+	# car +s -> 延续r的张大嘴巴哦, 声带震动, s也要震动,变 z{
+		kids
+		knees
+		needs
+	}			
+}
+
+# [v] [w] [f]{
+	#[w] -> 我们,鸡窝 半元音 类似/u:/
+	#[f] -> 飞机,  大门牙碰到下唇内侧,开始发
+	#[v] -> 先发飞机,在浊发, 很难发的音{
+		vest vile vet vine
 	}
+}
+# [θ] [s]  {
+	# [θ] 大舌头 或者 舌头碰上门牙,下牙自然贴住舌头 气流越吃力越好, 死,斯{
+		# thirst,thaw, thin, death
+	}
+	# [f] 舌头碰下门牙{
+		# first  four, fin   deaf
+	}
+	# [s] 气流大太多了,{
+		# sort seam  mouse face
+	}
+}
+
+# [ð] [z]{
+	# [ð]
+	# [z]
+}
+
+# [l] [n] [ŋ] [r]{  
+	#鼻音, 舌尖碰上牙龈, 鼻子震动, 
+	# [n] 通过t d n来带出来,把n带出来, name, night, next,{
+		牛, 那 nine
+	}
+	# [l] 舌尖顶住上中腔(比牙根靠后){
+		# clear 干净,清澈  l+元  啦啦啦啦, 舌头往前挂 刘 拉 lame
+		# dark  people  L 
+
+		# law lead alive
+	}
+	# [ŋ]  {
+		# 舌中拱起来 碰上腔 
+		# k g ŋ 额饿咧 (陕西话 额饿) 拱起碰到
+		# singer -ing  sing wing thing
+
+	}
+	# [r]{
+		# 舌头卷, 但哪也别碰到
+		# raw read arrive
+	}
+}	
+}
 }
 # 翻译{
 	# 2中语法的自由切换{

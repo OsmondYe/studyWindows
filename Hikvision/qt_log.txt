@@ -21,7 +21,6 @@
 	Q_DECLARE_PUBLIC(QLayout) :  inline Class* q_func() { return static_cast<Class *>(q_ptr); } 
 }
 
-
 # 资源相关{
 	qrc:  qt_resource{
 	  	#xml format{
@@ -130,18 +129,17 @@
 # 消息和事件处理{
 	# 事件的产生{
 		# 我以QAbstractButton为列子去看看{
-			# Polish{
-				-1QEvent e(QEvent::Polish);
-				-2QCoreApplication::sendEvent(const_cast<QWidget *>(this), &e);		
+			# Polish, UI外观着色{
+				#QCoreApplication::sendEvent(QButton b, QEvent e(QEvent::Polish));		
 					# 直接用Application里面的方法来sendEvent, 2参数, receiver和QEvent
 					# 最终形式一定是receiver[this]作为QObject, 找到作为QObject::event(e);
 					# CoreApp 处理 非Window,非Widget类型的事件
-				QGUIApplication::notify(QObject *object, QEvent *event)override
+				#QGUIApplication::notify(QObject *object, QEvent *event)override
 					# 重载了基类的notify
 					# 专门处理object->isWindowType()的情形
 					# 职责再次转发: QGuiApplicationPrivate::sendQWindowEventToQPlatformWindow(static_cast<QWindow *>(object), event);
 						# 必须object是 Window type
-				QAppilcaiton::Notify
+				#QAppilcaiton::Notify
 					# widget类型的由此Notify来负责响应
 			}         
 		}
@@ -159,13 +157,8 @@
 	}
 	# 消息是线程级别的QThreadData 类似tls, 每一个线程都具有的"局部变量"{
 		# QEvent{
-			# QEvent::Type用enum做type的区分, 每个给一个id编号
-			# 不同Event通过继承QEvent实现自己的派生类, 来做区分, 必然会涉及一个强转的问题{
-
-			}
-			# spontaneous 事件是系统事件转化来的,还是qt自己的事件
-			
-			
+			# QEvent::Type用enum做type的区分, 每个给一个id编号			
+			# spontaneous 事件是系统事件转化来的,还是qt自己的事件		
 		}
 		# QPostEvent {QObject_receiver, QEvent_event, int_priority};{
 				#继承自QObject的体系才能接受Event,QObject::event()
@@ -386,6 +379,12 @@
 	}
 }
 
+# ChildWidget{
+	# 以看懂源码为主
+	# QLabel  <- QFrame (必然是有外框的)
+	# QToolTip
+}
+
 # QMainWindow{
 	#QMainWindowLayout{
 		#QDockWidgetGroupLayout
@@ -393,7 +392,6 @@
 	# 我看到了样式级联  qstylesheetstyle <- qwindowsvistastyle{
 		# 如果设置了qss, 那么默认样式就是qstylesheetstyle,同时base是qwindowsvistastyle
 	}
-
 }
 
 # Signal&Slots{
@@ -541,49 +539,72 @@
 }
 
 # QStyle{
+	# 
 	# QStylePainter{
+		
+	}
+	# style sheet{
+		# 具有继承性?  app, widget都具有类似的继承性
+		# cascading ,  不同level都定义了样式表, 那就级联继承
+		# selector  , which widget will be 
+		# declartion, which style rules will be
+
+		# Box model{
+			# 一个矩形绘图区域, 本质上有4个同心矩形{
+				# 内到外:  content, padding, border, margin
+				# mbpc 
+			}
+		}
+
+		# font {
+			# in code {
+			 "font-family: PingFangSC-Regular;  font-size: 18px; color: #000000; text-align: center;letter-spacing: 0;"
+
+			 wid ->setStylesheet{};
+			}
+		}
+
+		# QPushButton { color: red } {
+			# selector : QPushButton
+			# declartion: { color: red }
+			# 所有继承自QPushButton的类对象都应该具有red属性
+		}
+		# QPushButton, QLineEdit, QComboBox { color: red }  同时写
+		# Sub-controls{
+			#QComboBox 里面有一个drop-down控件, 给其一个背景图片
+				QComboBox::drop-down { image: url(dropdown.png) }
+
+		}
+		#status{
+			hover, pressed, disable, normal
+		}
+
+		# 源码一窥究竟{
+			# qcss_parser
+		}
+	}
+}
+
+# Paint{
+	# QPainter, 
+	# QPaintDevice{
+		# 代表QPainter实际要去绘制的设备,
+		# QWidget继承自QPaintDevice, 因此QPainter可以直接在Wdiget上作图
+	}
+	# QPaintEngine{
+		#
+	}
+	# QStylePainter{
+		# 用widget自己的style来作为Paint时需要的参数
 		# 我在pushbutton里paintEvent中看到, 用其的drawContrl 来绘制button{
-		    QStylePainter p(this);
-		    QStyleOptionButton option;
-		    initStyleOption(&option);
-		    p.drawControl(QStyle::CE_PushButton, option);
+			    QStylePainter p(this);
+			    QStyleOptionButton option;
+			    initStyleOption(&option);
+			    p.drawControl(QStyle::CE_PushButton, option);
 		}
+	}
+	# QPaintEvent::region{
+		# 相比彻底重绘, 只绘制脏区域,加速渲染
+		# 多个Paint事件二合一,形成一个更大的region 然后统一被重绘
 	}
 }
-# style sheet{
-	# 具有继承性?  app, widget都具有类似的继承性
-	# cascading ,  不同level都定义了样式表, 那就级联继承
-	# selector  , which widget will be 
-	# declartion, which style rules will be
-
-	# Box model{
-		# 一个矩形绘图区域, 本质上有4个同心矩形{
-			# 内到外:  content, padding, border, margin
-			# mbpc 
-		}
-	}
-
-	# font {
-		# in code {
-		 "font-family: PingFangSC-Regular;  font-size: 18px; color: #000000; text-align: center;letter-spacing: 0;"
-
-		 wid ->setStylesheet{};
-		}
-	}
-
-	# QPushButton { color: red } {
-		# selector : QPushButton
-		# declartion: { color: red }
-		# 所有继承自QPushButton的类对象都应该具有red属性
-	}
-	# QPushButton, QLineEdit, QComboBox { color: red }  同时写
-	# Sub-controls{
-		#QComboBox 里面有一个drop-down控件, 给其一个背景图片
-			QComboBox::drop-down { image: url(dropdown.png) }
-
-	}
-	#status{
-		hover, pressed, disable, normal
-	}
-}
-
