@@ -15,8 +15,9 @@
 # Macro&Abbrev{
 	d_ptr  : data_ptr
 	q_prt  : qt_object_ptr
-	Q_D(QApplication)  :  Class##Private * const d = d_func()
+	Q_D(QApplication)  :  Class##Private * const d = d_func();
 	Q_Q(Class)         :  Class * const q = q_func()
+	Q_DECLARE_FLAGS(Flags, Enum) :   typedef QFlags<Enum> Flags;
 	Q_DECLARE_PRIVATE(QMenu)  :  inline Class##Private* d_func() { return reinterpret_cast<Class##Private *>(qGetPtrHelper(d_ptr)); }
 	Q_DECLARE_PUBLIC(QLayout) :  inline Class* q_func() { return static_cast<Class *>(q_ptr); } 
 }
@@ -539,7 +540,7 @@
 }
 
 # QStyle{
-	# 
+	# QPalette , style在画具体控件时,颜色要参考palette
 	# QStylePainter{
 		
 	}

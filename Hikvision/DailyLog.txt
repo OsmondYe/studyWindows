@@ -204,7 +204,29 @@ https://192.0.0.122/ISD-IPDPrj/2020/PJ17PD20201120178_智慧安检管理平台V1
 
 # task stack{
 	QBalloonTip
+	我想搞清楚,widget里面的rect的布局, 都有哪些需要考虑的
+
+
+	#stack{
+		# QColor
+		# QProgressBar  316task
+		# QAction
+		# QLineEdit  ->QWidgetLineControl -> QInputControl  -> 争取看懂QLineEdit::paintEvent
+		# QComboBox -> setModel -> QLineEdit
+		# Qlabel -> QWidgetTextControl -> QInputControl
+		#  QWidgetPrivate::drawWidget  迟早还要来
+		# QPixmap -> QPlaftformPixmap -> QSharedData
+		#QEvent::Move -> QTransform
+		#widget::keyPressEvent
+	}
+
+	#std{
+		std::enable_if
+		std::is_pointer ->  std::remove_cv<T>;  -> remove_const + remove_volatile
+
+	}
 	
+
 }
 
 
