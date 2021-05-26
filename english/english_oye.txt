@@ -37,10 +37,10 @@
 		# /aɪ/ 爱, 嗨
 			# hi my bye wide like light
 			# I like to say hi and bye
-		# /aʊ/ 打老虎, 嗷呜嗷呜
+		# /aʊ/ 嗷呜嗷呜, 别人打你一下,发出的音, 要饱满
 			# how bow now house south cloud
-		# /əʊ/ 饿-wu
-			# go no so hello smoke rose
+		# /əʊ/ 饿-wu, 起床时发的音rose, 有滑动的感觉,舌头往前推, 饿 --> 乌
+			# go no so goat hello smoke  
 		# 	
 		}
 	}	
@@ -116,6 +116,49 @@
 			}
 		}	
 	}
+	# 语流{
+		# 以重音带出轻音 
+		# 重读{
+			# 大声
+			# 加长时长, 元音
+			# 音调高, 从高往下降, 
+			# 打拍子  |--,  -|-, --|-,
+		}
+		# 弱读{
+			# 音量下
+			# 元音短  借助弱读元音  (换成/ə/)
+			# 音调低
+		}
+	}
+}
+
+#{
+	# 总结 变自己
+	# 顺城递进，对比转折，因果缘由，列举说明
+	# 吃准，吃透
+	# 事件，话题，议题
+	# 日积月累，精雕细琢 
+	# 模仿，跟读，复述 -》  肌肉记忆
+}
+
+# 常见转折{
+	# 伴随
+		# as,  as the use of ...., we..... 
+	# 让步
+		# No matter
+	# 至于说到, 关于这个主题
+		#with regard to  
+		# as far as
+	# 用来,引出后面的话
+		# definitely  
+		# of course,
+		# what's more
+		# because
+	# 总结
+		# in one word,  对整个内容做总结
+		# after all,    对一个议题做总结
+		# therefore,
+		# on the whole, 整体上看
 }
 
 # 翻译{
@@ -137,19 +180,12 @@
 	# from which
 }
 
-
 # 句子中英翻译思路{	
-	# 前所未有的冲击{
-		# unprecedented  impacts | shocks
-	}
 	# 关上门等于挡住了我们自己的路 closing China’s door will only hinder our own progress
 	# 支柱作用  underpinning force
 	# 集众智、聚众力，众人共享 When wisdom and strength are pooled, all stand to benefit.
 
-	# 应对{
-		# in eal with,  in coping with
-		# respond to 
-	}
+
 	# 协商中实现合理诉求{
 		# 遇见合理的关注点通过协商
 		# meet the legitimate concerns through consultation
@@ -258,36 +294,153 @@
 		# you go straight to the point and I will not beat about the bush 
 }
 
-# 俗语 成语{
-	# 浑水摸鱼	muddy the waters and fish for arbitrage
-	# 志合者,不以山海为远
-		# 什么不能分隔有共同目标和理想的人,更别提山和水
-		# Nothing can separate people with common goals and ideals, not even mountains and seas 
-	# 天下大事必作于细
-		# 每一个单个细节统计在内, 成就之大事
-		# Every single detail counts in the accomplishment of big tasks.
-	# 利民之事,丝发必兴 
-		# 英: 一个也没有 是 太小了我们不做   nothing is too small for us to do 
-		# 只要它能传递切实的好利益给人民  if it delivers concrete benefits to our people
-	# 我们万难不辞、万险不避
-		# 英 起来(直面)所有挑战, 
-		# rise up to all challenges and press ahead against all odds.
-	# 中国文化历来主张“己所不欲、勿施于人”
-		# The Chinese believe that one must not do to others what one does not like to be done to himself
-		# the rich 富人们,  The Chinese 中国人,中国文化
-	# 这不是一朝一夕之功
-		# This reform cannot be accomplished overnight.
-	# 按常理说，谁也不愿意自己的家门口整天闹个不停
-		# It’s common sense that no one wants to see turbulence at his doorstep.
-	# 就业是民生之本
-		# Employment is the foundation of people’s livelihood.
-	# 为政之要就是要舍小利、顾大义、顺民心。
-		# After all, governance is all about letting go of narrow departmental interests for the greater good and always responding to the people’s call.
-	# 因地制宜，分城施策。
-		# Differentiated policies need to be adopted in the light of local conditions.
+# 国家相关{
+	# 中华民族  Chinese Nation
+	# 
 }
 
-# 政府官话{
+# gov官词{	
+	# 做事{
+		# 坚持 adhere / stick to /uphold(高举) 
+		# 加快 speed up the establishment of / accelerate
+			# 加速的 建设  (中文是副词+动词)->   动词 + 名词  
+		# 完善 improve 
+		# 解决...通过  resolve ... through ...	
+		# 整合,结核,统一  integrate
+		# 执行,实施,从事 conduct / engage in
+			# 在依法治国中 in conducting law-based governance
+		# 倡导 encourage
+		# 整顿 rectify
+		# 维护,保持 safeguard / maintain
+		# 统筹 balacned
+			# 统筹兼顾
+		# 所以议题,放一块,全局考虑 an overall consideration of all issues	
+		# 承担 undertake
+		# 规范 standardize
+		# 重视 emphasize 
+			# highly emphasize the importance of 
+		# 扩大 expand
+		# 传播 disseminate / spread / distribution
+		# 照顾,兼顾  accommodate (可以容纳)	
+	}
+	# 讲话{
+		# 强调  underscore
+	}
+	# 增强,加强,提升, 提高 enhance / improve / strengthen / promote/ upgrade / increase
+		# 升级 escalate conflict
+	# 营造 foster（有促进的意思）	
+	# 推进,增进, carry forward / push ahead / promote / implement / advance
+		# advance the process steadily in ... 扎实推进
+		# facilitate 为...提供便利  
+			# facilitate the development of tourism 推动旅游业发展
+			# 贯彻 implement 
+	# 减少 reduce
+	# 保障 secure 
+	# 深化 deepen
+	# 寻求 seek
+	# 弘扬 popularize
+	# 履行 comply
+	# 实施 apply
+	# 实现 produce
+		# product sustained economic growth
+	# 打击 combat  
+	# 充分肯定和赞扬  completely approve and appreciate
+	# 高度重视 # attach greate importace to		
+		# 把A attach给 B 就是认为B有这特性
+	# 应对  in deal with,  in coping with  respond to  address
+
+	}
+	# 产生疑虑 spawn suspicion
+	# 完成,取得 gain / accomplish 
+	# 形容词{
+		# 时间{
+			# 长远 long-term 
+			# 历史悠久的 time-honored
+			# 久经考验的 time-tested
+			# 前所未有的冲击 unprecedented  impacts | shocks 
+		}
+		# 态度{
+			# 坚定无疑的 unswervingly firmly
+			# 积极地  proactive
+			# 真心,真诚,热烈 candid, spirited 
+		}
+		# 问题{
+			# 艰巨的 daunting 
+			# 不断在上升和增加的挑战  mounting challenges
+			# 多面,多管齐下  multi-faceted 
+		}
+		# 发展{
+			# 剧烈,急剧 sharply, dramatically
+			# 健康,良好 sound
+				# 真有 sound, 要习惯
+			# 稳定
+				# steady
+			# 总体 overall,
+			# 一如既往  as always / constant 
+			# 大力发展  make vigorous effort to 
+		}
+		# 成就{
+			# 实实在在 tangible and real
+				# 务实 practical 
+			# 举世瞩目的  remarkable
+		}
+	}
+	# 名词{
+		# 宗旨 ->  一种精神  in a spirite of 
+		# 保证 assurance
+		# 交流,对话  exchange dialog 
+		# 基础 foundation
+		# 双赢 win-win
+		# 原则,准则 priciple
+			# 外交礼节 diplomatic protocol
+		# 条约 pacts / agreement / convention / treaty 
+		# 互 mutual / common
+			# [political|strategic| beneficial] 
+			# trust / development  / interest / properity / consensus / cooperation
+			# 
+		# 态度,立场 position, posture
+		# 关切,情况  concern, condition 
+		# 援助 assistance
+			# material 
+		# 义务 obligation
+		# 解决办法 solution
+			# diplomatic soluton 
+
+		# 密切沟通 close-communication 
+		# 社会稳定 social stability 
+		# 边  laterral   uni/multi/bi
+		# 主权和领土完整 sovereignty  and territorial integrity 	
+		# independent innovation capabilities
+		# making breakthroughs in key and core technologies
+		# deepen its supply-side structural reform
+		# innovate its modes of production to provide high-quality products and services
+		# rectifying resource misallocation
+		# allowing the financial sector to better serve the real economy
+		# promote the coordinated development of domestic and external demand, imports and exports, as well as foreign and outbound investment
+		# a high-yield demonstration field
+
+	}
+}
+
+# 社会官词{
+	# 文明干某事  in a civilized way
+}
+# 经济{
+	# 钱  money finance fiscal capital(in rising capital 融资)
+}
+
+# 政府官话{	
+	# 提取强烈抗议  lodge a strong protest
+	# 求同存异 seek common ground while shelving differences
+	# 开放包容  openness and inclusiveness
+	# 搁置争议,共同开发 shelve disputes and carry out joint development
+	# 发挥更大作用 plya a larger role in
+	# 扩大内需,刺激经济 expand domestic demands, and stimulate economic growth
+	# 无端指责 groundless attacks and accusations agaisnt
+	# 总体平稳, 稳中有进
+		# generally stable growth while making further progress
+	# 停留形式上没有落实 
+		# remain formal rather than real in 那个行动中
 	#中国奉行不结盟政策，我们之间的合作也不针对第三方。
 		# China follows the principle of nonalignment, and China-Russian cooperation will not be targeted at any third party.
 	#抗击疫情
@@ -301,10 +454,12 @@
 	#这既是历史经验也是时代要求
 		#this is both the experience gained from history and an imperative under the current circumstances
 	#推进高质量"一带一路"建设
-		#push ahead high-quality construction of the Belt and Road Initiative
+		# push ahead high-quality construction of the Belt and Road Initiative
 	#党的领导是XXX最大的政治优势,和XXX不断走向胜利的根本保证
-		#the leadship of the CPC is  -1 the biggist political advantage of XXX 
+		# the leadship of the CPC is  -1 the biggist political advantage of XXX 
 								    -2 and the fundamental safegurad for continued victory in XXX
+	# 历史遗留下来的边界问题
+		# boundary quesiton left over from history
 	#复苏经济是中非合作的重中之重
 		# Bring Africa Countries' economies back on track is the top priority of the China-Africa cooperaitons
 	#完全合宪合法,正当合理	
@@ -336,8 +491,37 @@
 		# Only one is upright him or herself can he or her ask others to be upright.
 	# 喊破嗓子不如甩开膀子
 		# Talking and talk is not as good as working and work.
+}
 
-
+# 俗语 成语{
+	# 苟利国家生死以，岂因祸福避趋之
+		#In line with the conviction that I will do whatever it takes to serve my country even at the cost of my own life, regardless of fortune or misfortune to myself.
+	# 浑水摸鱼	muddy the waters and fish for arbitrage
+	# 志合者,不以山海为远
+		# 什么不能分隔有共同目标和理想的人,更别提山和水
+		# Nothing can separate people with common goals and ideals, not even mountains and seas 
+	# 天下大事必作于细
+		# 每一个单个细节统计在内, 成就之大事
+		# Every single detail counts in the accomplishment of big tasks.
+	# 利民之事,丝发必兴 
+		# 英: 一个也没有 是 太小了我们不做   nothing is too small for us to do 
+		# 只要它能传递切实的好利益给人民  if it delivers concrete benefits to our people
+	# 我们万难不辞、万险不避
+		# 英 起来(直面)所有挑战, 
+		# rise up to all challenges and press ahead against all odds.
+	# 中国文化历来主张“己所不欲、勿施于人”
+		# The Chinese believe that one must not do to others what one does not like to be done to himself
+		# the rich 富人们,  The Chinese 中国人,中国文化
+	# 这不是一朝一夕之功
+		# This reform cannot be accomplished overnight.
+	# 按常理说，谁也不愿意自己的家门口整天闹个不停
+		# It’s common sense that no one wants to see turbulence at his doorstep.
+	# 就业是民生之本
+		# Employment is the foundation of people’s livelihood.
+	# 为政之要就是要舍小利、顾大义、顺民心。
+		# After all, governance is all about letting go of narrow departmental interests for the greater good and always responding to the people’s call.
+	# 因地制宜，分城施策。
+		# Differentiated policies need to be adopted in the light of local conditions.
 }
 
 # 政府工作报告{
@@ -413,6 +597,47 @@
 	}
 }
 
+# i形容词{
+	# inevitable
+	# irreplacable
+	# irreversible
+	# irreconcilable
+	# irrefutable   	-> evidence, statements, or arguments 
+	# irrevocable
+	# inescapable
+	# indelible
+	# indefatigable
+	# inconceivable
+	# unswerving 
+	# unaccountable   ->  莫名其妙 He had an unaccountable change of mind.
+	# unequivocal
+
+}
+
+# 中英差异{
+	# 时间， 明年才会干什么。。。
+		# the aid will not be disbursed until next year
+			# 援助款明年才会下拨
+			# 英 援助款将不会下拨，直到明年			
+		# Aluminum remained unknown until the 19 century.
+	# 事实与评论， 
+		# 胡锦涛对奥巴马的来访表示热烈欢迎   （中：  先 事实，再 评论） 
+		# Pre Hu warmly welocmes Obama's visit  (英： 先 评论+态度 再 事实)
+}
+
+
+# 边缘{
+	# on the brink of 	
+}
+
+# trend{
+	# precipitous decline
+}
+
+# 背叛{
+	# betray, treachery apostate(apostasy), traitor
+}
+
 #
 # 练习的最终成果,需要merge到其它节中
 # 练习{
@@ -473,5 +698,13 @@
 
 }
 
-
+# 虚拟语气{
+	# 用一个明显错的语法，时间线， 来表明 是虚拟的愿望
+	# I wish that they were true  我也希望如此
+	# If I were a woman, I would marry him   时态后移,现在变过去
+	# If I had come last night, I wouldn't have missed your performance
+		# 
+	# If I should(were to) die tomorrow, I would die with honor
+	# Had Sharon asked me, I could have helped her.
+}
 

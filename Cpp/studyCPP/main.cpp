@@ -2,12 +2,14 @@
 
 extern void scratch();
 
-
 int main(int argc, wchar_t** argv)
 {
 	srand(time(NULL));	// give a randome seed
 
 	testing::InitGoogleTest(&argc, argv);
+
+	scratch();
+
 
 	// filter *,?,-,:
 	//	 aaa.*:bbb.*:ccc.*		->  only test aaa,bbb, ccc
@@ -52,7 +54,7 @@ int main(int argc, wchar_t** argv)
 	testing::FLAGS_gtest_filter = "AlgoLinear.LeetCode*";
 
 
-	scratch();
+
 
 	return RUN_ALL_TESTS();
 
