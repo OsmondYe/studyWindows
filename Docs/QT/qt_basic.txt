@@ -165,3 +165,750 @@ private: \
 # 辅助{
 	多语言,样式表,
 }
+
+
+
+# 问题{
+	# focus_proxy ,widget里面的hasFocus 看到了此字眼, 什么意思呢
+	# receiver can be moved to the other thread
+	# objectData->postedEvents
+	# QStyle 重点关注{pixelMetric,sizeFromContents}
+}
+
+# 工具集{
+	qmake
+	uic   -UI compiler,  qt的XML定于.ui文件作为用户界面,  uic把此xml 生成对应的 ****.h
+	moc   -meta-object compiler,  处理c++ Q_OBJECT 宏, 实现slot,之类
+	rcc   -resource compile,  编译.qrc,  最终嵌入进qt程序
+}
+
+# Macro&Abbrev{
+	d_ptr  : data_ptr
+	q_prt  : qt_object_ptr
+	Q_D(QApplication)  :  Class##Private * const d = d_func();
+	Q_Q(Class)         :  Class * const q = q_func();
+	Q_DECLARE_FLAGS(Flags, Enum) :   typedef QFlags<Enum> Flags;
+	Q_DECLARE_PRIVATE(QMenu)  :  inline Class##Private* d_func() { return reinterpret_cast<Class##Private *>(qGetPtrHelper(d_ptr)); }
+	Q_DECLARE_PUBLIC(QLayout) :  inline Class* q_func() { return static_cast<Class *>(q_ptr); } 
+}
+
+# 资源相关{
+	qrc:  qt_resource{
+	  	#xml format{
+	  		 <RCC>
+	  		 	<qresource prefixe="/xxx">
+	  		 		<file>xxx</file> 
+	  		 	</qresource>
+	  		 </RCC>
+	 	}
+	}
+	qss  qt_stylesheet{
+		# qrc 里面可以使用的一种资源
+	}
+	rcc {
+		#使用rcc 命令将resource.qrc生成.rcc二进制文件。
+		#rcc --binary resource.qrc -o skin.rcc（Windows）
+			--binary 很重要
+	}
+	# 程序启动时加载{
+		QResource::registerResource(qApp->applicationDirPath() + "/skin/skin.rcc");  
+	    QFile file(":/qss/stylesheet");  
+	    if(file.open(QFile::ReadOnly))  
+		    {  
+		      QString strStyleSheet = file.readAll();  
+		      file.close();  
+		      qApp->setStyleSheet(strStyleSheet);  
+		    }
+	}
+}
+
+# QObject{
+	#2线并行{
+		#QObject
+		#QObjectPrivate : QObjectData
+
+		#使用了pimp_模式, 隔离掉外层与内层,在内层存储具体数据
+
+		#所有继承体系中, 都会间接用到QObjectData, RTTI, 数据类型判断,树形结构找父亲和孩子
+	}
+	# common{
+		# SetProperty   {
+			attach key-value pair
+			property(), metaObject(), dynamicPropertyNames()
+		}
+		# SetObjectName
+		# thread   // qobj must be lived in a thread
+	}
+	# Connect的原理{
+		# signal slot connect
+		# 通过2宏完成{
+			# 拿到sender,receiver的 matadata ->  sm && rm;
+			# QMetaObject::Connection handle= {
+				QMetaObject::Connection(
+					// 构造函数, 接受
+					QMetaObjectPrivate::connect(
+							sender,   signal_index,          smeta, 
+							receiver, method_index_relative, rmeta ,
+							type, types)
+					);
+
+				#QMetaObject::Connection 是一个内嵌类对象,代表了构建的链接
+			} 
+        
+		}
+		# QMetaObject, 要读懂connect的代码, 需要理解QMetaObject这一支的系统设计和思想{
+
+		}
+		# emit 是没有意义的, 其作用的是经过moc后的函数里面{
+			# QMetaObject::activate;
+		}
+	}
+}
+
+# Application{
+	# [QCoreApplication, QCoreApplicationPrivate, QCoreApplicationData]
+	# Private{
+		# is_app_running  & is_app_closing
+	}
+	# SendEvent, PostEvent{
+		# sendEvent(QObject *receiver, QEvent *event) 
+			# 经App对一些有意思的消息额外处理后,最终直达receiver
+			# 等receiver处理后再返回
+		# postEvent{
+			# 构造 QPostEvent 作为外wrapper, QPostEvent(receiver, event, priority)
+			# 把放入thread_data->postEventList里面
+			# dispatcher->wakeup{
+				# win32::PostMessage(WM_QT_SENDPOSTEDMESSAGE){
+					#  Post相比Send的优势在这里就显现出来啦
+					# 会立刻返回, 正常流程继续走
+				}   
+				# q_internal_wnd_proc:  handle WM_QT_SENDPOSTEDMESSAGE{
+					QCoreApplicationPrivate::sendPostedEvents(0, 0, threadData);
+				}
+				# native platform绕一圈,在回来
+			}
+			# QCoreApplicationPrivate::sendPostedEvents里以while(data->postEventList)的形式重新处理{
+				# QPostEvent-> convert -> [receiver, event, priority]
+				# QCoreApplication::sendEvent(r, e); 
+				# 可以看出Post最终还是又SendEvent来处理
+			}
+
+		}
+	}
+}
+
+# 消息和事件处理{
+	# 事件的产生{
+		# 我以QAbstractButton为列子去看看{
+			# Polish, UI外观着色{
+				#QCoreApplication::sendEvent(QButton b, QEvent e(QEvent::Polish));		
+					# 直接用Application里面的方法来sendEvent, 2参数, receiver和QEvent
+					# 最终形式一定是receiver[this]作为QObject, 找到作为QObject::event(e);
+					# CoreApp 处理 非Window,非Widget类型的事件
+				#QGUIApplication::notify(QObject *object, QEvent *event)override
+					# 重载了基类的notify
+					# 专门处理object->isWindowType()的情形
+					# 职责再次转发: QGuiApplicationPrivate::sendQWindowEventToQPlatformWindow(static_cast<QWindow *>(object), event);
+						# 必须object是 Window type
+				#QAppilcaiton::Notify
+					# widget类型的由此Notify来负责响应
+			}         
+		}
+		# layout的update{
+			-1 从this layout,一路向上找到top level layout, top level layout的layout必然是widget, 给其post事件
+			-2 QApplication::postEvent(mw, new QEvent(QEvent::LayoutRequest));
+		}
+	}
+	# Application类组支持{
+		# [QApplication, QGUIApplication, QCoreApplication ]
+		# QCoreApplication::exec() 循环泵
+		# QCoreApplication::SendEvent qt自己的事件
+		# QCoreApplication::PostEvent qt自己的事件
+		# 从win32 线程消息queue中,拿到 MSG, 并且翻译成QEvent
+	}
+	# 消息是线程级别的QThreadData 类似tls, 每一个线程都具有的"局部变量"{
+		# QEvent{
+			# QEvent::Type用enum做type的区分, 每个给一个id编号			
+			# spontaneous 事件是系统事件转化来的,还是qt自己的事件		
+		}
+		# QPostEvent {QObject_receiver, QEvent_event, int_priority};{
+				#继承自QObject的体系才能接受Event,QObject::event()
+		}
+
+		# QEventLoop{
+				# exec, 消息处理泵 while(not_exit) processEvents; -> eventDispatcher::processEvents
+				# ThreadData里面有个成员eventDispatcher, 最终来处理分配
+					#ObjectPrivate->threadData
+				# exit -> 给exec一个信号,可以停止了
+				# wakeup
+				# event() 会处理 QEvent::Quit, 还是调用exit(0);
+		}
+		
+		
+		# qt中 设计了3元祖{
+			[   QStack<QEventLoop *> eventLoops,
+				QPostEventList postEventList;
+				QAtomicPointer<QAbstractEventDispatcher> eventDispatcher;
+			]
+		}
+	}	
+	# QObject::event() {
+		# 事件处理的基类虚函数,  派生类都通过override此fun来实现扩展, 比如QWidget
+	}
+	# Dispatcher QEventDispatcherWin32and {
+		# 自定义消息来处理 event(waitForxxx) msg(), timer(),socket()
+		# MsgFunc 和MsgHook
+		# qt_internal_proc, qt自定义了一个不可见的消息窗口, 专门用来分发消息的{
+			// 看到了老朋友 DefWindowProc
+			# WM_QT_SENDPOSTEDEVENTS
+				#dispatcher->sendPostedEvents();
+				#QCoreApplicationPrivate::sendPostedEvents(0, 0, d->threadData);
+		}
+		# qt_GetMessageHook, qt在MsgQueue中安装的Hook{
+			// 监听队列里 input 和 timer的消息被移除了
+			# 如果即将取出的msg, 不是inpu/timer类型, 那视情况,PostMessage(d->internalHwnd, WM_QT_SENDPOSTEDEVENTS, 0, 0);
+				# 确保QT的消息循环可以正常持续
+				# Qt正常的交互通过什么来呢???
+		}
+		# processEvents{
+			# 核心双重循环{ 这里的代码看的人实在头大, 逻辑交织在一起
+				do{
+					while( not_interruped){
+						#task1 !queuedUserInputEvents.empty(), 取出第一个, 
+							直接filterNativeEvent->TranslateMsg->DispatchMessage;
+							发送给那个窗口的Input消息,依旧使用Windows自己的窗口处理机制
+						#task2 PeekMessage 
+							#_1{
+								看看如果QEventLoop::ExcludeUserInputEvents && inpu消息, 
+								queuedUserInputEvents入队此消息
+								开始新循环, 让task1来处理下
+								}
+							#_2{其它Window消息,走老路filterNativeEvent->TranslateMsg->DispatchMessage}
+						#task3 死等MsgWaitForMultipleObjectsEx						
+							#_1{continue 内部循环}
+							#_2{事件激发, activateEventNotifier} 
+
+					}
+					emit aboutToBlock();
+					::MsgWaitForMultipleObjectsEx
+					emit awake();
+					#task whether it's waked by EventHandle signaled
+				}while(canWait);				
+			}
+			# 退出循环的方式 调用interrupt,
+		}
+		# WM_QT_SENDPOSTEDEVENTS{
+			# send the postedEvents  这个是qt自己定义的Event处理消息点
+				# 当qt的不可见消息派发窗口收到次消息是,就需要 dispatcher->sendPostedEvents();
+			# 针对其的响应最终还是 QCoreApplicationPrivate::sendPostedEvents(0, 0, d->threadData);
+			# 场景{
+				wakeUp() -> ::PostMessage(WM_QT_SENDPOSTEDEVENTS, 0, 0); 让MsgQueue有东西
+			}
+		}
+		# WM_Notify{
+			# QCoreApplication::sendEvent(receiver, &event);{
+
+			}
+		}
+		# 为何需要Timer? 需要把Timer看懂, 有些地方才能彻底明了
+		# 
+	}
+}
+
+# UI常见属性{
+	# {
+		LayoutItem
+			spacerItem
+			widgetItem
+			QLayout     -> 容纳所有其他类型的item
+	}
+	# layout  -> 一个widget只能有一个top level layout
+	# sizeHint : 首先的尺寸,  preferred size
+	# spacing  -> 间距,子控件之间的
+	# Margins  -> 控件自身的4个边框
+	# HeightForWidth -> qt中引入的属性, 高依赖宽
+}
+
+# layout{
+	# QVBoxLayout  QHBoxLayout
+	# addWidget: ownership,  help to delete the widget
+	# geometry manager
+	# parent, 一个widget
+	# SizePolicy{
+		# 尺寸发生变化时, 应该如何响应
+		# x横向怎么变, y纵向怎么变
+		# 设置最小,最大尺寸
+		# 有一个基础值, bV, baseValue
+		# grow  -> bV++
+		# shrink -> bV--
+		# fixed  -> bV
+		# expand -> bv++/--
+	}
+
+	# 具体布局时需要考虑的item的属性{
+		# preferred height  (heightForWidth)  hfw
+	}
+
+	# 布局引擎算法{
+		# 根据源码 所有的布局item 都要转换成 QLayoutStruct
+		# 由引擎函数 qGeomCalc 完成QLayoutStruct数组的 最终布局问题
+	}
+
+	# spacing:  子widget之间的间距
+
+	# heightForWidth {
+		# 给定一个w值, 看看h应该是多少
+		# hasHeightForWidth -> bool,  此item是否具有这个属性, 具体布局时,根据其作为参数来判断空间
+	}
+
+	# setGeometry{
+		# 所谓布局,就是依次调用每一个item的setGeometry
+		# 需要预先确定其的位置
+	}
+	# invalidate, update : 要求重绘{
+		// 从widge的任意layot出发,找到top_level的layout,
+		// 然后在找到其widget, 重绘此widget
+		QWidget *mw = static_cast<QWidget*>(layout->parent());
+
+		// 以post_msg的形式实现
+		QApplication::postEvent(mw, new QEvent(QEvent::LayoutRequest));
+	}
+	# SetSizeConstraint{
+
+	}
+
+	# 自我实现{
+		addItem(), sizeHint(), setGeometry(), itemAt() and takeAt()
+	}
+
+	# code {
+		auto* spacer = new QWidget(this);
+		spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+		hb->addWidget(spacer);
+	}
+}
+
+# QWidget{
+	# common{
+		#所有UI对象的基类, qt把UI统称为widget
+		#attr,[palette,font,cusor,stylesheet]
+		# code-style{
+			sizePolicy (自由resize,只能水平扩展,只能垂直扩展)
+			sineHint  (w自己最适合的尺寸)
+			strech factors 拉伸系数
+			focusPolicy
+			ForegroundRole
+			BackgroundRole
+		}
+		# QPixmap可以隐士转换为QIcon
+		# 老朋友{
+			QApplication::sendEvent(q, &pc);
+			QApplication::postEvent(q, new QUpdateLaterEvent(clipped));
+
+			# 消息处理{
+				bool QWidget::event(QEvent *event);  [oye event是QObject定义的虚函数]
+			}
+		}
+		
+
+	}
+	# Tech{
+		# propagatePaletteChange{
+			# 通知当前Widget下所有孩子, 调色盘内容有改变
+			# 看样子是以事件形式发送{
+				在WidgetPrivate里面,q代表了this_widget
+					QEvent pc(QEvent::PaletteChange); 
+					QApplication::sendEvent(q, &pc);
+				其中Event由virtual void changeEvent(QEvent *); 来负责resolve
+					默认	QEvent::PaletteChange直接update
+			}
+		}
+	}
+	# 有意思的点{
+		# Palette{
+			调色盘{
+				Widget想象成画布,
+				palette定义了画布上所有基本元素的颜色{
+					group :  active, inactive, disable 
+					role  :  window, shadow, window-text, Light, MidListh, Mid,Dark HighLisht,
+					// 组代表了状态,每种状态下不同的role都会有默认值 
+
+					比如 button, active和disable应该给绘制出不同的颜色
+				}	
+			} 
+		}
+	}
+	# Style{
+		# UI上面的通用属性[enable,focus,]
+		# QStyle{
+			# drawControl, 用来绘制控件
+		}
+		# QStyleOptionstyle option{
+			# 大基类,包含QStyle里面的fun需要的参数, 这些参数用来画一个UI元素
+
+		}
+	}
+}
+
+# QWindow{
+	#有别于QWidget, 其直接继承public QObject,  public QSurface
+	#QSurface 作为独立基类{
+
+	}
+}
+# QMainWindow : public QWidget{
+	# 预定义的标准App主窗口, 预定义自己的layout,来容纳 menu_bar, tool_bar, status_bar, 
+	  以及流行的dock_widget_bar{
+	  	# 用户 需要自己来设计一个centralWidget就好
+	  }
+
+	# dockwidget, popupMenu, savestate
+	# tool_bar
+	# status_bar
+	# menu_bar
+	# tabbar tab_widget 
+}
+
+# ChildWidget{
+	# 以看懂源码为主
+	# QLabel  <- QFrame (必然是有外框的)
+	# QToolTip
+}
+
+# QMainWindow{
+	#QMainWindowLayout{
+		#QDockWidgetGroupLayout
+	}
+	# 我看到了样式级联  qstylesheetstyle <- qwindowsvistastyle{
+		# 如果设置了qss, 那么默认样式就是qstylesheetstyle,同时base是qwindowsvistastyle
+	}
+}
+
+# Signal&Slots{
+	Q_OBJECT  所有从 QOjbect派生的都推荐上这个
+	Q_SIGNALS
+	emit SignalClearAlarmQueryInfo();
+	QObject::connect(sender, SIGNAL(signal()), receiver, SLOT(slot()));
+	SIGNAL 
+	public Q_SLOTS:
+
+	# Signal{
+		like public:
+		{	
+			Q_SIGNALS:
+			    void finished(int result);
+			    void accepted();
+			    void rejected();
+
+		}
+		只用声明,不用实现
+		# 可以把信号直接connect给另外一个信号
+
+		# 常见signal{
+			changed, hovered,toggled, triggered
+		}
+	}
+	# Slots {
+		可以是虚函数
+		public slots:
+			void setValue(int value){
+			    if (value != m_value) {
+			        m_value = value;
+			        emit valueChanged(value);
+			}
+	}
+		}
+}
+
+# QT's Model View{
+	# 一次搞定,终身受益, data_set, ui_present_data, ui_delegat_ext_ui
+	# 如果model学的好, 问题可以一次性搞定
+	# 先根据例子, 读取文本文件, 然后树形展示的列子
+	# model delegate view   [signals, slots]
+	# model -> sig -> view  , change data ui
+	# view -> sig ,  user interact
+	# delegate ->sig, [view/model] , state of the editor
+
+	# Model {
+		# QAbstractItemModel, interface to data
+			# 必须继承的函数{
+				index
+				parent
+				rowCount
+				columnCount
+				data
+
+				一个树形结构,直接挂住Item
+			}
+		# QStandardItemModel{
+			# QStandardItem
+			# 放置层次数据结构,树状
+		}
+		# QStandardItem{
+			item->setFlags( Qt::ItemIsEnabled);{
+				// 用户可以与item做ui交互
+				// 比如列表, 默认,选中一项后, list会关闭
+			}  
+		}
+		# 给View和Delegate来获取数据
+		# index 数据的表示与存储分离,, 通过下表获取数据{
+			# how data can be retrived from Model
+			# row
+			# col
+		}
+		# item roles{
+			# Qt::DisplayRole
+			# Qt::ItemDataRole
+		}
+		# QModelIndex
+		# Proxy Model{
+			Model 级联, 额外提供sort和filter
+		}
+		# signals{
+			# dataChanged  现存的数据集发生改变, 发送此数据
+		}
+		# edit{
+			# 通过flag,返回允许编辑,来提供cell的编辑功能
+			# 通过重载 setData 和 flags 2 函数来实现
+		}
+
+	}
+
+	# View {
+		# QAbstractItemView {
+			# 一个可以被用来显示UI的Item,应该具有哪些UI特性{
+				#[水平,垂直]滚动
+				#拖拽,编辑,[Tab,鼠标,键盘]事件
+				#被选择
+
+			}
+			# 抽象视图与抽象数据模型, 通过ModelIndex来互动
+			# table, list, tree UI不同,但是可以让其表示的数据是同一个数据
+			# QListView  QTableView  QTreeView
+			# 使用Delegate来提供增强型UI
+		}
+		# 导航,区域选择(handling selections),上下文菜单, 拖拽
+		# separation [content  | presentation]
+		# QHeaderView{
+			# sort_indicator
+			# column_size
+			# alignment
+			# orientation
+
+		}
+		# 常规操作{
+			1 Model,  n_row? n_col  (rowCount(), columnCount())
+			2 fetch each , how to present(render)? (data) 
+
+		}
+		# Role{
+
+		}
+
+	}
+
+	# Delegate{
+		# QAbstractDelegate, QStyledItemDelegate,
+		# 客户定制化的editor
+		# 提供数据呈现于编辑的组件, 星级排名
+	}
+	# sorting{
+
+	}
+	# conveninece class{
+		# Q[List|Tree|Table]Widget,
+		# 凡是widget,那就是view 和data被绑定在一起啦
+	}
+	# mapper{
+		# QDataWidgetMapper		
+			# 把widget映射到表格的制定列, 这样修改起来方便
+		# QCompleter
+			# 自动补全
+	}
+	# QHeaderView
+}
+
+# QStyle{
+	# QPalette , style在画具体控件时,颜色要参考palette
+	# QStylePainter{
+		
+	}
+	# style sheet{
+		# 具有继承性?  app, widget都具有类似的继承性
+		# cascading ,  不同level都定义了样式表, 那就级联继承
+		# selector  , which widget will be 
+		# declartion, which style rules will be
+
+		# Box model{
+			# 一个矩形绘图区域, 本质上有4个同心矩形{
+				# 内到外:  content, padding, border, margin
+				# mbpc 
+			}
+		}
+
+		# font {
+			# in code {
+			 "font-family: PingFangSC-Regular;  font-size: 18px; color: #000000; text-align: center;letter-spacing: 0;"
+
+			 wid ->setStylesheet{};
+			}
+		}
+
+		# QPushButton { color: red } {
+			# selector : QPushButton
+			# declartion: { color: red }
+			# 所有继承自QPushButton的类对象都应该具有red属性
+		}
+		# QPushButton, QLineEdit, QComboBox { color: red }  同时写
+		# Sub-controls{
+			#QComboBox 里面有一个drop-down控件, 给其一个背景图片
+				QComboBox::drop-down { image: url(dropdown.png) }
+
+		}
+		#status{
+			hover, pressed, disable, normal
+		}
+
+		# 源码一窥究竟{
+			# qcss_parser
+		}
+	}
+}
+
+# Paint{
+	# QPainter QPaintDevice QPaintEngine
+	# QPainter{
+		# performs low-level painting on widgets and other paint devices
+		# 在widget或者其它QPaintDevice内画画的类
+		# 我在LineEdit里面看到,{
+			# QPainter p(this);
+			# QStyleSheetStyle* cssStyle = qobject_cast<QStyleSheetStyle*>(style())
+			# cssStyle->styleSheetPalette(this, &panel, &pal);
+			# p.setPen(pal.text().color())
+			# d->control->draw(&p, topLeft, r, flags);
+		}
+		# QStylePainter{
+			# 这是一个convince class,可以在widget里面绘制QStyle定义好了element
+			# 相比painter, QStylePainter暂存了widget和style,这样在绘图时可以少传几个参数
+			# 用widget自己的style来作为Paint时需要的参数
+			# 我在pushbutton里paintEvent中看到, 用其的drawContrl 来绘制button{
+			    QStylePainter p(this);
+			    QStyleOptionButton option;
+			    initStyleOption(&option);
+			    p.drawControl(QStyle::CE_PushButton, option);
+			    // drawControl本质上qstyle提供的结构
+			}		
+		}
+	}
+
+	# QPaintDevice{
+		# 代表QPainter实际要去绘制的设备,
+		# QWidget继承自QPaintDevice, 因此QPainter可以直接在Wdiget上作图
+	}
+	# QPaintEngine{
+		#
+	}
+
+	# QStyle{
+		# 这里面也有画图的函数, 但本质上还是一个高层接口, 其内画图需要传递QPainter指针来实际实现绘制
+		# QCommonStyle <- QStyle{
+			# 同级子类
+				#QPixmapStyle 
+				#QFusionStyle
+				#QProxyStyle
+				#QWindowsStyle{
+					#QStyleSheetStyle   //  至少可以看出来qss和windows原生系统的关系, 其具有基本windows OS的样式,
+					#QWindowsXPStyle{
+						#QWindowsVistaStyle
+					}
+				}
+		}
+
+	}
+	
+	# QPaintEvent::region{
+		# 相比彻底重绘, 只绘制脏区域,加速渲染
+		# 多个Paint事件二合一,形成一个更大的region 然后统一被重绘
+	}
+}
+
+
+
+# 从下面的调用栈中看看Qt的PaintEvent事件发生机制
+
+//
+//
+//
+00bcb5cc 54e6d587 Qt5Widgetsd!QPushButton::paintEvent+0x15 [c:\users\qt\work\qt\qtbase\src\widgets\widgets\qpushbutton.cpp @ 450]
+00bcb774 54faa111 Qt5Widgetsd!QWidget::event+0x6e7 [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qwidget.cpp @ 9056]
+00bcb790 5507b76b Qt5Widgetsd!QAbstractButton::event+0xf1 [c:\users\qt\work\qt\qtbase\src\widgets\widgets\qabstractbutton.cpp @ 969]
+00bcb7a8 54e2a27b Qt5Widgetsd!QPushButton::event+0x9b [c:\users\qt\work\qt\qtbase\src\widgets\widgets\qpushbutton.cpp @ 686]
+
+00bcb7c8 54e2837e Qt5Widgetsd!QApplicationPrivate::notify_helper+0x12b [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qapplication.cpp @ 3722]
+00bcbe68 56645adc Qt5Widgetsd!QApplication::notify+0x21ee [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qapplication.cpp @ 3685]
+
+00bcbea8 56768e28 Qt5Cored!QCoreApplication::notifyInternal2+0xec [c:\users\qt\work\qt\qtbase\src\corelib\kernel\qcoreapplication.cpp @ 1024]
+00bcbeb8 54e74c1f Qt5Cored!QCoreApplication::sendSpontaneousEvent+0x28 [c:\users\qt\work\qt\qtbase\src\corelib\kernel\qcoreapplication.h @ 236]
+00bcbef4 54e748c7 Qt5Widgetsd!QWidgetPrivate::sendPaintEvent+0x2f [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qwidget.cpp @ 5715]
+00bcc094 54e74faa Qt5Widgetsd!QWidgetPrivate::drawWidget+0x777 [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qwidget.cpp @ 5659]
+00bcc144 54e74ed5 Qt5Widgetsd!QWidgetPrivate::paintSiblingsRecursive+0x35a [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qwidget.cpp @ 5851]
+00bcc1fc 54e74ed5 Qt5Widgetsd!QWidgetPrivate::paintSiblingsRecursive+0x285 [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qwidget.cpp @ 5838]
+00bcc2b4 54e74ed5 Qt5Widgetsd!QWidgetPrivate::paintSiblingsRecursive+0x285 [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qwidget.cpp @ 5838]
+00bcc36c 54e74ed5 Qt5Widgetsd!QWidgetPrivate::paintSiblingsRecursive+0x285 [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qwidget.cpp @ 5838]
+00bcc424 54e74bd0 Qt5Widgetsd!QWidgetPrivate::paintSiblingsRecursive+0x285 [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qwidget.cpp @ 5838]
+00bcc5e0 54e74faa Qt5Widgetsd!QWidgetPrivate::drawWidget+0xa80 [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qwidget.cpp @ 5709]
+00bcc690 54e74bd0 Qt5Widgetsd!QWidgetPrivate::paintSiblingsRecursive+0x35a [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qwidget.cpp @ 5851]
+00bcc84c 54e3d4ac Qt5Widgetsd!QWidgetPrivate::drawWidget+0xa80 [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qwidget.cpp @ 5709]
+00bccb2c 54e3b113 Qt5Widgetsd!QWidgetBackingStore::doSync+0xd0c [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qwidgetbackingstore.cpp @ 1384]
+00bccb74 54e7695c Qt5Widgetsd!QWidgetBackingStore::sync+0x1e3 [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qwidgetbackingstore.cpp @ 1137]
+00bccb8c 54ea5e2d Qt5Widgetsd!QWidgetPrivate::syncBackingStore+0x4c [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qwidget.cpp @ 1984]
+00bccbbc 54ea422a Qt5Widgetsd!QWidgetWindow::handleExposeEvent+0x14d [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qwidgetwindow.cpp @ 934]
+00bccc00 54e2a27b Qt5Widgetsd!QWidgetWindow::event+0x24a [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qwidgetwindow.cpp @ 296]
+00bccc20 54e2652d Qt5Widgetsd!QApplicationPrivate::notify_helper+0x12b [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qapplication.cpp @ 3722]
+00bcd2c0 56645adc Qt5Widgetsd!QApplication::notify+0x39d [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qapplication.cpp @ 3094]
+00bcd300 56768e28 Qt5Cored!QCoreApplication::notifyInternal2+0xec [c:\users\qt\work\qt\qtbase\src\corelib\kernel\qcoreapplication.cpp @ 1024]
+//
+//  Qt的机制, 在native platform上晃了一圈后,又回到了QCoreApplication::sendSpontaneousEvent
+//
+00bcd310 5598807e Qt5Cored!QCoreApplication::sendSpontaneousEvent+0x28 [c:\users\qt\work\qt\qtbase\src\corelib\kernel\qcoreapplication.h @ 236]
+WARNING: Stack unwind information not available. Following frames may be wrong.
+00bcd378 55987896 Qt5Guid!QOpenGLFunctions_4_0_Core::glDrawElementsInstancedBaseVertex+0x93b1b
+00bcd3b0 559537e9 Qt5Guid!QOpenGLFunctions_4_0_Core::glDrawElementsInstancedBaseVertex+0x93333
+00bcd3dc 5595398c Qt5Guid!QOpenGLFunctions_4_0_Core::glDrawElementsInstancedBaseVertex+0x5f286
+00bcd41c 54a718c1 Qt5Guid!QOpenGLFunctions_4_0_Core::glDrawElementsInstancedBaseVertex+0x5f429
+00bcd4a4 54a881ab qwindowsd!qt_plugin_instance+0xf4c6
+00bcd5ec 54a81ad2 qwindowsd!qt_plugin_instance+0x25db0
+00bcd6a8 75975cab qwindowsd!qt_plugin_instance+0x1f6d7
+00bcd6d4 759667bc USER32!_InternalCallWinProc+0x2b
+00bcd7b8 7596635a USER32!UserCallWinProcCheckWow+0x3ac
+00bcd81c 7597312f USER32!DispatchClientMessage+0xea
+00bcd858 77633b9d USER32!__fnDWORD+0x3f
+00bcd890 75965a08 ntdll!KiUserCallbackDispatcher+0x4d
+00bcd8ec 759656d0 USER32!DispatchMessageWorker+0x328
+00bcd8f8 566dffd6 USER32!DispatchMessageW+0x10
+//
+//  Qt自己搞得Dispatcher
+//
+00bcf708 54af2ad8 Qt5Cored!QEventDispatcherWin32::processEvents+0x646 [c:\users\qt\work\qt\qtbase\src\corelib\kernel\qeventdispatcher_win.cpp @ 628]
+00bcf720 56640dac qwindowsd!qt_plugin_instance+0x906dd
+//
+//	处理和配置 Qt消息泵, 并且不断处理消息
+//
+00bcf738 56640fb7 Qt5Cored!QEventLoop::processEvents+0x4c [c:\users\qt\work\qt\qtbase\src\corelib\kernel\qeventloop.cpp @ 135]
+00bcf79c 56643ce2 Qt5Cored!QEventLoop::exec+0x157 [c:\users\qt\work\qt\qtbase\src\corelib\kernel\qeventloop.cpp @ 212]
+00bcf7f8 55983508 Qt5Cored!QCoreApplication::exec+0x132 [c:\users\qt\work\qt\qtbase\src\corelib\kernel\qcoreapplication.cpp @ 1297]
+00bcf800 54e26189 Qt5Guid!QOpenGLFunctions_4_0_Core::glDrawElementsInstancedBaseVertex+0x8efa5
+00bcf808 008e2c8e Qt5Widgetsd!QApplication::exec+0x9 [c:\users\qt\work\qt\qtbase\src\widgets\kernel\qapplication.cpp @ 2911]
+00bcf848 008ebf9d gui_test!main+0x6e [c:\oye\qt_oye_test\gui_test\main.cpp @ 27]
+//
+//  win32 传统套路
+//
+00bcf87c 008eaabe gui_test!WinMain+0xad [c:\users\qt\work\qt\qtbase\src\winmain\qtmain_win.cpp @ 104]
+00bcf894 008ea940 gui_test!invoke_main+0x1e [f:\dd\vctools\crt\vcstartup\src\startup\exe_common.inl @ 99]
+00bcf8ec 008ea7dd gui_test!__scrt_common_main_seh+0x150 [f:\dd\vctools\crt\vcstartup\src\startup\exe_common.inl @ 253]
+00bcf8f4 008eaad8 gui_test!__scrt_common_main+0xd [f:\dd\vctools\crt\vcstartup\src\startup\exe_common.inl @ 296]
+00bcf8fc 75d60419 gui_test!WinMainCRTStartup+0x8 [f:\dd\vctools\crt\vcstartup\src\startup\exe_winmain.cpp @ 17]
+00bcf90c 776274ed KERNEL32!BaseThreadInitThunk+0x19
+00bcf968 776274bd ntdll!__RtlUserThreadStart+0x2f
+00bcf978 00000000 ntdll!_RtlUserThreadStart+0x1b
+

@@ -1,0 +1,87 @@
+#
+# Record the tips and exp when learning the src-code of Linux
+#
+
+# asmlinkage int printk(const char * fmt, ...)	__attribute__ ((format (printf, 1, 2)));
+	# gcc 自定义的 变量属性, 给与额外的编译器暗示
+	# __attribute__((format(function, string-index, first-to-check)))  函数属性 控制
+		# 控制编译器做额外的检查
+		# fun  printf  类型的
+		# string-index  格式化字符串是第几个
+		# 从哪个参数开始做具体的 类型检测
+
+#define barrier() __asm__ __volatile__("": : :"memory")
+
+#  asm
+
++------------------------------+------------------------------------+
+|       Intel Code             |      AT&T Code                     |
++------------------------------+------------------------------------+
+| mov     eax,1                |  movl    $1,%eax                   |   
+| mov     ebx,0ffh             |  movl    $0xff,%ebx                |   
+| int     80h                  |  int     $0x80                     |   
+| mov     ebx, eax             |  movl    %eax, %ebx                |
+| mov     eax,[ecx]            |  movl    (%ecx),%eax               |
+| mov     eax,[ebx+3]          |  movl    3(%ebx),%eax              | 
+| mov     eax,[ebx+20h]        |  movl    0x20(%ebx),%eax           |
+| add     eax,[ebx+ecx*2h]     |  addl    (%ebx,%ecx,0x2),%eax      |
+| lea     eax,[ebx+ecx]        |  leal    (%ebx,%ecx),%eax          |
+| sub     eax,[ebx+ecx*4h-20h] |  subl    -0x20(%ebx,%ecx,0x4),%eax |
++------------------------------+------------------------------------+
+
+# asm ext{
+
+    asm ( assembler template 
+           : output operands                  /* optional */
+           : input operands                   /* optional */
+           : list of clobbered registers      /* optional */
+           );
+    //-----------------------------------------------------
+
+    int a=10, b;
+    asm ("movl %1, %%eax; 
+          movl %%eax, %0;"
+         :"=r"(b)        /* output */
+         :"r"(a)         /* input */
+         :"%eax"         /* clobbered register */
+         );  	
+    // b 输出的 用 %0 表示   
+    // a 输入的 用 %1 表示
+    // "r"(a) 代表对操作数的限制, 用寄存器来存此值
+    // "=r"(b) b是 只能寄存器写的
+    // 模板里面 %%eax, %%可以方便区分 立即数和 寄存器
+}
+
+
+# Spin_lock{
+	 *(volatile signed char *)(&x->slock) <= 0
+ 	__asm__ __volatile__("": : :"memory")
+
+ #  _raw_spin_lock{
+		spin_lock_string: 
+			1:
+				lock decb %0
+				jns 3f			// 跳去3:处继续执行  , 符号位没情况就跳,说明dec后,%0不是负数
+								// 上锁 成功 slock 为0;
+			2:
+				rep; nop
+				cmpb $0, %0		// 常量0 和 lock->slock 比较下
+				jle 2b			// ZF=1 or SF != OF,
+				jmp 1b
+			3:
+	 	__asm__ __volatile__(  
+	 		spin_lock_string: 
+	 		"=m" (lock->slock)  
+	 		: 
+	 		:  "memory");
+	 	// lock->slock  "=m" 是write only 的 内存操作数
+ }
+
+ # _raw_spin_unlock{
+ 		"xchgb %b0, %1" 
+		: "=q" (oldval), "=m" (lock->slock) 
+		: "0" (oldval) 
+		: "memory"
+ }
+
+}
