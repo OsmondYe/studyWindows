@@ -414,14 +414,6 @@ TEST(AlgoHash, 645) {
 }
 
 
-//202. Happy Number is happyNum
-bool isHappy(int n) {
-    // sanity check
-    if (n < 0) {
-        return false;
-    }
-
-}
 
 //720. Longest Word in Dictionary
 string longestWord(vector<string> words) {
@@ -606,48 +598,6 @@ bool containsNearbyDuplicate(vector<int> nums, int k) {
 
 }
 
-/*
-205. Isomorphic Strings
-Input: s = "egg", t = "add"
-Output: true    e->a  g->d
-*/
-bool isIsomorphic(string s, string t) {
-    // sanity check
-    if (s.empty() && t.empty()) {
-        return true;
-    }
-    if (s.empty() && !t.empty()) {
-        return false;
-    }
-    if (!s.empty() && t.empty()) {
-        return false;
-    }
-
-    unordered_map<char, char> s2t;
-    unordered_map<char, char> t2s;
-    s2t[s[0]] = t[0];
-    t2s[t[0]] = s[0];
-
-    for (int i = 1; i < s.size(); ++i) {
-        char l = s[i], r = t[i];
-
-        if (s2t.find(l) != s2t.end()) { // exist, so to check if match
-            if (s2t[l] != r) {
-                return false;
-            }
-        }
-        else {// not exsit, 
-            if (t2s.find(r) != t2s.end() /*&& t2s[r] == l*/) {
-                return false;
-            }
-            s2t[l] = r;
-            t2s[r] = l;
-        }
-
-    }
-    return true;
-
-}
 
 
 TEST(AlgoHash, LeetCode) {
@@ -686,10 +636,6 @@ TEST(AlgoHash, LeetCode) {
     EXPECT_TRUE(!containsNearbyDuplicate({ 1,2,1 }, 0));  // good test-case
     EXPECT_TRUE(!containsNearbyDuplicate({ 1,2,3,1,2,3 }, 2));
 
-    aux::println("is isomorphic a->b b->a");
-    EXPECT_TRUE(isIsomorphic("egg", "add"));
-    EXPECT_TRUE(!isIsomorphic("foo", "bar"));
-    EXPECT_TRUE(isIsomorphic("paper", "title"));
-    EXPECT_TRUE(!isIsomorphic("ab", "aa"));
+  
 
 }

@@ -1,15 +1,15 @@
+# build package
+	windeployqt hellomw.exe
 
-# in class{
-	Q_OBJECT   {
-		IMPLED,  signale and slot
-	}
-
-	Q_PROPERTY	
-
-
+# exp{
+	# qss 根据style中的 枚举常量 , 来推测 实现对应参数的地方 
+		# 与size先关
+		# style()->pixelMetric() 
+			# PM_ButtonIconSize 找实现这个的地方
 }
 
-# Q_OBJECT{
+# Q_OBJECT Macro Expansion
+{
 	#define Q_OBJECT \
 public: \
     QT_WARNING_PUSH \
@@ -64,106 +64,6 @@ private: \
 		qobject_cast
 	# Q_CLASSINFO	
 		属性系统的附加信息
-}
-
-# mainwindow.ui{
-	会被翻译为一个头文件
-	ui_mainwindows.h
-
-	# setupUi {
-		# 这里只会new 需要的UI对象, 并没有delete
-		# 会在哪里delete?
-	}
-
-	# retranslateUi{
-		# 设置组件文字之类的内容
-		# 专门以函数来设计, 好处是 国际化
-	}
-
-}
-
-# QtGlobal{
-	#qint 之类的type设置
-	#常用util函数
-	#宏定义
-		QT_VERSION, Q_BYTE_ORDER
-}
-
-
-# Qt常见功能类{
-	# QString, QTime,QDate
-	# QTimer
-	# 容器类{
-	QStringList, QList<QString>
-	#顺序
-		QList, QLinkedList, QVector, QStack QQueue
-	#关联
-		QMap, QMultiMap, QHash, QMultiHash,QSet
-	#Qt foreach
-	}
-}
-
-# Model/View 结构{
-	#
-}
-
-# 布局 
-
-
-# 绘图{
-	# QPainter
-	# QPaintDevice
-	# QPaintEngine
-
-	# QWidget
-	# QPixmap
-	# QImage
-
-	# QGraphicsScene
-	# QGraphicsView
-	# QGraphicsItem
-}
-
-# Qt Charts{
-	# 折线图,柱状图,饼图
-
-	# QChart, QCharView
-	# QLineSeries
-	# QVauleAxis
-
-	# QBarSeries, PercentBar, StackedBar  BoxPlot,  
-		QPieSeries, LineSeries, SplineSeries
-		QScatter  QArea 
-}
-
-# Qt Data Visualization{
-	# 数据三维显示模块
-}
-
-# Qt SQL{
-	# 
-}
-
-# 自定义插件与库{
-	
-}
-
-# QThread{
-	
-}
-# 网络Socket{
-	
-}
-
-# 多媒体{
-	音频,视频
-	audio, video, camera
-	QSoundEffect
-	QSound
-}
-
-# 辅助{
-	多语言,样式表,
 }
 
 
@@ -912,3 +812,17 @@ WARNING: Stack unwind information not available. Following frames may be wrong.
 00bcf968 776274bd ntdll!__RtlUserThreadStart+0x2f
 00bcf978 00000000 ntdll!_RtlUserThreadStart+0x1b
 
+
+# QLabel consume too much space{
+	布局中碰到label很讨厌, 它默认会占据全部的空间
+}
+
+# Header处的标签选择页面{
+	# 选中为红色, 字体放大, 底部呈现红色
+	# 有一根线,明显因为边距的原因
+}
+# 瞬间开朗{
+	# QWdiget的 PaintEvent中 是默认实现, 也是说什么都没画
+	# QFrame 倒是有简单实现, 
+		#基于上面, 在用qss时, 最好基类是QFrame
+		# QBoxLayout默认居然是有Margin的
